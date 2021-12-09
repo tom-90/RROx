@@ -1,0 +1,30 @@
+diff --git a/node_modules/@vercel/webpack-asset-relocator-loader/dist/index.js b/node_modules/@vercel/webpack-asset-relocator-loader/dist/index.js
+index 0ee0a4c..9bfa432 100644
+--- a/node_modules/@vercel/webpack-asset-relocator-loader/dist/index.js
++++ b/node_modules/@vercel/webpack-asset-relocator-loader/dist/index.js
+@@ -29034,12 +29034,22 @@ module.exports = async function (content, map) {
+               }
+             break;
+             case NODE_GYP_BUILD:
+-              if (node.arguments.length === 1 && node.arguments[0].type === 'Identifier' &&
+-                  node.arguments[0].name === '__dirname' && knownBindings.__dirname.shadowDepth === 0) {
++              let gypDir;
++              if( node.arguments.length === 1 && node.arguments[0].type === 'Identifier' && node.arguments[0].name === '__dirname' && knownBindings.__dirname.shadowDepth === 0 )
++                gypDir = dir;
++              else if( node.arguments.length === 1 && node.arguments[0].type === 'CallExpression' && node.arguments[0].callee.type === 'MemberExpression'
++                  && node.arguments[0].callee.object.type === 'Identifier' && node.arguments[0].callee.object.name === 'path'
++                  && node.arguments[0].callee.property.type === 'Identifier' && node.arguments[0].callee.property.name === 'join'
++                  && node.arguments[0].arguments.length === 2
++                    && node.arguments[0].arguments[0].type === 'Identifier' && node.arguments[0].arguments[0].name === '__dirname'
++                    && node.arguments[0].arguments[1].type === 'Literal' && node.arguments[0].arguments[1].value === '..' )
++                gypDir=path.resolve( dir, '..' );
++
++              if (gypDir) {
+                 transformed = true;
+                 let resolved;
+                 try {
+-                  resolved = nodeGypBuild.path(dir);
++                  resolved = nodeGypBuild.path(gypDir);
+                 }
+                 catch (e) {}
+                 if (resolved) {

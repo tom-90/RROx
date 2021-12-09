@@ -1,0 +1,70 @@
+@import '~antd/lib/style/themes/default.less';
+@import '~antd/dist/antd.less';
+
+@primary-color: #fa8c16;
+
+.clickable {
+    cursor: pointer;
+}
+
+#app {
+    height: 100%;
+}
+
+.attachButton, .attachButton:focus:not(:hover) {
+    color: green;
+    border-color: green;
+}
+
+.detachButton, .detachButton:focus:not(:hover) {
+    color: red;
+    border-color: red;
+}
+
+.processingButton, .processingButton:focus:not(:hover) {
+    color: @primary-color;
+    border-color: @primary-color;
+}
+
+@font-face {
+    font-family: 'graduate';
+    src: url('../../assets/fonts/Graduate-Regular.woff2');
+}
+
+.appTitle, .appTitleShort {
+    font-family: 'graduate', 'serif';
+    margin: 0!important;
+    font-size: 24px!important;
+}
+
+.appTitle {
+    display: inline-block;
+}
+
+.appTitleShort {
+    display: none;
+}
+
+.tooltipControls .highlight, .highlight:hover {
+    filter: drop-shadow(0px 0px 3px black);
+}
+
+body {
+    background: none;
+}
+
+@media only screen and (max-width: 800px) {
+    .appTitle {
+        display: none;
+    }
+
+    .appTitleShort {
+        display: inline-block;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .appTitleShort {
+        display: none;
+    }
+}
