@@ -24,6 +24,18 @@ module.exports = {
             },
         }
     ],
+    publishers: [
+        {
+            name: '@electron-forge/publisher-github',
+            config: {
+                repository: {
+                    owner: 'tom-90',
+                    name: 'RROx'
+                },
+                prerelease: true
+            }
+        }
+    ],
     // Forge Plugins
     plugins: [
         [
