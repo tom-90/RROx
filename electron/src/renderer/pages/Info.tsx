@@ -9,9 +9,9 @@ export function Info() {
             <p>
                 RailroadsOnline Extended has been made with the help of the following open-source tools:
                 <ul>
-                    <li>ian76g (Map rendering)</li>
-                    <li>guttir14 (Unreal Engine Dumper)</li>
-                    <li>Cake-san (UE4 CheatEngine Table)</li>
+                    <li>RRO Mapper (ian76g)</li>
+                    <li>Unreal Engine Dumper (guttir14)</li>
+                    <li>UE4 CheatEngine Table (Cake-san)</li>
                 </ul>
             </p>
         </PageLayout>
