@@ -2436,7 +2436,7 @@ definitions = {
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
-    FrameCar = {{{"+FrameCar.FrameType", "+0"}, "s", 64}, {{"+FrameCar.FrameName", "+28", "+0"}, "s", 64},
+    FrameCar = {{{"+FrameCar.FrameType", "+0"}, "s", 64}, {{"+FrameCar.FrameName"}, "t", 64},
                 {{"+FrameCar.FrameNumber", "+28", "+0"}, "s", 64},
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -2537,6 +2537,29 @@ function transmitArray(id, pipe)
                 pipe.writeDword(readInteger(address) or 0)
             elseif propType == "s" then
                 local str = readString(address, property[3], true)
+                if str == nil then
+                    pipe.writeDword(0)
+                else
+                    pipe.writeDword(#str)
+                    pipe.writeString(str)
+                end
+            elseif propType == "t" then -- Special text type to try to read a string in two differnt ways
+                -- First try attempt 1 [[address+8]+0]
+                local testAddr = readPointer(readPointer(address)+0x8)
+                if testAddr ~= nil then
+                    testAddr = readPointer(testAddr)
+                end
+
+                if testAddr == nil then
+                    -- Try attempt 2 [address+28]
+                    testAddr = readPointer(readPointer(address)+0x28)
+                end
+
+                local str = nil
+                if testAddr ~= nil then
+                    str = readString(testAddr, property[3], true)
+                end
+
                 if str == nil then
                     pipe.writeDword(0)
                 else

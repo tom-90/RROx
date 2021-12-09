@@ -1,4 +1,5 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const relocateLoader = require('@vercel/webpack-asset-relocator-loader');
 
 module.exports = {
     // Put your normal webpack config below here
@@ -72,7 +73,19 @@ module.exports = {
             },
         ],
     },
-    plugins: [ new ForkTsCheckerWebpackPlugin() ],
+    plugins: [
+        new ForkTsCheckerWebpackPlugin(),
+        {
+            apply( compiler ) {
+                compiler.hooks.compilation.tap(
+                    'webpack-asset-relocator-loader',
+                    ( compilation ) => {
+                        relocateLoader.initAssetCache( compilation, 'native_modules' );
+                    },
+                );
+            },
+        },
+    ],
     resolve: {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
     },

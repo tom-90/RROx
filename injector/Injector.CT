@@ -7,6 +7,7 @@
     <CheatEntry>
       <ID>30970</ID>
       <Description>"GameModeBase"</Description>
+      <LastState Value="417736824" RealAddress="1B80EA086E0"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -20,6 +21,7 @@
     <CheatEntry>
       <ID>29757</ID>
       <Description>"FrameArraySize"</Description>
+      <LastState Value="90" RealAddress="1B78C77ABF8"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -33,12 +35,26 @@
     <CheatEntry>
       <ID>26253</ID>
       <Description>"PlayerArraySize"</Description>
+      <LastState Value="1" RealAddress="1B78C77AB40"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
       <Offsets>
         <Offset>GameStateBase.PlayerArray_size</Offset>
         <Offset>World.GameState</Offset>
+        <Offset>GameViewportClient.World</Offset>
+        <Offset>GameEngine.GameViewport</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>30971</ID>
+      <Description>"World"</Description>
+      <LastState Value="423132008" RealAddress="1B798583990"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>GEngine</Address>
+      <Offsets>
+        <Offset>0</Offset>
         <Offset>GameViewportClient.World</Offset>
         <Offset>GameEngine.GameViewport</Offset>
       </Offsets>
@@ -12262,7 +12278,7 @@ definitions = {
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
               {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
-    FrameCar = {{{"+FrameCar.FrameType", "+0"}, "s", 64}, {{"+FrameCar.FrameName", "+28", "+0"}, "s", 64},
+    FrameCar = {{{"+FrameCar.FrameType", "+0"}, "s", 64}, {{"+FrameCar.FrameName"}, "t", 64},
                 {{"+FrameCar.FrameNumber", "+28", "+0"}, "s", 64},
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -12363,6 +12379,47 @@ function transmitArray(id, pipe)
                 pipe.writeDword(readInteger(address) or 0)
             elseif propType == "s" then
                 local str = readString(address, property[3], true)
+                if str == nil then
+                    pipe.writeDword(0)
+                else
+                    pipe.writeDword(#str)
+                    pipe.writeString(str)
+                end
+            elseif propType == "t" then -- Special text type to try to read a string in two differnt ways
+                -- First try attempt 1 [[address+8]+0]
+                local testAddr = readPointer(readPointer(address)+0x8)
+                if i == 8 then
+                  print("1")
+                  print("|")
+                  print(address)
+                  print("|")
+                  print(readPointer(address))
+                  print("|")
+                  print(testAddr)
+                  print("|")
+                  print("2")
+                end
+                if testAddr ~= nil then
+                    testAddr = readPointer(testAddr)
+                    if i == 8 then
+                       print("|3|")
+                       print(testAddr)
+                    end
+                end
+
+                if testaddr == nil then
+                    if i == 8 then
+                       print("|4|")
+                    end
+                    -- Try attempt 2 [address+28]
+                    testAddr = readPointer(readPointer(address)+0x28)
+                end
+
+                local str = nil
+                if testAddr ~= nil then
+                    str = readString(testAddr, property[3], true)
+                end
+
                 if str == nil then
                     pipe.writeDword(0)
                 else

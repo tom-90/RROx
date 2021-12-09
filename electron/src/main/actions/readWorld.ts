@@ -100,9 +100,15 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
     private async readFrame(): Promise<Frame> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
+        let Type = await pipe.readString( await pipe.readInt() );
+        let Name = await pipe.readString( await pipe.readInt() );
+
+        if( Name.endsWith( '<br>' ) )
+            Name = Name.slice( 0, -4 );
+
         return {
-            Type  : await pipe.readString( await pipe.readInt() ),
-            Name  : await pipe.readString( await pipe.readInt() ),
+            Type  : Type,
+            Name  : Name,
             Number: await pipe.readString( await pipe.readInt() ),
             Location: [
                 await pipe.readFloat(),
