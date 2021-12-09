@@ -93,22 +93,41 @@ export const Switch = React.memo( function( { data, map, index }: { data: Switch
                 setTooltipVisible( false );
             }}
         >
-            <line
-                x1={x}
-                y1={y}
-                x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotation ) * radius / 2 )}
-                y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotation ) * radius / 2 )}
-                stroke={state ? "red" : "black"}
-                strokeWidth={3}
-            />
-            <line
-                x1={x}
-                y1={y}
-                x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotSide ) * radius / 2 )}
-                y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotSide ) * radius / 2 )}
-                stroke={state ? "black" : "red"}
-                strokeWidth={3}
-            />
+            {state ? <>
+                <line
+                    x1={x}
+                    y1={y}
+                    x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotation ) * radius / 2 )}
+                    y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotation ) * radius / 2 )}
+                    stroke={"red"}
+                    strokeWidth={3}
+                />
+                <line
+                    x1={x}
+                    y1={y}
+                    x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotSide ) * radius / 2 )}
+                    y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotSide ) * radius / 2 )}
+                    stroke={"black"}
+                    strokeWidth={3}
+                />
+            </> : <>
+                <line
+                    x1={x}
+                    y1={y}
+                    x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotSide ) * radius / 2 )}
+                    y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotSide ) * radius / 2 )}
+                    stroke={"red"}
+                    strokeWidth={3}
+                />
+                <line
+                    x1={x}
+                    y1={y}
+                    x2={imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) + ( Math.cos( rotation ) * radius / 2 )}
+                    y2={imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) + ( Math.sin( rotation ) * radius / 2 )}
+                    stroke={"black"}
+                    strokeWidth={3}
+                />
+            </>}
         </g>
     </Tooltip>;
 } );
