@@ -1,6 +1,6 @@
 # How to download
 
-All versions of RROx can be found on the [Releases](https://github.com/tom-90/RROx/releases) page. Download the file with the name `RailroadsOnline.Extended-X.X.X.Setup.exe` and run it to install RROx.
+All versions of RROx can be found on the [Releases](https://github.com/tom-90/RROx/releases) page. Download the file with the name `RailroadsOnline.Extended.Setup.exe` and run it to install RROx.
 
 # Antivirus warning
 
