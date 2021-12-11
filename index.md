@@ -1,37 +1,15 @@
-## Welcome to GitHub Pages
+### How to download
 
-You can use the [editor on GitHub](https://github.com/tom-90/RROx/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+You can find the latest release of RROx [here](https://github.com/tom-90/RROx/releases/latest). Under assets, download the file `RailroadsOnline.Extended-X.X.X.Setup.exe` and run it to install RROx.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Antivirus warning
 
-### Markdown
+RROx needs to inject code into the game to function. However, this is not something regular programs do, and as such, it might get detected by your antivirus.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+If necessary, you can add an exception to your antivirus for the following folder: `%localappdata%\RailroadsOnlineExtended`
 
-```markdown
-Syntax highlighted code block
+All of the code is open-source, such that it can be verified by others to make sure it does not contain any malicious code. The executable that will most likely be detected by the antivirus is the injector. This injector is built using Cheat Engine, which is also open-source and can be found here: https://github.com/cheat-engine/cheat-engine
 
-# Header 1
-## Header 2
-### Header 3
+### How to use
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/tom-90/RROx/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows the basic usage of RROx. In addition, the Info tab gives more a more detailed explanation of how to use it.
