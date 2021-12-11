@@ -1,6 +1,6 @@
-import { BrowserWindow, globalShortcut } from 'electron';
+import { BrowserWindow } from 'electron';
 import path from 'path';
-import { focusGame, getActiveWindow, getGameWindow } from '../utils';
+import { convertEntryPath } from '../utils';
 
 // Electron Forge automatically creates these entry points
 declare const APP_WINDOW_WEBPACK_ENTRY: string;
@@ -31,7 +31,7 @@ export function createOverlayWindow(): BrowserWindow {
         show: false,
     } );
 
-    let url = new URL( APP_WINDOW_WEBPACK_ENTRY );
+    let url = convertEntryPath( APP_WINDOW_WEBPACK_ENTRY );
     url.searchParams.append( 'mode', 'overlay' );
 
     // Load the index.html of the app window.

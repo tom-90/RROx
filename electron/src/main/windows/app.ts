@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import { convertEntryPath } from '../utils/urlPath';
 import path from 'path';
 
 // Electron Forge automatically creates these entry points
@@ -29,7 +30,7 @@ export function createAppWindow(): BrowserWindow {
     } );
 
     // Load the index.html of the app window.
-    appWindow.loadURL( APP_WINDOW_WEBPACK_ENTRY );
+    appWindow.loadURL( convertEntryPath( APP_WINDOW_WEBPACK_ENTRY ).toString() );
 
     // Show window when its ready to
     appWindow.on( 'ready-to-show', () => appWindow.show() );
