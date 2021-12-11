@@ -3,7 +3,13 @@ import { PipeType } from "../pipes";
 import { Frame, Player, Spline, Switch, Turntable, WaterTower, Industry, World } from "../../shared/data";
 import Log from 'electron-log';
 
-export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
+export enum ReadWorldMode {
+    HOST_FULL    = 0, // When server host: read full world including splines
+    HOST_PARTIAL = 1, // When server host: read world excluding splines
+    CLIENT       = 2, // When client: will read limited data as not the entire world is transmitted
+}
+
+export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
 
     public actionID   = 'R';
     public actionName = 'Read World';
@@ -13,7 +19,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
      * Execute the read world action
      * @param full Full world read (whether or not to include splines)
      */
-    protected async execute( full = false ) {
+    protected async execute( mode: ReadWorldMode ) {
         await this.acquire();
 
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
@@ -29,51 +35,60 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         };
 
         pipe.writeString( this.actionID );
-        pipe.writeInt( Number( full ) );
+        pipe.writeInt( Number( mode ) );
 
-        while( true ) {
+        while ( true ) {
             let nameLength = await pipe.readInt();
-            if( nameLength === 0 )
+            if ( nameLength === 0 )
                 break;
 
             let arrayName = await pipe.readString( nameLength );
-            let arraySize = await pipe.readInt();
 
-            let array : unknown[];
+            let arraySize = 0;
+            if ( mode !== ReadWorldMode.CLIENT )
+                arraySize = await pipe.readInt();
+
+            let array: unknown[];
             let method: () => Promise<unknown>;
 
-            if( arrayName === 'Player' ) {
-                array  = data.Players;
+            if ( arrayName === 'Player' || arrayName === 'PlayerMulti' ) {
+                array = data.Players;
                 method = () => this.readPlayer();
-            } else if( arrayName === 'FrameCar' ) {
-                array  = data.Frames;
+            } else if ( arrayName === 'FrameCar' ) {
+                array = data.Frames;
                 method = () => this.readFrame();
-            } else if( arrayName === 'Turntable' ) {
-                array  = data.Turntables;
+            } else if ( arrayName === 'Turntable' ) {
+                array = data.Turntables;
                 method = () => this.readTurntable();
-            } else if( arrayName === 'Switch' ) {
-                array  = data.Switches;
+            } else if ( arrayName === 'Switch' ) {
+                array = data.Switches;
                 method = () => this.readSwitch();
-            } else if( arrayName === 'WaterTower' ) {
-                array  = data.WaterTowers;
+            } else if ( arrayName === 'WaterTower' ) {
+                array = data.WaterTowers;
                 method = () => this.readWaterTower();
-            } else if( arrayName === 'Industry' ) {
-                array  = data.Industries;
+            } else if ( arrayName === 'Industry' ) {
+                array = data.Industries;
                 method = () => this.readIndustry();
-            } else if( arrayName === 'Spline' ) {
-                array  = data.Splines;
+            } else if ( arrayName === 'Spline' ) {
+                array = data.Splines;
                 method = () => this.readSpline();
             }
 
-            for( let i = 0; i < arraySize; i++ ) {
+            const read = async ( i: number | string = '' ) => {
                 try {
                     array.push( await method() );
-                } catch( e ) {
+                } catch ( e ) {
                     Log.warn( `Error while reading ${arrayName} ${i}:`, e );
                     pipe.close();
                     return data;
                 }
-            }
+            };
+
+            if ( mode === ReadWorldMode.CLIENT )
+                await read();
+            else
+                for ( let i = 0; i < arraySize; i++ )
+                    await read( i );
         }
 
         return data;
@@ -83,6 +98,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         return {
+            ID  : await pipe.readInt(),
             Name: await pipe.readString( await pipe.readInt() ),
             Location: [
                 await pipe.readFloat(),
@@ -100,6 +116,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
     private async readFrame(): Promise<Frame> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
+        let ID   = await pipe.readInt();
         let Type = await pipe.readString( await pipe.readInt() );
         let Name = await pipe.readString( await pipe.readInt() );
 
@@ -107,6 +124,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
             Name = Name.slice( 0, -4 );
 
         return {
+            ID    : ID,
             Type  : Type,
             Name  : Name,
             Number: await pipe.readString( await pipe.readInt() ),
@@ -130,6 +148,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         return {
+            ID    : await pipe.readInt(),
             Type  : await pipe.readInt(),
             Side  : await pipe.readInt(),
             Location: [
@@ -149,6 +168,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         return {
+            ID      : await pipe.readInt(),
             Location: [
                 await pipe.readFloat(),
                 await pipe.readFloat(),
@@ -171,6 +191,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         return {
+            ID      : await pipe.readInt(),
             Location: [
                 await pipe.readFloat(),
                 await pipe.readFloat(),
@@ -188,6 +209,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         return {
+            ID  : await pipe.readInt(),
             Type: await pipe.readInt(),
             Location: [
                 await pipe.readFloat(),
@@ -206,6 +228,7 @@ export class ReadWorldAction extends Action<World, [ full?: boolean ]> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         let data: Spline = {
+            ID      : await pipe.readInt(),
             Type    : await pipe.readInt(),
             Location: null,
             Segments: [],

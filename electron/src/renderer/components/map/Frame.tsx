@@ -33,7 +33,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
     const [ controlsVisible, setControlsVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
 
-    const { Type, Location, Rotation, Name, Number } = data;
+    const { Type, Location, Rotation, Name, Number, ID } = data;
     const { imx, minX, imy, minY, scale } = map;
 
     const radius = 6 * scale;
@@ -90,7 +90,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 regulator={data.Regulator}
                 reverser={data.Reverser}
                 brake={data.Brake}
-                index={index}
+                id={ID}
                 isVisible={controlsVisible && !minimap}
                 onClose={() => {
                     setControlsVisible( false );

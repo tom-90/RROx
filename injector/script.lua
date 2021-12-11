@@ -2386,10 +2386,12 @@ function initue4()
     -- Additions ARR
     print("(PROGRESS 60%)")
     createThread(ue4createstruct('/Script/arr.arrGameStateBase', 'GameStateBase', 0))
+    createThread(ue4createstruct('/Script/arr.arrGameModeBase', 'GameModeBase', 0))
     createThread(ue4createstruct('/Script/arr.framecar', 'FrameCar', 0))
     createThread(ue4createstruct('/Script/Engine.BasedMovementInfo', 'BasedMovement', 0))
     print("(PROGRESS 65%)")
     createThread(ue4createstruct('/Script/Engine.PlayerState', 'PlayerState', 0))
+    createThread(ue4createstruct('/Script/arr.SCharacter', 'Character', 0))
     createThread(ue4createstruct('/Script/Engine.SceneComponent', 'SceneComponent', 0))
     createThread(ue4createstruct('/Script/arr.turntable', 'TurnTable', 0))
     print("(PROGRESS 70%)")
@@ -2404,6 +2406,9 @@ function initue4()
     createThread(ue4createstruct('/Script/arr.whistle', 'Whistle', 0))
     createThread(ue4createstruct('/Script/arr.SplineActor', 'Spline', 0))
     print("(PROGRESS 85%)")
+    createThread(ue4createstruct('/Script/Engine.NetDriver', 'NetDriver', 0))
+    createThread(ue4createstruct('/Script/Engine.NetConnection', 'NetConnection', 0))
+    createThread(ue4createstruct('/Script/Engine.ActorChannel', 'ActorChannel', 0))
 
     local RunningStructCounter = 0
     while (true) do
@@ -2430,12 +2435,19 @@ end
 
 definitions = {
     Player = {{{"+PlayerState.PlayerNamePrivate", "+0"}, "s", 64},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
-              {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
+            {{"++PlayerState.PawnPrivate", "+GPlayer.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
+    PlayerMulti = {{{"+Character.myplayername", "+0"}, "s", 64},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
+            {{"+Character.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
     FrameCar = {{{"+FrameCar.FrameType", "+0"}, "s", 64}, {{"+FrameCar.FrameName"}, "t", 64},
                 {{"+FrameCar.FrameNumber", "+28", "+0"}, "s", 64},
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
@@ -2475,127 +2487,78 @@ definitions = {
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
-                {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}}
+                {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
+    Spline = {{{"+Spline.SplineControlPoints_size"}},
+                {{"+Spline.SplineControlPoints"}},
+                {{"+Spline.SplineMeshBoolArray"}},
+                {{"+Spline.SplineType"}}},
 }
 
-ItemBase = nil
+-- If an channel actor STARTS WITH a particular name, it will use the corresponding definition
+channelNames = {
+    BP_Player_Conductor = "PlayerMulti",
+    BP_SplineActor = "Spline",
+    BP_switch = "Switch",
+    BP_watertower = "WaterTower",
+    BP_industry = "Industry",
+    BP_turntable = "Turntable",
 
-function transmitArray(id, pipe)
-    pipe.writeDword(#id)
-    pipe.writeString(id)
+    flatcar = "FrameCar", --flatcar_cordwood, flatcar_hopper, flatcar_logs, flatcar_stakes, flatcar_tanker
+    boxcar = "FrameCar",
+    class70 = "FrameCar", --class70, class70_tender
+    climax = "FrameCar",
+    cooke260 = "FrameCar", --cooke260, cooke260_updg_tender
+    eureka = "FrameCar", --eureka, eureka_tender
+    handcar = "FrameCar",
+    heisler = "FrameCar",
+    porter = "FrameCar" --porter040, porter042
+}
 
-    -- We use a special approach for splines, as it requires subarrays
-    if id == "Spline" then
-        return readSplines(pipe)
-    end
-
-    properties = definitions[id]
-    propertyPaths = {}
+function prepareArrayProperties(id)
+    local properties = definitions[id]
+    local prepared = {}
 
     for p = 1, #properties do
-        address = properties[p][1]
-        if type(address) == "table" then
-            propertyPaths[p] = {}
-            for i = 1, #address do
-                propertyPaths[p][i] = getAddressSafe(address[i])
-            end
-        else
-            propertyPaths[p] = nil
+        local address = properties[p][1]
+        local path = {}
+        for i = 1, #address do
+            path[i] = getAddressSafe(address[i])
         end
+        prepared[p] = {
+            property = properties[p],
+            path = path
+        }
     end
 
-    local addrArray = readPointer(getAddressSafe(
-        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." .. id ..
-            "Array"))
-    local arraySize = readInteger(getAddressSafe(
-        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." .. id ..
-            "Array_size"))
-
-    pipe.writeDword(arraySize)
-    for i = 0, arraySize - 1 do
-        ItemBase = readPointer(addrArray + i * 8)
-        for p = 1, #properties do
-            property = properties[p]
-
-            if propertyPaths[p] ~= nil then
-                path = propertyPaths[p]
-                address = ItemBase
-                for j = 1, #path do
-                    address = address + path[j]
-                    if j ~= #path then
-                        address = readPointer(address)
-                    end
-                end
-            else
-                address = property[1]
-            end
-
-            propType = property[2]
-            if propType == "f" then
-                pipe.writeFloat(readFloat(address) or 0)
-            elseif propType == "i" then
-                pipe.writeDword(readInteger(address) or 0)
-            elseif propType == "s" then
-                local str = readString(address, property[3], true)
-                if str == nil then
-                    pipe.writeDword(0)
-                else
-                    pipe.writeDword(#str)
-                    pipe.writeString(str)
-                end
-            elseif propType == "t" then -- Special text type to try to read a string in two differnt ways
-                -- First try attempt 1 [[address+8]+0]
-                local testAddr = readPointer(readPointer(address)+0x8)
-                if testAddr ~= nil then
-                    testAddr = readPointer(testAddr)
-                end
-
-                if testAddr == nil then
-                    -- Try attempt 2 [address+28]
-                    testAddr = readPointer(readPointer(address)+0x28)
-                end
-
-                local str = nil
-                if testAddr ~= nil then
-                    str = readString(testAddr, property[3], true)
-                end
-
-                if str == nil then
-                    pipe.writeDword(0)
-                else
-                    pipe.writeDword(#str)
-                    pipe.writeString(str)
-                end
-            elseif propType == "b" then
-                pipe.writeByte(readBytes(address, 1) or 0)
-            end
-        end
-    end
+    return prepared
 end
 
-function readSplines(pipe)
-    local addrArraySize = getAddressSafe(
-        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase.SplineArray_size")
-    local arraySize = readInteger(addrArraySize)
+function prepareArraysProperties()
+    properties = {}
 
-    local addrSplineArray = getAddressSafe(
-        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase.SplineArray")
-    local addrArrayStart = readPointer(addrSplineArray)
+    for k, v in pairs(definitions) do
+        properties[k] = prepareArrayProperties(k)
+    end
 
-    local offsSplinePointCount = getAddressSafe("+Spline.SplineControlPoints_size")
-    local offsSplinePoints = getAddressSafe("+Spline.SplineControlPoints")
-    local offsPointsVisible = getAddressSafe("+Spline.SplineMeshBoolArray")
-    local offsSplineType = getAddressSafe("+Spline.SplineType")
+    return properties
+end
 
-    pipe.writeDword(arraySize)
-    for i = 0, arraySize - 1 do
-        local itemAddr = readPointer(addrArrayStart + i * 8)
+function transmitItem(pipe, baseAddr, properties, array, id)
+    
+    pipe.writeDword(id)
 
-        local pointCount = readInteger(itemAddr + offsSplinePointCount)
-        local addrPointsStart = readPointer(itemAddr + offsSplinePoints)
-        local addrVisibleStart = readPointer(itemAddr + offsPointsVisible)
+    -- We use a special approach for splines, as it requires subarrays
+    if array == "Spline" then
+        local offsSplinePointCount = properties[1].path[1]
+        local offsSplinePoints = properties[2].path[1]
+        local offsPointsVisible = properties[3].path[1]
+        local offsSplineType = properties[4].path[1]
 
-        local splineType = readInteger(itemAddr + offsSplineType)
+        local pointCount = readInteger(baseAddr + offsSplinePointCount)
+        local addrPointsStart = readPointer(baseAddr + offsSplinePoints)
+        local addrVisibleStart = readPointer(baseAddr + offsPointsVisible)
+
+        local splineType = readInteger(baseAddr + offsSplineType)
 
         pipe.writeDword(splineType or 0)
         pipe.writeDword(pointCount or 0)
@@ -2610,7 +2573,116 @@ function readSplines(pipe)
             -- Read Visible
             pipe.writeByte(readBytes(addrVisibleStart + i, 1) or 0)
         end
+
+        return
     end
+
+    for p = 1, #properties do
+        property = properties[p].property
+        path     = properties[p].path
+        address  = baseAddr
+
+        for j = 1, #path do
+            address = address + path[j]
+            if j ~= #path then
+                address = readPointer(address)
+            end
+        end
+
+        propType = property[2]
+        if propType == "f" then
+            pipe.writeFloat(readFloat(address) or 0)
+        elseif propType == "i" then
+            pipe.writeDword(readInteger(address) or 0)
+        elseif propType == "s" then
+            local str = readString(address, property[3], true)
+            if str == nil then
+                pipe.writeDword(0)
+            else
+                pipe.writeDword(#str)
+                pipe.writeString(str)
+            end
+        elseif propType == "t" then -- Special text type to try to read a string in two differnt ways
+            -- First try attempt 1 [[address+8]+0]
+            local testAddr = readPointer(readPointer(address)+0x8)
+            if testAddr ~= nil then
+                testAddr = readPointer(testAddr)
+            end
+
+            if testAddr == nil then
+                -- Try attempt 2 [address+28]
+                testAddr = readPointer(readPointer(address)+0x28)
+            end
+
+            local str = nil
+            if testAddr ~= nil then
+                str = readString(testAddr, property[3], true)
+            end
+
+            if str == nil then
+                pipe.writeDword(0)
+            else
+                pipe.writeDword(#str)
+                pipe.writeString(str)
+            end
+        elseif propType == "b" then
+            pipe.writeByte(readBytes(address, 1) or 0)
+        end
+    end
+end
+
+function transmitArray(array, pipe)
+    pipe.writeDword(#array)
+    pipe.writeString(array)
+
+    properties = prepareArrayProperties(array)
+
+    local addrArray = readPointer(getAddressSafe(
+        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." .. array ..
+            "Array"))
+    local arraySize = readInteger(getAddressSafe(
+        "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." .. array ..
+            "Array_size"))
+
+    pipe.writeDword(arraySize)
+    for i = 0, arraySize - 1 do
+        transmitItem(pipe, readPointer(addrArray + i * 8), properties, array, i)
+    end
+end
+
+function transmitChannels(pipe)
+    local addrArray = readPointer(getAddressSafe(
+        "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels"))
+    local arraySize = readInteger(getAddressSafe(
+        "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels_size"))
+
+    if addrArray == nil or arraySize == nil then
+        pipe.writeDword(0)
+        return
+    end
+
+    local arrayProperties = prepareArraysProperties()
+
+    local actorOffset = getAddressSafe( "+ActorChannel.Actor" )
+
+    for i = 0, arraySize - 1 do
+        ChannelBase = readPointer(addrArray + i * 8)
+        ChannelName = FNameStringAlgo(ChannelBase + UObject.FNameIndex)
+
+        if string.sub(ChannelName, 1, 5) == "Actor" then -- Check that the channel name is ActorChannel_XXXXX by checking it starts with actor
+            ActorBase = readPointer(ChannelBase + actorOffset)
+            ActorName = FNameStringAlgo(ActorBase + UObject.FNameIndex)
+            for k, v in pairs(channelNames) do
+                if ActorName ~= nil and string.sub(ActorName, 1, #k) == k then
+                    pipe.writeDword(#v)
+                    pipe.writeString(v)
+                    transmitItem(pipe, ActorBase, arrayProperties[v], v, i)
+                    break
+                end
+            end
+        end
+    end
+
 end
 
 staticAddresses = {}
@@ -2623,19 +2695,49 @@ function retrieveAddress(pipe)
         local arrayNameLength = pipe.readDword()
         local arrayName = pipe.readString(arrayNameLength)
         local index = pipe.readDword()
+        local offsetLength = pipe.readDword()
+        local offset = pipe.readString(offsetLength)
+        local clientMode = pipe.readDword()
 
-        local addrArray = readPointer(getAddressSafe(
+
+        if clientMode == 1 then
+            local addrArray = readPointer(getAddressSafe(
+                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels"))
+            local arraySize = readInteger(getAddressSafe(
+                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels_size"))
+            local actorOffset = getAddressSafe( "+ActorChannel.Actor" )
+
+            if index >= arraySize or index < 0 then
+                pipe.writeQword(0)
+                return
+            end
+            
+            local channelAddr = readPointer(addrArray + index * 8)
+            local channelName = FNameStringAlgo(ChannelBase + UObject.FNameIndex)
+    
+            if string.sub(channelName, 1, 5) ~= "Actor" then -- Check that the channel is a valid Actor channel
+                pipe.writeQword(0)
+                return
+            end
+
+            BASE = readPointer(channelAddr + actorOffset)
+            pipe.writeQword(getAddressSafe(offset))
+        else
+            local addrArray = readPointer(getAddressSafe(
             "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
                 arrayName .. "Array"))
-        local arraySize = readInteger(getAddressSafe(
-            "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
-                arrayName .. "Array_size"))
-        if index >= arraySize or index < 0 then
-            pipe.writeQword(0)
-            return
+            local arraySize = readInteger(getAddressSafe(
+                "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
+                    arrayName .. "Array_size"))
+            if index >= arraySize or index < 0 then
+                pipe.writeQword(0)
+                return
+            end
+
+            BASE = readPointer(addrArray + index * 8)
+            pipe.writeQword(getAddressSafe(offset))
         end
 
-        pipe.writeQword(readPointer(addrArray + index * 8))
         return
     end
 
@@ -2696,6 +2798,7 @@ end
 
 function starttransmitter()
     staticAddresses["KismetSystemLibrary"] = StaticFindObjectAlgo('/Script/Engine.Default__KismetSystemLibrary')
+    staticAddresses["GameplayStatics"] = StaticFindObjectAlgo('/Script/Engine.Default__GameplayStatics')
 
     pipeThread = createThread(function(thread)
         connectPipe()
@@ -2708,15 +2811,19 @@ function starttransmitter()
         while not thread.Terminated do
             command = pipe.readString(1)
             if command == "R" then -- Read tables
-                local includeSplines = pipe.readDword()
-                transmitArray("Player", pipe)
-                transmitArray("FrameCar", pipe)
-                transmitArray("Turntable", pipe)
-                transmitArray("Switch", pipe)
-                transmitArray("WaterTower", pipe)
-                transmitArray("Industry", pipe)
-                if includeSplines == 1 then
-                    transmitArray("Spline", pipe)
+                local readMode = pipe.readDword()
+                if readMode == 2 then -- CLIENT read mode
+                    transmitChannels(pipe)
+                else -- HOST read mode
+                    transmitArray("Player", pipe)
+                    transmitArray("FrameCar", pipe)
+                    transmitArray("Turntable", pipe)
+                    transmitArray("Switch", pipe)
+                    transmitArray("WaterTower", pipe)
+                    transmitArray("Industry", pipe)
+                    if readMode == 0 then -- Host FULL read mode
+                        transmitArray("Spline", pipe)
+                    end
                 end
                 pipe.writeDword(0)
             elseif command == "P" then -- Ping

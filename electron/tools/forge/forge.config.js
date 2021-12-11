@@ -18,9 +18,7 @@ module.exports = {
             config: {
                 name: 'RailroadsOnlineExtended',
                 setupIcon: path.resolve( __dirname, '../../assets/images/appIcon.ico'),
-
-                // TO ADD:
-                // iconUrl: 'https://github.com/.../icon.ico?raw=true'
+                iconUrl: 'https://github.com/tom-90/RROx/blob/master/electron/assets/images/appIcon.ico?raw=true'
             },
         }
     ],

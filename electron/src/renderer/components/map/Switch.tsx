@@ -3,8 +3,8 @@ import { MapProperties } from './interfaces';
 import { Switch as SwitchData } from "../../../shared/data";
 import { Button, Spin, Tooltip } from 'antd';
 
-export const Switch = React.memo( function( { data, map, index }: { data: SwitchData, map: MapProperties, index: number } ) {
-    const { Type, Side, Location, Rotation } = data;
+export const Switch = React.memo( function( { data, map }: { data: SwitchData, map: MapProperties, index: number } ) {
+    const { Type, Side, Location, Rotation, ID } = data;
     const { scale, minX, minY, imx, imy } = map;
 
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
@@ -89,7 +89,7 @@ export const Switch = React.memo( function( { data, map, index }: { data: Switch
         <g
             className={`clickable highlight`}
             onClick={() => {
-                window.ipc.send( 'change-switch', index );
+                window.ipc.send( 'change-switch', ID );
                 setTooltipVisible( false );
             }}
         >

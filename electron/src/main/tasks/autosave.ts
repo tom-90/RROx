@@ -1,5 +1,5 @@
 import { TimerTask } from "./task";
-import { EnsureInGameAction, SaveAction } from "../actions";
+import { EnsureInGameAction, GameMode, SaveAction } from "../actions";
 import { RROx } from "../rrox";
 import Log from 'electron-log';
 
@@ -15,7 +15,7 @@ export class AutosaveTask extends TimerTask {
     }
 
     protected async execute(): Promise<void> {
-        if( !( await this.app.getAction( EnsureInGameAction ).run() ) )
+        if ( ( await this.app.getAction( EnsureInGameAction ).run() ) !== GameMode.HOST )
             return;
 
         let lastSlot = this.app.settings.get( 'autosave.lastSlot' );

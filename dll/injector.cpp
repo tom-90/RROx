@@ -19,23 +19,32 @@ void save(uint64_t addrGameMode, int slotIndex)
   mode->SaveGame(slot);
 }
 
-void changeSwitch(uint64_t addrSwitch)
+void changeSwitch(uint64_t addrSwitch, uint64_t addrCharacter)
 {
     ASwitch* sw = (ASwitch*)addrSwitch;
+    ASCharacter* ch = (ASCharacter*)addrCharacter;
 
     if (sw->switchstate == 0)
-        sw->SetSwitchState(1);
+        ch->ServerSwitchUp(sw);
     else if (sw->switchstate == 1)
-        sw->SetSwitchState(0);
+        ch->ServerSwitchDown(sw);
 }
 
-void setEngineControls(uint64_t addrFramecar, float regulator, float reverser, float brake)
+void setEngineControls(uint64_t addrCharacter, uint64_t addrBrake, uint64_t addrRegulator, uint64_t addrReverser, float regulator, float reverser, float brake)
 {
-    Aframecar* frame = (Aframecar*)addrFramecar;
+    ASCharacter* ch = (ASCharacter*)addrCharacter;
 
-    frame->SetBrakeValue(brake);
-    frame->SetRegulatorValue(regulator);
-    frame->SetReverserValue(reverser);
+    //frame->SetBrakeValue(brake);
+    //frame->SetRegulatorValue(regulator);
+    //frame->SetReverserValue(reverser);
+
+    //frame->ServerSetBrake(frame, brake);
+    //frame->ServerSetRegulator(frame, regulator);
+    //frame->ServerSetReverser(frame, reverser);
+
+    ch->ServerSetRaycastBake((Aairbrake*)addrBrake, brake);
+    ch->ServerSetRaycastReverser((Ajohnsonbar*)addrReverser, reverser);
+    ch->ServerSetRaycastRegulator((Aregulator*)addrRegulator, regulator);
 }
 
 bool isServerHost(uint64_t addrKismet, uint64_t addrWorld)

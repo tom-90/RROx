@@ -1,5 +1,5 @@
 import { Action } from "./action";
-import { ReadAddressAction } from '.';
+import { ReadAddressAction, ReadAddressMode } from '.';
 import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
 
@@ -10,20 +10,25 @@ export class ChangeSwitchAction extends Action<void, [ index: number ]> {
     public pipes      = [ PipeType.DLLInjectorData ];
 
     protected async execute( index: number ): Promise<void> {
-        if( !( await this.app.getAction( EnsureInGameAction ).run() ) )
+        let gameMode = await this.app.getAction( EnsureInGameAction ).run();
+        if( !gameMode )
             throw new Error( 'Not in game' );
     
-        let addr = await this.app.getAction( ReadAddressAction ).run( 'array', 'Switch', index );
+        let addrSwitch = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'Switch', index, gameMode );
+        let addrPlayer = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'LocalPlayerPawn' );
 
-        if( addr === false )
+        if( addrSwitch === false )
             throw new Error( 'Unable to retrieve the switch address.' );
+        if( addrPlayer === false )
+            throw new Error( 'Unable to retrieve the player address.' );
 
         await this.acquire();
 
         let pipe = this.app.getPipe( PipeType.DLLInjectorData );
 
         pipe.writeInt( this.actionID );
-        pipe.writeUInt64( addr );
+        pipe.writeUInt64( addrSwitch );
+        pipe.writeUInt64( addrPlayer );
     }
 
 }

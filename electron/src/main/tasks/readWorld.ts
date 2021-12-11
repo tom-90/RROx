@@ -1,6 +1,6 @@
 import { DataChange, World } from "../../shared/data";
 import { TimerTask } from "./task";
-import { EnsureInGameAction, ReadWorldAction } from "../actions";
+import { EnsureInGameAction, GameMode, ReadWorldAction, ReadWorldMode } from "../actions";
 import { isEqual } from "../utils";
 
 export class ReadWorldTask extends TimerTask {
@@ -21,7 +21,8 @@ export class ReadWorldTask extends TimerTask {
     private counter = 0;
 
     protected async execute(): Promise<void> {
-        if( !( await this.app.getAction( EnsureInGameAction ).run() ) ) {
+        const gameStatus = await this.app.getAction( EnsureInGameAction ).run();
+        if( !gameStatus ) {
             let changes = [
                 ...this.detectChanges( 'Frames'     , this.world.Frames     , [] ),
                 ...this.detectChanges( 'Industries' , this.world.Industries , [] ),
@@ -51,7 +52,13 @@ export class ReadWorldTask extends TimerTask {
         if( this.counter > 4 )
             this.counter = 0;
 
-        let result = await this.app.getAction( ReadWorldAction ).run( full );
+        let readMode: ReadWorldMode;
+        if( gameStatus === GameMode.HOST )
+            readMode = full ? ReadWorldMode.HOST_FULL : ReadWorldMode.HOST_PARTIAL;
+        else
+            readMode = ReadWorldMode.CLIENT;
+
+        let result = await this.app.getAction( ReadWorldAction ).run( readMode );
 
         if( result === false )
             throw new Error( 'Failed to read world.' );

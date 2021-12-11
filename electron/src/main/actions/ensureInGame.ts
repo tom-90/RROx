@@ -1,8 +1,13 @@
 import { Action } from "./action";
-import { ReadAddressAction, ReadAddressValueAction } from ".";
+import { ReadAddressAction, ReadAddressMode, ReadAddressValueAction } from ".";
 import { PipeType } from "../pipes";
 
-export class EnsureInGameAction extends Action<boolean> {
+export enum GameMode {
+    CLIENT = 'CLIENT',
+    HOST = 'HOST',
+}
+
+export class EnsureInGameAction extends Action<false | GameMode> {
 
     public actionID   = 4;
     public actionName = 'Ensure In Game';
@@ -10,14 +15,14 @@ export class EnsureInGameAction extends Action<boolean> {
 
     private inGameTime?: number;
 
-    protected async execute(): Promise<boolean> {
+    protected async execute(): Promise<false | GameMode> {
         if( !this.canRun() )
             return false;
 
         let frameArraySize = await this.app.getAction( ReadAddressValueAction ).run( 'FrameArraySize' );
 
         // We check if the frame array size has some (sensible) value
-        if( !frameArraySize || frameArraySize === '??' || Number( frameArraySize ) === 0 || Number( frameArraySize ) > 1000 ) {
+        if( !frameArraySize || frameArraySize === '??' || Number( frameArraySize ) > 1000 ) {
             this.inGameTime = null;
             return false;
         }
@@ -31,8 +36,8 @@ export class EnsureInGameAction extends Action<boolean> {
             return false;
         }
 
-        let world  = await this.app.getAction( ReadAddressAction ).run( 'global', 'World' );
-        let kismet = await this.app.getAction( ReadAddressAction ).run( 'global', 'KismetSystemLibrary' );
+        let world  = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'World' );
+        let kismet = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'KismetSystemLibrary' );;
 
         if( !world || !kismet )
             return false;
@@ -50,9 +55,9 @@ export class EnsureInGameAction extends Action<boolean> {
         let returnValue = await pipe.readInt();
         
         if( returnValue !== 1 )
-            return false;
+            return GameMode.CLIENT;
 
-        return true;
+        return GameMode.HOST;
     }
 
     public canRun() {

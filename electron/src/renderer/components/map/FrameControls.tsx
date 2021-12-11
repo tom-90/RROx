@@ -20,11 +20,11 @@ function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): 
     }
 }
 
-const sendControls = throttle( ( data, index ) => {
-    window.ipc.send( 'set-engine-controls', index, data.regulator, data.reverser, data.brake );
+const sendControls = throttle( ( data, id ) => {
+    window.ipc.send( 'set-engine-controls', id, data.regulator, data.reverser, data.brake );
 }, 500 );
 
-export function FrameControls( { title, regulator, reverser, brake, index, isVisible, onClose }: { title: string, regulator: number, reverser: number, brake: number, index: number, isVisible: boolean, onClose: () => void } ) {
+export function FrameControls( { title, regulator, reverser, brake, id, isVisible, onClose }: { title: string, regulator: number, reverser: number, brake: number, id: number, isVisible: boolean, onClose: () => void } ) {
     const [ controls, setControls ] = useState<{ regulator?: number, reverser?: number, brake?: number, pendingUpdate?: boolean }>( { regulator, reverser, brake } );
 
     useEffect( () => {
@@ -37,19 +37,19 @@ export function FrameControls( { title, regulator, reverser, brake, index, isVis
     const onThrottle = ( value: number ) => {
         let data = { regulator: value / 100, reverser: controls.reverser, brake: controls.brake, pendingUpdate: true };
         setControls( data );
-        sendControls( data, index );
+        sendControls( data, id );
     };
 
     const onRegulator = ( value: number ) => {
         let data = { regulator: controls.regulator, reverser: value / 100, brake: controls.brake, pendingUpdate: true };
         setControls( data );
-        sendControls( data, index );
+        sendControls( data, id );
     }
 
     const onBrake = ( value: number ) => {
         let data = { regulator: controls.regulator, reverser: controls.reverser, brake: value / 100, pendingUpdate: true };
         setControls( data );
-        sendControls( data, index );
+        sendControls( data, id );
     };
 
     return <Modal

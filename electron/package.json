@@ -6,6 +6,10 @@
   "description": "RailroadsOnline Extended tool for RailroadsOnlineGame",
   "author": "_tom()",
   "main": ".webpack/main",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tom-90/RROx.git"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
@@ -75,6 +79,7 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.0.2",
     "ref-struct-di": "^1.1.1",
-    "svg-pan-zoom": "^3.6.1"
+    "svg-pan-zoom": "^3.6.1",
+    "update-electron-app": "^2.0.1"
   }
 }

@@ -1,4 +1,5 @@
 export interface Frame {
+    ID: number;
     Type: string;
     Name: string;
     Number: string;
@@ -10,12 +11,14 @@ export interface Frame {
 }
 
 export interface Player {
+    ID: number;
     Name: string;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
 }
 
 export interface Switch {
+    ID: number;
     Type: number;
     Side: number;
     Location: [ X: number, Y: number, Z: number ];
@@ -23,12 +26,14 @@ export interface Switch {
 }
 
 export interface Turntable {
+    ID: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
     Deck    : [ Pitch: number, Yaw: number, Roll: number ];
 }
 
 export interface Spline {
+    ID: number;
     Type: number;
     Location: [ X: number, Y: number, Z: number ];
     Segments: SplineSegment[];
@@ -41,11 +46,13 @@ export interface SplineSegment {
 }
 
 export interface WaterTower {
+    ID: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
 }
 
 export interface Industry {
+    ID: number;
     Type: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];

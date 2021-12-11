@@ -20,16 +20,20 @@ void run(std::stop_token stoken, HMODULE dll) {
       save(addr, slotIndex);
       logger->WriteString("Saved.");
     } else if (command == 2) { //Change Switch
-        uint64_t addr = communicator->ReadUInt64(stoken);
+        uint64_t addrSwitch = communicator->ReadUInt64(stoken);
+        uint64_t addrPlayer = communicator->ReadUInt64(stoken);
 
         if (stoken.stop_requested())
             return;
 
         logger->WriteString("Changing Switch...");
-        changeSwitch(addr);
+        changeSwitch(addrSwitch, addrPlayer);
         logger->WriteString("Switch Changed.");
     } else if (command == 3) { //Set Engine Controlers
-        uint64_t addr = communicator->ReadUInt64(stoken);
+        uint64_t addrPlayer = communicator->ReadUInt64(stoken);
+        uint64_t addrBrake = communicator->ReadUInt64(stoken);
+        uint64_t addrRegulator = communicator->ReadUInt64(stoken);
+        uint64_t addrReverser = communicator->ReadUInt64(stoken);
         float regulator = communicator->ReadFloat(stoken);
         float reverser = communicator->ReadFloat(stoken);
         float brake = communicator->ReadFloat(stoken);
@@ -38,7 +42,7 @@ void run(std::stop_token stoken, HMODULE dll) {
             return;
 
         logger->WriteString("Setting Engine Controls...");
-        setEngineControls(addr, regulator, reverser, brake);
+        setEngineControls(addrPlayer, addrBrake, addrRegulator, addrReverser, regulator, reverser, brake);
         logger->WriteString("Engine Controls Set.");
     }
     else if (command == 4) { //Check if Is Server

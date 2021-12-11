@@ -1,5 +1,5 @@
 import { Action } from "./action";
-import { ReadAddressAction } from ".";
+import { ReadAddressAction, ReadAddressMode } from ".";
 import { PipeType } from "../pipes";
 
 export class SaveAction extends Action<void, [ slot: number ]> {
@@ -9,7 +9,7 @@ export class SaveAction extends Action<void, [ slot: number ]> {
     public pipes      = [ PipeType.DLLInjectorData ];
 
     protected async execute( slot: number ): Promise<void> {
-        let addr = await this.app.getAction( ReadAddressAction ).run( 'global', 'GameModeBase' );
+        let addr = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'GameModeBase' );
 
         if( addr === false )
             throw new Error( 'Failed to retrieve address for GameModeBase.' );

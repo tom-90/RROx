@@ -1,7 +1,7 @@
 import { TimerTask } from "./task";
 import { RROx } from "../rrox";
 import { WindowType } from "../windows";
-import { globalShortcut } from "electron";
+import { globalShortcut, screen } from "electron";
 import { focusGame, getActiveWindow, getGameWindow } from "../utils";
 import { AutosaveTask } from ".";
 
@@ -145,7 +145,14 @@ export class OverlayTask extends TimerTask {
             overlay.restore();
 
         overlay.setIgnoreMouseEvents( true );
-        overlay.setBounds( { x, y, width, height }, false );
+
+        overlay.setBounds( screen.screenToDipRect( overlay, {
+            // All numbers need to be convertible to int
+            x: Math.floor( x ),
+            y: Math.floor( y ),
+            width: Math.floor( width ),
+            height:Math.floor( height )
+        } ), false );
 
         this.transparent = this.app.settings.get( 'minimap.transparent' );
 
@@ -172,9 +179,15 @@ export class OverlayTask extends TimerTask {
 
         if ( overlay.isMinimized() )
             overlay.restore();
-
+        
         overlay.setIgnoreMouseEvents( false );
-        overlay.setBounds( { x, y, width, height }, false );
+        overlay.setBounds( screen.screenToDipRect( overlay, {
+            // All numbers need to be convertible to int
+            x: Math.floor( x ),
+            y: Math.floor( y ),
+            width: Math.floor( width ),
+            height:Math.floor( height )
+        } ), false );
         overlay.focus();
         overlay.webContents.send( 'set-mode', 'map', false );
 
