@@ -23,6 +23,10 @@ For any other questions or issues, you can contact me on Discord:
 
 ### Changelog
 
+v1.1.1
+------
+- ``Fixed`` Auto-updater triggering error popups.
+
 v1.1.0
 ------
 - ``Fixed`` Controlling swithes and locomotives while driving in third-person mode (F-key)
