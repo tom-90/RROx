@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Divider, Form, Switch, Select, Slider, Button } from 'antd';
+import { Divider, Form, Switch, Select, Slider, Button, Radio, Avatar } from 'antd';
 import { PageLayout } from "../components/PageLayout";
 import Store from 'electron-store';
+import Background1 from "../../../assets/images/bg1.jpg";
+import Background2 from "../../../assets/images/bg2.jpg";
+import Background3 from "../../../assets/images/bg3.jpg";
+import Background4 from "../../../assets/images/bg4.jpg";
 
 declare global {
     interface Window {
@@ -12,6 +16,7 @@ declare global {
 export function Settings() {
 
     const [ settings, setSettings ] = useState( {
+        mapBackground     : window.settingsStore.get( 'map.background'      ),
         showMinimap       : window.settingsStore.get( 'minimap.enabled'     ),
         transparentMinimap: window.settingsStore.get( 'minimap.transparent' ),
         minimapCorner     : window.settingsStore.get( 'minimap.corner'      ),
@@ -33,6 +38,8 @@ export function Settings() {
                     wrapperCol={{ span: 16, offset: 3 }}
                     initialValues={settings}
                     onValuesChange={( changedValues ) => {
+                        if (changedValues.mapBackground !== undefined )
+                            window.settingsStore.set( 'map.background', changedValues.mapBackground );
                         if( changedValues.showMinimap !== undefined )
                             window.settingsStore.set( 'minimap.enabled', changedValues.showMinimap );
                         if( changedValues.transparentMinimap !== undefined )
@@ -55,6 +62,18 @@ export function Settings() {
                     }}
                     autoComplete="off"
                 >
+                    <Divider orientation="left">Map</Divider>
+                     <Form.Item
+                        label="Map Background"
+                        name="mapBackground"
+                    >
+                        <Radio.Group>
+                            <Radio.Button value={1} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background1}/></Radio.Button>
+                            <Radio.Button value={2} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background2}/></Radio.Button>
+                            <Radio.Button value={3} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background3}/></Radio.Button>
+                            <Radio.Button value={4} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background4}/></Radio.Button>
+                        </Radio.Group> 
+                    </Form.Item>
                     <Divider orientation="left">Minimap</Divider>
                     <Form.Item
                         label="Show Minimap"

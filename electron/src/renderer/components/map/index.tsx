@@ -1,5 +1,8 @@
 import React, { createRef, useMemo, useEffect, useState } from 'react';
-import Background from "../../../../assets/images/bg.jpg";
+import Background1 from "../../../../assets/images/bg1.jpg";
+import Background2 from "../../../../assets/images/bg2.jpg";
+import Background3 from "../../../../assets/images/bg3.jpg";
+import Background4 from "../../../../assets/images/bg4.jpg";
 import TransparentBackground from "../../../../assets/images/transparentBg.png";
 import { Button, Tooltip } from 'antd';
 import { ZoomInOutlined, ZoomOutOutlined, AimOutlined, StopOutlined } from '@ant-design/icons';
@@ -25,7 +28,7 @@ export function Map( { data }: { data: MapData } ) {
 
     const [ mode, setMode ] = useState<'normal' | 'map' | 'minimap'>( window.mode === 'overlay' ? 'minimap' : 'normal' );
     const [ transparent, setTransparent ] = useState( window.mode === 'overlay' ? window.settingsStore.get( 'minimap.transparent' ) as boolean : false );
-
+    const [ background, setBackground ] = useState( window.settingsStore.get('map.background') ?? 1);
 
     useEffect(() => {
         let onMouseWheel: ( event: WheelEvent ) => void;
@@ -94,9 +97,10 @@ export function Map( { data }: { data: MapData } ) {
     }, [ svgRef.current ] );
 
     useEffect( () => {
-        const cleanup = window.ipc.on( 'set-mode', ( event, mode, transparent ) => {
+        const cleanup = window.ipc.on( 'set-mode', ( event, mode, transparent, background ) => {
             setMode( mode );
             setTransparent( transparent );
+            setBackground( background );
         } );
 
         return () => {
@@ -171,15 +175,24 @@ export function Map( { data }: { data: MapData } ) {
         <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: window.mode === 'overlay' ? undefined : '#fefef2' }}>
             <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8000 8000" style={{ width: '100%', height: '100%' }}>
                 <defs>
-                    <pattern id="bg" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
-                        <image x="0" y="0" width="8000" height="8000" href={Background} />
+                    <pattern id="bg1" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
+                        <image x="0" y="0" width="8000" height="8000" href={Background1} />
+                    </pattern>
+                    <pattern id="bg2" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
+                        <image x="0" y="0" width="8000" height="8000" href={Background2} />
+                    </pattern>
+                    <pattern id="bg3" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
+                        <image x="0" y="0" width="8000" height="8000" href={Background3} />
+                    </pattern>
+                    <pattern id="bg4" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
+                        <image x="0" y="0" width="8000" height="8000" href={Background4} />
                     </pattern>
                     <pattern id="transparentBg" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
                         <image x="0" y="0" width="8000" height="8000" href={TransparentBackground} />
                     </pattern>
                 </defs>
                 <g className={'map_viewport'}>
-                    <rect x="0" y="0" width="8000" height="8000" fill={ transparent ? 'url(#transparentBg)' : 'url(#bg)'} stroke="black" className={'map_image'} />
+                    <rect x="0" y="0" width="8000" height="8000" fill={ transparent ? 'url(#transparentBg)' : 'url(#bg' + background + ')'} stroke="black" className={'map_image'} />
                     {data.Splines.filter( ( { Type } ) => !IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Splines.filter( ( { Type } ) =>  IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Turntables.map( ( d, i ) => <Turntable key={i} data={d} map={map} index={i}/> )}

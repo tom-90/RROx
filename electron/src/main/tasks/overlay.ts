@@ -4,6 +4,10 @@ import { WindowType } from "../windows";
 import { globalShortcut, screen } from "electron";
 import { focusGame, getActiveWindow, getGameWindow } from "../utils";
 import { AutosaveTask } from ".";
+import Background1 from "../../../assets/images/bg1.jpg";
+import Background2 from "../../../assets/images/bg2.jpg";
+import Background3 from "../../../assets/images/bg3.jpg";
+import Background4 from "../../../assets/images/bg4.jpg";
 
 export enum OverlayStates {
     HIDDEN = 0,
@@ -20,6 +24,7 @@ export class OverlayTask extends TimerTask {
     private minimapCorner: number;
     private shortcutsRegistered = false;
     private transparent = false;
+    private background = Background1;
 
     constructor( app: RROx ) {
         super( app );
@@ -155,8 +160,9 @@ export class OverlayTask extends TimerTask {
         } ), false );
 
         this.transparent = this.app.settings.get( 'minimap.transparent' );
+        this.background = this.app.settings.get( 'map.background' );
 
-        overlay.webContents.send( 'set-mode', 'minimap', this.transparent );
+        overlay.webContents.send( 'set-mode', 'minimap', this.transparent, this.background );
 
         this.state = OverlayStates.MINIMAP;
 
@@ -189,7 +195,10 @@ export class OverlayTask extends TimerTask {
             height:Math.floor( height )
         } ), false );
         overlay.focus();
-        overlay.webContents.send( 'set-mode', 'map', false );
+
+        this.background = this.app.settings.get( 'map.background' );
+
+        overlay.webContents.send( 'set-mode', 'map', false, this.background );
 
         this.state = OverlayStates.MAP;
 
