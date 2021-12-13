@@ -15,7 +15,8 @@ const validChannels = [
     'set-attached-state',
     'set-mode',
     'dangling-injector',
-    'kill-dangling-injector'
+    'kill-dangling-injector',
+    'get-version'
 ];
 
 contextBridge.exposeInMainWorld( 'ipc', {

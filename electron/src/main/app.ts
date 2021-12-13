@@ -5,7 +5,7 @@ import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, ReadAddressAction, ReadAddressValueAction, ReadWorldAction, SaveAction, SetEngineControlsAction, StopAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, KillDanglingInjector, MapDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 
@@ -75,6 +75,7 @@ if (!singleInstanceLock) {
             AutosaveIPCListener,
             ChangeSwitchIPCListener,
             GetAttachedStateIPCHandler,
+            GetVersionIPCHandler,
             KillDanglingInjector,
             MapDataIPCHandler,
             SetAttachedStateIPCListener,

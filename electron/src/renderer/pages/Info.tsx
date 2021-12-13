@@ -1,8 +1,16 @@
 import { Divider, Layout } from "antd";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PageLayout } from "../components/PageLayout";
 
 export function Info() {
+
+    let [ version, setVersion ] = useState( 'Unknown' );
+    useEffect( () => {
+        window.ipc.invoke( 'get-version' )
+            .then( ( version ) => setVersion( version ) )
+            .catch( ( err ) => console.log( 'Unable to retrieve app version', err ) );
+    }, [] );
+
     return (
         <PageLayout>
             <Layout.Content style={{ padding: '0 50px', overflowY: 'auto' }}>
@@ -39,6 +47,10 @@ export function Info() {
                         <li>Unreal Engine Dumper (guttir14)</li>
                         <li>UE4 CheatEngine Table (Cake-san)</li>
                     </ul>
+                </p>
+                <Divider style={{ margin: '20px -25px' }}/>
+                <p>
+                    <i>RROx - Version {version}</i>
                 </p>
             </Layout.Content>
         </PageLayout>
