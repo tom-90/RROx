@@ -16,12 +16,27 @@ Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows t
 
 - **Attaching fails**: When attaching fails, make sure that the game is running and that you have added an exception to your antivirus as indicated in the antivirus warning. If attaching still fails after adding the exception, you could try to reinstall RROx by running the downloaded setup file again. Your antivirus might have removed necessary files before you added the exception, and reinstalling will make sure these files are recreated.
 
-### Known Issues
-
-- When driving a locomotive in third-person mode (by pressing the F-key), you cannot change switches.
-- When driving a locomotive in third-person mode (by pressing the F-key), the game crashes when you try to control a locomotive remotely.
-
 ### Support
 
 For any other questions or issues, you can contact me on Discord:
 [_tom()#0056](https://discordapp.com/users/178197960457322497)
+
+### Changelog
+
+v1.1.0
+------
+- ``Fixed`` Controlling swithes and locomotives while driving in third-person mode (F-key)
+- ``Added`` Customizable map background (Thanks to [Nimrey](https://github.com/nimreydx))
+- ``Added`` RROx checks that it is not running twice (Thanks to [Nimrey](https://github.com/nimreydx))
+
+v1.0.1
+------
+- ``Fixed`` RROx was not always correctly attaching
+- ``Fixed`` RROx did not start with a special character in the path
+
+v1.0.0
+------
+- ``Added`` Configurable autosave
+- ``Added`` Remotely controlling switches (with multiplayer support)
+- ``Added`` Remotely controlling locomotives (with multiplayer support)
+- ``Added`` In-game map and minimap
