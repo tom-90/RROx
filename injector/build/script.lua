@@ -1,3 +1,5 @@
+-- Initialize Cheat Engine correctly and call the transmitter and ue4 init
+
 getAutoAttachList().add("arr-Win64-Shipping.exe")
 
 GetLuaEngine().cbShowOnPrint.checked = false
@@ -54,8 +56,8 @@ local bootstrapThread = createThread(function()
 end)
 
 bootstrapThread.Name = "Boostrap Thread"
+-- UE4 Library functions (from UE4 CheatEngine Table by Cake-san)
 
--- UE4 Functions
 function ue4config()
     local sub = targetIs64Bit() and 0 or 4
     UObject = {}
@@ -2284,6 +2286,8 @@ function enablescript(name, registername, addressname, script, disable)
     end
 end
 
+-- Initialization of UE4 Lib functions and discovery of memory structures
+
 function initue4()
     print("(PROGRESS 20%)")
     local starttime = os.time()
@@ -2430,8 +2434,7 @@ function initue4()
         ue_SymbolLookupCallbackID = registerSymbolLookupCallback(ue_SymbolLookupCallback, slNotSymbol)
     end
 end
-
--- Transmitter code
+-- Definitions of memory structures that will be transmitted to the electron process
 
 definitions = {
     Player = {{{"+PlayerState.PlayerNamePrivate", "+0"}, "s", 64},
@@ -2513,6 +2516,110 @@ channelNames = {
     heisler = "FrameCar",
     porter = "FrameCar" --porter040, porter042
 }
+-- Function for reading addresses
+-- Reading addresses can be done in 3 ways: read array index, read static address (in global staticAddresses table) or read from cheat engine address list
+staticAddresses = {}
+
+function retrieveAddress(pipe)
+    local nameLength = pipe.readDword()
+    local name = pipe.readString(nameLength)
+
+    if name == "ARRAY" then
+        local arrayNameLength = pipe.readDword()
+        local arrayName = pipe.readString(arrayNameLength)
+        local index = pipe.readDword()
+        local offsetLength = pipe.readDword()
+        local offset = pipe.readString(offsetLength)
+        local clientMode = pipe.readDword()
+
+
+        if clientMode == 1 then
+            local addrArray = readPointer(getAddressSafe(
+                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels"))
+            local arraySize = readInteger(getAddressSafe(
+                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels_size"))
+            local actorOffset = getAddressSafe( "+ActorChannel.Actor" )
+
+            if index >= arraySize or index < 0 then
+                pipe.writeQword(0)
+                return
+            end
+            
+            local channelAddr = readPointer(addrArray + index * 8)
+            local channelName = FNameStringAlgo(ChannelBase + UObject.FNameIndex)
+    
+            if string.sub(channelName, 1, 5) ~= "Actor" then -- Check that the channel is a valid Actor channel
+                pipe.writeQword(0)
+                return
+            end
+
+            BASE = readPointer(channelAddr + actorOffset)
+            pipe.writeQword(getAddressSafe(offset))
+        else
+            local addrArray = readPointer(getAddressSafe(
+            "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
+                arrayName .. "Array"))
+            local arraySize = readInteger(getAddressSafe(
+                "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
+                    arrayName .. "Array_size"))
+            if index >= arraySize or index < 0 then
+                pipe.writeQword(0)
+                return
+            end
+
+            BASE = readPointer(addrArray + index * 8)
+            pipe.writeQword(getAddressSafe(offset))
+        end
+
+        return
+    end
+
+    if staticAddresses[name] ~= nil then
+        pipe.writeQword(staticAddresses[name])
+        return
+    end
+
+    local record = getAddressList().getMemoryRecordByDescription(name)
+
+    if record == nil then
+        pipe.writeQword(0)
+        return
+    end
+
+    pipe.writeQword(record.CurrentAddress)
+end
+
+-- Function for reading address value from cheat engine address list
+
+function retrieveAddressValue(pipe)
+    local nameLength = pipe.readDword()
+    local name = pipe.readString(nameLength)
+
+    local record = getAddressList().getMemoryRecordByDescription(name)
+
+    if record == nil then
+        pipe.writeDword(2)
+        pipe.writeString("??")
+    end
+
+    local val = record.Value
+    pipe.writeDword(#val)
+    pipe.writeString(val)
+end
+
+-- Function for injecting DLL
+
+function injectDLLFile(pipe)
+    local pathLength = pipe.readDword()
+    local path = pipe.readString(pathLength)
+    print("(PROGRESS 95%)")
+    print("Injecting DLL...")
+    injectDLL(path)
+    print("Injected DLL.")
+    print("(PROGRESS 100%)")
+    pipe.writeDword(1)
+end
+-- Functions for transmitting the world data
 
 function prepareArrayProperties(id)
     local properties = definitions[id]
@@ -2685,103 +2792,7 @@ function transmitChannels(pipe)
 
 end
 
-staticAddresses = {}
-
-function retrieveAddress(pipe)
-    local nameLength = pipe.readDword()
-    local name = pipe.readString(nameLength)
-
-    if name == "ARRAY" then
-        local arrayNameLength = pipe.readDword()
-        local arrayName = pipe.readString(arrayNameLength)
-        local index = pipe.readDword()
-        local offsetLength = pipe.readDword()
-        local offset = pipe.readString(offsetLength)
-        local clientMode = pipe.readDword()
-
-
-        if clientMode == 1 then
-            local addrArray = readPointer(getAddressSafe(
-                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels"))
-            local arraySize = readInteger(getAddressSafe(
-                "[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.NetDriver]+NetDriver.ServerConnection]+NetConnection.OpenChannels_size"))
-            local actorOffset = getAddressSafe( "+ActorChannel.Actor" )
-
-            if index >= arraySize or index < 0 then
-                pipe.writeQword(0)
-                return
-            end
-            
-            local channelAddr = readPointer(addrArray + index * 8)
-            local channelName = FNameStringAlgo(ChannelBase + UObject.FNameIndex)
-    
-            if string.sub(channelName, 1, 5) ~= "Actor" then -- Check that the channel is a valid Actor channel
-                pipe.writeQword(0)
-                return
-            end
-
-            BASE = readPointer(channelAddr + actorOffset)
-            pipe.writeQword(getAddressSafe(offset))
-        else
-            local addrArray = readPointer(getAddressSafe(
-            "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
-                arrayName .. "Array"))
-            local arraySize = readInteger(getAddressSafe(
-                "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." ..
-                    arrayName .. "Array_size"))
-            if index >= arraySize or index < 0 then
-                pipe.writeQword(0)
-                return
-            end
-
-            BASE = readPointer(addrArray + index * 8)
-            pipe.writeQword(getAddressSafe(offset))
-        end
-
-        return
-    end
-
-    if staticAddresses[name] ~= nil then
-        pipe.writeQword(staticAddresses[name])
-        return
-    end
-
-    local record = getAddressList().getMemoryRecordByDescription(name)
-
-    if record == nil then
-        pipe.writeQword(0)
-        return
-    end
-
-    pipe.writeQword(record.CurrentAddress)
-end
-
-function retrieveAddressValue(pipe)
-    local nameLength = pipe.readDword()
-    local name = pipe.readString(nameLength)
-
-    local record = getAddressList().getMemoryRecordByDescription(name)
-
-    if record == nil then
-        pipe.writeDword(2)
-        pipe.writeString("??")
-    end
-
-    local val = record.Value
-    pipe.writeDword(#val)
-    pipe.writeString(val)
-end
-
-function injectDLLFile(pipe)
-    local pathLength = pipe.readDword()
-    local path = pipe.readString(pathLength)
-    print("(PROGRESS 95%)")
-    print("Injecting DLL...")
-    injectDLL(path)
-    print("Injected DLL.")
-    print("(PROGRESS 100%)")
-    pipe.writeDword(1)
-end
+-- Transmitter functions for communication with the electron process
 
 function fetchPlayerAddress()
     local addr = getAddressSafe("[[[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.GameInstance]+GameInstance.LocalPlayers]+0]+LocalPlayer.PlayerController]+PlayerController.Pawn]")
