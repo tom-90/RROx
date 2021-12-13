@@ -9,14 +9,10 @@ import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandle
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 
-if (!singleInstanceLock) {
+/** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
+if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
     app.quit();
 } else {
-    /** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
-    if ( require( 'electron-squirrel-startup' ) ) {
-        app.quit();
-    }
-
     Updater( {
         logger    : Logger,
         notifyUser: false, // We manually notify the user with a custom message
