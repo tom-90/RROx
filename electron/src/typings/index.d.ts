@@ -13,4 +13,5 @@ declare interface Window {
         once ( channel: string, listener: ( event: Electron.IpcRendererEvent, ...args: any[] ) => void ): () => void,
     }
     mode: 'normal' | 'overlay';
+    openBrowser: ( url: string ) => void;
 }

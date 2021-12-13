@@ -1,4 +1,10 @@
 export const schema = {
+    'map.background': {
+        type: "number" as const,
+        default: 1,
+        maximum: 4,
+        minimum: 1,
+    },
     'minimap.enabled': {
         type: "boolean" as const,
         default: true
@@ -38,15 +44,23 @@ export const schema = {
         minimum: 1,
         maximum: 3600
     },
-    'keepOnTop': {
-        type   : "boolean" as const,
-        default: false,
-    }
+    'minizwerg.enabled': {
+        type: "boolean" as const,
+        default: false
+    },
+    'minizwerg.public': {
+        type: "boolean" as const,
+        default: false
+    },
+    'minizwerg.url': {
+        type: "string" as const
+    },
 };
 
 export const accessPropertiesByDotNotation = false;
 
 export interface Schema {
+    'map.background': boolean;
     'minimap.enabled': boolean;
     'minimap.transparent': boolean;
     'minimap.corner': number;
@@ -54,5 +68,7 @@ export interface Schema {
     'autosave.slots': number[];
     'autosave.lastSlot': number;
     'autosave.interval': number;
-    'keepOnTop': boolean;
+    'minizwerg.enabled': boolean;
+    'minizwerg.public': boolean;
+    'minizwerg.url'?: string;
 }

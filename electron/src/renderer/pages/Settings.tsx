@@ -16,21 +16,22 @@ declare global {
 export function Settings() {
 
     const [ settings, setSettings ] = useState( {
-        mapBackground     : window.settingsStore.get( 'map.background'      ),
-        showMinimap       : window.settingsStore.get( 'minimap.enabled'     ),
-        transparentMinimap: window.settingsStore.get( 'minimap.transparent' ),
-        minimapCorner     : window.settingsStore.get( 'minimap.corner'      ),
-        autosaveEnabled   : window.settingsStore.get( 'autosave.enabled'    ),
-        autosaveSlots     : window.settingsStore.get( 'autosave.slots'      ),
-        autosaveInterval  : window.settingsStore.get( 'autosave.interval'   ),
-        keepOnTop         : window.settingsStore.get( 'keepOnTop'           ),
+        mapBackground     : window.settingsStore.get( 'map.background'           ),
+        showMinimap       : window.settingsStore.get( 'minimap.enabled'          ),
+        transparentMinimap: window.settingsStore.get( 'minimap.transparent'      ),
+        minimapCorner     : window.settingsStore.get( 'minimap.corner'           ),
+        autosaveEnabled   : window.settingsStore.get( 'autosave.enabled'         ),
+        autosaveSlots     : window.settingsStore.get( 'autosave.slots'           ),
+        autosaveInterval  : window.settingsStore.get( 'autosave.interval'        ),
+        minizwergUpload   : window.settingsStore.get( 'minizwerg.enabled'        ),
+        minizwergPublic   : window.settingsStore.get( 'minizwerg.public'         ),
     } );
 
     const SliderSeconds = { 0: 10, 7: 30, 15: 60, 23: 120, 35: 300, 50: 600, 65: 900, 80: 1200, 100: 1800 };
 
     return (
         <PageLayout>
-            <div style={{ maxWidth: 1000, width: '100%', overflowY: 'auto' }}>
+            <div style={{ maxWidth: 1000, width: '100%', overflowY: 'auto', marginBottom: 20 }}>
                 <Form
                     name="settings"
                     layout="vertical"
@@ -52,8 +53,10 @@ export function Settings() {
                             window.settingsStore.set( 'autosave.slots', changedValues.autosaveSlots );
                         if( changedValues.autosaveInterval !== undefined )
                             window.settingsStore.set( 'autosave.interval', changedValues.autosaveInterval );
-                        if( changedValues.keepOnTop !== undefined )
-                            window.settingsStore.set( 'keepOnTop', changedValues.keepOnTop );
+                        if( changedValues.minizwergUpload !== undefined )
+                            window.settingsStore.set( 'minizwerg.enabled', changedValues.minizwergUpload );
+                        if( changedValues.minizwergPublic !== undefined )
+                            window.settingsStore.set( 'minizwerg.public', changedValues.minizwergPublic );
                         setSettings( {
                             ...settings,
                             ...changedValues,
@@ -154,14 +157,39 @@ export function Settings() {
                         }} step={null} tooltipVisible={false} included={false}/>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="default" disabled={!settings.autosaveEnabled} onClick={() => {
-                            window.ipc.send( 'autosave' );
-                        }}>
+                        <Button
+                            type="default"
+                            disabled={!settings.autosaveEnabled}
+                            onClick={() => {
+                                window.ipc.send( 'autosave' );
+                            }}
+                        >
                             Autosave now
                         </Button>
                     </Form.Item>
+                    <Divider orientation="left">Minizwerg</Divider>
+                    <Form.Item
+                        label="Upload autosaves to Minizwerg"
+                        name="minizwergUpload"
+                        valuePropName="checked"
+                        help={<p style={{ padding: '10px 0' }}>Uploading to Minizwerg happens at most every 15 minutes</p>}
+                    >
+                        <Switch />
+                    </Form.Item>
+                    <Form.Item
+                        label="Make Minizwerg saves public"
+                        name="minizwergPublic"
+                        valuePropName="checked"
+                        help={window.settingsStore.get( 'minizwerg.url' ) ? <Button
+                            style={{ margin: '10px 0' }}
+                            onClick={() => window.openBrowser( window.settingsStore.get( 'minizwerg.url' ) as string )}
+                        >
+                            Open your Minizwerg map
+                        </Button> : null}
+                    >
+                        <Switch />
+                    </Form.Item>
                 </Form>
-
             </div>
         </PageLayout>
     );

@@ -1,6 +1,7 @@
 export * from './changeSwitch';
 export * from './ensureInGame';
 export * from './injectDLL';
+export * from './minizwergUpload';
 export * from './readAddress';
 export * from './readAddressValue';
 export * from './readWorld';

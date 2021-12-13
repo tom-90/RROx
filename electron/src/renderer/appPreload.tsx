@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, shell } from 'electron';
 import Store from 'electron-store';
 import * as config from '../shared/config';
 
@@ -47,4 +47,8 @@ contextBridge.exposeInMainWorld( 'settingsStore', {
     set( key: string, val: any ) {
         return store.set( key, val );
     }
+} );
+
+contextBridge.exposeInMainWorld( 'openBrowser', ( url: string ) => {
+    shell.openExternal( url );
 } );

@@ -1,5 +1,5 @@
 import { TimerTask } from "./task";
-import { EnsureInGameAction, GameMode, SaveAction } from "../actions";
+import { EnsureInGameAction, GameMode, MinizwergUploadAction, SaveAction } from "../actions";
 import { RROx } from "../rrox";
 import Log from 'electron-log';
 
@@ -13,6 +13,8 @@ export class AutosaveTask extends TimerTask {
 
         app.on( 'settingsUpdate', () => this.update() );
     }
+
+    private lastUpload?: Date;
 
     protected async execute(): Promise<void> {
         if ( ( await this.app.getAction( EnsureInGameAction ).run() ) !== GameMode.HOST )
@@ -44,6 +46,17 @@ export class AutosaveTask extends TimerTask {
         if( result === false )
             throw new Error( 'Failed to autosave.' );
 
+        if( this.app.settings.get( 'minizwerg.enabled' ) &&
+            ( !this.lastUpload || ( new Date().getTime() - this.lastUpload.getTime() ) > 15 * 60 * 1000 ) ) {
+            this.lastUpload = new Date();
+
+            Log.info( 'Uploading to minizwerg.' );
+
+            let result = await this.app.getAction( MinizwergUploadAction ).run( slot );
+
+            if( result === false )
+                throw new Error( 'Failed to upload to minizwerg.' );
+        }
     }
 
     private update() {
