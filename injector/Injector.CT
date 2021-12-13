@@ -7,7 +7,7 @@
     <CheatEntry>
       <ID>26253</ID>
       <Description>"PlayerArraySize"</Description>
-      <LastState Value="1" RealAddress="22B43734840"/>
+      <LastState Value="1" RealAddress="21909B76940"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -21,7 +21,7 @@
     <CheatEntry>
       <ID>29757</ID>
       <Description>"FrameArraySize"</Description>
-      <LastState Value="26" RealAddress="22B437348F8"/>
+      <LastState Value="26" RealAddress="21909B769F8"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -35,7 +35,7 @@
     <CheatEntry>
       <ID>30970</ID>
       <Description>"GameModeBase"</Description>
-      <LastState Value="4033292408" RealAddress="22B1CEB0760"/>
+      <LastState Value="390473848" RealAddress="21917898080"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -47,26 +47,9 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>38130</ID>
-      <Description>"LocalPlayerPawn"</Description>
-      <LastState Value="4033297744" RealAddress="22B412DC040"/>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>GEngine</Address>
-      <Offsets>
-        <Offset>0</Offset>
-        <Offset>PlayerController.Pawn</Offset>
-        <Offset>LocalPlayer.PlayerController</Offset>
-        <Offset>0</Offset>
-        <Offset>GameInstance.LocalPlayers</Offset>
-        <Offset>GameViewportClient.GameInstance</Offset>
-        <Offset>GameEngine.GameViewport</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
       <ID>30971</ID>
       <Description>"World"</Description>
-      <LastState Value="4038687592" RealAddress="22B39606140"/>
+      <LastState Value="395869032" RealAddress="21907FB29B0"/>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>GEngine</Address>
@@ -15474,6 +15457,21 @@ function injectDLLFile(pipe)
     pipe.writeDword(1)
 end
 
+function fetchPlayerAddress()
+    local addr = getAddressSafe("[[[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.GameInstance]+GameInstance.LocalPlayers]+0]+LocalPlayer.PlayerController]+PlayerController.Pawn]")
+    if addr == nil then
+        return
+    end
+    local objName = FNameStringAlgo(addr + UObject.FNameIndex)
+
+    -- Check that the object name starts with BP_Player_Conductor.
+    -- When inside the engine (after pressing F key), this pointer gets replaced with a pointer to the engine.
+    -- We need a pointer to the player object for things like changing switches
+    if string.sub(objName, 1, 19) == "BP_Player_Conductor" then
+        staticAddresses["LocalPlayerPawn"] = addr
+    end
+end
+
 pipe = nil
 
 function connectPipe()
@@ -15490,6 +15488,7 @@ end
 function starttransmitter()
     staticAddresses["KismetSystemLibrary"] = StaticFindObjectAlgo('/Script/Engine.Default__KismetSystemLibrary')
     staticAddresses["GameplayStatics"] = StaticFindObjectAlgo('/Script/Engine.Default__GameplayStatics')
+    staticAddresses["LocalPlayerPawn"] = 0
 
     pipeThread = createThread(function(thread)
         connectPipe()
@@ -15535,6 +15534,7 @@ function starttransmitter()
                     connectPipe()
                 end
             end
+            fetchPlayerAddress()
         end
         print("destroy")
         if pipe then

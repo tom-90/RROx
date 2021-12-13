@@ -19,8 +19,10 @@ export class ChangeSwitchAction extends Action<void, [ index: number ]> {
 
         if( addrSwitch === false )
             throw new Error( 'Unable to retrieve the switch address.' );
-        if( addrPlayer === false )
-            throw new Error( 'Unable to retrieve the player address.' );
+        if( addrPlayer === false ) {
+            console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            return;
+        }
 
         await this.acquire();
 

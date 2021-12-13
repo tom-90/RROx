@@ -39,14 +39,19 @@ export abstract class Action<R = void,P extends any[] = []> {
             result = await this.execute( ...params );
         } catch( e ) {
             Log.warn( `Error while executing action '${this.actionName}':`, e );
-            Log.warn( `Closing the following pipes that have an error-state: ${this.pipes.join( ', ' )}` );
-            this.pipes.forEach( ( pipeType ) => {
-                try {
-                    this.app.getPipe( pipeType ).close();
-                } catch( e ) {
-                    Log.error( `Unable to close pipe '${e}':`, e );
-                }
-            } );
+            // When pipes are still open, they might be in an error-state.
+            // We close them to make them reconnect such that we can recover
+            if( this.locks ) {
+                Log.warn( `Closing the following pipes that have an error-state: ${this.pipes.join( ', ' )}` );
+                this.pipes.forEach( ( pipeType ) => {
+                    try {
+                        this.app.getPipe( pipeType ).close();
+                    } catch( e ) {
+                        Log.error( `Unable to close pipe '${e}':`, e );
+                    }
+                } );
+                this.locks = undefined;
+            }
             result = false;
         }
         
@@ -90,7 +95,7 @@ export abstract class Action<R = void,P extends any[] = []> {
         }
     }
 
-    protected async release() {
+    protected release() {
         if( !this.locks )
             return;
 

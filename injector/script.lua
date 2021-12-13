@@ -2783,6 +2783,21 @@ function injectDLLFile(pipe)
     pipe.writeDword(1)
 end
 
+function fetchPlayerAddress()
+    local addr = getAddressSafe("[[[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.GameInstance]+GameInstance.LocalPlayers]+0]+LocalPlayer.PlayerController]+PlayerController.Pawn]")
+    if addr == nil then
+        return
+    end
+    local objName = FNameStringAlgo(addr + UObject.FNameIndex)
+    
+    -- Check that the object name starts with BP_Player_Conductor.
+    -- When inside the engine (after pressing F key), this pointer gets replaced with a pointer to the engine.
+    -- We need a pointer to the player object for things like changing switches
+    if string.sub(objName, 1, 19) == "BP_Player_Conductor" then
+        staticAddresses["LocalPlayerPawn"] = addr
+    end
+end
+
 pipe = nil
 
 function connectPipe()
@@ -2799,6 +2814,7 @@ end
 function starttransmitter()
     staticAddresses["KismetSystemLibrary"] = StaticFindObjectAlgo('/Script/Engine.Default__KismetSystemLibrary')
     staticAddresses["GameplayStatics"] = StaticFindObjectAlgo('/Script/Engine.Default__GameplayStatics')
+    staticAddresses["LocalPlayerPawn"] = 0
 
     pipeThread = createThread(function(thread)
         connectPipe()
@@ -2844,6 +2860,7 @@ function starttransmitter()
                     connectPipe()
                 end
             end
+            fetchPlayerAddress()
         end
         print("destroy")
         if pipe then
