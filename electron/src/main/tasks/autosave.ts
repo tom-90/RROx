@@ -50,6 +50,9 @@ export class AutosaveTask extends TimerTask {
             ( !this.lastUpload || ( new Date().getTime() - this.lastUpload.getTime() ) > 15 * 60 * 1000 ) ) {
             this.lastUpload = new Date();
 
+            // We wait for the game to actually save.
+            await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) );
+
             Log.info( 'Uploading to minizwerg.' );
 
             let result = await this.app.getAction( MinizwergUploadAction ).run( slot );

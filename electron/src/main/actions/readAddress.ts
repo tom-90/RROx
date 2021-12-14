@@ -43,7 +43,7 @@ export class ReadAddressAction extends Action<bigint, [
         this.release();
 
         if( addr === BigInt( 0 ) )
-            throw new Error( `Invalid address (${addressType}:${addressOrArrayName},${id})` );
+            throw new Error( `Invalid address (${addressType}:${addressOrArrayName},${id},${offset})` );
 
         return addr;
     }

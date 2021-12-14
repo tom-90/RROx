@@ -87,9 +87,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
             />
             <FrameControls
                 title={`${Name.toUpperCase()}${Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
-                regulator={data.Regulator}
-                reverser={data.Reverser}
-                brake={data.Brake}
+                data={data}
                 id={ID}
                 isVisible={controlsVisible && !minimap}
                 onClose={() => {

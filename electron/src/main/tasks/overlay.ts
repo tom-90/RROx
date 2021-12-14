@@ -178,8 +178,8 @@ export class OverlayTask extends TimerTask {
 
         const { bounds: gameBounds } = gameWindow;
 
-        let width = gameBounds.width / 3;
-        let height = gameBounds.height / 2;
+        let width = gameBounds.width / 2;
+        let height = gameBounds.height / 1.5;
         let x = gameBounds.x + gameBounds.width / 2 - width / 2;
         let y = gameBounds.y + gameBounds.height / 2 - height / 2;
 

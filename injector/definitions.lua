@@ -25,7 +25,18 @@ definitions = {
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"},
                 {{"+FrameCar.MyRegulator", "+Regulator.openPercentage"}, "f"},
                 {{"+FrameCar.MyReverser", "+Reverser.forwardvalue"}, "f"},
-                {{"+FrameCar.MyBrake", "+Brake.brakevalue"}, "f"}},
+                {{"+FrameCar.MyBrake", "+Brake.brakevalue"}, "f"},
+                {{"+FrameCar.MyWhistle", "+Whistle.whistleopenfactor"}, "f"},
+                {{"+FrameCar.Myhandvalvegenerator", "+Handvalve.openPercentage"}, "f"},
+                {{"+FrameCar.Myhandvalvecompressor", "+Handvalve.openPercentage"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentboilerpressure"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentwatertemperature"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentwateramount"}, "f"},
+                {{"+FrameCar.Mycompressor", "+Compressor.currentairpressure"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentfiretemperature"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentfuel"}, "f"},
+                {{"+FrameCar.currentspeedms"}, "f"},
+                {{"+FrameCar.maxspeedms"}, "i"}},
     Switch = {{{"+Switch.switchtype"}, "i"}, {{"+Switch.switchstate"}, "i"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -79,4 +90,42 @@ channelNames = {
     handcar = "FrameCar",
     heisler = "FrameCar",
     porter = "FrameCar" --porter040, porter042
+}
+
+-- UE4 Structs to discover
+ue4Structs = {
+    -- UE4 objects
+    GameEngine         = { "/Script/Engine.GameEngine", global = true },
+    GameViewportClient = { "/Script/Engine.GameViewportClient" },
+    GameInstance       = { "/Script/Engine.GameInstance" },
+    LocalPlayer        = { "/Script/Engine.LocalPlayer", global = true },
+    PlayerController   = { "/Script/Engine.PlayerController", global = true },
+    MovementComponent  = { "/Script/Engine.CharacterMovementComponent" },
+    CapsuleComponent   = { "/Script/Engine.CapsuleComponent", global = true },
+    GPlayer            = { "/Script/Engine.Character" },
+    World              = { "/Script/Engine.World" },
+
+    -- RailroadsOnline Objects
+    GameStateBase      = { "/Script/arr.arrGameStateBase" },
+    GameModeBase       = { "/Script/arr.arrGameModeBase" },
+    FrameCar           = { "/Script/arr.framecar" },
+    BasedMovement      = { "/Script/Engine.BasedMovementInfo" },
+    PlayerState        = { "/Script/Engine.PlayerState" },
+    Character          = { "/Script/arr.SCharacter" },
+    SceneComponent     = { "/Script/Engine.SceneComponent" },
+    TurnTable          = { "/Script/arr.turntable" },
+    Switch             = { "/Script/arr.Switch" },
+    WaterTower         = { "/Script/arr.watertower" },
+    Industry           = { "/Script/arr.industry" },
+    Regulator          = { "/Script/arr.regulator" },
+    Reverser           = { "/Script/arr.johnsonbar" },
+    Brake              = { "/Script/arr.airbrake" },
+    Whistle            = { "/Script/arr.whistle" },
+    Spline             = { "/Script/arr.SplineActor" },
+    Boiler             = { "/Script/arr.boiler" },
+    Compressor         = { "/Script/arr.compressor" },
+    Handvalve          = { "/Script/arr.handvalve" },
+    NetDriver          = { "/Script/Engine.NetDriver" },
+    NetConnection      = { "/Script/Engine.NetConnection" },
+    ActorChannel       = { "/Script/Engine.ActorChannel" }
 }

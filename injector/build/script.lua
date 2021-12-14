@@ -2373,46 +2373,19 @@ function initue4()
     -- createThread(function()
     SaveAndRemoveStruct()
 
-    print("(PROGRESS 40%)")
-    createThread(ue4createstruct('/Script/Engine.GameEngine', 'GameEngine', 1))
-    createThread(ue4createstruct('/Script/Engine.GameViewportClient', 'GameViewportClient', 0))
-    createThread(ue4createstruct('/Script/Engine.GameInstance', 'GameInstance', 0))
-    print("(PROGRESS 45%)")
-    createThread(ue4createstruct('/Script/Engine.LocalPlayer', 'LocalPlayer', 1))
-    createThread(ue4createstruct('/Script/Engine.PlayerController', 'PlayerController', 2))
-    createThread(ue4createstruct('/Script/Engine.CharacterMovementComponent', 'MovementComponent', 0))
-    print("(PROGRESS 50%)")
-    createThread(ue4createstruct('/Script/Engine.CapsuleComponent', 'CapsuleComponent', 3))
-    createThread(ue4createstruct('/Script/Engine.Character', 'GPlayer', 0))
-    createThread(ue4createstruct('/Script/Engine.World', 'World', 0))
-    print("(PROGRESS 55%)")
-
-    -- Additions ARR
-    print("(PROGRESS 60%)")
-    createThread(ue4createstruct('/Script/arr.arrGameStateBase', 'GameStateBase', 0))
-    createThread(ue4createstruct('/Script/arr.arrGameModeBase', 'GameModeBase', 0))
-    createThread(ue4createstruct('/Script/arr.framecar', 'FrameCar', 0))
-    createThread(ue4createstruct('/Script/Engine.BasedMovementInfo', 'BasedMovement', 0))
-    print("(PROGRESS 65%)")
-    createThread(ue4createstruct('/Script/Engine.PlayerState', 'PlayerState', 0))
-    createThread(ue4createstruct('/Script/arr.SCharacter', 'Character', 0))
-    createThread(ue4createstruct('/Script/Engine.SceneComponent', 'SceneComponent', 0))
-    createThread(ue4createstruct('/Script/arr.turntable', 'TurnTable', 0))
-    print("(PROGRESS 70%)")
-    createThread(ue4createstruct('/Script/arr.Switch', 'Switch', 0))
-    createThread(ue4createstruct('/Script/arr.watertower', 'WaterTower', 0))
-    createThread(ue4createstruct('/Script/arr.industry', 'Industry', 0))
-    print("(PROGRESS 75%)")
-    createThread(ue4createstruct('/Script/arr.regulator', 'Regulator', 0))
-    createThread(ue4createstruct('/Script/arr.johnsonbar', 'Reverser', 0))
-    createThread(ue4createstruct('/Script/arr.airbrake', 'Brake', 0))
-    print("(PROGRESS 80%)")
-    createThread(ue4createstruct('/Script/arr.whistle', 'Whistle', 0))
-    createThread(ue4createstruct('/Script/arr.SplineActor', 'Spline', 0))
-    print("(PROGRESS 85%)")
-    createThread(ue4createstruct('/Script/Engine.NetDriver', 'NetDriver', 0))
-    createThread(ue4createstruct('/Script/Engine.NetConnection', 'NetConnection', 0))
-    createThread(ue4createstruct('/Script/Engine.ActorChannel', 'ActorChannel', 0))
+    local structCount = 0
+    for name, options in pairs(ue4Structs) do structCount = structCount + 1 end
+    
+    local i = 0
+    for name, options in pairs(ue4Structs) do
+        i = i + 1
+        print("(PROGRESS " ..string.format("%.3f", 40 + i / structCount * 50).. "%)")
+        if options["global"] then
+            createThread(ue4createstruct(options[1], name, 1))
+        else
+            createThread(ue4createstruct(options[1], name, 0))
+        end
+    end
 
     local RunningStructCounter = 0
     while (true) do
@@ -2461,7 +2434,18 @@ definitions = {
                 {{"+FrameCar.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"},
                 {{"+FrameCar.MyRegulator", "+Regulator.openPercentage"}, "f"},
                 {{"+FrameCar.MyReverser", "+Reverser.forwardvalue"}, "f"},
-                {{"+FrameCar.MyBrake", "+Brake.brakevalue"}, "f"}},
+                {{"+FrameCar.MyBrake", "+Brake.brakevalue"}, "f"},
+                {{"+FrameCar.MyWhistle", "+Whistle.whistleopenfactor"}, "f"},
+                {{"+FrameCar.Myhandvalvegenerator", "+Handvalve.openPercentage"}, "f"},
+                {{"+FrameCar.Myhandvalvecompressor", "+Handvalve.openPercentage"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentboilerpressure"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentwatertemperature"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentwateramount"}, "f"},
+                {{"+FrameCar.Mycompressor", "+Compressor.currentairpressure"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentfiretemperature"}, "f"},
+                {{"+FrameCar.MyBoiler", "+Boiler.currentfuel"}, "f"},
+                {{"+FrameCar.currentspeedms"}, "f"},
+                {{"+FrameCar.maxspeedms"}, "i"}},
     Switch = {{{"+Switch.switchtype"}, "i"}, {{"+Switch.switchstate"}, "i"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -2515,6 +2499,44 @@ channelNames = {
     handcar = "FrameCar",
     heisler = "FrameCar",
     porter = "FrameCar" --porter040, porter042
+}
+
+-- UE4 Structs to discover
+ue4Structs = {
+    -- UE4 objects
+    GameEngine         = { "/Script/Engine.GameEngine", global = true },
+    GameViewportClient = { "/Script/Engine.GameViewportClient" },
+    GameInstance       = { "/Script/Engine.GameInstance" },
+    LocalPlayer        = { "/Script/Engine.LocalPlayer", global = true },
+    PlayerController   = { "/Script/Engine.PlayerController", global = true },
+    MovementComponent  = { "/Script/Engine.CharacterMovementComponent" },
+    CapsuleComponent   = { "/Script/Engine.CapsuleComponent", global = true },
+    GPlayer            = { "/Script/Engine.Character" },
+    World              = { "/Script/Engine.World" },
+
+    -- RailroadsOnline Objects
+    GameStateBase      = { "/Script/arr.arrGameStateBase" },
+    GameModeBase       = { "/Script/arr.arrGameModeBase" },
+    FrameCar           = { "/Script/arr.framecar" },
+    BasedMovement      = { "/Script/Engine.BasedMovementInfo" },
+    PlayerState        = { "/Script/Engine.PlayerState" },
+    Character          = { "/Script/arr.SCharacter" },
+    SceneComponent     = { "/Script/Engine.SceneComponent" },
+    TurnTable          = { "/Script/arr.turntable" },
+    Switch             = { "/Script/arr.Switch" },
+    WaterTower         = { "/Script/arr.watertower" },
+    Industry           = { "/Script/arr.industry" },
+    Regulator          = { "/Script/arr.regulator" },
+    Reverser           = { "/Script/arr.johnsonbar" },
+    Brake              = { "/Script/arr.airbrake" },
+    Whistle            = { "/Script/arr.whistle" },
+    Spline             = { "/Script/arr.SplineActor" },
+    Boiler             = { "/Script/arr.boiler" },
+    Compressor         = { "/Script/arr.compressor" },
+    Handvalve          = { "/Script/arr.handvalve" },
+    NetDriver          = { "/Script/Engine.NetDriver" },
+    NetConnection      = { "/Script/Engine.NetConnection" },
+    ActorChannel       = { "/Script/Engine.ActorChannel" }
 }
 -- Function for reading addresses
 -- Reading addresses can be done in 3 ways: read array index, read static address (in global staticAddresses table) or read from cheat engine address list

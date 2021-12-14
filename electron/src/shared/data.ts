@@ -8,6 +8,17 @@ export interface Frame {
     Regulator?: number;
     Reverser?: number;
     Brake?: number;
+    Whistle?: number;
+    Generator?: number;
+    Compressor?: number;
+    BoilerPressure?: number;
+    WaterTemperature?: number;
+    WaterLevel?: number;
+    AirPressure?: number;
+    FireTemperature?: number;
+    FuelAmount?: number;
+    Speed?: number;
+    MaxSpeed?: number;
 }
 
 export interface Player {

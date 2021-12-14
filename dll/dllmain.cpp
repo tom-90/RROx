@@ -30,19 +30,17 @@ void run(std::stop_token stoken, HMODULE dll) {
         changeSwitch(addrSwitch, addrPlayer);
         logger->WriteString("Switch Changed.");
     } else if (command == 3) { //Set Engine Controlers
+        int type = communicator->ReadInt(stoken);
         uint64_t addrPlayer = communicator->ReadUInt64(stoken);
-        uint64_t addrBrake = communicator->ReadUInt64(stoken);
-        uint64_t addrRegulator = communicator->ReadUInt64(stoken);
-        uint64_t addrReverser = communicator->ReadUInt64(stoken);
-        float regulator = communicator->ReadFloat(stoken);
-        float reverser = communicator->ReadFloat(stoken);
-        float brake = communicator->ReadFloat(stoken);
+        uint64_t addrControl = communicator->ReadUInt64(stoken);
+        uint64_t addrFramecar = communicator->ReadUInt64(stoken);
+        float value = communicator->ReadFloat(stoken);
 
         if (stoken.stop_requested())
             return;
 
         logger->WriteString("Setting Engine Controls...");
-        setEngineControls(addrPlayer, addrBrake, addrRegulator, addrReverser, regulator, reverser, brake);
+        setEngineControls(type, addrPlayer, addrControl, addrFramecar, value);
         logger->WriteString("Engine Controls Set.");
     }
     else if (command == 4) { //Check if Is Server

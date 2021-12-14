@@ -30,21 +30,23 @@ void changeSwitch(uint64_t addrSwitch, uint64_t addrCharacter)
         ch->ServerSwitchDown(sw);
 }
 
-void setEngineControls(uint64_t addrCharacter, uint64_t addrBrake, uint64_t addrRegulator, uint64_t addrReverser, float regulator, float reverser, float brake)
+void setEngineControls(int type, uint64_t addrCharacter, uint64_t addrControl, uint64_t addrFramecar, float value)
 {
     ASCharacter* ch = (ASCharacter*)addrCharacter;
+    Aframecar* frame = (Aframecar*)addrFramecar;
 
-    //frame->SetBrakeValue(brake);
-    //frame->SetRegulatorValue(regulator);
-    //frame->SetReverserValue(reverser);
-
-    //frame->ServerSetBrake(frame, brake);
-    //frame->ServerSetRegulator(frame, regulator);
-    //frame->ServerSetReverser(frame, reverser);
-
-    ch->ServerSetRaycastBake((Aairbrake*)addrBrake, brake);
-    ch->ServerSetRaycastReverser((Ajohnsonbar*)addrReverser, reverser);
-    ch->ServerSetRaycastRegulator((Aregulator*)addrRegulator, regulator);
+    if( type == 1 )
+        ch->ServerSetRaycastRegulator((Aregulator*)addrControl, value);
+    else if( type == 2 )
+        ch->ServerSetRaycastReverser((Ajohnsonbar*)addrControl, value);
+    else if( type == 3 )
+        ch->ServerSetRaycastBake((Aairbrake*)addrControl, value);
+    else if( type == 4 ) {
+        frame->SetWhistle(value);
+        ch->ServerSetRaycastWhistle((Awhistle*)addrControl, value);
+    }
+    else if( type == 5 || type == 6 )
+        ch->ServerSetRaycastHandvalve((Ahandvalve*)addrControl, value);
 }
 
 bool isServerHost(uint64_t addrKismet, uint64_t addrWorld)

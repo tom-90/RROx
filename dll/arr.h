@@ -23,19 +23,8 @@ struct ASwitch : AActor {
 // Size: 0xbf0 (Inherited: 0x4c0)
 struct Aframecar : ACharacter {
 	char pad_4C0[0x730]; //0x4C0(0x730)
-
-	void SetReverserValue(float Value); // Function arr.framecar.SetReverserValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab9b00
-	void SetRegulatorValue(float Value); // Function arr.framecar.SetRegulatorValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab9a80
-	void SetBrakeValue(float Value); // Function arr.framecar.SetBrakeValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab9260
-	void ControlsSetReverserValue(float Value); // Function arr.framecar.ControlsSetReverserValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab83a0
-	void ControlsSetRegulatorValue(float Value); // Function arr.framecar.ControlsSetRegulatorValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab8320
-	void ControlsSetBrakeValue(float Value); // Function arr.framecar.ControlsSetBrakeValue // (Final|Native|Public|BlueprintCallable) // @ game+0xab8120
-	void ServerSetReverser(struct Aframecar* Vehicle, float Value); // Function arr.framecar.ServerSetReverser // (Net|NetReliableNative|Event|Public|NetServer|BlueprintCallable) // @ game+0xab8f40
-	void ServerSetRegulator(struct Aframecar* Vehicle, float Value); // Function arr.framecar.ServerSetRegulator // (Net|Native|Event|Public|NetServer|BlueprintCallable) // @ game+0xab8e70
-	void ServerSetBrake(struct Aframecar* Vehicle, float Value); // Function arr.framecar.ServerSetBrake // (Net|NetReliableNative|Event|Public|NetServer|BlueprintCallable) // @ game+0xab8aa0
-	void ApplyControlsRegulator(); // Function arr.framecar.ApplyControlsRegulator // (Final|Native|Public|BlueprintCallable) // @ game+0xab8060
-	void ApplyControlReverser(); // Function arr.framecar.ApplyControlReverser // (Final|Native|Public|BlueprintCallable) // @ game+0xab8000
-	void ApplyControlBrake(); // Function arr.framecar.ApplyControlBrake // (Final|Native|Public|BlueprintCallable) // @ game+0xab7f80
+	
+	void SetWhistle(float Value); // Function arr.framecar.SetWhistle // (Final|Native|Public|BlueprintCallable) // @ game+0xab9c80
 };
 
 // Class Engine.BlueprintFunctionLibrary
@@ -53,6 +42,8 @@ struct ASCharacter : ACharacter {
 	void ServerSetRaycastReverser(struct Ajohnsonbar* reverser, float Value); // Function arr.SCharacter.ServerSetRaycastReverser // (Net|Native|Event|Protected|NetServer) // @ game+0xac2770
 	void ServerSetRaycastRegulator(struct Aregulator* regulator, float Value); // Function arr.SCharacter.ServerSetRaycastRegulator // (Net|Native|Event|Protected|NetServer) // @ game+0xac26a0
 	void ServerSetRaycastBake(struct Aairbrake* Brake, float Value); // Function arr.SCharacter.ServerSetRaycastBake // (Net|Native|Event|Protected|NetServer) // @ game+0xac2320
+	void ServerSetRaycastWhistle(struct Awhistle* whistle, float Input); // Function arr.SCharacter.ServerSetRaycastWhistle // (Net|Native|Event|Protected|NetServer) // @ game+0xac2840
+	void ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float Value); // Function arr.SCharacter.ServerSetRaycastHandvalve // (Net|Native|Event|Protected|NetServer) // @ game+0xac25d0
 };
 
 // Class Engine.KismetSystemLibrary
@@ -78,4 +69,16 @@ struct Aregulator : AActor {
 // Size: 0x270 (Inherited: 0x220)
 struct Aairbrake : AActor {
 	char pad_220[0x50]; // 0x220(0x50)
+};
+
+// Class arr.whistle
+// Size: 0x2c0 (Inherited: 0x220)
+struct Awhistle : AActor {
+	char pad_220[0xA0]; // 0x220(0xA0)
+};
+
+// Class arr.handvalve
+// Size: 0x248 (Inherited: 0x220)
+struct Ahandvalve : AActor {
+	char pad_220[0x28]; // 0x220(0x28)
 };

@@ -11,134 +11,14 @@ void AarrGameModeBase::SaveGame(struct FString MySaveSlotName)
   ProcessEvent(fn, &parms);
 }
 
-void ASwitch::SetSwitchState(int32_t State)
+void Aframecar::SetWhistle(float Value)
 {
-    static auto fn = ObjObjects->FindObject("Function arr.Switch.SetSwitchState");
-    struct {
-        int32_t State;
-    } parms;
-    parms = { State };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::SetReverserValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.SetReverserValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::SetRegulatorValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.SetRegulatorValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::SetBrakeValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.SetBrakeValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ServerSetReverser(struct Aframecar* vehicle, float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ServerSetReverser");
-    struct {
-        struct Aframecar* vehicle;
-        float value;
-    } parms;
-    parms = { vehicle, value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ServerSetRegulator(struct Aframecar* vehicle, float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ServerSetRegulator");
-    struct {
-        struct Aframecar* vehicle;
-        float value;
-    } parms;
-    parms = { vehicle, value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ServerSetBrake(struct Aframecar* vehicle, float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ServerSetBrake");
-    struct {
-        struct Aframecar* vehicle;
-        float value;
-    } parms;
-    parms = { vehicle, value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ControlsSetReverserValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ControlsSetReverserValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ControlsSetRegulatorValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ControlsSetRegulatorValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ControlsSetBrakeValue(float value)
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ControlsSetBrakeValue");
-    struct {
-        float value;
-    } parms;
-    parms = { value };
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ApplyControlsRegulator()
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ApplyControlsRegulator");
-    struct {
-    } parms;
-    parms = {};
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ApplyControlReverser()
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ApplyControlReverser");
-    struct {
-    } parms;
-    parms = {};
-    ProcessEvent(fn, &parms);
-}
-
-void Aframecar::ApplyControlBrake()
-{
-    static auto fn = ObjObjects->FindObject("Function arr.framecar.ApplyControlBrake");
-    struct {
-    } parms;
-    parms = {};
-    ProcessEvent(fn, &parms);
+  static auto fn = ObjObjects->FindObject("Function arr.framecar.SetWhistle");
+  struct {
+    float Value;
+  } parms;
+  parms = { Value };
+  ProcessEvent(fn, &parms);
 }
 
 bool UKismetSystemLibrary::IsServer(struct UObject* WorldContextObject)
@@ -210,5 +90,25 @@ void ASCharacter::ServerSetRaycastBake(struct Aairbrake* brake, float value) {
         float value;
     } parms;
     parms = { brake, value };
+    ProcessEvent(fn, &parms);
+}
+
+void ASCharacter::ServerSetRaycastWhistle(struct Awhistle* whistle, float value) {
+    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ServerSetRaycastWhistle");
+    struct {
+        struct Awhistle* whistle;
+        float value;
+    } parms;
+    parms = { whistle, value };
+    ProcessEvent(fn, &parms);
+}
+
+void ASCharacter::ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float value) {
+    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ServerSetRaycastHandvalve");
+    struct {
+        struct Ahandvalve* handvalve;
+        float value;
+    } parms;
+    parms = { handvalve, value };
     ProcessEvent(fn, &parms);
 }
