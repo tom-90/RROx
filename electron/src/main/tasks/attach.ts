@@ -94,7 +94,7 @@ export class AttachTask extends Task {
             const onLog = ( data: Buffer ) => {
                 if( this.state !== AttachedState.ATTACHING )
                     return;
-                let match = /\(PROGRESS (\d+)%\.?\d*\)/g.exec( data.toString() );
+                let match = /\(PROGRESS (\d+\.?\d*)%\)/g.exec( data.toString() );
                 if( !match )
                     return;
                 let progress = Number( match[ 1 ] );
