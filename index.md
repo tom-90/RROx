@@ -23,6 +23,11 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Changelog
 
+### v1.2.0 - 14-12-2021
+- ``Added`` Automatic upload to minizwerg.
+- ``Added`` Controls for whistle, generator and comrpessor.
+- ``Added`` Locomotive information like boiler pressure and fuel amount.
+
 ### v1.1.1 - 13-12-2021
 - ``Fixed`` Auto-updater triggering error popups.
 
