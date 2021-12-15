@@ -27,7 +27,7 @@ const FrameColors: { [ vehicle: string ]: string } = {
 }
 
 export const Frame = React.memo( function( { data, map, index }: { data: FrameData, map: MapProperties, index: number } ) {
-    const { followElement, stopFollowing, following, minimap } = useContext( MapContext );
+    const { followElement, stopFollowing, following, minimap, controlEnabled } = useContext( MapContext );
     const engineRef = createRef<SVGPathElement>();
 
     const [ controlsVisible, setControlsVisible ] = useState( false );
@@ -90,6 +90,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 data={data}
                 id={ID}
                 isVisible={controlsVisible && !minimap}
+                controlEnabled={controlEnabled}
                 onClose={() => {
                     setControlsVisible( false );
                     setTooltipVisible( false );

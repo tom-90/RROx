@@ -2814,10 +2814,16 @@ function transmitChannels(pipe)
 
 end
 
--- Transmitter functions for communication with the electron process
+-- Function for retrieving player index
 
-function fetchPlayerAddress()
-    local addr = getAddressSafe("[[[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.GameInstance]+GameInstance.LocalPlayers]+0]+LocalPlayer.PlayerController]+PlayerController.Pawn]")
+local cachedPlayerAddress = 0
+
+function getPlayerAddress()
+    return getAddressSafe("[[[[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.GameInstance]+GameInstance.LocalPlayers]+0]+LocalPlayer.PlayerController]+PlayerController.Pawn]")
+end
+
+function cachePlayerAddress()
+    local addr = getPlayerAddress()
     if addr == nil then
         return
     end
@@ -2827,9 +2833,30 @@ function fetchPlayerAddress()
     -- When inside the engine (after pressing F key), this pointer gets replaced with a pointer to the engine.
     -- We need a pointer to the player object for things like changing switches
     if string.sub(objName, 1, 19) == "BP_Player_Conductor" then
-        staticAddresses["LocalPlayerPawn"] = addr
+        cachedPlayerAddress = addr
     end
 end
+
+function getPlayer(pipe)
+    local addr = getPlayerAddress()
+    if addr == nil then
+        pipe.writeQword(cachedPlayerAddress)
+        pipe.writeDword(1)
+        return
+    end
+
+    local objName = FNameStringAlgo(addr + UObject.FNameIndex)
+    
+    if string.sub(objName, 1, 19) == "BP_Player_Conductor" then
+        pipe.writeQword(addr)
+        pipe.writeDword(0)
+        return
+    end
+
+    pipe.writeQword(cachedPlayerAddress)
+    pipe.writeDword(1)
+end
+-- Transmitter functions for communication with the electron process
 
 pipe = nil
 
@@ -2847,7 +2874,6 @@ end
 function starttransmitter()
     staticAddresses["KismetSystemLibrary"] = StaticFindObjectAlgo('/Script/Engine.Default__KismetSystemLibrary')
     staticAddresses["GameplayStatics"] = StaticFindObjectAlgo('/Script/Engine.Default__GameplayStatics')
-    staticAddresses["LocalPlayerPawn"] = 0
 
     pipeThread = createThread(function(thread)
         connectPipe()
@@ -2875,8 +2901,8 @@ function starttransmitter()
                     end
                 end
                 pipe.writeDword(0)
-            elseif command == "P" then -- Ping
-                pipe.writeString("P")
+            elseif command == "P" then -- Player
+                getPlayer(pipe)
             elseif command == "S" then -- Stop
                 closeCE()
             elseif command == "A" then -- Get Address
@@ -2893,7 +2919,7 @@ function starttransmitter()
                     connectPipe()
                 end
             end
-            fetchPlayerAddress()
+            cachePlayerAddress()
         end
         print("destroy")
         if pipe then

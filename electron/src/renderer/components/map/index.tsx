@@ -30,6 +30,8 @@ export function Map( { data }: { data: MapData } ) {
     const [ transparent, setTransparent ] = useState( window.mode === 'overlay' ? window.settingsStore.get( 'minimap.transparent' ) as boolean : false );
     const [ background, setBackground ] = useState( window.settingsStore.get('map.background') ?? 1);
 
+    const [ controlEnabled, setControlEnabled ] = useState( false );
+
     useEffect(() => {
         let onMouseWheel: ( event: WheelEvent ) => void;
 
@@ -103,8 +105,14 @@ export function Map( { data }: { data: MapData } ) {
             setBackground( background );
         } );
 
+        
+        const cleanup2 = window.ipc.on( 'control-enabled', ( event, enabled ) => {
+            setControlEnabled( enabled );
+        } );
+
         return () => {
             cleanup();
+            cleanup2();
         }
     }, [] );
 
@@ -170,6 +178,7 @@ export function Map( { data }: { data: MapData } ) {
             stopFollowing: () => setFollowing( null ),
             following,
             minimap: mode === 'minimap',
+            controlEnabled,
         }}
     >
         <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: window.mode === 'overlay' ? undefined : '#fefef2' }}>

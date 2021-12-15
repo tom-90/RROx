@@ -15,6 +15,7 @@ include( 'actions/address.lua' );
 include( 'actions/addressValue.lua' );
 include( 'actions/injectDLL.lua' );
 include( 'actions/readWorld.lua' );
+include( 'actions/player.lua' );
 include( 'transmitter.lua' );
 
 

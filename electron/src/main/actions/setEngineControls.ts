@@ -1,5 +1,5 @@
 import { Action } from "./action";
-import { EnsureInGameAction, ReadAddressAction, ReadAddressMode } from ".";
+import { EnsureInGameAction, GameMode, ReadAddressAction, ReadAddressMode, ReadPlayerAddress } from ".";
 import { PipeType } from "../pipes";
 import { EngineControls } from "../../shared/controls";
 
@@ -33,7 +33,20 @@ export class SetEngineControlsAction extends Action<void, [ id: number, type: En
         if( !offset )
             throw new Error( 'Unknown control type.' );
         
-        let addrPlayer = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'LocalPlayerPawn' );
+        let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
+    
+        if( playerRead === false ) {
+            console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            return;
+        }
+
+        let [ addrPlayer, insideEngine ] = playerRead;
+
+        if( insideEngine && gameMode === GameMode.CLIENT ) {
+            console.log( 'Cannot change switches as client while driving engines.' );
+            return;
+        }
+
         let addrControl = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'FrameCar', id, gameMode, offset );
         let addrFramecar = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'FrameCar', id, gameMode );
 

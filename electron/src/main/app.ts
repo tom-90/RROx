@@ -3,7 +3,7 @@ import Updater from 'update-electron-app';
 import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
-import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadWorldAction, SaveAction, SetEngineControlsAction, StopAction } from './actions';
+import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, StopAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
 import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
 
@@ -49,6 +49,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             MinizwergUploadAction,
             ReadAddressAction,
             ReadAddressValueAction,
+            ReadPlayerAddress,
             ReadWorldAction,
             SaveAction,
             SetEngineControlsAction,

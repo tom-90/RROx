@@ -1,5 +1,5 @@
 import { Action } from "./action";
-import { ReadAddressAction, ReadAddressMode } from '.';
+import { GameMode, ReadAddressAction, ReadAddressMode, ReadPlayerAddress } from '.';
 import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
 
@@ -14,15 +14,24 @@ export class ChangeSwitchAction extends Action<void, [ index: number ]> {
         if( !gameMode )
             throw new Error( 'Not in game' );
     
-        let addrSwitch = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'Switch', index, gameMode );
-        let addrPlayer = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'LocalPlayerPawn' );
-
-        if( addrSwitch === false )
-            throw new Error( 'Unable to retrieve the switch address.' );
-        if( addrPlayer === false ) {
+        let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
+        
+        if( playerRead === false ) {
             console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
             return;
         }
+
+        let [ addrPlayer, insideEngine ] = playerRead;
+
+        if( insideEngine && gameMode === GameMode.CLIENT ) {
+            console.log( 'Cannot change switches as client while driving engines.' );
+            return;
+        }
+
+        let addrSwitch = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'Switch', index, gameMode );
+
+        if( addrSwitch === false )
+            throw new Error( 'Unable to retrieve the switch address.' );
 
         await this.acquire();
 

@@ -9,6 +9,7 @@ const validChannels = [
     'map-update',
     'autosave',
     'update-config',
+    'control-enabled',
     'change-switch',
     'set-engine-controls',
     'get-attached-state',

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { MapProperties } from './interfaces';
 import { Switch as SwitchData } from "../../../shared/data";
-import { Button, Spin, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
+import { MapContext } from './context';
 
 export const Switch = React.memo( function( { data, map }: { data: SwitchData, map: MapProperties, index: number } ) {
+    const { controlEnabled } = useContext( MapContext );
+
     const { Type, Side, Location, Rotation, ID } = data;
     const { scale, minX, minY, imx, imy } = map;
 
@@ -83,12 +86,14 @@ export const Switch = React.memo( function( { data, map }: { data: SwitchData, m
 
     return <Tooltip
         title="Flip Switch"
-        visible={tooltipVisible}
+        visible={tooltipVisible && controlEnabled}
         onVisibleChange={setTooltipVisible}
     >
         <g
-            className={`clickable highlight`}
+            className={controlEnabled ? `clickable highlight` : undefined}
             onClick={() => {
+                if( !controlEnabled )
+                    return;
                 window.ipc.send( 'change-switch', ID );
                 setTooltipVisible( false );
             }}

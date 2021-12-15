@@ -4,6 +4,7 @@ export * from './injectDLL';
 export * from './minizwergUpload';
 export * from './readAddress';
 export * from './readAddressValue';
+export * from './readPlayerAddress';
 export * from './readWorld';
 export * from './save';
 export * from './setEngineControls';
