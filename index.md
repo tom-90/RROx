@@ -21,6 +21,10 @@ Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows t
 For any other questions or issues, you can contact me on Discord:
 [_tom()#0056](https://discordapp.com/users/178197960457322497)
 
+## Known issues
+
+- Controlling a locomotive remotely in multiplayer can cause game crashes.
+
 ## Changelog
 
 ### v1.2.0 - 14-12-2021
