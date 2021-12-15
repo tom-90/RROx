@@ -29,17 +29,17 @@ export class NamedPipe {
         return new Promise( ( resolve, reject ) => {
             let readableTries = 0;
             let onReadable = () => {
-                this.socket.removeListener( 'end', onEnd );
-
                 readableTries++;
                 let buffer: Buffer | null = this.socket.read( length );
 
-                if( !buffer && readableTries > 10 )
-                    return reject( new Error( `[${this.name}] Not enough data is available` ) );
-                else if( !buffer )
+                if( !buffer && readableTries <= 10 )
                     return; // Wait for more data
 
+                this.socket.removeListener( 'end', onEnd );
                 this.socket.removeListener( 'readable', onReadable );
+
+                if( !buffer )
+                    return reject( new Error( `[${this.name}] Not enough data is available` ) );
 
                 resolve( buffer );
             };
@@ -47,7 +47,7 @@ export class NamedPipe {
             let onEnd = () => {
                 this.socket.removeListener( 'readable', onReadable );
 
-                return Promise.reject( new Error( 'NamedPipe has been closed' ) );
+                reject( new Error( 'NamedPipe has been closed' ) );
             };
 
             this.socket.once( 'end', onEnd );

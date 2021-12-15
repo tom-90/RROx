@@ -22,6 +22,7 @@ export class ReadWorldTask extends TimerTask {
 
     protected async execute(): Promise<void> {
         const gameStatus = await this.app.getAction( EnsureInGameAction ).run();
+
         if( !gameStatus ) {
             let changes = [
                 ...this.detectChanges( 'Frames'     , this.world.Frames     , [] ),

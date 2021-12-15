@@ -6,15 +6,18 @@ import Log from 'electron-log';
 export class AutosaveTask extends TimerTask {
 
     public taskName = "Autosave";
-    public interval = 60000;
+
+    public interval: number;
+
+    private lastMinizwergUpload?: Date;
 
     constructor( app: RROx ) {
         super( app );
 
+        this.interval = this.app.settings.get( 'autosave.interval' ) * 1000
+
         app.on( 'settingsUpdate', () => this.update() );
     }
-
-    private lastUpload?: Date;
 
     protected async execute(): Promise<void> {
         if ( ( await this.app.getAction( EnsureInGameAction ).run() ) !== GameMode.HOST )
@@ -47,8 +50,8 @@ export class AutosaveTask extends TimerTask {
             throw new Error( 'Failed to autosave.' );
 
         if( this.app.settings.get( 'minizwerg.enabled' ) &&
-            ( !this.lastUpload || ( new Date().getTime() - this.lastUpload.getTime() ) > 15 * 60 * 1000 ) ) {
-            this.lastUpload = new Date();
+            ( !this.lastMinizwergUpload || ( new Date().getTime() - this.lastMinizwergUpload.getTime() ) > 15 * 60 * 1000 ) ) {
+            this.lastMinizwergUpload = new Date();
 
             // We wait for the game to actually save.
             await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) );
