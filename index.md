@@ -23,9 +23,13 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Known issues
 
-- Controlling a locomotive remotely in multiplayer can cause game crashes.
+- When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
 
 ## Changelog
+
+### v1.2.1 - 15-12-2021
+- ``Fixed`` Autosave timer reverted to 1 minute after every restart of RROx.
+- ``Fixed`` Game crashes for clients while driving in F-mode. (Locomotive and switch controls are now disabled for this situation)
 
 ### v1.2.0 - 14-12-2021
 - ``Added`` Automatic upload to minizwerg.
