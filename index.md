@@ -27,6 +27,13 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Changelog
 
+### v1.3.0 - 17-12-2021
+- ``Added`` More detailed drawings of all industries.
+- ``Added`` Industry input and output information.
+- ``Added`` Information about the freight of cars.
+- ``Added`` Border colors to indicate if brakes are applied on locomotives and cars.
+- ``Added`` Dark map (Thanks to [Nimrey](https://github.com/nimreydx))
+
 ### v1.2.1 - 15-12-2021
 - ``Fixed`` Autosave timer reverted to 1 minute after every restart of RROx.
 - ``Fixed`` Game crashes for clients while driving in F-mode. (Locomotive and switch controls are now disabled for this situation)
