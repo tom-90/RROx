@@ -1,0 +1,16 @@
+export enum Products {
+    LOG = 'log',
+    CORDWOOD = 'cordwood',
+    LUMBER = 'lumber',
+    BEAM = 'beam',
+    CRUDEOIL = 'crudeoil',
+    IRONORE = 'ironore',
+    COAL = 'coal',
+    RAWIRON = 'rawiron',
+    RAILS = 'rail',
+    STEELPIPES = 'steelpipe',
+    OILBARREL = 'oilbarrel',
+    TOOLS = 'crate_tools',
+    FIREWOOD = 'firewood',
+    WATER = 'water',
+}

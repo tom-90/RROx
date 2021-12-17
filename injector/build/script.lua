@@ -2445,7 +2445,10 @@ definitions = {
                 {{"+FrameCar.MyBoiler", "+Boiler.currentfiretemperature"}, "f"},
                 {{"+FrameCar.MyBoiler", "+Boiler.currentfuel"}, "f"},
                 {{"+FrameCar.currentspeedms"}, "f"},
-                {{"+FrameCar.maxspeedms"}, "i"}},
+                {{"+FrameCar.maxspeedms"}, "i"},
+                {{"+FrameCar.MyFreight", "+Freight.currentfreight"}, "i"},
+                {{"+FrameCar.MyFreight", "+Freight.maxfreight"}, "i"},
+                {{"+FrameCar.MyFreight", "+Freight.currentfreighttype", "+0"}, "s", 64}},
     Switch = {{{"+Switch.switchtype"}, "i"}, {{"+Switch.switchstate"}, "i"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
               {{"+Switch.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -2467,14 +2470,41 @@ definitions = {
                   {{"+WaterTower.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
                   {{"+WaterTower.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
                   {{"+WaterTower.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
-                  {{"+WaterTower.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
+                  {{"+WaterTower.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"},
+                  {{"+WaterTower.Mystorage", "+Storage.currentamountitems"}, "f"},
+                  {{"+WaterTower.Mystorage", "+Storage.maxitems"}, "f"},
+                  {{"+WaterTower.Mystorage", "+Storage.storagetype", "+0"}, "s", 256}},
     Industry = {{{"+Industry.industrytype"}, "i"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
-                {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"}},
+                {{"+Industry.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"},
+                {{"+Industry.mystorageeducts1", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageeducts1", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageeducts1", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageeducts2", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageeducts2", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageeducts2", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageeducts3", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageeducts3", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageeducts3", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageeducts4", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageeducts4", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageeducts4", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageproducts1", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageproducts1", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageproducts1", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageproducts2", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageproducts2", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageproducts2", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageproducts3", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageproducts3", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageproducts3", "+Storage.storagetype", "+0"}, "s", 256},
+                {{"+Industry.mystorageproducts4", "+Storage.currentamountitems"}, "f"},
+                {{"+Industry.mystorageproducts4", "+Storage.maxitems"}, "f"},
+                {{"+Industry.mystorageproducts4", "+Storage.storagetype", "+0"}, "s", 256}},
     Spline = {{{"+Spline.SplineControlPoints_size"}},
                 {{"+Spline.SplineControlPoints"}},
                 {{"+Spline.SplineMeshBoolArray"}},
@@ -2526,6 +2556,7 @@ ue4Structs = {
     Switch             = { "/Script/arr.Switch" },
     WaterTower         = { "/Script/arr.watertower" },
     Industry           = { "/Script/arr.industry" },
+    Storage            = { "/Script/arr.storage" },
     Regulator          = { "/Script/arr.regulator" },
     Reverser           = { "/Script/arr.johnsonbar" },
     Brake              = { "/Script/arr.airbrake" },
@@ -2534,6 +2565,7 @@ ue4Structs = {
     Boiler             = { "/Script/arr.boiler" },
     Compressor         = { "/Script/arr.compressor" },
     Handvalve          = { "/Script/arr.handvalve" },
+    Freight            = { "/Script/arr.freight" },
     NetDriver          = { "/Script/Engine.NetDriver" },
     NetConnection      = { "/Script/Engine.NetConnection" },
     ActorChannel       = { "/Script/Engine.ActorChannel" }
@@ -2712,6 +2744,10 @@ function transmitItem(pipe, baseAddr, properties, array, id)
         address  = baseAddr
 
         for j = 1, #path do
+            if address == nil then
+                break
+            end
+            
             address = address + path[j]
             if j ~= #path then
                 address = readPointer(address)

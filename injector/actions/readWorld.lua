@@ -69,6 +69,10 @@ function transmitItem(pipe, baseAddr, properties, array, id)
         address  = baseAddr
 
         for j = 1, #path do
+            if address == nil then
+                break
+            end
+            
             address = address + path[j]
             if j ~= #path then
                 address = readPointer(address)

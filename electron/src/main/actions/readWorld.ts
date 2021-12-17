@@ -123,7 +123,7 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
         if( Name.endsWith( '<br>' ) )
             Name = Name.slice( 0, -4 );
 
-        return {
+        let frame = {
             ID    : ID,
             Type  : Type,
             Name  : Name,
@@ -152,7 +152,17 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
             FuelAmount      : await pipe.readFloat(),
             Speed           : await pipe.readFloat(),
             MaxSpeed        : await pipe.readInt(),
-        }
+            Freight         : {
+                Amount: await pipe.readInt(),
+                Max   : await pipe.readInt(),
+                Type  : await pipe.readString( await pipe.readInt() ),
+            }
+        } as Frame;
+
+        if( frame.Freight.Max === 0 )
+            frame.Freight = null;
+
+        return frame;
     }
 
     private async readSwitch(): Promise<Switch> {
@@ -212,14 +222,19 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
                 await pipe.readFloat(),
-            ]
+            ],
+            Storage: {
+                Amount: await pipe.readFloat(),
+                Max   : await pipe.readFloat(),
+                Type  : await pipe.readString( await pipe.readInt() ) ,
+            }
         }
     }
 
     private async readIndustry(): Promise<Industry> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
-        return {
+        let industry = {
             ID  : await pipe.readInt(),
             Type: await pipe.readInt(),
             Location: [
@@ -231,8 +246,29 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
                 await pipe.readFloat(),
-            ]
-        }
+            ],
+            Educts: [],
+            Products: []
+        } as Industry;
+
+        let productsAndEducts = [];
+        for( let i = 0; i < 8; i++ )
+            productsAndEducts.push( {
+                Amount: await pipe.readFloat(),
+                Max: await pipe.readFloat(),
+                Type: await pipe.readString( await pipe.readInt() ) ,
+            } );
+
+        productsAndEducts.forEach( ( item, i ) => {
+            if( item.Type === '' )
+                return;
+            else if( i < 4 )
+                industry.Educts.push( item );
+            else
+                industry.Products.push( item );
+        } );
+
+        return industry;
     }
 
     private async readSpline(): Promise<Spline> {
