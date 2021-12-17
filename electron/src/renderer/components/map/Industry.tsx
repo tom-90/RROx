@@ -5,16 +5,16 @@ import { MapTooltip } from './Tooltip';
 import { MapContext } from './context';
 import { Industry as IndustryData } from "../../../shared/data";
 import { IndustryType } from '../../../shared/industry';
-import LoggingCamp from '../../../../assets/images/Logging Camp.svg';
-import Sawmill from '../../../../assets/images/Sawmill.svg';
-import FreightDepot from '../../../../assets/images/Freight Depot.svg';
-import Smelter from '../../../../assets/images/Smelter.svg';
-import IronMine from '../../../../assets/images/Iron Mine.svg';
-import CoalMine from '../../../../assets/images/Coal Mine.svg';
-import Refinery from '../../../../assets/images/Refinery.svg';
-import Ironworks from '../../../../assets/images/Ironworks.svg';
-import OilField from '../../../../assets/images/Oil Field.svg';
-import { IndustryInfo } from './IndustryInfo';
+import LoggingCamp from '../../../../assets/images/industries/Logging Camp.svg';
+import Sawmill from '../../../../assets/images/industries/Sawmill.svg';
+import FreightDepot from '../../../../assets/images/industries/Freight Depot.svg';
+import Smelter from '../../../../assets/images/industries/Smelter.svg';
+import IronMine from '../../../../assets/images/industries/Iron Mine.svg';
+import CoalMine from '../../../../assets/images/industries/Coal Mine.svg';
+import Refinery from '../../../../assets/images/industries/Refinery.svg';
+import Ironworks from '../../../../assets/images/industries/Ironworks.svg';
+import OilField from '../../../../assets/images/industries/Oil Field.svg';
+import { StorageInfo } from './StorageInfo';
 
 export const Industry = React.memo( function( { data, map }: { data: IndustryData, map: MapProperties, index: number } ) {
     const { Type, Location, Rotation } = data;
@@ -44,10 +44,12 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
                 stroke="brown"
                 className={'clickable highlight'}
             />
-            <IndustryInfo
+            <StorageInfo
                 title={'Firewood Depot'}
-                input={data.Educts}
-                output={data.Products}
+                storages={{
+                    Input: data.Educts,
+                    Output: data.Products
+                }}
                 isVisible={infoVisible && !minimap}
                 onClose={() => {
                     setInfoVisible( false );
@@ -150,10 +152,12 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
             height={industry.height}
             className={'clickable highlight'}
         />
-        <IndustryInfo
+        <StorageInfo
             title={industry.name}
-            input={data.Educts}
-            output={data.Products}
+            storages={{
+                Input: data.Educts,
+                Output: data.Products
+            }}
             isVisible={infoVisible && !minimap}
             onClose={() => {
                 setInfoVisible( false );

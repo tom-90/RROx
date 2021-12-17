@@ -19,6 +19,7 @@ export interface Frame {
     FuelAmount?: number;
     Speed?: number;
     MaxSpeed?: number;
+    Freight?: Storage;
 }
 
 export interface Player {

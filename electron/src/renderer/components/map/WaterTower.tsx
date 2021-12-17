@@ -4,10 +4,10 @@ import { WaterTower as WaterTowerData } from "../../../shared/data";
 import { MapTooltip } from './Tooltip';
 import { MapContext } from './context';
 import { Button } from 'antd';
-import { IndustryInfo } from './IndustryInfo';
+import { StorageInfo } from './StorageInfo';
 
 export const WaterTower = React.memo( function( { data, map }: { data: WaterTowerData, map: MapProperties, index: number } ) {
-    const { Location, Rotation } = data;
+    const { Location, Rotation, Storage } = data;
     const { imx, imy, minX, minY, scale } = map;
 
     const x = imx - ( ( Location[ 0 ] - minX ) / 100 * scale );
@@ -41,10 +41,11 @@ export const WaterTower = React.memo( function( { data, map }: { data: WaterTowe
                 fill="blue"
             />
         </g>
-        <IndustryInfo
+        <StorageInfo
             title={'Watertower'}
-            input={[]}
-            output={[ data.Storage ]}
+            storages={{
+                'Water Level': [ Storage ],
+            }}
             isVisible={infoVisible && !minimap}
             onClose={() => {
                 setInfoVisible( false );

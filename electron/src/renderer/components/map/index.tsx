@@ -199,10 +199,10 @@ export function Map( { data }: { data: MapData } ) {
                 <g className={'map_viewport'}>
                     <rect x="0" y="0" width="8000" height="8000" fill={ transparent ? 'rgba(0,0,0,0)' : 'url(#bg' + background + ')'} stroke="black" className={'map_image'} />
                     {data.Splines.filter( ( { Type } ) => !IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
+                    {data.Industries.map( ( d, i ) => <Industry key={i} data={d} map={map} index={i}/> )}
                     {data.Splines.filter( ( { Type } ) =>  IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Turntables.map( ( d, i ) => <Turntable key={i} data={d} map={map} index={i}/> )}
                     {data.Switches.map( ( d, i ) => <Switch key={i} data={d} map={map} index={i}/> )}
-                    {data.Industries.map( ( d, i ) => <Industry key={i} data={d} map={map} index={i}/> )}
                     {data.WaterTowers.map( ( d, i ) => <WaterTower key={i} data={d} map={map} index={i}/> )}
                     {data.Frames.map( ( d, i ) => <Frame key={i} data={d} map={map} index={i}/> )}
                     {data.Players.map( ( d, i ) => <Player key={i} data={d} map={map} index={i}/> )}

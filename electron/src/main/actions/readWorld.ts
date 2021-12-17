@@ -123,7 +123,7 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
         if( Name.endsWith( '<br>' ) )
             Name = Name.slice( 0, -4 );
 
-        return {
+        let frame = {
             ID    : ID,
             Type  : Type,
             Name  : Name,
@@ -152,7 +152,17 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
             FuelAmount      : await pipe.readFloat(),
             Speed           : await pipe.readFloat(),
             MaxSpeed        : await pipe.readInt(),
-        }
+            Freight         : {
+                Amount: await pipe.readInt(),
+                Max   : await pipe.readInt(),
+                Type  : await pipe.readString( await pipe.readInt() ),
+            }
+        } as Frame;
+
+        if( frame.Freight.Max === 0 )
+            frame.Freight = null;
+
+        return frame;
     }
 
     private async readSwitch(): Promise<Switch> {
