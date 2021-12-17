@@ -212,14 +212,19 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
                 await pipe.readFloat(),
-            ]
+            ],
+            Storage: {
+                Amount: await pipe.readFloat(),
+                Max   : await pipe.readFloat(),
+                Type  : await pipe.readString( await pipe.readInt() ) ,
+            }
         }
     }
 
     private async readIndustry(): Promise<Industry> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
-        return {
+        let industry = {
             ID  : await pipe.readInt(),
             Type: await pipe.readInt(),
             Location: [
@@ -231,8 +236,29 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
                 await pipe.readFloat(),
-            ]
-        }
+            ],
+            Educts: [],
+            Products: []
+        } as Industry;
+
+        let productsAndEducts = [];
+        for( let i = 0; i < 8; i++ )
+            productsAndEducts.push( {
+                Amount: await pipe.readFloat(),
+                Max: await pipe.readFloat(),
+                Type: await pipe.readString( await pipe.readInt() ) ,
+            } );
+
+        productsAndEducts.forEach( ( item, i ) => {
+            if( item.Type === '' )
+                return;
+            else if( i < 4 )
+                industry.Educts.push( item );
+            else
+                industry.Products.push( item );
+        } );
+
+        return industry;
     }
 
     private async readSpline(): Promise<Spline> {

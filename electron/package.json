@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development electron-forge start",
+    "debug": "cross-env NODE_ENV=development electron-forge start --inspect-electron",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -77,6 +78,7 @@
     "ffi-napi": "^4.0.3",
     "form-data": "^4.0.0",
     "history": "^5.1.0",
+    "quaternion": "^1.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.0.2",

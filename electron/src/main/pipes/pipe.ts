@@ -35,8 +35,7 @@ export class NamedPipe {
                 if( !buffer && readableTries <= 10 )
                     return; // Wait for more data
 
-                this.socket.removeListener( 'end', onEnd );
-                this.socket.removeListener( 'readable', onReadable );
+                removeListeners();
 
                 if( !buffer )
                     return reject( new Error( `[${this.name}] Not enough data is available` ) );
@@ -45,13 +44,23 @@ export class NamedPipe {
             };
 
             let onEnd = () => {
-                this.socket.removeListener( 'readable', onReadable );
+                removeListeners();
 
                 reject( new Error( 'NamedPipe has been closed' ) );
             };
 
+            let removeListeners = () => {
+                this.socket.removeListener( 'end', onEnd );
+                this.socket.removeListener( 'readable', onReadable );
+                clearTimeout( timeout );
+            };
+
             this.socket.once( 'end', onEnd );
             this.socket.on( 'readable', onReadable );
+            let timeout = setTimeout( () => {
+                removeListeners();
+                reject( new Error( `[${this.name}] Timeout waiting for data` ) );
+            }, 10000 );
         } );
     }
 

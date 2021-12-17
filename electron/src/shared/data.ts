@@ -60,6 +60,7 @@ export interface WaterTower {
     ID: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
+    Storage : Storage;
 }
 
 export interface Industry {
@@ -67,6 +68,14 @@ export interface Industry {
     Type: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
+    Educts  : Storage[];
+    Products: Storage[];
+}
+
+export interface Storage {
+    Type: string;
+    Amount: number;
+    Max: number;
 }
 
 export interface DataChange<T = unknown> {

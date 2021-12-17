@@ -71,6 +71,10 @@ module.exports = {
                     filename: 'assets/[name][ext][query]',
                 },
             },
+            {
+                resourceQuery: /raw/,
+                type: 'asset/source',
+            }
         ],
     },
     plugins: [

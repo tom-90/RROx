@@ -3,7 +3,6 @@ import Background1 from "../../../../assets/images/bg1.jpg";
 import Background2 from "../../../../assets/images/bg2.jpg";
 import Background3 from "../../../../assets/images/bg3.jpg";
 import Background4 from "../../../../assets/images/bg4.jpg";
-import TransparentBackground from "../../../../assets/images/transparentBg.png";
 import { Button, Tooltip } from 'antd';
 import { ZoomInOutlined, ZoomOutOutlined, AimOutlined, StopOutlined } from '@ant-design/icons';
 import { MapData, MapProperties } from './interfaces';
@@ -14,7 +13,7 @@ import { Turntable } from './Turntable';
 import { Player } from './Player';
 import SVGPanZoom from 'svg-pan-zoom';
 import { WaterTower } from './WaterTower';
-import { FirewoodDepot } from './FirewoodDepot';
+import { Industry } from './Industry';
 import { MapContext } from './context';
 
 // @ts-expect-error
@@ -196,17 +195,14 @@ export function Map( { data }: { data: MapData } ) {
                     <pattern id="bg4" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
                         <image x="0" y="0" width="8000" height="8000" href={Background4} />
                     </pattern>
-                    <pattern id="transparentBg" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
-                        <image x="0" y="0" width="8000" height="8000" href={TransparentBackground} />
-                    </pattern>
                 </defs>
                 <g className={'map_viewport'}>
-                    <rect x="0" y="0" width="8000" height="8000" fill={ transparent ? 'url(#transparentBg)' : 'url(#bg' + background + ')'} stroke="black" className={'map_image'} />
+                    <rect x="0" y="0" width="8000" height="8000" fill={ transparent ? 'rgba(0,0,0,0)' : 'url(#bg' + background + ')'} stroke="black" className={'map_image'} />
                     {data.Splines.filter( ( { Type } ) => !IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Splines.filter( ( { Type } ) =>  IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Turntables.map( ( d, i ) => <Turntable key={i} data={d} map={map} index={i}/> )}
                     {data.Switches.map( ( d, i ) => <Switch key={i} data={d} map={map} index={i}/> )}
-                    {data.Industries.filter( ( d ) => d.Type === 10 ).map( ( d, i ) => <FirewoodDepot key={i} data={d} map={map} index={i}/> )}
+                    {data.Industries.map( ( d, i ) => <Industry key={i} data={d} map={map} index={i}/> )}
                     {data.WaterTowers.map( ( d, i ) => <WaterTower key={i} data={d} map={map} index={i}/> )}
                     {data.Frames.map( ( d, i ) => <Frame key={i} data={d} map={map} index={i}/> )}
                     {data.Players.map( ( d, i ) => <Player key={i} data={d} map={map} index={i}/> )}
