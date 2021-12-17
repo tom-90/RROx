@@ -2,7 +2,7 @@ export const schema = {
     'map.background': {
         type: "number" as const,
         default: 1,
-        maximum: 4,
+        maximum: 5,
         minimum: 1,
     },
     'minimap.enabled': {
@@ -60,7 +60,7 @@ export const schema = {
 export const accessPropertiesByDotNotation = false;
 
 export interface Schema {
-    'map.background': boolean;
+    'map.background': number;
     'minimap.enabled': boolean;
     'minimap.transparent': boolean;
     'minimap.corner': number;
