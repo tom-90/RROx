@@ -3,6 +3,7 @@ import Background1 from "../../../../assets/images/bg1.jpg";
 import Background2 from "../../../../assets/images/bg2.jpg";
 import Background3 from "../../../../assets/images/bg3.jpg";
 import Background4 from "../../../../assets/images/bg4.jpg";
+import Background5 from "../../../../assets/images/bg5.jpg";
 import TransparentBackground from "../../../../assets/images/transparentBg.png";
 import { Button, Tooltip } from 'antd';
 import { ZoomInOutlined, ZoomOutOutlined, AimOutlined, StopOutlined } from '@ant-design/icons';
@@ -181,7 +182,7 @@ export function Map( { data }: { data: MapData } ) {
             controlEnabled,
         }}
     >
-        <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: window.mode === 'overlay' ? undefined : '#fefef2' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: window.mode === 'overlay' ? undefined : (background === 5 ? '#000008' : '#fefef2') }}>
             <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8000 8000" style={{ width: '100%', height: '100%' }}>
                 <defs>
                     <pattern id="bg1" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
@@ -195,6 +196,9 @@ export function Map( { data }: { data: MapData } ) {
                     </pattern>
                     <pattern id="bg4" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
                         <image x="0" y="0" width="8000" height="8000" href={Background4} />
+                    </pattern>
+                    <pattern id="bg5" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
+                        <image x="0" y="0" width="8000" height="8000" href={Background5} />
                     </pattern>
                     <pattern id="transparentBg" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">
                         <image x="0" y="0" width="8000" height="8000" href={TransparentBackground} />

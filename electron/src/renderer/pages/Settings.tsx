@@ -6,6 +6,7 @@ import Background1 from "../../../assets/images/bg1.jpg";
 import Background2 from "../../../assets/images/bg2.jpg";
 import Background3 from "../../../assets/images/bg3.jpg";
 import Background4 from "../../../assets/images/bg4.jpg";
+import Background5 from "../../../assets/images/bg5.jpg";
 
 declare global {
     interface Window {
@@ -75,6 +76,7 @@ export function Settings() {
                             <Radio.Button value={2} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background2}/></Radio.Button>
                             <Radio.Button value={3} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background3}/></Radio.Button>
                             <Radio.Button value={4} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background4}/></Radio.Button>
+                            <Radio.Button value={5} style={{ margin: '5px', padding: '5px', height: '100%'  }}><Avatar shape='square' size={128} src={Background5}/></Radio.Button>
                         </Radio.Group> 
                     </Form.Item>
                     <Divider orientation="left">Minimap</Divider>

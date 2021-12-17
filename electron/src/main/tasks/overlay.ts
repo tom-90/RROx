@@ -4,10 +4,6 @@ import { WindowType } from "../windows";
 import { globalShortcut, screen } from "electron";
 import { focusGame, getActiveWindow, getGameWindow } from "../utils";
 import { AutosaveTask } from ".";
-import Background1 from "../../../assets/images/bg1.jpg";
-import Background2 from "../../../assets/images/bg2.jpg";
-import Background3 from "../../../assets/images/bg3.jpg";
-import Background4 from "../../../assets/images/bg4.jpg";
 
 export enum OverlayStates {
     HIDDEN = 0,
@@ -24,7 +20,7 @@ export class OverlayTask extends TimerTask {
     private minimapCorner: number;
     private shortcutsRegistered = false;
     private transparent = false;
-    private background = Background1;
+    private background: number;
 
     constructor( app: RROx ) {
         super( app );
