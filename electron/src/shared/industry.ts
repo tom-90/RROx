@@ -9,4 +9,8 @@ export enum IndustryType {
     IRONMINE = 8,
     FREIGHT_DEPOT = 9,
     FIREWOOD_DEPOT = 10,
+    ENGINE_SHED_BLUE = 11,
+    ENGINE_SHED_GOLD = 12,
+    ENGINE_SHED_RED = 13,
+    ENGINE_SHED_BROWN = 14,
 }

@@ -58,6 +58,25 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
             />
         </MapTooltip>;
 
+    if( Type === IndustryType.ENGINE_SHED_BLUE || Type === IndustryType.ENGINE_SHED_BROWN
+            || Type === IndustryType.ENGINE_SHED_GOLD || Type === IndustryType.ENGINE_SHED_RED ) {
+        let color = '#4f6cff';
+
+        if( Type === IndustryType.ENGINE_SHED_BROWN )
+            color = '#5c4936';
+        else if( Type === IndustryType.ENGINE_SHED_GOLD )
+            color = '#ffef9c';
+        else if( Type === IndustryType.ENGINE_SHED_RED )
+            color = '#ff5959';
+
+        return <path
+            transform={"rotate(" + Math.round( Rotation[ 1 ] ) + ", " + x + ", " + y + ")"}
+            d={"M" + x + "," + y + " m-40,-10 l40,0 l0,20 l-40,0 z"}
+            fill={color}
+            stroke="black"
+        />;
+    }
+
     let industry: { name: string, image: string, transform: string, width: number, height: number };
 
     if( Type === IndustryType.LOGGING_CAMP )

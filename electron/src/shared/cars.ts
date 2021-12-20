@@ -16,4 +16,5 @@ export enum Cars {
     FLATCAR_LOGS = 'flatcar_logs',
     FLATCAR_STAKES = 'flatcar_stakes',
     TANKER = 'flatcar_tanker',
+    CABOOSE = 'caboose',
 }

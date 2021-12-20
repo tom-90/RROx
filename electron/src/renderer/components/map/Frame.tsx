@@ -25,6 +25,7 @@ import FlatcarStakes from '../../../../assets/images/cars/flatcar_stakes.png';
 import Hopper from '../../../../assets/images/cars/flatcar_hopper.png';
 import Tanker from '../../../../assets/images/cars/flatcar_tanker.png';
 import Boxcar from '../../../../assets/images/cars/boxcar.png';
+import Caboose from '../../../../assets/images/cars/caboose.png';
 
 const FrameInfo: { [ car: string ]: { color: string, image: string, name: string } } = {
     [ Cars.HANDCAR          ]: { color: 'white'      , image: Handcar        , name: 'Handcar' },
@@ -44,6 +45,7 @@ const FrameInfo: { [ car: string ]: { color: string, image: string, name: string
     [ Cars.HOPPER           ]: { color: 'rosybrown'  , image: Hopper         , name: 'Hopper' },
     [ Cars.TANKER           ]: { color: 'lightgray'  , image: Tanker         , name: 'Tanker' },
     [ Cars.BOXCAR           ]: { color: 'gray'       , image: Boxcar         , name: 'Boxcar' },
+    [ Cars.CABOOSE          ]: { color: '#ff5e5e'    , image: Caboose        , name: 'Caboose' },
 };
 
 const getStrokeColor = ( brake: number ) => {
@@ -60,6 +62,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
     const engineRef = createRef<SVGPathElement>();
 
     const [ controlsVisible, setControlsVisible ] = useState( false );
+    const [ storageVisible, setStorageVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
 
     const { Type, Location, Rotation, Name, Number, ID, Brake } = data;
@@ -70,7 +73,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
     const x = ( imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) );
     const y = ( imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) );
 
-    const isEngine = [ 'porter_040', 'porter_042', /*'handcar', */'eureka', 'climax', 'heisler', 'class70', 'cooke260' ].includes( Type );
+    const isEngine = [ 'porter_040', 'porter_042', 'handcar', 'eureka', 'climax', 'heisler', 'class70', 'cooke260' ].includes( Type );
 
     useEffect( () => {
         if( !isEngine || !following || following.type !== 'frame' || following.index !== index || ( following.data === data && following.element === engineRef.current ) )
@@ -121,6 +124,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 id={ID}
                 isVisible={controlsVisible && !minimap}
                 controlEnabled={controlEnabled}
+                isEngine={true}
                 onClose={() => {
                     setControlsVisible( false );
                     setTooltipVisible( false );
@@ -142,9 +146,13 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
         title={FrameInfo[ Type ]?.name || 'Freight Car'}
         controls={<>
             <img src={FrameInfo[ Type ]?.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }}/>
+            <Button onClick={() => {
+                    setTooltipVisible( false );
+                    setControlsVisible( true );
+                }}>Open Controls</Button>
             {data.Freight && <Button onClick={() => {
                 setTooltipVisible( false );
-                setControlsVisible( true );
+                setStorageVisible( true );
             }}>Show Freight</Button>}
         </>}
         visible={tooltipVisible && !minimap}
@@ -163,7 +171,19 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
             storages={{
                 Freight: data.Freight ? [ data.Freight ] : []
             }}
+            isVisible={storageVisible && !minimap}
+            onClose={() => {
+                setStorageVisible( false );
+                setTooltipVisible( false );
+            }}
+        />
+        <FrameControls
+            title={FrameInfo[ Type ]?.name || 'Freight Car'}
+            data={data}
+            id={ID}
             isVisible={controlsVisible && !minimap}
+            isEngine={false}
+            controlEnabled={controlEnabled}
             onClose={() => {
                 setControlsVisible( false );
                 setTooltipVisible( false );
