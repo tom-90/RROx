@@ -5,7 +5,7 @@ import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, StopAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 
@@ -76,6 +76,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             GetVersionIPCHandler,
             KillDanglingInjector,
             MapDataIPCHandler,
+            PathDataIPCHandler,
             SetAttachedStateIPCListener,
             SetEngineControlsIPCListener,
             UpdateConfigIPCListener

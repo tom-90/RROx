@@ -242,6 +242,6 @@ declare module 'quaternion' {
          * @param {string=} order
          * @returns {Quaternion}
          */
-        static fromEuler( phi: number, theta: number, psi: number, order: string ): Quaternion;
+        static fromEuler( phi: number, theta: number, psi: number, order?: string ): Quaternion;
     }
 }

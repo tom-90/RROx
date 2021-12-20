@@ -90,8 +90,10 @@ export abstract class TimerTask<P extends any[] = []> extends Task<P> {
 
         release();
 
-        if( this.isRunning && !this.mutex.isLocked() )
+        if( this.isRunning && !this.mutex.isLocked() ) {
+            clearTimeout( this.timeout );
             this.timeout = setTimeout( () => this.run(), this.interval );
+        }
     }
 
     protected abstract execute( ...params: P ): void | Promise<void>;

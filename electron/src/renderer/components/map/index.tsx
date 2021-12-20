@@ -16,6 +16,7 @@ import SVGPanZoom from 'svg-pan-zoom';
 import { WaterTower } from './WaterTower';
 import { Industry } from './Industry';
 import { MapContext } from './context';
+import { Paths } from './Paths';
 
 // @ts-expect-error
 import SVGUtils from 'svg-pan-zoom/src/svg-utilities';
@@ -210,6 +211,7 @@ export function Map( { data }: { data: MapData } ) {
                     {data.WaterTowers.map( ( d, i ) => <WaterTower key={i} data={d} map={map} index={i}/> )}
                     {data.Frames.map( ( d, i ) => <Frame key={i} data={d} map={map} index={i}/> )}
                     {data.Players.map( ( d, i ) => <Player key={i} data={d} map={map} index={i}/> )}
+                    <Paths map={map} />
                 </g>
             </svg>
             {mode !== 'minimap' && <div style={{ position: 'absolute', right: 0, top: 0 }}>

@@ -4,5 +4,6 @@ export * from './changeSwitch';
 export * from './danglingInjector';
 export * from './getVersion';
 export * from './mapData';
+export * from './pathData';
 export * from './setEngineControls';
 export * from './updateConfig';

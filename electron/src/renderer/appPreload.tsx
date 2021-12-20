@@ -6,6 +6,7 @@ const store = new Store<config.Schema>( config );
 
 const validChannels = [
     'map-data',
+    'path-data',
     'map-update',
     'autosave',
     'update-config',
