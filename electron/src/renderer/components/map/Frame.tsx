@@ -150,10 +150,13 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                     setTooltipVisible( false );
                     setControlsVisible( true );
                 }}>Open Controls</Button>
-            {data.Freight && <Button onClick={() => {
-                setTooltipVisible( false );
-                setStorageVisible( true );
-            }}>Show Freight</Button>}
+            {data.Freight && <Button
+                style={{ marginTop: 5 }}
+                onClick={() => {
+                    setTooltipVisible( false );
+                    setStorageVisible( true );
+                }}
+            >Show Freight</Button>}
         </>}
         visible={tooltipVisible && !minimap}
         setVisible={setTooltipVisible}
