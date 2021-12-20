@@ -27,6 +27,11 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Changelog
 
+### v1.4.0 - 20-12-2021
+- ``Added`` Engine shed is now shown on the map.
+- ``Added`` Caboose is now correctly shown.
+- ``Added`` Remote control for brakes on freight cars and the caboose.
+
 ### v1.3.0 - 17-12-2021
 - ``Added`` More detailed drawings of all industries.
 - ``Added`` Industry input and output information.
