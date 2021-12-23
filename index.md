@@ -24,6 +24,7 @@ For any other questions or issues, you can contact me on Discord:
 ## Known issues
 
 - When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
+- Teleporting does not work for clients in multiplayer.
 
 ## Changelog
 
