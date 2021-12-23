@@ -27,6 +27,14 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Changelog
 
+### v1.5.0 - 23-12-2021
+- ``Added`` Teleporting to industries, locomotives and cabooses.
+- ``Added`` Minizwerg color scheme sharing.
+- ``Added`` The sandhouse is now shown on the map.
+- ``Added`` When clicking attach, a popup with important information is now shown.
+- ``Fixed`` Locomotive and car sizes.
+- ``Fixed`` Ironworks now shows steel pipes as output.
+
 ### v1.4.0 - 20-12-2021
 - ``Added`` Engine shed is now shown on the map.
 - ``Added`` Caboose is now correctly shown.
