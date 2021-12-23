@@ -13,4 +13,5 @@ export enum Products {
     TOOLS = 'crate_tools',
     FIREWOOD = 'firewood',
     WATER = 'water',
+    SAND = 'sand',
 }

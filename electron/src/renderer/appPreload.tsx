@@ -12,13 +12,16 @@ const validChannels = [
     'update-config',
     'control-enabled',
     'change-switch',
+    'minizwerg-colors',
+    'set-money-and-xp',
     'set-engine-controls',
     'get-attached-state',
     'set-attached-state',
     'set-mode',
     'dangling-injector',
     'kill-dangling-injector',
-    'get-version'
+    'get-version',
+    'teleport'
 ];
 
 contextBridge.exposeInMainWorld( 'ipc', {
@@ -45,6 +48,9 @@ contextBridge.exposeInMainWorld( 'ipc', {
 contextBridge.exposeInMainWorld( 'settingsStore', {
     get( key: string ) {
         return store.get( key );
+    },
+    getAll() {
+        return store.store
     },
     set( key: string, val: any ) {
         return store.set( key, val );

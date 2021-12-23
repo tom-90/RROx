@@ -16,4 +16,9 @@ declare interface Window {
     }
     mode: 'normal' | 'overlay';
     openBrowser: ( url: string ) => void;
+    settingsStore: {
+        get<T>( key: string ): T;
+        getAll(): any;
+        set( key: string, val: any ): void;
+    };
 }

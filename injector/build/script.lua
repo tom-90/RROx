@@ -2474,6 +2474,15 @@ definitions = {
                   {{"+WaterTower.Mystorage", "+Storage.currentamountitems"}, "f"},
                   {{"+WaterTower.Mystorage", "+Storage.maxitems"}, "f"},
                   {{"+WaterTower.Mystorage", "+Storage.storagetype", "+0"}, "s", 256}},
+    Sandhouse = {{{"+Sandhouse.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
+                  {{"+Sandhouse.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
+                  {{"+Sandhouse.RootComponent", "+SceneComponent.RelativeLocation.Z"}, "f"},
+                  {{"+Sandhouse.RootComponent", "+SceneComponent.RelativeRotation.Pitch"}, "f"},
+                  {{"+Sandhouse.RootComponent", "+SceneComponent.RelativeRotation.Yaw"}, "f"},
+                  {{"+Sandhouse.RootComponent", "+SceneComponent.RelativeRotation.Roll"}, "f"},
+                  {{"+Sandhouse.Mystorage", "+Storage.currentamountitems"}, "f"},
+                  {{"+Sandhouse.Mystorage", "+Storage.maxitems"}, "f"},
+                  {{"+Sandhouse.Mystorage", "+Storage.storagetype", "+0"}, "s", 256}},
     Industry = {{{"+Industry.industrytype"}, "i"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.X"}, "f"},
                 {{"+Industry.RootComponent", "+SceneComponent.RelativeLocation.Y"}, "f"},
@@ -2517,6 +2526,7 @@ channelNames = {
     BP_SplineActor = "Spline",
     BP_switch = "Switch",
     BP_watertower = "WaterTower",
+    BP_sandhouse = "Sandhouse",
     BP_industry = "Industry",
     BP_turntable = "Turntable",
 
@@ -2555,6 +2565,7 @@ ue4Structs = {
     TurnTable          = { "/Script/arr.turntable" },
     Switch             = { "/Script/arr.Switch" },
     WaterTower         = { "/Script/arr.watertower" },
+    Sandhouse          = { "/Script/arr.sandhouse" },
     Industry           = { "/Script/arr.industry" },
     Storage            = { "/Script/arr.storage" },
     Regulator          = { "/Script/arr.regulator" },
@@ -2931,6 +2942,7 @@ function starttransmitter()
                     transmitArray("Turntable", pipe)
                     transmitArray("Switch", pipe)
                     transmitArray("WaterTower", pipe)
+                    transmitArray("Sandhouse", pipe)
                     transmitArray("Industry", pipe)
                     if readMode == 0 then -- Host FULL read mode
                         transmitArray("Spline", pipe)

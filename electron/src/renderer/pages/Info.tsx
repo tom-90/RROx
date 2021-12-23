@@ -12,8 +12,8 @@ export function Info() {
     }, [] );
 
     return (
-        <PageLayout>
-            <Layout.Content style={{ padding: '0 50px', overflowY: 'auto' }}>
+        <PageLayout style={{ overflowY: 'auto' }}>
+            <div style={{ maxWidth: 1000, width: '100%', marginBottom: 20, padding: '0 50px' }}>
                 <Divider orientation="left" style={{ margin: '20px -25px' }}>How to use</Divider>
                 <p>
                     To use the app, first configure all the options you would like in the settings-tab.
@@ -52,7 +52,7 @@ export function Info() {
                 <p>
                     <i>RROx - Version {version}</i>
                 </p>
-            </Layout.Content>
+            </div>
         </PageLayout>
     );
 }

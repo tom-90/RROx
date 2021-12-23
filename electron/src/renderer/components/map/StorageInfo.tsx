@@ -17,6 +17,7 @@ import Rails from '../../../../assets/images/products/rails_p.svg';
 import Tools from '../../../../assets/images/products/tools_p.svg';
 import Firewood from '../../../../assets/images/products/firewood_p.svg';
 import Water from '../../../../assets/images/products/water_p.svg';
+import Sand from '../../../../assets/images/products/sand_p.svg';
 
 const Images: { [ key: string ]: { image: string, offset?: number } } = {
     [ Products.CRUDEOIL   ]: { image: CrudeOil   },
@@ -27,6 +28,7 @@ const Images: { [ key: string ]: { image: string, offset?: number } } = {
     [ Products.FIREWOOD   ]: { image: Firewood   },
     [ Products.TOOLS      ]: { image: Tools      },
     [ Products.WATER      ]: { image: Water      },
+    [ Products.SAND       ]: { image: Sand       },
     [ Products.BEAM       ]: { image: Beams   , offset: -5 },
     [ Products.CORDWOOD   ]: { image: Cordwood, offset: -5 },
     [ Products.RAWIRON    ]: { image: Iron    , offset: -5 },

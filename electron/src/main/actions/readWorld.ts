@@ -1,6 +1,6 @@
 import { Action } from "./action";
 import { PipeType } from "../pipes";
-import { Frame, Player, Spline, Switch, Turntable, WaterTower, Industry, World } from "../../shared/data";
+import { Frame, Player, Spline, Switch, Turntable, WaterTower, Sandhouse, Industry, World } from "../../shared/data";
 import Log from 'electron-log';
 
 export enum ReadWorldMode {
@@ -30,6 +30,7 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
             Switches   : [],
             Turntables : [],
             WaterTowers: [],
+            Sandhouses : [],
             Industries : [],
             Splines    : [],
         };
@@ -66,6 +67,9 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
             } else if ( arrayName === 'WaterTower' ) {
                 array = data.WaterTowers;
                 method = () => this.readWaterTower();
+            } else if ( arrayName === 'Sandhouse' ) {
+                array = data.Sandhouses;
+                method = () => this.readSandhouse();
             } else if ( arrayName === 'Industry' ) {
                 array = data.Industries;
                 method = () => this.readIndustry();
@@ -227,6 +231,29 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 Amount: await pipe.readFloat(),
                 Max   : await pipe.readFloat(),
                 Type  : await pipe.readString( await pipe.readInt() ) ,
+            }
+        }
+    }
+
+    private async readSandhouse(): Promise<Sandhouse> {
+        let pipe = this.app.getPipe( PipeType.CheatEngineData );
+
+        return {
+            ID: await pipe.readInt(),
+            Location: [
+                await pipe.readFloat(),
+                await pipe.readFloat(),
+                await pipe.readFloat(),
+            ],
+            Rotation: [
+                await pipe.readFloat(),
+                await pipe.readFloat(),
+                await pipe.readFloat(),
+            ],
+            Storage: {
+                Amount: await pipe.readFloat(),
+                Max: await pipe.readFloat(),
+                Type: await pipe.readString( await pipe.readInt() ),
             }
         }
     }

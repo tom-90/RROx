@@ -1,3 +1,5 @@
+import { Cars } from './cars';
+
 export const schema = {
     'map.background': {
         type: "number" as const,
@@ -55,6 +57,21 @@ export const schema = {
     'minizwerg.url': {
         type: "string" as const
     },
+
+    [ `colors.${Cars.FLATCAR_LOGS}.unloaded`     ]: { type: 'string', default: '#cd5c5c' },
+    [ `colors.${Cars.FLATCAR_LOGS}.loaded`       ]: { type: 'string', default: '#cd5c5c' },
+    [ `colors.${Cars.FLATCAR_CORDWOOD}.unloaded` ]: { type: 'string', default: '#ffa500' },
+    [ `colors.${Cars.FLATCAR_CORDWOOD}.loaded`   ]: { type: 'string', default: '#ffa500' },
+    [ `colors.${Cars.FLATCAR_STAKES}.unloaded`   ]: { type: 'string', default: '#adff2f' },
+    [ `colors.${Cars.FLATCAR_STAKES}.loaded`     ]: { type: 'string', default: '#adff2f' },
+    [ `colors.${Cars.HOPPER}.unloaded`           ]: { type: 'string', default: '#bc8f8f' },
+    [ `colors.${Cars.HOPPER}.loaded`             ]: { type: 'string', default: '#bc8f8f' },
+    [ `colors.${Cars.TANKER}.unloaded`           ]: { type: 'string', default: '#d3d3d3' },
+    [ `colors.${Cars.TANKER}.loaded`             ]: { type: 'string', default: '#d3d3d3' },
+    [ `colors.${Cars.BOXCAR}.unloaded`           ]: { type: 'string', default: '#808080' },
+    [ `colors.${Cars.BOXCAR}.loaded`             ]: { type: 'string', default: '#808080' },
+    [ `colors.${Cars.CABOOSE}.unloaded`          ]: { type: 'string', default: '#ff5e5e' },
+    [ `colors.${Cars.CABOOSE}.loaded`            ]: { type: 'string', default: '#ff5e5e' },
 };
 
 export const accessPropertiesByDotNotation = false;

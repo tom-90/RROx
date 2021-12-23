@@ -44,6 +44,9 @@ struct ASCharacter : ACharacter {
 	void ServerSetRaycastBake(struct Aairbrake* Brake, float Value); // Function arr.SCharacter.ServerSetRaycastBake // (Net|Native|Event|Protected|NetServer) // @ game+0xac2320
 	void ServerSetRaycastWhistle(struct Awhistle* whistle, float Input); // Function arr.SCharacter.ServerSetRaycastWhistle // (Net|Native|Event|Protected|NetServer) // @ game+0xac2840
 	void ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float Value); // Function arr.SCharacter.ServerSetRaycastHandvalve // (Net|Native|Event|Protected|NetServer) // @ game+0xac25d0
+
+	void SetPlayerMoney(float money); // Function arr.SCharacter.SetPlayerMoney // (Final|Native|Public|BlueprintCallable) // @ game+0xac4550
+	void SetPlayerXP(int32_t xp); // Function arr.SCharacter.SetPlayerXP // (Final|Native|Public|BlueprintCallable) // @ game+0xac45d0
 };
 
 // Class Engine.KismetSystemLibrary

@@ -21,6 +21,10 @@ struct FVector2D {
 
 struct FRotator {
   float Pitch, Yaw, Roll;
+
+  FRotator() : Pitch(0.f), Yaw(0.f), Roll(0.f) {}
+  FRotator(float Pitch, float Yaw, float Roll) : Pitch(Pitch), Yaw(Yaw), Roll(Roll) {}
+  FRotator(float InF) : Pitch(InF), Yaw(InF), Roll(InF) { }
 };
 
 struct FLinearColor {
@@ -136,6 +140,7 @@ struct AActor : UObject {
   char pad_28[0x1F8]; // 0x28(0x1F8)
 
   FVector K2_GetActorLocation();
+  bool K2_SetActorLocation(struct FVector NewLocation, bool bSweep, struct FHitResult& SweepHitResult, bool bTeleport); // Function Engine.Actor.K2_SetActorLocation // (Final|Native|Public|HasOutParms|HasDefaults|BlueprintCallable) // @ game+0x24cf750
 };
 
 // Class Engine.Pawn
@@ -156,6 +161,12 @@ struct AController : AActor {
   char pad_220[0x78];
 
   struct APawn* K2_GetPawn();
+};
+
+// ScriptStruct Engine.HitResult
+// Size: 0x88 (Inherited: 0x00)
+struct FHitResult {
+	char pad_00[0x88];
 };
 
 // Class Engine.PlayerController

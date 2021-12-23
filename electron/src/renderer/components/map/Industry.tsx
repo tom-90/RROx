@@ -15,6 +15,7 @@ import Refinery from '../../../../assets/images/industries/Refinery.svg';
 import Ironworks from '../../../../assets/images/industries/Ironworks.svg';
 import OilField from '../../../../assets/images/industries/Oil Field.svg';
 import { StorageInfo } from './StorageInfo';
+import { Products } from '../../../shared/products';
 
 export const Industry = React.memo( function( { data, map }: { data: IndustryData, map: MapProperties, index: number } ) {
     const { Type, Location, Rotation } = data;
@@ -157,10 +158,18 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
     
     return <MapTooltip
         title={industry.name}
-        controls={<Button onClick={() => {
-            setTooltipVisible( false );
-            setInfoVisible( true );
-        }}>Show Info</Button>}
+        controls={<>
+            <Button onClick={() => {
+                setTooltipVisible( false );
+                setInfoVisible( true );
+            }}>Show Info</Button>
+            <Button
+                style={{ marginTop: 5 }}
+                onClick={() => {
+                    window.ipc.send( 'teleport', data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 1000 )
+                }}
+            >Teleport Here</Button>
+        </>}
         visible={tooltipVisible && !minimap}
         setVisible={setTooltipVisible}
     >
@@ -175,7 +184,12 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
             title={industry.name}
             storages={{
                 Input: data.Educts,
-                Output: data.Products
+                Output: Type === IndustryType.IRONWORKS
+                        ? data.Products.map( ( p ) => p.Type === Products.RAWIRON ? {
+                            ...p,
+                            Type: Products.STEELPIPES,
+                        } : p )
+                        : data.Products
             }}
             isVisible={infoVisible && !minimap}
             onClose={() => {

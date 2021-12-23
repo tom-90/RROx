@@ -53,6 +53,31 @@ void run(std::stop_token stoken, HMODULE dll) {
         bool checked = isServerHost(addrKismet, addrWorld);
         communicator->WriteInt(checked);
     }
+    else if (command == 5) { //Teleport
+        uint64_t addrPlayer = communicator->ReadUInt64(stoken);
+        float x = communicator->ReadFloat(stoken);
+        float y = communicator->ReadFloat(stoken);
+        float z = communicator->ReadFloat(stoken);
+
+        if (stoken.stop_requested())
+            return;
+
+        logger->WriteString("Teleporting...");
+        teleport(addrPlayer, x, y, z);
+        logger->WriteString("Teleported.");
+    }
+    else if (command == 6) { //Set money and xp
+        uint64_t addrPlayer = communicator->ReadUInt64(stoken);
+        float money = communicator->ReadFloat(stoken);
+        int xp = communicator->ReadInt(stoken);
+
+        if (stoken.stop_requested())
+            return;
+
+        logger->WriteString("Setting Money and XP...");
+        setMoneyAndXP(addrPlayer, money, xp);
+        logger->WriteString("Set Money and XP.");
+    }
   }
 }
 

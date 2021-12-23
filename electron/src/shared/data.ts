@@ -64,6 +64,13 @@ export interface WaterTower {
     Storage : Storage;
 }
 
+export interface Sandhouse {
+    ID: number;
+    Location: [ X: number, Y: number, Z: number ];
+    Rotation: [ Pitch: number, Yaw: number, Roll: number ];
+    Storage: Storage;
+}
+
 export interface Industry {
     ID: number;
     Type: number;
@@ -93,6 +100,7 @@ export interface World {
     Switches: Switch[];
     Turntables: Turntable[];
     WaterTowers: WaterTower[];
+    Sandhouses: Sandhouse[];
     Industries: Industry[];
     Splines: Spline[];
 }

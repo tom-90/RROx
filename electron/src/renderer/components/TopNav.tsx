@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Button, Spin, Typography, notification } from "antd";
+import { Menu, Button, Spin, Typography, notification, Modal } from "antd";
 import { ApiOutlined, DisconnectOutlined } from '@ant-design/icons';
 import { useLocation, matchPath, Link } from "react-router-dom";
 import { AttachedState } from '../../shared/state';
@@ -60,8 +60,17 @@ export function TopNav() {
                             return;
                         if( status === 'ATTACHED' )
                             return window.ipc.send( 'set-attached-state', 'DETACH' );
-                        if( status === 'DETACHED' )
-                            return window.ipc.send( 'set-attached-state', 'ATTACH' );
+                        if( status === 'DETACHED' ) {
+                            Modal.confirm( {
+                                title  : 'Before attaching:',
+                                content: 'Make sure you have joined the game before attaching. Detach before leaving the game and before closing RROx.',
+                                onOk() {
+                                    window.ipc.send( 'set-attached-state', 'ATTACH' );
+                                },
+                                okText   : 'Attach',
+                                cancelText: 'Cancel',
+                            } );
+                        }
                     }}
                     icon={
                         status === 'ATTACHING' || status === 'DETACHING' ? <Spin size="small" style={{ marginRight: 10 }}/>

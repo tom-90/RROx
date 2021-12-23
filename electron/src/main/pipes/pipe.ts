@@ -60,7 +60,7 @@ export class NamedPipe {
             let timeout = setTimeout( () => {
                 removeListeners();
                 reject( new Error( `[${this.name}] Timeout waiting for data` ) );
-            }, 10000 );
+            }, 25000 );
         } );
     }
 

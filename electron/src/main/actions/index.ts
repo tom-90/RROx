@@ -1,6 +1,7 @@
 export * from './changeSwitch';
 export * from './ensureInGame';
 export * from './injectDLL';
+export * from './minizwergColors';
 export * from './minizwergUpload';
 export * from './readAddress';
 export * from './readAddressValue';
@@ -8,4 +9,6 @@ export * from './readPlayerAddress';
 export * from './readWorld';
 export * from './save';
 export * from './setEngineControls';
+export * from './setMoneyAndXP';
 export * from './stop';
+export * from './teleport';

@@ -64,3 +64,22 @@ bool isLoggedIn(uint64_t addrKismet, uint64_t addrPlayer)
 
     return kismet->IsLoggedIn(player);
 }
+
+void teleport(uint64_t addrCharacter, float x, float y, float z)
+{
+    ASCharacter* ch = (ASCharacter*)addrCharacter;
+
+    // This is unused
+    FHitResult result = {};
+
+	ch->K2_SetActorLocation(FVector(x,y,z), false, result, true);
+}
+
+
+void setMoneyAndXP(uint64_t addrCharacter, float money, int32_t xp)
+{
+    ASCharacter* ch = (ASCharacter*)addrCharacter;
+
+    ch->SetPlayerMoney(money);
+    ch->SetPlayerXP(xp);
+}

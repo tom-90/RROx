@@ -1,15 +1,3 @@
-import { Frame, Spline, Switch, Turntable, Player, WaterTower, Industry } from '../../../shared/data';
-
-export interface MapData {
-    Frames: Frame[];
-    Splines: Spline[];
-    Switches: Switch[];
-    Turntables: Turntable[];
-    Players: Player[];
-    WaterTowers: WaterTower[];
-    Industries: Industry[];
-}
-
 export interface MapProperties {
     imageWidth: number;
 

@@ -16,6 +16,7 @@ export class ReadWorldTask extends TimerTask {
         Switches   : [],
         Turntables : [],
         WaterTowers: [],
+        Sandhouses : [],
     };
 
     private counter = 0;
@@ -33,6 +34,7 @@ export class ReadWorldTask extends TimerTask {
                 ...this.detectChanges( 'Switches'   , this.world.Switches   , [] ),
                 ...this.detectChanges( 'Turntables' , this.world.Turntables , [] ),
                 ...this.detectChanges( 'WaterTowers', this.world.WaterTowers, [] ),
+                ...this.detectChanges( 'Sandhouses' , this.world.Sandhouses , [] ),
                 ...this.detectChanges( 'Splines'    , this.world.Splines    , [] ),
             ];
     
@@ -45,6 +47,7 @@ export class ReadWorldTask extends TimerTask {
             this.world.Switches    = [];
             this.world.Turntables  = [];
             this.world.WaterTowers = [];
+            this.world.Sandhouses  = [];
             this.world.Splines     = [];
 
             return;
@@ -73,6 +76,7 @@ export class ReadWorldTask extends TimerTask {
             ...this.detectChanges( 'Switches'   , this.world.Switches   , result.Switches    ),
             ...this.detectChanges( 'Turntables' , this.world.Turntables , result.Turntables  ),
             ...this.detectChanges( 'WaterTowers', this.world.WaterTowers, result.WaterTowers ),
+            ...this.detectChanges( 'Sandhouses' , this.world.Sandhouses , result.Sandhouses  ),
 
             ...( full ? this.detectChanges( 'Splines', this.world.Splines, result.Splines ) : [] ),
         ];
@@ -86,6 +90,7 @@ export class ReadWorldTask extends TimerTask {
         this.world.Switches    = result.Switches;
         this.world.Turntables  = result.Turntables;
         this.world.WaterTowers = result.WaterTowers;
+        this.world.Sandhouses  = result.Sandhouses;
 
         if( full )
             this.world.Splines = result.Splines;

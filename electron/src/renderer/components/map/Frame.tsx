@@ -27,25 +27,25 @@ import Tanker from '../../../../assets/images/cars/flatcar_tanker.png';
 import Boxcar from '../../../../assets/images/cars/boxcar.png';
 import Caboose from '../../../../assets/images/cars/caboose.png';
 
-const FrameInfo: { [ car: string ]: { color: string, image: string, name: string } } = {
-    [ Cars.HANDCAR          ]: { color: 'white'      , image: Handcar        , name: 'Handcar' },
-    [ Cars.PORTER           ]: { color: 'black'      , image: Porter         , name: 'Porter' },
-    [ Cars.PORTER2          ]: { color: 'black'      , image: Porter2        , name: 'Porter 2' },
-    [ Cars.EUREKA           ]: { color: 'black'      , image: Eureka         , name: 'Eureka' },
-    [ Cars.EUREKA_TENDER    ]: { color: 'black'      , image: EurekaTender   , name: 'Eureka Tender' },
-    [ Cars.CLIMAX           ]: { color: 'black'      , image: Climax         , name: 'Climax' },
-    [ Cars.HEISLER          ]: { color: 'black'      , image: Heisler        , name: 'Heisler' },
-    [ Cars.CLASS70          ]: { color: 'black'      , image: Class70        , name: 'Class 70' },
-    [ Cars.CLASS70_TENDER   ]: { color: 'black'      , image: Class70Tender  , name: 'Class 70 Tender' },
-    [ Cars.COOKE260         ]: { color: 'black'      , image: Cooke260       , name: 'Cooke Mogul' },
-    [ Cars.COOKE260_TENDER  ]: { color: 'black'      , image: Cooke260Tender , name: 'Cooke Mogul Tender' },
-    [ Cars.FLATCAR_LOGS     ]: { color: 'indianred'  , image: FlatcarLogs    , name: 'Flatcar Tier 1' },
-    [ Cars.FLATCAR_CORDWOOD ]: { color: 'orange'     , image: FlatcarCordwood, name: 'Flatcar Tier 2' },
-    [ Cars.FLATCAR_STAKES   ]: { color: 'greenyellow', image: FlatcarStakes  , name: 'Flatcar Tier 3' },
-    [ Cars.HOPPER           ]: { color: 'rosybrown'  , image: Hopper         , name: 'Hopper' },
-    [ Cars.TANKER           ]: { color: 'lightgray'  , image: Tanker         , name: 'Tanker' },
-    [ Cars.BOXCAR           ]: { color: 'gray'       , image: Boxcar         , name: 'Boxcar' },
-    [ Cars.CABOOSE          ]: { color: '#ff5e5e'    , image: Caboose        , name: 'Caboose' },
+const FrameInfo: { [ car: string ]: { image: string, name: string, length: number } } = {
+    [ Cars.HANDCAR          ]: { image: Handcar        , length: 4.202, name: 'Handcar' },
+    [ Cars.PORTER           ]: { image: Porter         , length: 3.912, name: 'Porter' },
+    [ Cars.PORTER2          ]: { image: Porter2        , length: 4.614, name: 'Porter 2' },
+    [ Cars.EUREKA           ]: { image: Eureka         , length: 8.021, name: 'Eureka' },
+    [ Cars.EUREKA_TENDER    ]: { image: EurekaTender   , length: 4.971, name: 'Eureka Tender' },
+    [ Cars.CLIMAX           ]: { image: Climax         , length: 8.499, name: 'Climax' },
+    [ Cars.HEISLER          ]: { image: Heisler        , length: 9.137, name: 'Heisler' },
+    [ Cars.CLASS70          ]: { image: Class70        , length: 9.389, name: 'Class 70' },
+    [ Cars.CLASS70_TENDER   ]: { image: Class70Tender  , length: 6.788, name: 'Class 70 Tender' },
+    [ Cars.COOKE260         ]: { image: Cooke260       , length: 8.378, name: 'Cooke Mogul' },
+    [ Cars.COOKE260_TENDER  ]: { image: Cooke260Tender , length: 6.417, name: 'Cooke Mogul Tender' },
+    [ Cars.FLATCAR_LOGS     ]: { image: FlatcarLogs    , length: 7.856, name: 'Flatcar Tier 1' },
+    [ Cars.FLATCAR_CORDWOOD ]: { image: FlatcarCordwood, length: 7.856, name: 'Flatcar Tier 2' },
+    [ Cars.FLATCAR_STAKES   ]: { image: FlatcarStakes  , length: 7.856, name: 'Flatcar Tier 3' },
+    [ Cars.HOPPER           ]: { image: Hopper         , length: 7.856, name: 'Hopper' },
+    [ Cars.TANKER           ]: { image: Tanker         , length: 7.856, name: 'Tanker' },
+    [ Cars.BOXCAR           ]: { image: Boxcar         , length: 8.228, name: 'Boxcar' },
+    [ Cars.CABOOSE          ]: { image: Caboose        , length: 6.096, name: 'Caboose' },
 };
 
 const getStrokeColor = ( brake: number ) => {
@@ -81,10 +81,10 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
         followElement( 'frame', index, engineRef.current, data );
     }, [ engineRef.current, data, following ] );
 
-    if( isEngine ) {
-        const yl = ( radius / 3 ) * 2;
-        const xl = ( radius / 2 ) * 2;
+    const yl = 5.70;
+    const xl = ( ( FrameInfo[ Type ]?.length || 5 ) - 0.6 ) * 2;
 
+    if( isEngine )
         return <MapTooltip
             title={`${Name.toUpperCase()}${Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
             controls={<>
@@ -105,13 +105,19 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 >
                     {following && following.type === 'frame' && following.index === index ? 'Unfollow' : 'Follow'}
                 </Button>
+                <Button
+                    style={{ marginTop: 5 }}
+                    onClick={() => {
+                        window.ipc.send( 'teleport', data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 500 )
+                    }}
+                >Teleport Here</Button>
             </>}
             visible={tooltipVisible && !minimap}
             setVisible={setTooltipVisible}
         >
             <path
                 transform={"rotate(" + Math.round( Rotation[ 1 ] ) + ", " + x + ", " + y + ")"}
-                d={"M" + ( x - ( radius / 2 ) ) + "," + y + " l " + ( xl / 3 ) + "," + ( yl / 2 ) + " l " + ( xl / 3 * 2 ) + ",0 l 0,-" + yl + " l -" + ( xl / 3 * 2 ) + ",0 z"}
+                d={"M" + ( x - ( xl / 2 ) ) + "," + y + " l " + ( xl / 3 ) + "," + ( yl / 2 ) + " l " + ( xl / 3 * 2 ) + ",0 l 0,-" + yl + " l -" + ( xl / 3 * 2 ) + ",0 z"}
                 fill="purple"
                 stroke={getStrokeColor( Brake )}
                 strokeWidth={1}
@@ -131,13 +137,6 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 }}
             />
         </MapTooltip>;
-    }
-
-    const yl = ( radius / 3 ) * 2;
-    let xl = radius;
-
-    if ( Type.toLowerCase().includes( 'tender' ) )
-        xl = xl / 3 * 2;
 
     let cx = x + Math.cos( Rotation[ 1 ] * ( Math.PI / 180 ) ) * 2;
     let cy = y + Math.sin( Rotation[ 1 ] * ( Math.PI / 180 ) ) * 2;
@@ -157,13 +156,19 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                     setStorageVisible( true );
                 }}
             >Show Freight</Button>}
+            {Type === Cars.CABOOSE && <Button
+                style={{ marginTop: 5 }}
+                onClick={() => {
+                    window.ipc.send( 'teleport', data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] )
+                }}
+            >Teleport Here</Button>}
         </>}
         visible={tooltipVisible && !minimap}
         setVisible={setTooltipVisible}
     >
         <path
             d={"M" + x + "," + y + " m-" + ( xl / 2 ) + ",-" + ( yl / 2 ) + " h" + ( xl - 4 ) + " a2,2 0 0 1 2,2 v" + ( yl - 4 ) + " a2,2 0 0 1 -2,2 h-" + ( xl - 4 ) + " a2,2 0 0 1 -2,-2 v-" + ( yl - 4 ) + " a2,2 0 0 1 2,-2 z"}
-            fill={FrameInfo[ Type ]?.color}
+            fill={window.settingsStore.get( `colors.${Type}.${data.Freight && data.Freight.Amount > 0 ? 'loaded' : 'unloaded'}` )}
             className={'clickable highlight'}
             stroke={getStrokeColor( Brake )}
             strokeWidth={0.5}

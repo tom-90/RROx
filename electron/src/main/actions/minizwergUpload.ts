@@ -11,9 +11,7 @@ export class MinizwergUploadAction extends Action<void, [ slot: number ]> {
     public actionName = 'Upload to minizwerg';
     public pipes      = [] as PipeType[];
 
-    public readonly server = process.env.NODE_ENV == 'development'
-            ? 'https://ohnezahn.online'
-            : 'https://minizwerg.online';
+    public readonly server = 'https://minizwerg.online';
 
     protected async execute( slot: number ): Promise<void> {
         const reqData = new FormData();

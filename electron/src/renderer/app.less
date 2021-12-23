@@ -1,70 +1,109 @@
-@import '~antd/lib/style/themes/default.less';
-@import '~antd/dist/antd.less';
-
+@import "~antd/lib/style/themes/default.less";
+@import "~antd/dist/antd.less";
 @primary-color: #fa8c16;
 
 .clickable {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 #app {
-    height: 100%;
+	height: 100%;
 }
 
 .attachButton, .attachButton:focus:not(:hover) {
-    color: green;
-    border-color: green;
+	color: green;
+	border-color: green;
 }
 
 .detachButton, .detachButton:focus:not(:hover) {
-    color: red;
-    border-color: red;
+	color: red;
+	border-color: red;
 }
 
 .processingButton, .processingButton:focus:not(:hover) {
-    color: @primary-color;
-    border-color: @primary-color;
+	color: @primary-color;
+	border-color: @primary-color;
 }
 
 @font-face {
-    font-family: 'graduate';
-    src: url('../../assets/fonts/Graduate-Regular.woff2');
+	font-family: "graduate";
+
+	src: url("../../assets/fonts/Graduate-Regular.woff2");
 }
 
 .appTitle, .appTitleShort {
-    font-family: 'graduate', 'serif';
-    margin: 0!important;
-    font-size: 24px!important;
+	font-family: "graduate", "serif";
+	font-size: 24px!important;
+
+	margin: 0!important;
 }
 
 .appTitle {
-    display: inline-block;
+	display: inline-block;
 }
 
 .appTitleShort {
-    display: none;
+	display: none;
 }
 
 .tooltipControls .highlight, .highlight:hover {
-    filter: drop-shadow(0px 0px 3px black);
+	filter: drop-shadow(0px 0px 3px black);
 }
 
 body {
-    background: none;
+	background: none;
 }
 
 @media only screen and (max-width: 800px) {
-    .appTitle {
-        display: none;
-    }
+	.appTitle {
+		display: none;
+	}
 
-    .appTitleShort {
-        display: inline-block;
-    }
+	.appTitleShort {
+		display: inline-block;
+	}
 }
 
 @media only screen and (max-width: 500px) {
-    .appTitleShort {
-        display: none;
-    }
+	.appTitleShort {
+		display: none;
+	}
 }
+
+.colorTable {
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+
+	.ant-col {
+		margin: 0 auto;
+	}
+
+	.ant-row {
+		margin: auto 0;
+	}
+
+	img {
+		display: block;
+
+		width: 70px;
+		margin: 0 auto;
+	}
+
+	td > span {
+		font-weight: bold;
+
+		display: block;
+
+		margin-top: 20px;
+
+		text-align: center;
+	}
+
+	td > button {
+		display: block;
+
+		margin: 20px auto 0 auto;
+	}
+}
+

@@ -6,7 +6,7 @@ import Background4 from "../../../../assets/images/bg4.jpg";
 import Background5 from "../../../../assets/images/bg5.jpg";
 import { Button, Tooltip } from 'antd';
 import { ZoomInOutlined, ZoomOutOutlined, AimOutlined, StopOutlined } from '@ant-design/icons';
-import { MapData, MapProperties } from './interfaces';
+import { MapProperties } from './interfaces';
 import { Frame } from './Frame';
 import { IsTrack, Spline } from './Spline';
 import { Switch } from './Switch';
@@ -14,14 +14,16 @@ import { Turntable } from './Turntable';
 import { Player } from './Player';
 import SVGPanZoom from 'svg-pan-zoom';
 import { WaterTower } from './WaterTower';
+import { Sandhouse } from './Sandhouse';
 import { Industry } from './Industry';
 import { MapContext } from './context';
 import { Paths } from './Paths';
+import { World } from './../../../shared/data';
 
 // @ts-expect-error
 import SVGUtils from 'svg-pan-zoom/src/svg-utilities';
 
-export function Map( { data }: { data: MapData } ) {
+export function Map( { data }: { data: World } ) {
 
     const svgRef = createRef<SVGSVGElement>();
     const [ panZoom, setPanZoom ] = useState<SvgPanZoom.Instance | null>( null );
@@ -208,7 +210,8 @@ export function Map( { data }: { data: MapData } ) {
                     {data.Splines.filter( ( { Type } ) =>  IsTrack( Type ) ).map( ( d, i ) => <Spline key={i} data={d} map={map} index={i}/> )}
                     {data.Turntables.map( ( d, i ) => <Turntable key={i} data={d} map={map} index={i}/> )}
                     {data.Switches.map( ( d, i ) => <Switch key={i} data={d} map={map} index={i}/> )}
-                    {data.WaterTowers.map( ( d, i ) => <WaterTower key={i} data={d} map={map} index={i}/> )}
+                    {data.WaterTowers.map( ( d, i ) => <WaterTower key={i} data={d} map={map} index={i} /> )}
+                    {data.Sandhouses.map( ( d, i ) => <Sandhouse key={i} data={d} map={map} index={i} /> )}
                     {data.Frames.map( ( d, i ) => <Frame key={i} data={d} map={map} index={i}/> )}
                     {data.Players.map( ( d, i ) => <Player key={i} data={d} map={map} index={i}/> )}
                     <Paths map={map} />

@@ -3,11 +3,11 @@ import Updater from 'update-electron-app';
 import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
-import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, StopAction } from './actions';
+import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, StopAction, TeleportAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 
-const singleInstanceLock = app.requestSingleInstanceLock();
+const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
 
 /** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
 if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
@@ -46,6 +46,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             ChangeSwitchAction,
             EnsureInGameAction,
             InjectDLLAction,
+            MinizwergColorsAction,
             MinizwergUploadAction,
             ReadAddressAction,
             ReadAddressValueAction,
@@ -53,7 +54,9 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             ReadWorldAction,
             SaveAction,
             SetEngineControlsAction,
-            StopAction
+            SetMoneyAndXPAction,
+            StopAction,
+            TeleportAction
         ];
         rrox.createActions( actions );
 
@@ -76,10 +79,13 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             GetVersionIPCHandler,
             KillDanglingInjector,
             MapDataIPCHandler,
+            MinizwergColorsIPCHandler,
             PathDataIPCHandler,
             SetAttachedStateIPCListener,
             SetEngineControlsIPCListener,
-            UpdateConfigIPCListener
+            SetMoneyAndXPIPCListener,
+            UpdateConfigIPCListener,
+            TeleportIPCListener,
         ];
         rrox.createTasks( ipc );
         await rrox.startTasks( ipc );

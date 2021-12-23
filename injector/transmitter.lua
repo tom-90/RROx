@@ -37,6 +37,7 @@ function starttransmitter()
                     transmitArray("Turntable", pipe)
                     transmitArray("Switch", pipe)
                     transmitArray("WaterTower", pipe)
+                    transmitArray("Sandhouse", pipe)
                     transmitArray("Industry", pipe)
                     if readMode == 0 then -- Host FULL read mode
                         transmitArray("Spline", pipe)

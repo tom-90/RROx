@@ -111,6 +111,20 @@ FVector AActor::K2_GetActorLocation()
   return parms.ReturnValue;
 }
 
+bool AActor::K2_SetActorLocation(struct FVector NewLocation, bool bSweep, struct FHitResult& SweepHitResult, bool bTeleport)
+{
+  static auto fn = ObjObjects->FindObject("Function Engine.Actor.K2_SetActorLocation");
+  struct {
+    FVector NewLocation;
+    bool bSweep;
+    FHitResult* SweepHitResult;
+    bool bTeleport;
+    bool ReturnValue;
+  } parms = { NewLocation, bSweep, &SweepHitResult, bTeleport };
+  ProcessEvent(fn, &parms);
+  return parms.ReturnValue;
+}
+
 APawn* AController::K2_GetPawn()
 {
   static auto fn = ObjObjects->FindObject("Function Engine.Controller.K2_GetPawn");

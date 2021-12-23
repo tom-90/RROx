@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import { PageLayout } from "../components/PageLayout";
 import svgPanZoom from 'svg-pan-zoom';
 import { Map } from "../components/map";
-import { MapData } from "../components/map/interfaces";
 import { DataChange } from "../../shared/data";
+import { World } from './../../shared/data';
 
 export function MapPage() {
 
-    const [ mapData, setMapData ] = useState<MapData>( {
+    const [ mapData, setMapData ] = useState<World>( {
         Frames     : [],
         Splines    : [],
         Switches   : [],
         Turntables : [],
         Players    : [],
         WaterTowers: [],
+        Sandhouses : [],
         Industries : [],
     } );
 
