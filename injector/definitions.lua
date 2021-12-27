@@ -171,5 +171,6 @@ ue4Structs = {
     Freight             = { "/Script/arr.freight" },
     NetDriver           = { "/Script/Engine.NetDriver" },
     NetConnection       = { "/Script/Engine.NetConnection" },
+    WorldComposition    = { "/Script/Engine.WorldComposition" },
     ActorChannel        = { "/Script/Engine.ActorChannel" }
 }

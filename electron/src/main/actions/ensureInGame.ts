@@ -1,6 +1,7 @@
 import { Action } from "./action";
 import { ReadAddressAction, ReadAddressMode, ReadAddressValueAction } from ".";
 import { PipeType } from "../pipes";
+import Log from 'electron-log';
 
 export enum GameMode {
     CLIENT = 'CLIENT',
@@ -20,14 +21,18 @@ export class EnsureInGameAction extends Action<false | GameMode> {
         let inGameTest = await this.app.getAction( ReadAddressValueAction ).run( 'InGameTest' );
 
         // We check if the in game test has some (sensible) value
-        if ( !inGameTest || inGameTest === '??' || Number( inGameTest ) > 1000 )
+        if ( !inGameTest || inGameTest === '??' || inGameTest.includes( 'MainMenu' ) ) {
+            Log.info( 'Not in game: InGameTestValue', inGameTest );
             return false;
+        }
 
         let world  = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'World' );
         let kismet = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'KismetSystemLibrary' );;
 
-        if( !world || !kismet )
+        if( !world || !kismet ) {
+            Log.info( 'Not in game: World/Kismet not found', world, kismet );
             return false;
+        }
 
         await this.acquire();
 
