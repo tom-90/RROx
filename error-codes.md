@@ -1,3 +1,7 @@
+---
+layout: info
+title: Error codes
+---
 # Error Code Troubleshooting
 
 This page provides an overview of the troubleshooting steps to take for various error codes that RROx can give.
