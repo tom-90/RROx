@@ -36,6 +36,7 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 - ``Added`` Compact mode for the engine controls.
 - ``Added`` RROx can now show error codes for the most common problems when attaching.
 - ``Added`` Troubleshooting information for attaching error codes.
+- ``Added`` RROx now automatically detaches whenever you leave the game.
 - ``Fixed`` Fixed minizwerg upload.
 - ``Fixed`` Wrong names for flatcars.
 - ``Fixed`` RROx left a background process running when closed.
