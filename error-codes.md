@@ -1,6 +1,6 @@
 ---
 layout: info
-title: Error codes
+title: Error Codes
 ---
 # Error Code Troubleshooting
 
