@@ -37,7 +37,7 @@ export function TopNav() {
                             }}>{error}</code>
                             Details on how to fix this code can be found here:
                             <br/>
-                            <a href="https://tom-90.github.io/RROx/error-codes">https://tom-90.github.io/RROx/error-codes</a>
+                            <a onClick={() => window.openBrowser( 'https://tom-90.github.io/RROx/error-codes' )}>https://tom-90.github.io/RROx/error-codes</a>
                         </p>,
                     } );
                 }

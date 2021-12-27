@@ -2,7 +2,7 @@
   "name": "rrox",
   "productName": "RailroadsOnline Extended",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "RailroadsOnline Extended tool for RailroadsOnlineGame",
   "author": "_tom()",
   "main": ".webpack/main",
