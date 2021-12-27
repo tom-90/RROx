@@ -21,6 +21,8 @@ Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows t
 For any other questions or issues, you can contact me on Discord:
 [_tom()#0056](https://discordapp.com/users/178197960457322497)
 
+Troubleshooting information for RROx error codes can be found [here](./error-codes.md).
+
 ## Known issues
 
 - When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
