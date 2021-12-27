@@ -47,7 +47,13 @@ function transmitItem(pipe, baseAddr, properties, array, id)
         local splineType = readInteger(baseAddr + offsSplineType)
 
         pipe.writeDword(splineType or 0)
-        pipe.writeDword(pointCount or 0)
+
+        if pointCount == nil or addrPointsStart == nil or addrVisibleStart == nil then
+            pipe.writeDword(0)
+            return
+        end
+
+        pipe.writeDword(pointCount)
 
         for i = 0, pointCount - 1 do
             -- Read X
@@ -94,14 +100,20 @@ function transmitItem(pipe, baseAddr, properties, array, id)
             end
         elseif propType == "t" then -- Special text type to try to read a string in two differnt ways
             -- First try attempt 1 [[address+8]+0]
-            local testAddr = readPointer(readPointer(address)+0x8)
+            local testAddr = readPointer(address)
             if testAddr ~= nil then
-                testAddr = readPointer(testAddr)
+                testAddr = readPointer(testAddr+0x8)
+                if testAddr ~= nil then
+                    testAddr = readPointer(testAddr)
+                end
             end
 
             if testAddr == nil then
                 -- Try attempt 2 [address+28]
-                testAddr = readPointer(readPointer(address)+0x28)
+                testAddr = readPointer(address)
+                if testAddr ~= nil then
+                   testAddr = readPointer(testAddr+0x28)
+                end
             end
 
             local str = nil
@@ -133,6 +145,11 @@ function transmitArray(array, pipe)
     local arraySize = readInteger(getAddressSafe(
         "[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.GameState]+GameStateBase." .. array ..
             "Array_size"))
+
+    if addrArray == nil or arraySize == nil then
+        pipe.writeDword(0)
+        return
+    end
 
     pipe.writeDword(arraySize)
     for i = 0, arraySize - 1 do

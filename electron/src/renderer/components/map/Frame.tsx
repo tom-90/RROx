@@ -40,8 +40,8 @@ const FrameInfo: { [ car: string ]: { image: string, name: string, length: numbe
     [ Cars.COOKE260         ]: { image: Cooke260       , length: 8.378, name: 'Cooke Mogul' },
     [ Cars.COOKE260_TENDER  ]: { image: Cooke260Tender , length: 6.417, name: 'Cooke Mogul Tender' },
     [ Cars.FLATCAR_LOGS     ]: { image: FlatcarLogs    , length: 7.856, name: 'Flatcar Tier 1' },
-    [ Cars.FLATCAR_CORDWOOD ]: { image: FlatcarCordwood, length: 7.856, name: 'Flatcar Tier 2' },
-    [ Cars.FLATCAR_STAKES   ]: { image: FlatcarStakes  , length: 7.856, name: 'Flatcar Tier 3' },
+    [ Cars.FLATCAR_STAKES   ]: { image: FlatcarStakes  , length: 7.856, name: 'Flatcar Tier 2' },
+    [ Cars.FLATCAR_CORDWOOD ]: { image: FlatcarCordwood, length: 7.856, name: 'Flatcar Tier 3' },
     [ Cars.HOPPER           ]: { image: Hopper         , length: 7.856, name: 'Hopper' },
     [ Cars.TANKER           ]: { image: Tanker         , length: 7.856, name: 'Tanker' },
     [ Cars.BOXCAR           ]: { image: Boxcar         , length: 8.228, name: 'Boxcar' },
@@ -128,7 +128,8 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
                 title={`${Name.toUpperCase()}${Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
                 data={data}
                 id={ID}
-                isVisible={controlsVisible && !minimap}
+                isVisible={controlsVisible}
+                className={minimap ? 'modal-hidden' : undefined}
                 controlEnabled={controlEnabled}
                 isEngine={true}
                 onClose={() => {
@@ -167,7 +168,7 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
         setVisible={setTooltipVisible}
     >
         <path
-            d={"M" + x + "," + y + " m-" + ( xl / 2 ) + ",-" + ( yl / 2 ) + " h" + ( xl - 4 ) + " a2,2 0 0 1 2,2 v" + ( yl - 4 ) + " a2,2 0 0 1 -2,2 h-" + ( xl - 4 ) + " a2,2 0 0 1 -2,-2 v-" + ( yl - 4 ) + " a2,2 0 0 1 2,-2 z"}
+            d={"M" + x + "," + y + " m-" + ( xl / 2 ) + ", " + -( Rotation[ 1 ] < 0 ? yl - 1 : 1 ) + " h" + ( xl - 4 ) + " a2,2 0 0 1 2,2 v" + ( yl - 4 ) + " a2,2 0 0 1 -2,2 h-" + ( xl - 4 ) + " a2,2 0 0 1 -2,-2 v-" + ( yl - 4 ) + " a2,2 0 0 1 2,-2 z"}
             fill={window.settingsStore.get( `colors.${Type}.${data.Freight && data.Freight.Amount > 0 ? 'loaded' : 'unloaded'}` )}
             className={'clickable highlight'}
             stroke={getStrokeColor( Brake )}
@@ -176,10 +177,11 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
         />
         <StorageInfo
             title={FrameInfo[ Type ]?.name || 'Freight Car'}
+            className={minimap ? 'modal-hidden' : undefined}
             storages={{
                 Freight: data.Freight ? [ data.Freight ] : []
             }}
-            isVisible={storageVisible && !minimap}
+            isVisible={storageVisible}
             onClose={() => {
                 setStorageVisible( false );
                 setTooltipVisible( false );
@@ -189,7 +191,8 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
             title={FrameInfo[ Type ]?.name || 'Freight Car'}
             data={data}
             id={ID}
-            isVisible={controlsVisible && !minimap}
+            isVisible={controlsVisible}
+            className={minimap ? 'modal-hidden' : undefined}
             isEngine={false}
             controlEnabled={controlEnabled}
             onClose={() => {

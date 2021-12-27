@@ -4,6 +4,7 @@ import path from "path";
 import { PipeType } from "../pipes";
 import axios from "axios";
 import FormData from "form-data";
+import { ReadAddressValueAction } from './readAddressValue';
 
 export class MinizwergUploadAction extends Action<void, [ slot: number ]> {
 
@@ -14,6 +15,11 @@ export class MinizwergUploadAction extends Action<void, [ slot: number ]> {
     public readonly server = 'https://minizwerg.online';
 
     protected async execute( slot: number ): Promise<void> {
+        let playerName = await this.app.getAction( ReadAddressValueAction ).run( 'PlayerName' );
+
+        if ( !playerName )
+            throw new Error( 'Failed to determine player name' );
+    
         const reqData = new FormData();
 
         reqData.append( 'headless', 1 );
@@ -21,9 +27,13 @@ export class MinizwergUploadAction extends Action<void, [ slot: number ]> {
         if( this.app.settings.get( 'minizwerg.public' ) )
             reqData.append( 'public', 'YES' );
 
+        reqData.append( 'steam_personaname', playerName );
+
         const file = await fs.readFile( this.getFilePath( slot ) );
 
         reqData.append( 'fileToUpload', file, 'autosave.sav' );
+
+        console.log( playerName );
 
         let res = await axios.post( `${this.server}/upload.php`, reqData, {
             headers: reqData.getHeaders()

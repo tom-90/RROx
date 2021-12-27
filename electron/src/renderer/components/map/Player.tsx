@@ -13,7 +13,7 @@ export const Player = React.memo( function( { data, map, index }: { data: Player
     const { Location, Rotation, Name } = data;
     const { imx, minX, imy, minY, scale } = map;
 
-    const radius = 6 * scale;
+    const radius = 3 * scale;
 
     const x = ( imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) );
     const y = ( imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) );
@@ -44,7 +44,7 @@ export const Player = React.memo( function( { data, map, index }: { data: Player
             d={"M" + ( x - ( radius / 2 ) ) + "," + y + " l " + ( xl / 3 ) + "," + ( yl / 2 ) + " l " + ( xl / 3 * 2 ) + ",0 l -" + ( xl / 3 ) + ",-" + ( yl / 2 ) + " l " + ( xl / 3 ) + ",-" + ( yl / 2 ) + " l -" + ( xl / 3 * 2 ) + ",0 z"}
             fill="blue"
             stroke="black"
-            strokeWidth={2}
+            strokeWidth={0.5}
             className={'clickable highlight'}
             ref={playerRef}
         />

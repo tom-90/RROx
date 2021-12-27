@@ -119,10 +119,10 @@ export class OverlayTask extends TimerTask {
         if ( !gameWindow )
             return false;
 
-        const { bounds: gameBounds } = gameWindow;
+        const { bounds } = gameWindow;
         this.minimapCorner = this.app.settings.get( 'minimap.corner' );
 
-        let width = gameBounds.width / 5;
+        /*let width = gameBounds.width / 5;
         let height = gameBounds.height / 4;
 
         let x: number, y: number;
@@ -140,7 +140,7 @@ export class OverlayTask extends TimerTask {
             x = gameBounds.x + gameBounds.width - width;
             y = gameBounds.y + gameBounds.height - height;
         } else
-            return;
+            return;*/
 
         if ( overlay.isMinimized() )
             overlay.restore();
@@ -149,16 +149,16 @@ export class OverlayTask extends TimerTask {
 
         overlay.setBounds( screen.screenToDipRect( overlay, {
             // All numbers need to be convertible to int
-            x: Math.floor( x ),
-            y: Math.floor( y ),
-            width: Math.floor( width ),
-            height:Math.floor( height )
+            x: Math.floor( bounds.x ),
+            y: Math.floor( bounds.y ),
+            width: Math.floor( bounds.width ),
+            height: Math.floor( bounds.height )
         } ), false );
 
         this.transparent = this.app.settings.get( 'minimap.transparent' );
         this.background = this.app.settings.get( 'map.background' );
 
-        overlay.webContents.send( 'set-mode', 'minimap', this.transparent, this.background );
+        overlay.webContents.send( 'set-mode', 'minimap', this.transparent, this.background, this.minimapCorner );
 
         this.state = OverlayStates.MINIMAP;
 
@@ -172,12 +172,7 @@ export class OverlayTask extends TimerTask {
         if ( !gameWindow )
             return false;
 
-        const { bounds: gameBounds } = gameWindow;
-
-        let width = gameBounds.width / 2;
-        let height = gameBounds.height / 1.5;
-        let x = gameBounds.x + gameBounds.width / 2 - width / 2;
-        let y = gameBounds.y + gameBounds.height / 2 - height / 2;
+        const { bounds } = gameWindow;
 
         if ( overlay.isMinimized() )
             overlay.restore();
@@ -185,10 +180,10 @@ export class OverlayTask extends TimerTask {
         overlay.setIgnoreMouseEvents( false );
         overlay.setBounds( screen.screenToDipRect( overlay, {
             // All numbers need to be convertible to int
-            x: Math.floor( x ),
-            y: Math.floor( y ),
-            width: Math.floor( width ),
-            height:Math.floor( height )
+            x: Math.floor( bounds.x ),
+            y: Math.floor( bounds.y ),
+            width: Math.floor( bounds.width ),
+            height: Math.floor( bounds.height )
         } ), false );
         overlay.focus();
 

@@ -3,7 +3,7 @@ import Updater from 'update-electron-app';
 import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
-import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, StopAction, TeleportAction } from './actions';
+import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, TeleportAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
 import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 
@@ -55,7 +55,6 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             SaveAction,
             SetEngineControlsAction,
             SetMoneyAndXPAction,
-            StopAction,
             TeleportAction
         ];
         rrox.createActions( actions );
@@ -89,8 +88,6 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         ];
         rrox.createTasks( ipc );
         await rrox.startTasks( ipc );
-
-        rrox.start();
     } );
 
     app.on( 'second-instance', () => {

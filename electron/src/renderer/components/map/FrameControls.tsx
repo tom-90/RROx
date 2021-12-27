@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Modal, Slider } from "antd";
+import { Slider, Button } from "antd";
+import { CompressOutlined, ExpandOutlined } from "@ant-design/icons";
 import { Frame } from '../../../shared/data';
+import { DraggableModal } from 'ant-design-draggable-modal';
 import { EngineControls } from '../../../shared/controls';
 
 function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): ( ...args: P ) => void {
@@ -22,7 +24,24 @@ function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): 
     }
 }
 
-export function FrameControls( { title, data, id, isVisible, isEngine, onClose, controlEnabled }: { title: string, data: Frame, id: number, isVisible: boolean, isEngine: boolean, onClose: () => void, controlEnabled: boolean } ) {
+export function FrameControls( {
+    className,
+    title,
+    data,
+    id,
+    isVisible,
+    isEngine,
+    onClose,
+    controlEnabled
+}: {
+    className?: string,
+    title: string,
+    data: Frame,
+    id: number,
+    isVisible: boolean,
+    isEngine: boolean,
+    onClose: () => void, controlEnabled: boolean
+} ) {
     const { Regulator, Reverser, Brake, Whistle, Generator, Compressor, BoilerPressure, WaterTemperature, FireTemperature, FuelAmount, AirPressure, WaterLevel, Speed, MaxSpeed } = data;
     
     const [ controls, setControls ] = useState<{
@@ -33,6 +52,8 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
         Generator: number,
         Compressor: number
     }>( { Regulator, Reverser, Brake, Whistle, Generator, Compressor } );
+
+    const [ compact, setCompact ] = useState( false );
 
     const setWhistle = useMemo( () => {
         return throttle( ( value: number ) => {
@@ -53,24 +74,43 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
         setControls( { Regulator, Reverser, Brake, Whistle, Generator, Compressor } );
     }, [ Regulator, Reverser, Brake, Whistle, Generator, Compressor, isVisible ] );
 
-    return <Modal
-        title={title}
+    return <DraggableModal
+        title={<>
+            {title}
+            <Button
+                type='text'
+                style={{ marginLeft: 10, padding: 5 }}
+                onClick={() => setCompact( !compact )}
+            >
+                {compact ? <ExpandOutlined /> : <CompressOutlined/>}
+            </Button>
+        </>}
         visible={isVisible}
+        className={className}
         footer={null}
         onCancel={onClose}
-        destroyOnClose={true}
-        width={800}
+        initialWidth={800}
+        initialHeight={450}
+        modalRender={( content ) => {
+            if ( !React.isValidElement( content ) )
+                return;
+            return React.cloneElement( content, {
+                onClick: ( e: React.SyntheticEvent ) => {
+                    e.stopPropagation();
+                }
+            } );
+        }}
     >
-        <table style={{ width: '100%'}}>
+        <table style={{ width: '100%'}} className='frameControls'>
             <thead>
                 {isEngine 
                     ? <tr>
                         <th style={{ width: '16%'}}>Regulator</th>
                         <th style={{ width: '16%'}}>Reverser</th>
                         <th style={{ width: '16%'}}>Brake</th>
-                        <th style={{ width: '16%'}}>Whistle</th>
-                        <th style={{ width: '16%'}}>Generator</th>
-                        <th style={{ width: '16%'}}>Compressor</th>
+                        {!compact && <th style={{ width: '16%'}}>Whistle</th>}
+                        {!compact && <th style={{ width: '16%'}}>Generator</th>}
+                        {!compact && <th style={{ width: '16%'}}>Compressor</th>}
                     </tr>
                     : <tr><th style={{ width: '100%'}}>Brake</th></tr>
                 }
@@ -85,7 +125,6 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         step={1}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
                             0: '0%',
@@ -104,7 +143,6 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         included={false}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
                             [ -100 ]: '-100%',
@@ -123,7 +161,6 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         step={1}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
                             0: '0%',
@@ -133,7 +170,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         onChange={( value: number ) => setControls( { ...controls, Brake: value / 100 } )}
                         onAfterChange={( value: number ) => window.ipc.send( 'set-engine-controls', id, EngineControls.BRAKE, value / 100 )}
                     /></td>
-                    {isEngine && <td><Slider 
+                    {isEngine && !compact && <td><Slider 
                         vertical
                         min={0}
                         max={100}
@@ -141,7 +178,6 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         step={1}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
                             0: '0%',
@@ -157,7 +193,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                             setControls( { ...controls, Whistle: 0 } )
                         }}
                     /></td>}
-                    {isEngine && <td><Slider 
+                    {isEngine && !compact && <td><Slider 
                         vertical
                         min={0}
                         max={100}
@@ -165,10 +201,8 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         step={1}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
-                            [ -100 ]: '-100%',
                             0: '0%',
                             100: '100%'
                         }}
@@ -176,7 +210,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         onChange={( value: number ) => setControls( { ...controls, Generator: value / 100 } )}
                         onAfterChange={( value: number ) => window.ipc.send( 'set-engine-controls', id, EngineControls.GENERATOR, value / 100 )}
                     /></td>}
-                    {isEngine && <td><Slider 
+                    {isEngine && !compact && <td><Slider 
                         vertical
                         min={0}
                         max={100}
@@ -184,7 +218,6 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                         step={1}
                         tipFormatter={( value ) => value + '%'}
                         tooltipPlacement={'left'}
-                        tooltipVisible={isVisible}
                         disabled={!controlEnabled}
                         marks={{
                             0: '0%',
@@ -197,7 +230,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                 </tr>
             </tbody>
         </table>
-        {isEngine && <table style={{ width: '100%'}}>
+        {isEngine && !compact && <table style={{ width: '100%'}}>
             <thead>
                 <tr>
                     <th style={{ width: '25%'}}>Boiler Pressure</th>
@@ -215,7 +248,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                 </tr>
             </tbody>
         </table>}
-        {isEngine && <table style={{ width: '100%' }}>
+        {isEngine && !compact && <table style={{ width: '100%' }}>
             <thead>
                 <tr>
                     <th style={{ width: '25%'}}>Brake Pressure</th>
@@ -233,7 +266,7 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                 </tr>
             </tbody>
         </table>}
-        {!isEngine && <table style={{ width: '100%' }}>
+        {( !isEngine || compact ) && <table style={{ width: '100%' }}>
             <thead>
                 <tr>
                     <th style={{ width: '50%'}}>Current Speed</th>
@@ -247,5 +280,5 @@ export function FrameControls( { title, data, id, isVisible, isEngine, onClose, 
                 </tr>
             </tbody>
         </table>}
-    </Modal>;
+    </DraggableModal>;
 }

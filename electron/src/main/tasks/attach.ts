@@ -1,13 +1,15 @@
 import { app as electron } from 'electron';
+import { promises as fs, constants as fsconstants } from 'fs';
 import { ChildProcess, spawn, exec } from "child_process";
 import { Task } from "./task";
 import { AttachedState } from '../../shared/state';
-import { InjectDLLAction, StopAction } from "../actions";
+import { InjectDLLAction } from "../actions";
 import { NamedPipe, PipeType } from "../pipes";
 import { RROx } from "../rrox";
 import { WindowType } from '../windows';
 import Injector from '../../../assets/binaries/RROxInjector.exe';
 import Elevator from '../../../assets/binaries/elevate-x64.exe';
+import DLL from '../../../assets/binaries/RailroadsOnlineExtended.dll';
 import Log from 'electron-log';
 import path from 'path';
 
@@ -23,7 +25,7 @@ export class AttachTask extends Task {
 
     constructor( app: RROx ) {
         super( app );
-        electron.on( 'before-quit', ( event ) => {
+        electron.on( 'will-quit', ( event ) => {
             event.preventDefault();
             this.shuttingDown = true;
             this.stop().then( () => {
@@ -56,11 +58,45 @@ export class AttachTask extends Task {
 
         this.setState( AttachedState.ATTACHING );
 
+        const elevatorExists = await this.fileExists( path.resolve( __dirname, Elevator ) );
+
+        if ( !elevatorExists ) {
+            Log.error( 'Elevator missing.' );
+            this.setState( AttachedState.DETACHED, undefined, 'MISSING_ELEVATE_EXE' );
+            return;
+        }
+
+        const injectorExists = await this.fileExists( path.resolve( __dirname, Injector ) );
+
+        if ( !injectorExists ) {
+            Log.error( 'Injector missing.' );
+            this.setState( AttachedState.DETACHED, undefined, 'MISSING_INJECTOR_EXE' );
+            return;
+        }
+
+        const dllExists = await this.fileExists( path.resolve( __dirname, DLL ) );
+
+        if ( !dllExists ) {
+            Log.error( 'Injector missing.' );
+            this.setState( AttachedState.DETACHED, undefined, 'MISSING_DLL' );
+            return;
+        }
+
+        const msvcrExists = await this.fileExists( path.resolve( 'C:/Windows/SysWOW64/MSVCR120.dll' ) );
+
+        if ( !msvcrExists ) {
+            Log.error( 'MSVCR120.dll missing.' );
+            this.setState( AttachedState.DETACHED, undefined, 'MSVCR120_MISSING' );
+            return;
+        }
+
+        this.app.server.start();
+
         try {
             this.process = this.execElevated( path.resolve( __dirname, Injector ) );
         } catch( e ) {
             Log.error( e );
-            this.setState( AttachedState.DETACHED );
+            this.setState( AttachedState.DETACHED, undefined, 'INJECTOR_CRASHED' );
             return;
         }
 
@@ -134,12 +170,29 @@ export class AttachTask extends Task {
 
         this.setState( AttachedState.DETACHING );
 
-        if( await this.app.getAction( StopAction ).run() !== false )
-            await new Promise( ( resolve ) => setTimeout( resolve, 5000 ) ); // Wait 5 seconds to allow process to exit
+        Log.info( 'Stopping server' );
+
+        await this.app.server.stop();
+
+        Log.info( 'Stopped server' );
+
+        await new Promise<void>( ( resolve ) => {
+            const onClose = () => {
+                clearTimeout( timeout );
+                this.process?.removeListener( 'close', onClose );
+                resolve();
+            };
+            this.process.once( 'close', onClose );
+            let timeout = setTimeout( onClose, 10000 );
+        } ); // Wait 5 seconds to allow process to exit
         
         // @ts-expect-error
-        if( this.state !== AttachedState.DETACHED )
+        if( this.state !== AttachedState.DETACHED ) {
+            Log.info( 'Forcefully killing injector' );
             await this.kill();
+        }
+
+        Log.info( 'Detached.' );
     }
 
     public async kill() {
@@ -158,15 +211,28 @@ export class AttachTask extends Task {
         } );
     }
 
-    private setState( state: AttachedState, progress?: number ) {
+    private setState( state: AttachedState, progress?: number, error?: string ) {
         this.state = state;
         if( this.shuttingDown )
             return;
-        this.app.broadcast( 'get-attached-state', this.state, progress );
+        this.app.broadcast( 'get-attached-state', this.state, progress, error );
     }
 
     private execElevated( command: string | string[] ) {
-        return spawn( path.resolve( __dirname, Elevator ), Array.isArray( command ) ? [ '-w', ...command ] : [ '-w', command ] );
+        let process = spawn(
+            path.resolve( __dirname, Elevator ),
+            Array.isArray( command ) ? [ '-w', ...command ] : [ '-w', command ]
+        );
+
+        process.stdout.on( 'data', ( data ) => {
+            Log.info( data.toString() );
+        } );
+
+        process.stderr.on( 'data', ( data ) => {
+            Log.info( data.toString() );
+        } );
+
+        return process;
     }
 
     private hasDanglingInjector() {
@@ -178,6 +244,12 @@ export class AttachTask extends Task {
                     resolve( stdout.toLowerCase().includes( 'rroxinjector.exe' ) );
             } );
         } );
+    }
+
+    private fileExists( path: string ) {
+        return fs.access( path, fsconstants.F_OK )
+            .then( () => true )
+            .catch( () => false )
     }
 
 }

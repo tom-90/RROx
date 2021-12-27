@@ -31,7 +31,7 @@ export function Info() {
                     The minimap can follow players or locomotives.
                     To select a target to follow, click on the player or locomotive on the map and choose follow.
                     If you want to follow your own player, you can also click the 'Follow Player'-button under the zoom-controls.
-                    To stop following, click the 'Stop Following'-button uner the zoom-controls.
+                    To stop following, click the 'Stop Following'-button below the zoom-controls.
                 </p>
                 <Divider orientation="left" style={{ margin: '20px -25px' }}>Antivirus</Divider>
                 <p>

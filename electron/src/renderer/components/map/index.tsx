@@ -1,4 +1,4 @@
-import React, { createRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import Background1 from "../../../../assets/images/bg1.jpg";
 import Background2 from "../../../../assets/images/bg2.jpg";
 import Background3 from "../../../../assets/images/bg3.jpg";
@@ -25,13 +25,14 @@ import SVGUtils from 'svg-pan-zoom/src/svg-utilities';
 
 export function Map( { data }: { data: World } ) {
 
-    const svgRef = createRef<SVGSVGElement>();
+    const svgRef = useRef<SVGSVGElement>();
     const [ panZoom, setPanZoom ] = useState<SvgPanZoom.Instance | null>( null );
     const [ following, setFollowing ] = useState<{ type: 'player' | 'frame', index: number, element?: SVGElement, data?: any } | null>( null );
 
     const [ mode, setMode ] = useState<'normal' | 'map' | 'minimap'>( window.mode === 'overlay' ? 'minimap' : 'normal' );
     const [ transparent, setTransparent ] = useState( window.mode === 'overlay' ? window.settingsStore.get( 'minimap.transparent' ) as boolean : false );
-    const [ background, setBackground ] = useState( window.settingsStore.get('map.background') ?? 1);
+    const [ background, setBackground ] = useState( window.settingsStore.get('map.background') ?? 1 );
+    const [ minimapCorner, setMinimapCorner ] = useState( window.settingsStore.get( 'minimap.corner' ) );
 
     const [ controlEnabled, setControlEnabled ] = useState( false );
 
@@ -102,10 +103,11 @@ export function Map( { data }: { data: World } ) {
     }, [ svgRef.current ] );
 
     useEffect( () => {
-        const cleanup = window.ipc.on( 'set-mode', ( event, mode, transparent, background ) => {
+        const cleanup = window.ipc.on( 'set-mode', ( event, mode, transparent, background, minimapCorner ) => {
             setMode( mode );
             setTransparent( transparent );
             setBackground( background );
+            setMinimapCorner( minimapCorner );
         } );
 
         
@@ -145,8 +147,10 @@ export function Map( { data }: { data: World } ) {
         }
     }, [] );
 
+    const prevMode = useRef<string>();
+
     useEffect( () => {
-        if( !panZoom || !svgRef.current || !following || !following.element || mode === 'map' )
+        if( !panZoom || !svgRef.current || !following || !following.element )
             return;
 
         const svg = svgRef.current;
@@ -162,11 +166,24 @@ export function Map( { data }: { data: World } ) {
             panZoom.panBy( { x: svgBB.width / 2 - left, y: svgBB.height / 2 - top } );
         };
 
+        if ( panZoom && prevMode.current === 'map' && mode === 'minimap' ) {
+            panZoom.zoomBy( 0.5 );
+        } else if ( panZoom && prevMode.current === 'minimap' && mode === 'map' ) {
+            pan();
+            panZoom.zoomBy( 2 );
+        }
+
+        prevMode.current = mode;
+
+        if( mode === 'map' )
+            return;
+
         window.addEventListener( 'resize', pan );
 
         panZoom.disablePan();
 
         pan();
+
 
         return () => {
             window.removeEventListener( 'resize', pan );
@@ -184,7 +201,10 @@ export function Map( { data }: { data: World } ) {
             controlEnabled,
         }}
     >
-        <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: window.mode === 'overlay' ? undefined : (background === 5 ? '#000008' : '#fefef2') }}>
+        <div
+            className={[ 'map', `map-${mode}`, `corner-${minimapCorner}` ].join( ' ' )}
+            style={{  backgroundColor: window.mode === 'overlay' ? undefined : (background === 5 ? '#000008' : '#fefef2') }}
+        >
             <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8000 8000" style={{ width: '100%', height: '100%' }}>
                 <defs>
                     <pattern id="bg1" x="0" y="0" width="8000" height="8000" patternUnits="userSpaceOnUse">

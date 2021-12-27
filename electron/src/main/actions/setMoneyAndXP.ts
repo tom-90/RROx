@@ -2,7 +2,7 @@ import { Action } from "./action";
 import { ReadPlayerAddress } from '.';
 import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
-
+import Log from 'electron-log';
 export class SetMoneyAndXPAction extends Action<void, [ money: number, xp: number ]> {
 
     public actionID   = 6;
@@ -17,14 +17,14 @@ export class SetMoneyAndXPAction extends Action<void, [ money: number, xp: numbe
         let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
         
         if( playerRead === false ) {
-            console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            Log.info( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
             return;
         }
 
         let [ addrPlayer, insideEngine ] = playerRead;
 
         if( insideEngine ) {
-            console.log( 'Cannot set player money and xp while driving engines.' );
+            Log.info( 'Cannot set player money and xp while driving engines.' );
             return;
         }
         await this.acquire();

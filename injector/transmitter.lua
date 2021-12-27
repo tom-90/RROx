@@ -57,9 +57,16 @@ function starttransmitter()
             elseif command == nil and not thread.Terminated then
                 print("Pipe disconnected. Attempting to reconnect...")
                 pipe = nil
-                while pipe == nil and not thread.Terminated do
+                connectPipe()
+                print("Reconnect failed. Waiting 2 seconds...")
+                if pipe == nil then
                     sleep(2000)
+                    print("Attempting to reconnect...")
                     connectPipe()
+                    if pipe == nil then
+                        print("Pipe connection lost. Closing...")
+                        closeCE()
+                    end
                 end
             end
             cachePlayerAddress()

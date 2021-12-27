@@ -39,7 +39,8 @@ export const Sandhouse = React.memo( function( { data, map }: { data: SandhouseD
             storages={{
                 'Sand Level': [ Storage ],
             }}
-            isVisible={infoVisible && !minimap}
+            className={minimap ? 'modal-hidden' : undefined}
+            isVisible={infoVisible}
             onClose={() => {
                 setInfoVisible( false );
                 setTooltipVisible( false );

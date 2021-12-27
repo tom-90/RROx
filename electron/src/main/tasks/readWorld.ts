@@ -2,6 +2,8 @@ import { DataChange, World } from "../../shared/data";
 import { TimerTask } from "./task";
 import { EnsureInGameAction, GameMode, ReadPlayerAddress, ReadWorldAction, ReadWorldMode } from "../actions";
 import { isEqual } from "../utils";
+import Log from 'electron-log';
+import { AttachTask } from './attach';
 
 export class ReadWorldTask extends TimerTask {
 
@@ -50,19 +52,27 @@ export class ReadWorldTask extends TimerTask {
             this.world.Sandhouses  = [];
             this.world.Splines     = [];
 
+            if ( this.app.getAction( EnsureInGameAction ).canRun() ) {
+                Log.info( 'Detaching because not in game...' );
+                await this.app.getTask( AttachTask ).stop();
+                this.app.broadcast( 'popup-message', 'error', 'Not in game', 'RROx automatically detached because you are not currently in a game.' );
+            }
+
             return;
         }
 
         let full = this.counter == 0;
         this.counter++;
-        if( this.counter > 4 )
+        if( this.counter > 30 )
             this.counter = 0;
 
         let readMode: ReadWorldMode;
         if( gameStatus === GameMode.HOST )
             readMode = full ? ReadWorldMode.HOST_FULL : ReadWorldMode.HOST_PARTIAL;
-        else
+        else {
+            full = true;
             readMode = ReadWorldMode.CLIENT;
+        }
 
         let result = await this.app.getAction( ReadWorldAction ).run( readMode );
 
@@ -70,30 +80,32 @@ export class ReadWorldTask extends TimerTask {
             throw new Error( 'Failed to read world.' );
 
         let changes = [
-            ...this.detectChanges( 'Frames'     , this.world.Frames     , result.Frames      ),
-            ...this.detectChanges( 'Industries' , this.world.Industries , result.Industries  ),
-            ...this.detectChanges( 'Players'    , this.world.Players    , result.Players     ),
-            ...this.detectChanges( 'Switches'   , this.world.Switches   , result.Switches    ),
-            ...this.detectChanges( 'Turntables' , this.world.Turntables , result.Turntables  ),
-            ...this.detectChanges( 'WaterTowers', this.world.WaterTowers, result.WaterTowers ),
-            ...this.detectChanges( 'Sandhouses' , this.world.Sandhouses , result.Sandhouses  ),
+            ...this.detectChanges( 'Frames'    , this.world.Frames    , result.Frames     ),
+            ...this.detectChanges( 'Players'   , this.world.Players   , result.Players    ),
+            ...this.detectChanges( 'Switches'  , this.world.Switches  , result.Switches   ),
+            ...this.detectChanges( 'Turntables', this.world.Turntables, result.Turntables ),
 
-            ...( full ? this.detectChanges( 'Splines', this.world.Splines, result.Splines ) : [] ),
+            ...( full ? this.detectChanges( 'Industries' , this.world.Industries , result.Industries  ) : [] ),
+            ...( full ? this.detectChanges( 'WaterTowers', this.world.WaterTowers, result.WaterTowers ) : [] ),
+            ...( full ? this.detectChanges( 'Sandhouses' , this.world.Sandhouses , result.Sandhouses  ) : [] ),
+            ...( full ? this.detectChanges( 'Splines'    , this.world.Splines    , result.Splines     ) : [] ),
         ];
 
         if( changes.length > 0 )
             this.app.broadcast( 'map-update', changes );
 
         this.world.Frames      = result.Frames;
-        this.world.Industries  = result.Industries;
         this.world.Players     = result.Players;
         this.world.Switches    = result.Switches;
         this.world.Turntables  = result.Turntables;
-        this.world.WaterTowers = result.WaterTowers;
-        this.world.Sandhouses  = result.Sandhouses;
 
-        if( full )
-            this.world.Splines = result.Splines;
+        if ( full ) {
+            this.world.Industries  = result.Industries;
+            this.world.WaterTowers = result.WaterTowers;
+            this.world.Sandhouses  = result.Sandhouses;
+            this.world.Splines     = result.Splines;
+        }
+
 
         let playerResult = await this.app.getAction( ReadPlayerAddress ).run();
 

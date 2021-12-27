@@ -13,28 +13,15 @@ export class EnsureInGameAction extends Action<false | GameMode> {
     public actionName = 'Ensure In Game';
     public pipes      = [ PipeType.DLLInjectorData ];
 
-    private inGameTime?: number;
-
     protected async execute(): Promise<false | GameMode> {
         if( !this.canRun() )
             return false;
 
-        let frameArraySize = await this.app.getAction( ReadAddressValueAction ).run( 'FrameArraySize' );
+        let inGameTest = await this.app.getAction( ReadAddressValueAction ).run( 'InGameTest' );
 
-        // We check if the frame array size has some (sensible) value
-        if( !frameArraySize || frameArraySize === '??' || Number( frameArraySize ) > 1000 ) {
-            this.inGameTime = null;
+        // We check if the in game test has some (sensible) value
+        if ( !inGameTest || inGameTest === '??' || Number( inGameTest ) > 1000 )
             return false;
-        }
-
-        // We only start processing 2 seconds after the player has entered the game
-        // This is to reduce the number of access violations due to wrong memory addresses
-        if( this.inGameTime && ( new Date().getTime() - this.inGameTime ) < 2000 )
-            return false;
-        else if( !this.inGameTime ) {
-            this.inGameTime = new Date().getTime(); 
-            return false;
-        }
 
         let world  = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'World' );
         let kismet = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.GLOBAL, 'KismetSystemLibrary' );;

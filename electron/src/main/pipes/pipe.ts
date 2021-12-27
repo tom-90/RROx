@@ -6,61 +6,84 @@ export class NamedPipe {
 
     private mutex = new Mutex();
 
+    private data: Buffer[] = [];
+    private callback: () => void;
+
     public open = true;
 
     public name?: string;
 
     constructor( public socket: net.Socket ) {
-        socket.once( 'end', () => {
+        socket.once( 'close', () => {
             Log.info( `[${this.name}] Pipe closed.` );
             this.open = false;
+            if ( this.callback )
+                this.callback();
         } );
+
+        socket.on( 'data', ( data ) => {
+            this.data.push( data );
+            if( this.callback )
+                this.callback();
+        } );
+    }
+
+    private readFromSocket( length: number ) {
+        if ( length === 0 )
+            return Buffer.allocUnsafe( 0 );
+        if( this.data.length === 0 )
+            return false;
+        let data: Buffer = this.data.shift();
+
+        while ( data.length < length && this.data.length > 0 )
+            data = Buffer.concat( [ data, this.data.shift() ] );
+
+        if( data.length < length ) {
+            this.data.unshift( data );
+            return false;
+        } else if( data.length === length ) {
+            return data;
+        } else {
+            let d1 = data.slice( 0, length );
+            let d2 = data.slice( length, data.length );
+
+            this.data.unshift( d2 );
+            return d1;
+        }
     }
 
     public readBuffer( length: number ): Promise<Buffer> {
         if( !this.open )
             return Promise.reject( new Error( 'NamedPipe has been closed' ) );
-        if( length === 0 )
-            return Promise.resolve( Buffer.allocUnsafe( 0 ) );
-        let buffer: Buffer | null = this.socket.read( length );
-        if( buffer )
-            return Promise.resolve( buffer );
+        let data = this.readFromSocket( length );
+
+        if( data !== false )
+            return Promise.resolve( data );
 
         return new Promise( ( resolve, reject ) => {
-            let readableTries = 0;
-            let onReadable = () => {
-                readableTries++;
-                let buffer: Buffer | null = this.socket.read( length );
+            let onData = () => {
+                if( !this.open )
+                    return reject( new Error( 'NamedPipe has been closed' ) );
 
-                if( !buffer && readableTries <= 10 )
+                data = this.readFromSocket( length );
+
+                if( !data )
                     return; // Wait for more data
 
-                removeListeners();
-
-                if( !buffer )
-                    return reject( new Error( `[${this.name}] Not enough data is available` ) );
-
-                resolve( buffer );
-            };
-
-            let onEnd = () => {
-                removeListeners();
-
-                reject( new Error( 'NamedPipe has been closed' ) );
-            };
-
-            let removeListeners = () => {
-                this.socket.removeListener( 'end', onEnd );
-                this.socket.removeListener( 'readable', onReadable );
                 clearTimeout( timeout );
+                this.callback = null;
+
+                resolve( data );
             };
 
-            this.socket.once( 'end', onEnd );
-            this.socket.on( 'readable', onReadable );
             let timeout = setTimeout( () => {
-                removeListeners();
-                reject( new Error( `[${this.name}] Timeout waiting for data` ) );
+                this.callback = null;
+
+                if ( !this.open )
+                    reject( new Error( 'Timeout reached while reading data' ) );
             }, 25000 );
+
+            this.callback = onData;
         } );
     }
 

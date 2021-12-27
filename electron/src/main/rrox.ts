@@ -40,10 +40,6 @@ export class RROx extends EventEmitter {
         this.pipes[ pipe.name ] = undefined;
     }
 
-    public start() {
-        this.server.start();
-    }
-
     public getPipe( name: PipeType ) {
         if( !this.pipes[ name ] )
             throw new Error( `Pipe '${name}' is not available` );
@@ -107,7 +103,7 @@ export class RROx extends EventEmitter {
             throw new Error( `Window '${type}' already exists.` );
         
         this.windows[ type ] = window;
-        window.on( 'close', () => this.windows = this.windows[ type ] = undefined );
+        window.on( 'close', () => delete this.windows[ type ] );
     }
 
     public getWindow( type: WindowType ) {

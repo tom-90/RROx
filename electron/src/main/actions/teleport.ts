@@ -2,6 +2,7 @@ import { Action } from "./action";
 import { GameMode, ReadAddressAction, ReadAddressMode, ReadPlayerAddress } from '.';
 import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
+import Log from 'electron-log';
 
 export class TeleportAction extends Action<void, [ x: number, y: number, z: number ]> {
 
@@ -17,14 +18,14 @@ export class TeleportAction extends Action<void, [ x: number, y: number, z: numb
         let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
         
         if( playerRead === false ) {
-            console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            Log.info( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
             return;
         }
 
         let [ addrPlayer, insideEngine ] = playerRead;
 
         if( insideEngine ) {
-            console.log( 'Cannot teleport player while driving engines.' );
+            Log.info( 'Cannot teleport player while driving engines.' );
             return;
         }
         await this.acquire();

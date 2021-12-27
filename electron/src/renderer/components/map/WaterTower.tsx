@@ -46,7 +46,8 @@ export const WaterTower = React.memo( function( { data, map }: { data: WaterTowe
             storages={{
                 'Water Level': [ Storage ],
             }}
-            isVisible={infoVisible && !minimap}
+            className={minimap ? 'modal-hidden' : undefined}
+            isVisible={infoVisible}
             onClose={() => {
                 setInfoVisible( false );
                 setTooltipVisible( false );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from "antd";
+import { DraggableModal } from 'ant-design-draggable-modal';
 import { Storage } from '../../../shared/data';
 import { Products } from '../../../shared/products';
 
@@ -37,14 +37,38 @@ const Images: { [ key: string ]: { image: string, offset?: number } } = {
     [ Products.OILBARREL  ]: { image: Barrels , offset: 2  },
 };
 
-export function StorageInfo( { title, storages, isVisible, onClose }: { title: string, storages: { [ category: string ]: Storage[] }, isVisible: boolean, onClose: () => void } ) {
-    return <Modal
+export function StorageInfo( {
+    className,
+    title,
+    storages,
+    isVisible,
+    onClose,
+    height
+}: {
+    className?: string,
+    title: string,
+    storages: { [ category: string ]: Storage[] },
+    isVisible: boolean,
+    onClose: () => void,
+    height?: number
+} ) {
+    return <DraggableModal
+        className={className}
         title={title}
         visible={isVisible}
         footer={null}
         onCancel={onClose}
         destroyOnClose={true}
-        width={800}
+        initialHeight={height || ( 150 * Object.keys( storages ).length )}
+        modalRender={( content ) => {
+            if( !React.isValidElement( content ) )
+                return;
+            return React.cloneElement( content, {
+                onClick: ( e: React.SyntheticEvent ) => {
+                    e.stopPropagation();
+                }
+            } );
+        }}
     >
         {Object.keys( storages ).map( ( storage ) => <table key={storage} style={{
                 width: '100%',
@@ -81,5 +105,5 @@ export function StorageInfo( { title, storages, isVisible, onClose }: { title: s
                 </tbody>
             </table>
         ) }
-    </Modal>;
+    </DraggableModal>;
 }

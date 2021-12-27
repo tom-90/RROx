@@ -1,5 +1,6 @@
 @import "~antd/lib/style/themes/default.less";
 @import "~antd/dist/antd.less";
+@import "~ant-design-draggable-modal/dist/index.css";
 @primary-color: #fa8c16;
 
 .clickable {
@@ -51,6 +52,9 @@
 }
 
 body {
+	overflow-x: hidden;
+	overflow-y: hidden;
+
 	background: none;
 }
 
@@ -67,6 +71,60 @@ body {
 @media only screen and (max-width: 500px) {
 	.appTitleShort {
 		display: none;
+	}
+}
+
+.frameControls {
+	overflow-x: auto;
+
+	tr {
+		th {
+			min-width: 100px;
+		}
+	}
+}
+
+.modal-hidden {
+	display: none!important;
+}
+
+.map {
+	position: relative;
+
+	&.map-normal {
+		width: 100%;
+		height: 100%;
+	}
+
+	&.map-map {
+		width: 50vw;
+		height: 70vh;
+		margin-top: 15vh;
+	}
+
+	&.map-minimap {
+		width: 20vw;
+		height: 25vh;
+
+		&.corner-1 {
+			margin-top: 0;
+			margin-right: 80vw;
+		}
+
+		&.corner-2 {
+			margin-top: 0;
+			margin-left: 80vw;
+		}
+
+		&.corner-3 {
+			margin-top: 75vh;
+			margin-right: 80vw;
+		}
+
+		&.corner-4 {
+			margin-top: 75vh;
+			margin-left: 80vw;
+		}
 	}
 }
 

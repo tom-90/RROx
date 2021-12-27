@@ -51,7 +51,9 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
                     Input: data.Educts,
                     Output: data.Products
                 }}
-                isVisible={infoVisible && !minimap}
+                className={minimap ? 'modal-hidden' : undefined}
+                isVisible={infoVisible}
+                height={500}
                 onClose={() => {
                     setInfoVisible( false );
                     setTooltipVisible( false );
@@ -140,7 +142,7 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
         industry = {
             name: 'Ironworks',
             image: Ironworks,
-            transform: `rotate(${Math.round( Rotation[ 1 ] )}, ${x}, ${y}) translate(${x-100},${y-65})`,
+            transform: `rotate(${Math.round( Rotation[ 1 ] )}, ${x}, ${y}) translate(${x-80},${y-65})`,
             width: 170,
             height: 170,
         };
@@ -191,7 +193,8 @@ export const Industry = React.memo( function( { data, map }: { data: IndustryDat
                         } : p )
                         : data.Products
             }}
-            isVisible={infoVisible && !minimap}
+            className={minimap ? 'modal-hidden' : undefined}
+            isVisible={infoVisible}
             onClose={() => {
                 setInfoVisible( false );
                 setTooltipVisible( false );

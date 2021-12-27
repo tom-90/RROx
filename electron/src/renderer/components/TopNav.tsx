@@ -14,14 +14,34 @@ export function TopNav() {
             event: Electron.IpcRendererEvent,
             status: AttachedState,
             progress?: number,
+            error?: string
         ) => {
             setStatus( { status, progress } );
-            if( status === AttachedState.DETACHED && currentStatus === AttachedState.ATTACHING )
-                notification.warn( {
-                    message: 'Attaching failed',
-                    description: 'Make sure your antivirus is not blocking the program and that the game is running.',
-                    placement: 'bottomRight'
-                } );
+            if( status === AttachedState.DETACHED && currentStatus === AttachedState.ATTACHING ) {
+                if( !error )
+                    notification.warn( {
+                        message: 'Attaching failed',
+                        description: 'Make sure your antivirus is not blocking the program and that the game is running.',
+                        placement: 'bottomRight'
+                    } );
+                else {
+                    Modal.error( {
+                        title: 'Attaching failed',
+                        content: <p>
+                            Attaching has failed with the following error code:
+                            <code style={{
+                                display: 'block',
+                                textAlign: 'center',
+                                margin: '5px 0',
+                                fontWeight: 'bold'
+                            }}>{error}</code>
+                            Details on how to fix this code can be found here:
+                            <br/>
+                            <a href="https://tom-90.github.io/RROx/error-codes">https://tom-90.github.io/RROx/error-codes</a>
+                        </p>,
+                    } );
+                }
+            }
             currentStatus = status;
         };
 
@@ -62,7 +82,7 @@ export function TopNav() {
                             return window.ipc.send( 'set-attached-state', 'DETACH' );
                         if( status === 'DETACHED' ) {
                             Modal.confirm( {
-                                title  : 'Before attaching:',
+                                title  : 'Before attaching',
                                 content: 'Make sure you have joined the game before attaching. Detach before leaving the game and before closing RROx.',
                                 onOk() {
                                     window.ipc.send( 'set-attached-state', 'ATTACH' );

@@ -10,6 +10,8 @@ export declare interface NamedPipeServer {
 
 export class NamedPipeServer extends EventEmitter {
 
+    private sockets: net.Socket[] = [];
+
     constructor( public readonly name: string ) {
         super()
     }
@@ -17,7 +19,11 @@ export class NamedPipeServer extends EventEmitter {
     public server?: net.Server;
 
     start() {
+        if( this.server )
+            return;
         this.server = net.createServer( ( socket ) => {
+            this.sockets.push( socket );
+
             let pipe = new NamedPipe( socket );
 
             pipe.readString( 3 ).then( ( name ) => {
@@ -26,7 +32,10 @@ export class NamedPipeServer extends EventEmitter {
                 this.emit( 'connect', pipe );
             } ).catch( ( e ) => Log.error( 'Pipe Server Connect Error', e ) );
 
-            socket.once( 'end', () => this.emit( 'disconnect', pipe ) );
+            socket.once( 'close', () => {
+                this.sockets = this.sockets.filter( ( s ) => s !== socket );
+                this.emit( 'disconnect', pipe );
+            } );
         } );
 
         this.server.once( 'close', () => {
@@ -36,6 +45,23 @@ export class NamedPipeServer extends EventEmitter {
 
         this.server.listen( "\\\\.\\pipe\\" + this.name, () => {
             Log.info( 'Pipe Server Listening' );
+        } );
+    }
+
+    stop() {
+        if( !this.server )
+            return Promise.resolve();
+
+        return new Promise<void>( ( resolve, reject ) => {
+            this.server.close( ( err ) => {
+                this.server = null;
+                if( err )
+                    reject( err )
+                else
+                    resolve()
+            } );
+
+            this.sockets.forEach( ( s ) => s.destroy() );
         } );
     }
 

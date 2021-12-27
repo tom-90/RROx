@@ -1,11 +1,11 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
+const XML = require( './xml-js' );
 const contents = [];
 
 function include( file ) {
     contents.push( fs.readFileSync( path.resolve( __dirname, '../', file ), 'utf8' ) );
 }
-
 
 include( 'bootstrap.lua' );
 include( 'ue4lib.lua' );
@@ -18,5 +18,13 @@ include( 'actions/readWorld.lua' );
 include( 'actions/player.lua' );
 include( 'transmitter.lua' );
 
+let data = XML.xml2js( fs.readFileSync( path.resolve( __dirname, 'Injector.CT' ) ) );
 
-fs.writeFileSync( path.resolve( __dirname, 'script.lua' ), contents.join( '\n' ) );
+let scriptEl = data
+    .elements.find( ( { name } ) => name === 'CheatTable' )
+    .elements.find( ( { name } ) => name === 'LuaScript' )
+    .elements.find( ( { type } ) => type === 'text' );
+
+scriptEl.text = contents.join( '\n' );
+
+fs.writeFileSync( path.resolve( __dirname, 'Injector.CT' ), XML.js2xml( data, { compact: false, spaces: 2 } ).replace( /\r?\n|\r/g, "\r\n" ) + '\r\n' );

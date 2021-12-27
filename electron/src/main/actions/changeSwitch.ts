@@ -2,6 +2,7 @@ import { Action } from "./action";
 import { GameMode, ReadAddressAction, ReadAddressMode, ReadPlayerAddress } from '.';
 import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
+import Log from 'electron-log';
 
 export class ChangeSwitchAction extends Action<void, [ index: number ]> {
 
@@ -17,14 +18,14 @@ export class ChangeSwitchAction extends Action<void, [ index: number ]> {
         let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
         
         if( playerRead === false ) {
-            console.log( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            Log.info( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
             return;
         }
 
         let [ addrPlayer, insideEngine ] = playerRead;
 
         if( insideEngine && gameMode === GameMode.CLIENT ) {
-            console.log( 'Cannot change switches as client while driving engines.' );
+            Log.info( 'Cannot change switches as client while driving engines.' );
             return;
         }
 
