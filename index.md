@@ -30,6 +30,10 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.6.1
+
+- ``Fixed`` Fixed issue where RROx did not detect if you were in game properly.
+
 ### v1.6.0 - 27-12-2021
 
 - ``Added`` Draggable popups, allowing to use the map while controlling a locomotive.
