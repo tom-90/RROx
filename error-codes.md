@@ -8,7 +8,7 @@ This error code can be shown when RROx fails to attach, because a necessary prog
 
 To fix this error code, download [Microsoft Visual C++ 2013 Redistributable x86](https://aka.ms/highdpimfc2013x86enu).
 
-### MISSING_ELEVATE_EXE, MISSING_INJECTOR_EXE, MISSING_DLL
+### MISSING_INJECTOR_EXE, MISSING_ELEVATE_EXE, MISSING_DLL
 
 When RROx shows one of these error codes, it means that one of the essential files that RROx needs to attach to the game is missing. This most likely means that your antivirus has detected this file as a virus and removed it.
 

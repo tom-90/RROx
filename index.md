@@ -28,6 +28,20 @@ For any other questions or issues, you can contact me on Discord:
 
 ## Changelog
 
+### v1.6.0 - 27-12-2021
+
+- ``Added`` Draggable popups, allowing to use the map while controlling a locomotive.
+- ``Added`` Compact mode for the engine controls.
+- ``Added`` RROx can now show error codes for the most common problems when attaching.
+- ``Added`` Troubleshooting information for attaching error codes.
+- ``Fixed`` Fixed minizwerg upload.
+- ``Fixed`` Wrong names for flatcars.
+- ``Fixed`` RROx left a background process running when closed.
+- ``Fixed`` Detaching could sometimes hang.
+- ``Fixed`` Improved overall performance by reducing the refresh rate of splines (tracks, groundwork and bridges)
+- ``Fixed`` Player is now smaller, to make it easier to click on the locomotive when the player is in it.
+- ``Fixed`` Cars are now properly centered.
+
 ### v1.5.0 - 23-12-2021
 - ``Added`` Teleporting to industries, locomotives and cabooses.
 - ``Added`` Minizwerg color scheme sharing.
