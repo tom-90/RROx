@@ -1,6 +1,7 @@
 import { ipcMain } from "electron";
 import { Task } from "../tasks/task";
 import Log from 'electron-log';
+import { RROx } from "../rrox";
 
 export abstract class IPCTask extends Task {
 
@@ -10,16 +11,26 @@ export abstract class IPCTask extends Task {
 
 export abstract class IPCListener<P extends any[] = []> extends IPCTask {
 
-    private listener?: ( event: Electron.IpcMainEvent, ...args: P ) => void;
+    private listener?: ( event?: Electron.IpcMainEvent, ...args: P ) => void;
+
+    constructor( app: RROx ) {
+        super( app );
+
+        this.app.socket.on( 'listener-event', ( type, args: P ) => {
+            if( type !== this.channel || !this.listener )
+                return;
+            this.listener( null, ...args );
+        } );
+    }
 
     public start(): void {
         if( this.listener )
             return;
         
         this.listener = ( event, ...args ) => {
-            let res = this.onMessage( event, ...args );
+            let res = this.onMessage( ...args );
             if( res instanceof Promise )
-                res.catch( ( e ) =>  Log.error( `Error while handling IPC Event '${this.taskName}':`, e ) );    
+                res.catch( ( e ) => Log.error( `Error while handling IPC Event '${this.taskName}':`, e ) );    
         }
 
         ipcMain.on( this.channel, this.listener );
@@ -32,18 +43,35 @@ export abstract class IPCListener<P extends any[] = []> extends IPCTask {
         this.listener = null;
     }
 
-    protected abstract onMessage( event: Electron.IpcMainEvent, ...args: P ): void | Promise<void>;
+    protected abstract onMessage( ...args: P ): void | Promise<void>;
+
 
 }
 
 export abstract class IPCHandler<P extends any[] = []> extends IPCTask {
 
-    private handler?: ( event: Electron.IpcMainEvent, ...args: P ) => any;
+    private handler?: ( event: Electron.IpcMainInvokeEvent | string, ...args: P ) => any;
+
+    constructor( app: RROx ) {
+        super( app );
+
+        this.app.socket.on( 'handler-event', ( type, args: P, callback: ( data: any ) => void ) => {
+            if ( type !== this.channel || !this.handler )
+                return;
+            
+            let res = this.handler( null, ...args );
+
+            if( res instanceof Promise )
+                res.then( callback ).catch( ( e ) => Log.error( `Error while executing IPC Handler from websocket '${this.taskName}':`, e ) );
+            else
+                callback( res );
+        } );
+    }
 
     public start(): void {
         if( this.handler )
             return;
-        this.handler = ( event, ...args ) => this.handle( event, ...args );
+        this.handler = ( event, ...args ) => this.handle( ...args );
         ipcMain.handle( this.channel, this.handler );
     }
 
@@ -54,6 +82,6 @@ export abstract class IPCHandler<P extends any[] = []> extends IPCTask {
         this.handler = null;
     }
 
-    protected abstract handle( event: Electron.IpcMainEvent, ...args: P ): any | Promise<any>;
+    protected abstract handle( ...args: P ): any | Promise<any>;
 
 }

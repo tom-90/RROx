@@ -25,7 +25,7 @@ export class OverlayTask extends TimerTask {
     constructor( app: RROx ) {
         super( app );
 
-        app.on( 'settingsUpdate', () => this.update() );
+        app.on( 'settings-update', () => this.update() );
     }
 
     public start() {

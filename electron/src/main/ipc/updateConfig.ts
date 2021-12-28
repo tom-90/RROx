@@ -7,6 +7,6 @@ export class UpdateConfigIPCListener extends IPCListener {
     public channel = 'update-config';
     
     protected onMessage(): void {
-        this.app.emit( 'settingsUpdate' );
+        this.app.emit( 'settings-update' );
     }
 }

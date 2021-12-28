@@ -6,7 +6,7 @@ export class SetMoneyAndXPIPCListener extends IPCListener<[ money: number, xp: n
     
     public channel = 'set-money-and-xp';
     
-    protected async onMessage( event: Electron.IpcMainEvent, money: number, xp: number ): Promise<void> {
+    protected async onMessage( money: number, xp: number ): Promise<void> {
         await this.app.getAction( SetMoneyAndXPAction ).run( money, xp );
     }
 }

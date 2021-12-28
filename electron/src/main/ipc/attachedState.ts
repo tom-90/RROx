@@ -16,7 +16,7 @@ export class SetAttachedStateIPCListener extends IPCListener<[ state: 'ATTACH' |
     
     public channel = 'set-attached-state';
     
-    protected onMessage( event: Electron.IpcMainEvent, state: 'ATTACH' | 'DETACH' ) {
+    protected onMessage( state: 'ATTACH' | 'DETACH' ) {
         let attachTask =  this.app.getTask( AttachTask );
 
         if( state === 'ATTACH' )

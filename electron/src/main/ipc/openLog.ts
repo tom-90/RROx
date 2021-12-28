@@ -7,7 +7,7 @@ export class OpenLogIPCListener extends IPCListener {
 
     public channel = 'open-log';
 
-    protected async onMessage( event: Electron.IpcMainEvent ): Promise<void> {
+    protected async onMessage(): Promise<void> {
         shell.openExternal( Log.transports.file.getFile().path );
     }
 }

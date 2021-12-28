@@ -5,7 +5,7 @@ import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, TeleportAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 
 const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
 
@@ -75,6 +75,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             AutosaveIPCListener,
             ChangeSwitchIPCListener,
             GetAttachedStateIPCHandler,
+            GetSocketStateIPCHandler,
             GetVersionIPCHandler,
             KillDanglingInjector,
             MapDataIPCHandler,
@@ -84,6 +85,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             SetAttachedStateIPCListener,
             SetEngineControlsIPCListener,
             SetMoneyAndXPIPCListener,
+            SetSocketStateIPCHandler,
             UpdateConfigIPCListener,
             TeleportIPCListener,
         ];

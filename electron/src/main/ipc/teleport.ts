@@ -6,7 +6,7 @@ export class TeleportIPCListener extends IPCListener<[ x: number, y: number, z: 
     
     public channel = 'teleport';
     
-    protected async onMessage( event: Electron.IpcMainEvent, x: number, y: number, z: number ): Promise<void> {
+    protected async onMessage( x: number, y: number, z: number ): Promise<void> {
         await this.app.getAction( TeleportAction ).run( x, y, z );
     }
 }

@@ -7,15 +7,19 @@ import * as config from '../shared/config';
 import EventEmitter from 'events';
 import { WindowType } from './windows';
 import Log from 'electron-log';
+import { Socket } from 'socket.io-client';
+import { SocketConnection } from './utils';
 
 export declare interface RROx {
-    on( event: 'settingsUpdate', listener: () => void ): this;
+    on( event: 'settings-update', listener: () => void ): this;
 }
 
 export class RROx extends EventEmitter {
 
     public server   = new NamedPipeServer( 'RRO' );
     public settings = new Store<config.Schema>( config );
+
+    public socket   = new SocketConnection();
 
     private pipes  : { [ key: string ]: NamedPipe     } = {};
     private windows: { [ key: string ]: BrowserWindow } = {};
@@ -33,7 +37,7 @@ export class RROx extends EventEmitter {
         Log.transports.file.level = logLevel;
         Log.transports.console.level = logLevel;
 
-        this.on( 'settingsUpdate', () => {
+        this.on( 'settings-update', () => {
             let logLevel = this.settings.get( 'loglevel' );
             Log.transports.file.level = logLevel;
             Log.transports.console.level = logLevel;
@@ -131,6 +135,7 @@ export class RROx extends EventEmitter {
      */
     public broadcast( channel: string, ...args: any[] ) {
         Object.values( this.windows ).forEach( ( w ) => w.webContents.send( channel, ...args ) );
+        this.socket.broadcast( channel, ...args );
     }
 
 }

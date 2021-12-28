@@ -19,6 +19,8 @@ const validChannels = [
     'set-engine-controls',
     'get-attached-state',
     'set-attached-state',
+    'get-socket-state',
+    'set-socket-state',
     'set-mode',
     'dangling-injector',
     'kill-dangling-injector',

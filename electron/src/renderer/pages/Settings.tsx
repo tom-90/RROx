@@ -289,7 +289,7 @@ export function Settings() {
                         label="Enable debug logging"
                         name="loglevel"
                         valuePropName="checked"
-                        getValueProps={( val ) => ( { value: val === 'debug' } )}
+                        getValueProps={( val ) => ( { checked: val === 'debug' } )}
                         getValueFromEvent={( val ) => val ? 'debug' : 'info'}
                         help={<>
                             <p style={{ padding: '10px 0' }}>

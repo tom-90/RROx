@@ -9,5 +9,6 @@ export * from './openLog';
 export * from './pathData';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';
+export * from './socketState';
 export * from './teleport';
 export * from './updateConfig';

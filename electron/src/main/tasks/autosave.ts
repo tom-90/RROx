@@ -16,7 +16,7 @@ export class AutosaveTask extends TimerTask {
 
         this.interval = this.app.settings.get( 'autosave.interval' ) * 1000
 
-        app.on( 'settingsUpdate', () => this.update() );
+        app.on( 'settings-update', () => this.update() );
     }
 
     protected async execute(): Promise<void> {
