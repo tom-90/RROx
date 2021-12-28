@@ -68,10 +68,8 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
     const { Type, Location, Rotation, Name, Number, ID, Brake } = data;
     const { imx, minX, imy, minY, scale } = map;
 
-    const radius = 6 * scale;
-
-    const x = ( imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) );
-    const y = ( imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) );
+    let x = ( imx - ( ( Location[ 0 ] - minX ) / 100 * scale ) );
+    let y = ( imy - ( ( Location[ 1 ] - minY ) / 100 * scale ) );
 
     const isEngine = [ 'porter_040', 'porter_042', 'handcar', 'eureka', 'climax', 'heisler', 'class70', 'cooke260' ].includes( Type );
 
@@ -139,9 +137,6 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
             />
         </MapTooltip>;
 
-    let cx = x + Math.cos( Rotation[ 1 ] * ( Math.PI / 180 ) ) * 2;
-    let cy = y + Math.sin( Rotation[ 1 ] * ( Math.PI / 180 ) ) * 2;
-
     return <MapTooltip
         title={FrameInfo[ Type ]?.name || 'Freight Car'}
         controls={<>
@@ -168,12 +163,12 @@ export const Frame = React.memo( function( { data, map, index }: { data: FrameDa
         setVisible={setTooltipVisible}
     >
         <path
-            d={"M" + x + "," + y + " m-" + ( xl / 2 ) + ", " + -( Rotation[ 1 ] < 0 ? yl - 1 : 1 ) + " h" + ( xl - 4 ) + " a2,2 0 0 1 2,2 v" + ( yl - 4 ) + " a2,2 0 0 1 -2,2 h-" + ( xl - 4 ) + " a2,2 0 0 1 -2,-2 v-" + ( yl - 4 ) + " a2,2 0 0 1 2,-2 z"}
+            d={"M" + x + "," + y + " m-" + ( xl / 2 - 2 ) + ",-" + ( yl / 2 ) + " h" + ( xl - 4 ) + " a2,2 0 0 1 2,2 v" + ( yl - 4 ) + " a2,2 0 0 1 -2,2 h-" + ( xl - 4 ) + " a2,2 0 0 1 -2,-2 v-" + ( yl - 4 ) + " a2,2 0 0 1 2,-2 z"}
             fill={window.settingsStore.get( `colors.${Type}.${data.Freight && data.Freight.Amount > 0 ? 'loaded' : 'unloaded'}` )}
             className={'clickable highlight'}
             stroke={getStrokeColor( Brake )}
             strokeWidth={0.5}
-            transform={"rotate(" + Math.round( Rotation[ 1 ] ) + ", " + cx.toFixed( 2 ) + ", " + cy.toFixed( 2 ) + ")"}
+            transform={"rotate(" + Math.round( Rotation[ 1 ] ) + ", " + x.toFixed( 2 ) + ", " + y.toFixed( 2 ) + ")"}
         />
         <StorageInfo
             title={FrameInfo[ Type ]?.name || 'Freight Car'}
