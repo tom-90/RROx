@@ -27,8 +27,15 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 - When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
 - Teleporting does not work for clients in multiplayer.
+- When the game is running in `Native Fullscreen`-mode, the minimap will not show. Please switch to any other mode to get the minimap to work.
 
 ## Changelog
+
+### v1.6.2 - 28-12-2021
+
+- ``Added`` Debugging options
+- ``Fixed`` Fixed car positioning
+- ``Fixed`` Multiplayer clients were not attaching properly
 
 ### v1.6.1 - 27-12-2021
 
