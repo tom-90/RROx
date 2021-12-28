@@ -57,6 +57,8 @@ export abstract class TimerTask<P extends any[] = []> extends Task<P> {
         this.isRunning = true;
         this.params    = params;
         this.timeout   = setTimeout( () => this.run(), this.interval );
+
+        Log.debug( `Started task ${this.taskName}.` );
     }
 
     public async stop(): Promise<void> {
@@ -65,6 +67,8 @@ export abstract class TimerTask<P extends any[] = []> extends Task<P> {
         this.isRunning = false;
         clearTimeout( this.timeout );
         this.timeout = null;
+
+        Log.debug( `Stopped task ${this.taskName}.` );
     }
 
     public async runNow(): Promise<void> {
@@ -80,17 +84,21 @@ export abstract class TimerTask<P extends any[] = []> extends Task<P> {
     }
 
     private async run() {
+        Log.debug( `Acquiring lock for task ${this.taskName}...` );
         let release = await this.mutex.acquire();
+        Log.debug( `Executing task ${this.taskName}...` );
 
         try {
             await this.execute( ...this.params );
         } catch( e ) {
             Log.error( `Error while executing '${this.taskName}' task:`, e );
         }
+        Log.debug( `Executed task ${this.taskName}.` );
 
         release();
 
-        if( this.isRunning && !this.mutex.isLocked() ) {
+        if ( this.isRunning && !this.mutex.isLocked() ) {
+            Log.debug( `Rescheduling task ${this.taskName}.` );
             clearTimeout( this.timeout );
             this.timeout = setTimeout( () => this.run(), this.interval );
         }

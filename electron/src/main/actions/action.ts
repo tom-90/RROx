@@ -33,7 +33,9 @@ export abstract class Action<R = void,P extends any[] = []> {
     public async run( ...params: P ): Promise<false | R> {
         let result: R | false;
 
+        Log.debug( `Acquiring lock for action ${this.actionName}...` );
         let release = await this.mutex.acquire();
+        Log.debug( `Executing action ${this.actionName}...` );
 
         try {
             result = await this.execute( ...params );
@@ -54,6 +56,7 @@ export abstract class Action<R = void,P extends any[] = []> {
             }
             result = false;
         }
+        Log.debug( `Executed action ${this.actionName}.` );
         
         this.release();
 

@@ -6,6 +6,13 @@ function retrieveAddressValue(pipe)
 
     if name == "InGameTest" then
         local authorityGameMode = getAddressSafe("[[[[GEngine]+GameEngine.GameViewport]+GameViewportClient.World]+World.AuthorityGameMode]")
+        
+        if authorityGameMode == 0 then
+            pipe.writeDword(#"Client")
+            pipe.writeString("Client")
+            return
+        end
+        
         if authorityGameMode == nil then
             pipe.writeDword(2)
             pipe.writeString("??")

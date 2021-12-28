@@ -5,6 +5,7 @@ export * from './danglingInjector';
 export * from './getVersion';
 export * from './mapData';
 export * from './minizwergColors';
+export * from './openLog';
 export * from './pathData';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';

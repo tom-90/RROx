@@ -6,6 +6,7 @@ import Store from 'electron-store';
 import * as config from '../shared/config';
 import EventEmitter from 'events';
 import { WindowType } from './windows';
+import Log from 'electron-log';
 
 export declare interface RROx {
     on( event: 'settingsUpdate', listener: () => void ): this;
@@ -27,6 +28,16 @@ export class RROx extends EventEmitter {
 
         this.server.on( 'connect'   , ( pipe ) => this.onConnect   ( pipe ) );
         this.server.on( 'disconnect', ( pipe ) => this.onDisconnect( pipe ) );
+
+        let logLevel = this.settings.get( 'loglevel' );
+        Log.transports.file.level = logLevel;
+        Log.transports.console.level = logLevel;
+
+        this.on( 'settingsUpdate', () => {
+            let logLevel = this.settings.get( 'loglevel' );
+            Log.transports.file.level = logLevel;
+            Log.transports.console.level = logLevel;
+        } );
     }
 
     private onConnect( pipe: NamedPipe ) {

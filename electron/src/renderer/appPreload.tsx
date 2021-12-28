@@ -13,6 +13,7 @@ const validChannels = [
     'control-enabled',
     'change-switch',
     'minizwerg-colors',
+    'open-log',
     'popup-message',
     'set-money-and-xp',
     'set-engine-controls',
