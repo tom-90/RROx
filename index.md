@@ -33,9 +33,9 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ### v1.6.2 - 28-12-2021
 
-- ``Added`` Debugging options
-- ``Fixed`` Fixed car positioning
-- ``Fixed`` Multiplayer clients were not attaching properly
+- ``Added`` Debugging options.
+- ``Fixed`` Fixed car positioning.
+- ``Fixed`` Multiplayer clients were not attaching properly.
 
 ### v1.6.1 - 27-12-2021
 
