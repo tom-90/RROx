@@ -1,5 +1,7 @@
 # RailroadsOnline Extended
 
+RailroadsOnline Extended provides an in-game minimap, with the ability to remotely control switches and locomotives. In addition, RROx allows you to teleport to various locations and trigger autosaves.
+
 ## Antivirus warning
 
 RROx needs to inject code into the game to function. However, this is not something regular programs do, and as such, it might get detected by your antivirus.
@@ -14,7 +16,9 @@ Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows t
 
 ## Frequently Asked Questions
 
-- **Attaching fails**: When attaching fails, make sure that the game is running and that you have added an exception to your antivirus as indicated in the antivirus warning. If attaching still fails after adding the exception, you could try to reinstall RROx by running the downloaded setup file again. Your antivirus might have removed necessary files before you added the exception, and reinstalling will make sure these files are recreated.
+- **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the correspondign error code [here](./error-codes.md).
+- **Minimap not visible**: Please make sure that the game is not running in `Native Fullscreen`-mode. Please switch to any other mode to get the minimap to work.
+- **Attaching works, but the map stays empty**: Please make sure that you are **not** running RROx as administrator.
 
 ## Support
 
@@ -27,7 +31,6 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 - When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
 - Teleporting does not work for clients in multiplayer.
-- When the game is running in `Native Fullscreen`-mode, the minimap will not show. Please switch to any other mode to get the minimap to work.
 
 ## Changelog
 
