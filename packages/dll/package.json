@@ -1,0 +1,11 @@
+{
+    "name": "@rrox/dll",
+    "private": true,
+    "version": "1.6.2",
+    "description": "RailroadsOnline Extended DLL",
+    "author": "_tom()",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tom-90/RROx.git"
+    }
+}
