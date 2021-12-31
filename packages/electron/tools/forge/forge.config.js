@@ -7,7 +7,7 @@ module.exports = {
     packagerConfig: {
         // Set executable name
         executableName: 'RailroadsOnline Extended',
-        icon: path.resolve( __dirname, '../../assets/images/appIcon.ico'),
+        icon: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
     },
     // Forge Makers
     makers: [
@@ -17,8 +17,8 @@ module.exports = {
             name: '@electron-forge/maker-squirrel',
             config: {
                 name: 'RailroadsOnlineExtended',
-                setupIcon: path.resolve( __dirname, '../../assets/images/appIcon.ico'),
-                iconUrl: 'https://github.com/tom-90/RROx/blob/master/electron/assets/images/appIcon.ico?raw=true',
+                setupIcon: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
+                iconUrl: 'https://github.com/tom-90/RROx/blob/master/packages/assets/images/appIcon.ico?raw=true',
                 setupExe: 'RailroadsOnline Extended Setup.exe',
             },
         }

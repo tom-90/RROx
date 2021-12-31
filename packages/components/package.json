@@ -10,10 +10,19 @@
         "url": "https://github.com/tom-90/RROx.git"
     },
     "devDependencies": {
+        "@types/leaflet": "^1.7.7",
+        "@types/leaflet-imageoverlay-rotated": "^0.1.4",
+        "@types/react": "^17.0.34",
         "typescript": "^4.4.4"
     },
     "dependencies": {
         "@rrox/types": "^1.6.2",
-        "@rrox/assets": "^1.6.2"
+        "@rrox/assets": "^1.6.2",
+        "ant-design-draggable-modal": "^1.0.0",
+        "antd": "^4.17.2",
+        "leaflet": "^1.7.1",
+        "leaflet-imageoverlay-rotated": "^0.2.1",
+        "react": "^17.0.2",
+        "react-leaflet": "^3.2.2"
     }
 }

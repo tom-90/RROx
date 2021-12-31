@@ -6,6 +6,7 @@ declare module '*.svg';
 declare module '*.svg?raw';
 declare module '*.exe';
 declare module '*.dll';
+declare module '*.ico';
 
 declare interface Window {
     ipc: {

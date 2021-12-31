@@ -1,6 +1,9 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 import { convertEntryPath } from '../utils';
+import appIcon from '@rrox/assets/images/appIcon.ico';
+
+const dir = __dirname;
 
 // Electron Forge automatically creates these entry points
 declare const APP_WINDOW_WEBPACK_ENTRY: string;
@@ -15,7 +18,7 @@ export function createOverlayWindow(): BrowserWindow {
     let overlayWindow = new BrowserWindow( {
         width: 800,
         height: 600,
-        icon: path.resolve( 'assets/images/appIcon.ico' ),
+        icon: path.resolve( dir, appIcon ),
         webPreferences: {
             nodeIntegration: false,
             nativeWindowOpen: true,

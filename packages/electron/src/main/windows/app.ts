@@ -1,6 +1,9 @@
 import { app, session, BrowserWindow } from 'electron';
 import { convertEntryPath } from '../utils/urlPath';
 import path from 'path';
+import appIcon from '@rrox/assets/images/appIcon.ico';
+
+const dir = __dirname;
 
 // Electron Forge automatically creates these entry points
 declare const APP_WINDOW_WEBPACK_ENTRY: string;
@@ -22,7 +25,7 @@ export function createAppWindow(): BrowserWindow {
         backgroundColor: '#1f252c',
         show: false,
         autoHideMenuBar: true,
-        icon: path.resolve( 'assets/images/appIcon.ico' ),
+        icon: path.resolve( dir, appIcon ),
         webPreferences: {
             nodeIntegration: false,
             nativeWindowOpen: true,
