@@ -58,6 +58,9 @@ contextBridge.exposeInMainWorld( 'settingsStore', {
     },
     set( key: string, val: any ) {
         return store.set( key, val );
+    },
+    reset( key: keyof config.Schema ) {
+        return store.reset( key );
     }
 } );
 

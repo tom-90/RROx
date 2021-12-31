@@ -8,5 +8,6 @@ export class UpdateConfigIPCListener extends IPCListener {
     
     protected onMessage(): void {
         this.app.emit( 'settings-update' );
+        this.app.broadcast( 'settings-update' );
     }
 }

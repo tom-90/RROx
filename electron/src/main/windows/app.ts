@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, session, BrowserWindow } from 'electron';
 import { convertEntryPath } from '../utils/urlPath';
 import path from 'path';
 
@@ -11,6 +11,10 @@ declare const APP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
  * @returns {BrowserWindow} Application Window Instance
  */
 export function createAppWindow(): BrowserWindow {
+    session.defaultSession.loadExtension( path.resolve(
+        'C:/Users/Tom/AppData/Roaming/Google Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0'
+    ) )
+
     // Create new window instance
     let appWindow = new BrowserWindow( {
         width: 800,

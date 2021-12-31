@@ -1,6 +1,11 @@
+import { Cars } from "./cars";
+import { IndustryType } from "./industry";
+import { SplineType } from "./spline";
+import { SwitchType } from "./switch";
+
 export interface Frame {
     ID: number;
-    Type: string;
+    Type: Cars;
     Name: string;
     Number: string;
     Location: [ X: number, Y: number, Z: number ];
@@ -31,7 +36,7 @@ export interface Player {
 
 export interface Switch {
     ID: number;
-    Type: number;
+    Type: SwitchType;
     Side: number;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
@@ -46,7 +51,7 @@ export interface Turntable {
 
 export interface Spline {
     ID: number;
-    Type: number;
+    Type: SplineType;
     Location: [ X: number, Y: number, Z: number ];
     Segments: SplineSegment[];
 }
@@ -73,7 +78,7 @@ export interface Sandhouse {
 
 export interface Industry {
     ID: number;
-    Type: number;
+    Type: IndustryType;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
     Educts  : Storage[];

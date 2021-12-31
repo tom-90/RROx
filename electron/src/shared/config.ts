@@ -1,4 +1,6 @@
 import { Cars } from './cars';
+import { Options } from 'electron-store';
+import { SplineType } from './spline';
 
 export const schema = {
     'map.background': {
@@ -63,6 +65,19 @@ export const schema = {
         enum: [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
     },
 
+
+    [ `colors.${Cars.HANDCAR}`         ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.PORTER}`          ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.PORTER2}`         ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.EUREKA}`          ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.EUREKA_TENDER}`   ]: { type: 'string', default: '#000000' },
+    [ `colors.${Cars.CLIMAX}`          ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.HEISLER}`         ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.CLASS70}`         ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.CLASS70_TENDER}`  ]: { type: 'string', default: '#000000' },
+    [ `colors.${Cars.COOKE260}`        ]: { type: 'string', default: '#800080' },
+    [ `colors.${Cars.COOKE260_TENDER}` ]: { type: 'string', default: '#000000' },
+
     [ `colors.${Cars.FLATCAR_LOGS}.unloaded`     ]: { type: 'string', default: '#cd5c5c' },
     [ `colors.${Cars.FLATCAR_LOGS}.loaded`       ]: { type: 'string', default: '#cd5c5c' },
     [ `colors.${Cars.FLATCAR_CORDWOOD}.unloaded` ]: { type: 'string', default: '#ffa500' },
@@ -75,8 +90,23 @@ export const schema = {
     [ `colors.${Cars.TANKER}.loaded`             ]: { type: 'string', default: '#d3d3d3' },
     [ `colors.${Cars.BOXCAR}.unloaded`           ]: { type: 'string', default: '#808080' },
     [ `colors.${Cars.BOXCAR}.loaded`             ]: { type: 'string', default: '#808080' },
-    [ `colors.${Cars.CABOOSE}.unloaded`          ]: { type: 'string', default: '#ff5e5e' },
-    [ `colors.${Cars.CABOOSE}.loaded`            ]: { type: 'string', default: '#ff5e5e' },
+
+    [ `colors.${Cars.CABOOSE}` ]: { type: 'string', default: '#ff5e5e' },
+    
+    [ `colors.spline.${SplineType.TRACK}`         ]: { type: 'string', default: '#000000' },
+    [ `colors.spline.${SplineType.TRENDLE_TRACK}` ]: { type: 'string', default: '#000000' },
+    [ `colors.spline.${SplineType.VARIABLE_BANK}` ]: { type: 'string', default: '#bdb76b' },
+    [ `colors.spline.${SplineType.CONSTANT_BANK}` ]: { type: 'string', default: '#bdb76b' },
+    [ `colors.spline.${SplineType.VARIABLE_WALL}` ]: { type: 'string', default: '#a9a9a9' },
+    [ `colors.spline.${SplineType.CONSTANT_WALL}` ]: { type: 'string', default: '#a9a9a9' },
+    [ `colors.spline.${SplineType.WOODEN_BRIDGE}` ]: { type: 'string', default: '#ffa500' },
+    [ `colors.spline.${SplineType.IRON_BRIDGE}`   ]: { type: 'string', default: '#add8e6' },
+
+    [ `colors.switch.active`   ]: { type: 'string', default: '#000000' },
+    [ `colors.switch.inactive` ]: { type: 'string', default: '#ff0000' },
+    [ `colors.switch.cross`    ]: { type: 'string', default: '#000000' },
+    
+    [ `colors.turntable.circle` ]: { type: 'string', default: '#ffffe0' },
 };
 
 export const accessPropertiesByDotNotation = false;
@@ -94,4 +124,14 @@ export interface Schema {
     'minizwerg.public': boolean;
     'minizwerg.url'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
+}
+
+export const migrations: Options<Schema>[ 'migrations' ] = {
+    '>=1.6.2': ( store ) => {
+        if ( store.has( `colors.${Cars.CABOOSE}.unloaded` ) ) {
+            store.set( `colors.${Cars.CABOOSE}`, store.get( `colors.${Cars.CABOOSE}.unloaded` ) );
+            store.delete( `colors.${Cars.CABOOSE}.unloaded` as keyof Schema );
+            store.delete( `colors.${Cars.CABOOSE}.loaded` as keyof Schema );
+        }
+    }
 }

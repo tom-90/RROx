@@ -30,8 +30,8 @@ export class MinizwergColorsAction extends Action<string, [ share: true ] | [ sh
                 cf_flatcar_tanker  : this.app.settings.get( `colors.${Cars.TANKER}.loaded`             ),
                 ce_boxcar          : this.app.settings.get( `colors.${Cars.BOXCAR}.unloaded`           ),
                 cf_boxcar          : this.app.settings.get( `colors.${Cars.BOXCAR}.loaded`             ),
-                ce_caboose         : this.app.settings.get( `colors.${Cars.CABOOSE}.unloaded`          ),
-                cf_caboose         : this.app.settings.get( `colors.${Cars.CABOOSE}.loaded`            ),
+                ce_caboose         : this.app.settings.get( `colors.${Cars.CABOOSE}`                   ),
+                cf_caboose         : this.app.settings.get( `colors.${Cars.CABOOSE}`                   ),
             } } );
 
             if ( res.status !== 200 || !res.data?.code )
@@ -60,8 +60,7 @@ export class MinizwergColorsAction extends Action<string, [ share: true ] | [ sh
         this.app.settings.set( `colors.${Cars.TANKER}.loaded`            , res.data.colors[ 'cf_flatcar_tanker' ]   );
         this.app.settings.set( `colors.${Cars.BOXCAR}.unloaded`          , res.data.colors[ 'ce_boxcar' ]           );
         this.app.settings.set( `colors.${Cars.BOXCAR}.loaded`            , res.data.colors[ 'cf_boxcar' ]           );
-        this.app.settings.set( `colors.${Cars.CABOOSE}.unloaded`         , res.data.colors[ 'ce_caboose' ]          );
-        this.app.settings.set( `colors.${Cars.CABOOSE}.loaded`           , res.data.colors[ 'cf_caboose' ]          );
+        this.app.settings.set( `colors.${Cars.CABOOSE}`                  , res.data.colors[ 'ce_caboose' ]          );
 
         return code;
     }

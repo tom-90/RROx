@@ -57,6 +57,8 @@ export function TopNav() {
 
     if( matchPath( '/map', pathname ) )
         selectedKeys.push( 'map' );
+    if ( matchPath( '/mapNew', pathname ) )
+        selectedKeys.push( 'mapNew' );
     if( matchPath( '/settings', pathname ) )
         selectedKeys.push( 'settings' );
     if( matchPath( '/info', pathname ) )
@@ -113,6 +115,11 @@ export function TopNav() {
             <Menu.Item key="map" >
                 <Link to="/map">
                     Map
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="mapNew" >
+                <Link to="/mapNew">
+                    Map New
                 </Link>
             </Menu.Item>
             <Menu.Item key="settings">

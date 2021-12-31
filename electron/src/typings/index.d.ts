@@ -20,5 +20,6 @@ declare interface Window {
         get<T>( key: string ): T;
         getAll(): any;
         set( key: string, val: any ): void;
+        reset( key: string ): void;
     };
 }

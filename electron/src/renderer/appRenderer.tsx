@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import { MapPage } from './pages/Map';
+import { MapNewPage } from './pages/MapNew';
 import { Settings } from './pages/Settings';
 import { Info } from './pages/Info';
 import './app.less';
@@ -22,8 +23,9 @@ ReactDOM.render( <DraggableModalProvider>
         <Routes>
             <Route path="/settings" element={<Settings />} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/mapNew" element={<MapNewPage />} />
             <Route path="/info" element={<Info />} />
-            <Route path="/" element={<Navigate to="/map" />} />
+            <Route path="/" element={<Navigate to="/mapNew" />} />
         </Routes>
     </MemoryRouter>
 </DraggableModalProvider>, document.getElementById( 'app' ) );
