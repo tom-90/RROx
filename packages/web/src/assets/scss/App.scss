@@ -3,9 +3,16 @@ $border-color: red;
 
 #root {
 	font-family: helvetica, arial, sans-serif;
-
 	height: 100%;
-	padding: 2em;
 
-	border: 5px solid $border-color;
+	.page-container{
+		height: 100%;
+	}
+	.app-logo{
+		position: absolute;
+		left: 5px;
+		bottom: 10px;
+		z-index: 5000;
+		width: 50px;
+	}
 }

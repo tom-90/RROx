@@ -6,6 +6,9 @@ const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
 module.exports = {
     resolve: {
         extensions: [ '.js', '.ts', '.jsx', '.tsx', '.css', '.json' ],
+        alias: {
+            'react-dom': '@hot-loader/react-dom'
+        }
     },
     context: resolve( __dirname, "../../" ),
     module: {
