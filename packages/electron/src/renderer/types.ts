@@ -1,13 +1,3 @@
-declare module '*.css';
-declare module '*.png';
-declare module '*.jpg';
-declare module '*.jpeg';
-declare module '*.svg';
-declare module '*.svg?raw';
-declare module '*.exe';
-declare module '*.dll';
-declare module '*.ico';
-
 declare interface Window {
     ipc: {
         invoke( channel: string, ...params: any[] ): Promise<any>,

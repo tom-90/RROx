@@ -140,14 +140,14 @@ declare module 'quaternion' {
          * @returns {boolean}
          */
         isNaN(): boolean;
-        
+
         /**
          * Gets the Quaternion as a well formatted string
          *
          * @returns {string}
          */
         toString(): string;
-        
+
         /**
          * Returns the real part of the quaternion
          *
@@ -161,14 +161,14 @@ declare module 'quaternion' {
          * @returns {Array}
          */
         imag(): [ x: number, y: number, z: number ];
-        
+
         /**
          * Gets the actual quaternion as a 4D vector / array
          *
          * @returns {Array}
          */
         toVector(): [ w: number, x: number, y: number, z: number ];
-        
+
         /**
          * Calculates the 3x3 rotation matrix for the current quat
          *
@@ -185,7 +185,7 @@ declare module 'quaternion' {
          * @returns {Array}
          */
         toMatrix4( d2: boolean ): number[];
-        
+
         /**
          * Clones the actual object
          *

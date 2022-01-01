@@ -1,0 +1,75 @@
+.tooltipControls .highlight, .highlight:hover, .leaflet-interactive:hover {
+	filter: drop-shadow(0px 0px 3px black);
+}
+
+.frameControls {
+	overflow-x: auto;
+
+	tr {
+		th {
+			min-width: 100px;
+		}
+	}
+}
+
+.modal-hidden {
+	display: none!important;
+}
+
+.map {
+	position: relative;
+
+	&.map-normal {
+		width: 100%;
+		height: 100%;
+	}
+
+	&.map-map {
+		width: 50vw;
+		height: 70vh;
+		margin-top: 15vh;
+	}
+
+	&.map-minimap {
+		width: 20vw;
+		height: 25vh;
+
+		&.corner-1 {
+			margin-top: 0;
+			margin-right: 80vw;
+		}
+
+		&.corner-2 {
+			margin-top: 0;
+			margin-left: 80vw;
+		}
+
+		&.corner-3 {
+			margin-top: 75vh;
+			margin-right: 80vw;
+		}
+
+		&.corner-4 {
+			margin-top: 75vh;
+			margin-left: 80vw;
+		}
+
+		.leaflet-control-container {
+			visibility: hidden;
+		}
+	}
+}
+
+.leaflet-container {
+	background: none;
+}
+
+.leaflet-popup {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	z-index: 1000;
+
+	.leaflet-popup-content-wrapper {
+		border-radius: 0;
+	}
+}

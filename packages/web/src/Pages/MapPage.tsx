@@ -2,7 +2,6 @@ import * as React from "react";
 import {useEffect, useMemo, useState} from "react";
 import {World} from "@rrox/types";
 import {Map, MapActions, MapMode, MapSettings} from "@rrox/components";
-import {PageLayout} from "@rrox/electron/src/renderer/components/PageLayout";
 
 export function MapPage() {
 
@@ -47,14 +46,12 @@ export function MapPage() {
     } ), [ settings ] );
 
     return (
-        <PageLayout>
-            <Map
-                data={mapData}
-                settings={settings}
-                actions={actions}
-                mode={MapMode.NORMAL}
-                controlEnabled={controlEnabled}
-            />
-        </PageLayout>
+        <Map
+            data={mapData}
+            settings={settings}
+            actions={actions}
+            mode={MapMode.NORMAL}
+            controlEnabled={controlEnabled}
+        />
     );
 }

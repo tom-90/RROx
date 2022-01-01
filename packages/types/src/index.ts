@@ -1,3 +1,5 @@
+import './types';
+
 export * from './cars';
 export * from './controls';
 export * from './data';

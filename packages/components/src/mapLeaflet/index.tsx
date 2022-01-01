@@ -14,6 +14,7 @@ import { Frame } from './elements/Frame';
 import { Sandhouse } from './elements/Sandhouse';
 import { WaterTower } from './elements/WaterTower';
 import { Controls } from './leaflet/controls';
+import './styles.less';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,

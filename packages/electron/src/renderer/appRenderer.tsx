@@ -11,6 +11,7 @@ import { Info } from './pages/Info';
 import './app.less';
 import './components/DanglingInjector';
 import { notification } from 'antd';
+import './types';
 
 window.mode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'overlay' ? 'overlay' : 'normal';
 
