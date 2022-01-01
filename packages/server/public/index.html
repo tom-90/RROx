@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RROx Websocket Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px 60px;
+        }
+
+        #form {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem;
+            display: flex;
+            margin: 10px 0;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        #input {
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #form>button {
+            background: #333;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages>li {
+            padding: 0.5rem 1rem;
+        }
+
+        #messages>li:nth-child(odd) {
+            background: #efefef;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="connectInstructions">
+        The connection token can be retrieved by executing <code>await ipc.invoke("set-socket-state", true)</code> in the RROx dev-tools.
+    </p>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" placeholder="Enter Connection Token" /><button>Send</button>
+    </form>
+    <p>
+        Open the dev-tools to use the following functions:
+    </p>
+    <ul>
+        <li><code>await socket.invoke( type, ...args )</code>: Invoke a function on the host and wait for a response</li>
+        <li><code>socket.send( type, ...args )</code>: Send an event to the host</li>
+    </ul>
+    <ul id="messages"></ul>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var iosock = io( { transports: [ 'websocket' ] } );
+
+        var messages = document.getElementById( 'messages' );
+        var form = document.getElementById( 'form' );
+        var input = document.getElementById( 'input' );
+
+        form.addEventListener( 'submit', function( e ) {
+            e.preventDefault();
+            if( input.value ) {
+                iosock.emit( 'join', input.value, ( success ) => {
+                    var item = document.createElement( 'li' );
+                    item.textContent = success ? 'Connected' : 'Connection failed';
+                    messages.appendChild( item );
+
+                    if( success ) {
+                        document.getElementById( 'connectInstructions' );
+                        form.remove();
+                    }
+
+                    window.socket = {
+                        invoke: ( type, ...args ) => {
+                            return new Promise( ( resolve ) => {
+                                iosock.emit( 'rpc', type, args, ( res ) => resolve( res ) );
+                            } );
+                        },
+                        send: ( type, ...args ) => {
+                            iosock.emit( 'rpc', type, args );
+                        }
+                    }
+                } );
+            }
+        } );
+
+        iosock.on( 'broadcast', function( ev, args ) {
+            console.log( '[BROADCAST]', ev, ...args );
+            var item = document.createElement( 'li' );
+            var event = document.createElement( 'code' );
+            event.textContent = ev;
+            event.style.paddingRight = '10px';
+            item.appendChild( event );
+            var text = document.createElement( 'span' );
+            let data = args.map( ( a ) => JSON.stringify( a ) ).join( ', ' );
+            text.textContent = data.length > 1024 ? data.substring( 0, 1024 ) + '...' : data;
+            item.appendChild( text );
+            messages.appendChild( item );
+            window.scrollTo( 0, document.body.scrollHeight );
+
+            while( messages.children.length > 50 ) {
+                messages.children[ 0 ].remove();
+            }
+        } );
+    </script>
+</body>
+
+</html>
