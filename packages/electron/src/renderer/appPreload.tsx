@@ -15,6 +15,8 @@ const validChannels = [
     'minizwerg-colors',
     'open-log',
     'popup-message',
+    'read-height',
+    'remove-vegetation',
     'set-money-and-xp',
     'set-engine-controls',
     'get-attached-state',
@@ -25,6 +27,7 @@ const validChannels = [
     'dangling-injector',
     'kill-dangling-injector',
     'get-version',
+    'show-injector',
     'teleport'
 ];
 

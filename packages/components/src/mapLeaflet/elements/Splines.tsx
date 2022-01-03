@@ -43,6 +43,9 @@ export function Splines( { data, type }: { data: SplineData[], type: SplineType 
 
     const definition = SplineDefinitions[ type ];
 
+    if( coordinates.length === 0 )
+        return null;
+
     return <Line
         positions={coordinates}
         color={actions.getColor( `spline.${type}` )}

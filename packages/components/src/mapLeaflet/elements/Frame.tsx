@@ -99,7 +99,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
         anchor={anchor}
         rotation={Math.round( Rotation[ 1 ] ) - 90}
         color={'black'}
-        fillColor={Freight
+        fillColor={definition.freight
                 ? actions.getColor( `${Type}.${Freight && Freight.Amount > 0 ? 'loaded' : 'unloaded'}` )
                 : actions.getColor( Type )}
         fillOpacity={1}

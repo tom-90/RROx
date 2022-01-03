@@ -27,4 +27,4 @@ let scriptEl = data
 
 scriptEl.text = contents.join( '\n' );
 
-fs.writeFileSync( path.resolve( __dirname, 'Injector.CT' ), XML.js2xml( data, { compact: false, spaces: 2 } ).replace( /\r?\n|\r/g, "\r\n" ) + '\r\n' );
+fs.writeFileSync( path.resolve( __dirname, '../Injector.CT' ), XML.js2xml( data, { compact: false, spaces: 2 } ).replace( /\r?\n|\r/g, "\r\n" ) + '\r\n' );

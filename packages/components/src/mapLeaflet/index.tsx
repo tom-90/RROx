@@ -61,13 +61,15 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         const minY = -200000;
         const maxY = 200000;
 
-        // Scale to transform the above ranges to min -10 max 10
-        const scale = 20000;
+        // Calibrated against hi-res background
+        const scale = 112000;
 
         return {
             bounds     : L.latLngBounds( L.latLng( minY / scale, minX / scale ), L.latLng( maxY / scale, maxX / scale ) ),
             center     : L.latLng( 0, 0 ),
             initialZoom: 10,
+            minZoom    : 0,
+            maxZoom    : 18,
             scale
         }
     }, [] );

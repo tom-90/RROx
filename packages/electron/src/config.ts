@@ -5,7 +5,7 @@ export const schema = {
     'map.background': {
         type: 'number' as const,
         default: 1,
-        maximum: 5,
+        maximum: 6,
         minimum: 1,
     },
     'minimap.enabled': {

@@ -46,8 +46,9 @@ function starttransmitter()
                 pipe.writeDword(0)
             elseif command == "P" then -- Player
                 getPlayer(pipe)
-            elseif command == "S" then -- Stop
-                closeCE()
+            elseif command == "S" then -- Show Window
+                unhideMainCEwindow()
+                GetAddressList().Parent = GetMainForm()
             elseif command == "A" then -- Get Address
                 retrieveAddress(pipe)
             elseif command == "V" then -- Get Address Value

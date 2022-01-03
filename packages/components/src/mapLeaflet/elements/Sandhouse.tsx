@@ -50,10 +50,6 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: Sandh
         url={SandhouseDefinitions.image}
         interactive={false}
     >
-        <Circle
-            center={anchor}
-            radius={100}
-        />
         <MapTooltip
             title={'Sandhouse'}
             visible={tooltipVisible && mode !== MapMode.MINIMAP}

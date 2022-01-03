@@ -15,7 +15,7 @@ declare const APP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
  */
 export function createAppWindow(): BrowserWindow {
     session.defaultSession.loadExtension( path.resolve(
-        'C:/Users/Tom/AppData/Roaming/Google Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0'
+        'C:/Users/20201781/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0'
     ) )
 
     // Create new window instance

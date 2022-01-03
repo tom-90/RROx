@@ -5,6 +5,7 @@ import { MapContext } from '../context';
 import { Line } from '../leaflet/line';
 import { SwitchDefinitions } from '../definitions/Switch';
 import { Tooltip } from 'react-leaflet';
+import { message } from 'antd';
 
 export const Switch = React.memo( function Switch( { data }: { data: SwitchData } ) {
     const { utils, controlEnabled, actions } = useContext( MapContext );
@@ -58,11 +59,13 @@ export const Switch = React.memo( function Switch( { data }: { data: SwitchData 
         positions={[ utils.scalePoint( end1x, end1y ), utils.scalePoint( px, py ), utils.scalePoint( end2x, end2y ) ]}
         lineCap={'butt'}
         lineJoin={'bevel'}
-        interactive={controlEnabled}
+        interactive={true}
         eventHandlers={{
             click: () => {
-                if ( !controlEnabled )
+                if ( !controlEnabled ) {
+                    message.error( 'Flipping a switch is not possible while in this mode.' );
                     return;
+                }
                 actions.changeSwitch( ID );
             }
         }}

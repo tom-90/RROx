@@ -14,7 +14,7 @@ export function useScalingWeight( weight: number ) {
         let centerPoint  = map.latLngToContainerPoint( centerLatLng );
         let latLngX      = map.containerPointToLatLng( L.point( centerPoint.x + 10, centerPoint.y ) );
 
-        return weight * 2 / ( centerLatLng.distanceTo( latLngX ) / 10 );
+        return weight * 0.5 / ( centerLatLng.distanceTo( latLngX ) / 10 );
     };
 
     const calculatedWeight = useMemo( () => calculateWeight( weight ), [] );

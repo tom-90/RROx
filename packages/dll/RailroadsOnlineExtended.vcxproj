@@ -18,6 +18,23 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\arr.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\injector.cpp" />
+    <ClCompile Include="src\logger.cpp" />
+    <ClCompile Include="src\pipe.cpp" />
+    <ClCompile Include="src\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\arr.h" />
+    <ClInclude Include="src\engine.h" />
+    <ClInclude Include="src\injector.h" />
+    <ClInclude Include="src\logger.h" />
+    <ClInclude Include="src\pipe.h" />
+    <ClInclude Include="src\utils.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -152,21 +169,6 @@
       <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="arr.cpp" />
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="engine.cpp" />
-    <ClCompile Include="injector.cpp" />
-    <ClCompile Include="pipe.cpp" />
-    <ClCompile Include="utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="arr.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="injector.h" />
-    <ClInclude Include="pipe.h" />
-    <ClInclude Include="utils.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

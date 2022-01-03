@@ -22,6 +22,8 @@ export interface MapContextData {
     map: {
         bounds     : L.LatLngBounds;
         center     : L.LatLng;
+        minZoom    : number;
+        maxZoom    : number;
         initialZoom: number;
         scale      : number;
     },
