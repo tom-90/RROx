@@ -106,6 +106,8 @@ export const schema = {
     [ `colors.switch.cross`    ]: { type: 'string', default: '#000000' },
     
     [ `colors.turntable.circle` ]: { type: 'string', default: '#ffffe0' },
+    
+    [ `colors.player` ]: { type: 'string', default: '#0000ff' },
 };
 
 export const accessPropertiesByDotNotation = false;

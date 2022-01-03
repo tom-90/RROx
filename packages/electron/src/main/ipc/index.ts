@@ -7,8 +7,6 @@ export * from './mapData';
 export * from './minizwergColors';
 export * from './openLog';
 export * from './pathData';
-export * from './readHeight';
-export * from './removeVegetation';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';
 export * from './socketState';
