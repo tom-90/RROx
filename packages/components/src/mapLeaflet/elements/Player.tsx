@@ -8,7 +8,7 @@ import { MapTooltip } from '../leaflet/tooltip';
 import { Button } from 'antd';
 
 export const Player = React.memo( function Player( { data }: { data: PlayerData } ) {
-    const { utils, follow, mode } = useContext( MapContext );
+    const { utils, follow, mode, actions } = useContext( MapContext );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     const map = useMap();
 
@@ -34,7 +34,7 @@ export const Player = React.memo( function Player( { data }: { data: PlayerData 
         anchor={anchor}
         rotation={Math.round( Rotation[ 1 ] ) - 90}
         color={'black'}
-        fillColor={'blue'}
+        fillColor={actions.getColor( 'player' )}
         fillOpacity={1}
         interactive
     >

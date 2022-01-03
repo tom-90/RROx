@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Popup, Pane, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Divider } from 'antd';
@@ -21,7 +21,9 @@ export function MapTooltip( { title, children, visible, setVisible }: {
         }
     }, [ visible ] );
 
-    return <Popup pane='popups' ref={ref} onOpen={() => setVisible( true )} onClose={() => setVisible( true )}>
+    const { onOpen, onClose } = useMemo( () => ( { onOpen: () => setVisible( true ), onClose: () => setVisible( true ) } ), [] );
+
+    return <Popup pane='popups' ref={ref} onOpen={onOpen} onClose={onClose}>
         <div style={{ margin: '0 10px 10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Divider orientation={'center'} style={{ margin: '0 0 10px 0' }}>{title}</Divider>
             {children}

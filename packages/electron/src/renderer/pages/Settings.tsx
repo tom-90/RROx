@@ -579,6 +579,16 @@ export function Settings() {
                                             className='reset'
                                         ><ReloadOutlined /></Button></td>
                                     </tr>
+                                    <tr>
+                                        <td>Player</td>
+                                        <td><Form.Item name={`colors.player`}><input type='color' /></Form.Item></td>
+                                        <td><Button
+                                            type="text"
+                                            onClick={() => reset( `colors.player` )}
+                                            title='Reset to default value'
+                                            className='reset'
+                                        ><ReloadOutlined /></Button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </Collapse.Panel>

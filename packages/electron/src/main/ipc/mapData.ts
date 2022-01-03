@@ -6,6 +6,8 @@ export class MapDataIPCHandler extends IPCHandler {
     
     public channel = 'map-data';
     
+    public public = true;
+    
     protected handle() {
         return this.app.getTask( ReadWorldTask ).world;
     }

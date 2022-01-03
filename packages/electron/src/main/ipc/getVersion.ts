@@ -6,6 +6,8 @@ export class GetVersionIPCHandler extends IPCHandler {
     
     public channel = 'get-version';
     
+    public public = true;
+    
     protected handle() {
         return app.getVersion();
     }
