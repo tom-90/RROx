@@ -15,4 +15,28 @@ $border-color: red;
 		z-index: 5000;
 		width: 50px;
 	}
+	.key-input-body{
+		background-color: #eaeaea;
+	}
+	.key-input-div{
+		display: flex;
+		justify-content: center;
+		padding-top: 30vh;
+		.key-input-container{
+			width: 50vw;
+			text-align: center;
+			h1{
+				font-size: 50px;
+				margin-bottom: 5px;
+				font-weight: bold;
+			}
+			Input{
+				font-size: 25px;
+			}
+			Button{
+				margin-top: 5px;
+				height: 50px;
+			}
+		}
+	}
 }

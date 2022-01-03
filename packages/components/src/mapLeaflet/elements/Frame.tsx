@@ -71,7 +71,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                     </Button>
                     <Button
                         style={{ marginTop: 5 }}
-                        onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 500 )}
+                        onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 500, data.Name )}
                     >Teleport Here</Button>
                 </MapTooltip>
                 <FrameControls
@@ -124,7 +124,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
             >Show Freight</Button>}
             {Type === Cars.CABOOSE && <Button
                 style={{ marginTop: 5 }}
-                onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] )}
+                onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ], data.Name )}
             >Teleport Here</Button>}
         </MapTooltip>
         <FrameControls
