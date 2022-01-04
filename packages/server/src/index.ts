@@ -15,6 +15,12 @@ const io = new SocketServer(
 
 app.use( express.static( path.join( __dirname, '../public' ) ) );
 
+app.get( "/*", ( req, res ) => {
+    res.sendFile( path.join( __dirname, "../public/index.html" ), err => {
+        if ( err ) res.sendStatus( 500 );
+    } );
+} );
+
 const rooms = new RoomManager( io );
 
 io.on( 'connection', ( socket ) => {
