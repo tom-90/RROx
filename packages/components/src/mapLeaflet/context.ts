@@ -10,7 +10,7 @@ export interface MapSettings {
 }
 
 export interface MapActions {
-    teleport         : ( x: number, y: number, z: number, name?: string ) => void;
+    teleport         : ( x: number, y: number, z: number ) => void;
     changeSwitch     : ( id: number ) => void;
     setEngineControls: ( id: number, type: EngineControls, value: number ) => void;
     getColor         : ( key: string ) => string;

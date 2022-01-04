@@ -21,12 +21,11 @@ export abstract class IPCListener<P extends any[] = []> extends IPCTask {
     constructor( app: RROx ) {
         super( app );
 
-        if( this.public )
-            this.app.socket.on( 'listener-event', ( type, args: P ) => {
-                if( type !== this.channel || !this.listener )
-                    return;
-                this.listener( null, ...args );
-            } );
+        this.app.socket.on( 'listener-event', ( type, args: P ) => {
+            if( type !== this.channel || !this.listener || !this.public )
+                return;
+            this.listener( null, ...args );
+        } );
     }
 
     public start(): void {
@@ -61,18 +60,17 @@ export abstract class IPCHandler<P extends any[] = []> extends IPCTask {
     constructor( app: RROx ) {
         super( app );
 
-        if( this.public )
-            this.app.socket.on( 'handler-event', ( type, args: P, callback: ( data: any ) => void ) => {
-                if ( type !== this.channel || !this.handler )
-                    return;
-                
-                let res = this.handler( null, ...args );
+        this.app.socket.on( 'handler-event', ( type, args: P, callback: ( data: any ) => void ) => {
+            if ( type !== this.channel || !this.handler || !this.public )
+                return;
+            
+            let res = this.handler( null, ...args );
 
-                if( res instanceof Promise )
-                    res.then( callback ).catch( ( e ) => Log.error( `Error while executing IPC Handler from websocket '${this.taskName}':`, e ) );
-                else
-                    callback( res );
-            } );
+            if( res instanceof Promise )
+                res.then( callback ).catch( ( e ) => Log.error( `Error while executing IPC Handler from websocket '${this.taskName}':`, e ) );
+            else
+                callback( res );
+        } );
     }
 
     public start(): void {

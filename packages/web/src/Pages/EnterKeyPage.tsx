@@ -1,10 +1,13 @@
 import * as React from "react";
 import {useEffect, useMemo, useState, useRef} from "react";
+import { useNavigate } from "react-router-dom";
 import AppIcon from '@rrox/assets/images/appicon.ico';
 import { Row, Col, Input, Button, message } from "antd";
+import { useSocket } from "../helpers/socket";
 
 export function EnterKey() {
     const [getKeyInput, setKeyInput] = useState('');
+    const navigate = useNavigate();
 
     const UpdateKeyValue = (e : any) => {
         let value = e.target.value;
@@ -13,8 +16,7 @@ export function EnterKey() {
 
     const OpenMapPage = () => {
         if (getKeyInput){
-            window.location.href = `/${getKeyInput}`;
-            window.location.replace(`/${getKeyInput}`);
+            navigate( `/${getKeyInput}` );
         }else{
             message.error('Key can not be empty');
         }

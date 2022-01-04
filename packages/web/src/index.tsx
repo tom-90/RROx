@@ -10,6 +10,9 @@ import { message } from "antd";
 import 'antd/dist/antd.less';
 import 'leaflet/dist/leaflet.css';
 import './assets/scss/App.scss';
+import { SocketProvider } from "./helpers/socket";
+import { MapDataProvider } from "./helpers/mapData";
+import { SettingsProvider } from "./helpers/settings";
 
 const rootEl = document.getElementById("root");
 
@@ -19,13 +22,19 @@ message.config({
 
 render(
     <DraggableModalProvider>
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<EnterKey />} />
-                <Route path="/:serverKey" element={<PlayerSelect />} />
-                <Route path="/:serverKey/map" element={<MapPage />} />
-            </Routes>
-        </BrowserRouter>
+        <SocketProvider>
+            <MapDataProvider>
+                <SettingsProvider>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<EnterKey />} />
+                            <Route path="/:serverKey/players" element={<PlayerSelect />} />
+                            <Route path="/:serverKey" element={<MapPage />} />
+                        </Routes>
+                    </BrowserRouter>
+                </SettingsProvider>
+            </MapDataProvider>
+        </SocketProvider>
     </DraggableModalProvider>,
     rootEl
 );

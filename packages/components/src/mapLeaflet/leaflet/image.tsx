@@ -38,7 +38,7 @@ export function Image( props: ImageProps ) {
         {...props}
         ref={ref}
         eventHandlers={{
-            load: () => ref.current.reposition( props.topLeft, props.topRight, props.bottomLeft ),
+            load: () => ref.current?.reposition( props.topLeft, props.topRight, props.bottomLeft ),
         }}
     />
 }

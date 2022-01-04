@@ -1,103 +1,60 @@
 import * as React from "react";
 import {useEffect, useMemo, useState} from "react";
-import { useParams } from "react-router-dom";
-import {World} from "@rrox/types";
+import { useParams, useNavigate } from "react-router-dom";
 import {Map, MapActions, MapMode, MapSettings} from "@rrox/components";
 import AppIcon from '@rrox/assets/images/appicon.ico';
-import { io, Socket } from 'socket.io-client';
+import { useSocketSession } from "../helpers/socket";
+import { useMapData } from "../helpers/mapData";
+import { useSettings } from "../helpers/settings";
 
 export function MapPage() {
     let { serverKey } = useParams();
+    const navigate = useNavigate();
 
-    const socket = useMemo(() => {
-        return io("https://rrox.tom90.nl", {
-            transports: [ 'websocket' ],
-            autoConnect: false
-        } );
-    }, []);
+    const socket = useSocketSession( serverKey );
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled } = useMapData();
+    const [ settings ] = useSettings();
 
-    const [ mapData, setMapData ] = useState<World>( {
-        Frames     : [],
-        Splines    : [],
-        Switches   : [],
-        Turntables : [],
-        Players    : [],
-        WaterTowers: [],
-        Sandhouses : [],
-        Industries : [],
-    } );
-
-    const getSettings = () => ( {
-        background: 6,
-        minimapCorner: 0,
-        transparent: false,
-    } );
-
-    const [ settings, setSettings ] = useState<MapSettings>( useMemo( getSettings, [] ) );
-    const [ controlEnabled, setControlEnabled ] = useState( true );
-
+    // When this page loads, we refresh the map data
     useEffect( () => {
-        let data = { ...mapData };
-
-        socket.connect();
-        if (serverKey !== undefined){
-            socket.emit( 'join', serverKey, ( success: any ) => {
-                console.log(success ? "connected" : "could not connect");
-                socket.emit( 'rpc', 'map-data', [], ( joinData : any ) => {
-                    data = joinData;
-                    setMapData(joinData);
-                });
-            });
-        }
-
-        socket.on( 'connect_error', ( error ) => {
-            console.log('Socket connect error', error);
-        });
-
-        socket.on( 'disconnect', ( reason ) => {
-            console.log('Socket disconnected. Reason:', reason);
-        } );
-
-        socket.on('broadcast', ( channel: string, changes: any[] ) => {
-            if (channel !== "map-update") return;
-            changes = changes[0];
-
-            data = { ...data };
-
-            // We sort the indices in reverse order, such that we can safely remove all of them
-            changes = changes.sort( ( a, b ) => b.Index - a.Index );
-
-            changes.forEach( ( c ) => {
-                let array = data[ c.Array as keyof typeof mapData ];
-
-                if( c.ChangeType === 'ADD' || c.ChangeType === 'UPDATE' )
-                    array[ c.Index ] = c.Data! as any;
-                else if( c.ChangeType === 'REMOVE' )
-                    array.splice( c.Index, 1 );
-            } );
-
-            setMapData( data );
-        });
+        if( !mapDataLoaded )
+            refreshMapData();
     }, [] );
+    
+    // When the map data loads, we check if we have a selected player
+    useEffect( () => {
+        if( !mapDataLoaded )
+            return;
+        // If we do not have a selected player, or the selected player is not in the world
+        // Then we redirect to the select player page
+        if( !settings.selectedPlayer || !mapData.Players.some( ( p ) => p.Name === settings.selectedPlayer ) )
+            navigate( `/${serverKey}/players` );
+    }, [ mapDataLoaded, settings ] );
 
     const actions = useMemo<MapActions>( () => ( {
-        teleport         : ( x, y, z, name ) => {
-            socket.emit( 'rpc', 'teleport', [x, y, z, name]);
+        teleport         : ( x, y, z ) => {
+            socket.send( 'teleport', x, y, z, settings.selectedPlayer );
         },
         changeSwitch     : ( id ) => {
-            socket.emit( 'rpc', 'change-switch', [id]);
+            socket.send( 'change-switch', id );
         },
         setEngineControls: ( id, type, value ) => {
-            socket.emit( 'rpc', 'set-engine-controls', [id, type, value]);
+            socket.send( 'set-engine-controls', id, type, value );
         },
         getColor         : ( key ) => '#000',
+    } ), [ settings, socket ] );
+
+    const mapSettings = useMemo<MapSettings>( () => ( {
+        background   : settings.background,
+        minimapCorner: 1,
+        transparent  : false,
     } ), [ settings ] );
 
     return (
         <div className="page-container">
             <Map
                 data={mapData}
-                settings={settings}
+                settings={mapSettings}
                 actions={actions}
                 mode={MapMode.NORMAL}
                 controlEnabled={controlEnabled}
