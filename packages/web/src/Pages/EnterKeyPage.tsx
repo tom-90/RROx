@@ -2,7 +2,7 @@ import * as React from "react";
 import {useEffect, useMemo, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import AppIcon from '@rrox/assets/images/appicon.ico';
-import { Row, Col, Input, Button, message } from "antd";
+import { Input, Button, message } from "antd";
 import { useSocket } from "../helpers/socket";
 
 export function EnterKey() {

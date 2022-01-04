@@ -39,4 +39,17 @@ $border-color: red;
 			}
 		}
 	}
+	.player-select-div{
+		display: flex;
+		justify-content: center;
+		padding-top: 30vh;
+		.player-select-container{
+			width: 50vw;
+			text-align: center;
+			.player-select-item{
+				width: 200px;
+				margin: 2px;
+			}
+		}
+	}
 }

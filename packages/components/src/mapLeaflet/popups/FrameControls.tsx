@@ -5,6 +5,7 @@ import { Frame } from '@rrox/types';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { EngineControls } from '@rrox/types';
 import { MapContext } from '../context';
+import { useSmoothCounter } from '../../hooks/useSmoothCounter';
 
 function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): ( ...args: P ) => void {
     let latestArgs: P;
@@ -128,7 +129,7 @@ export function FrameControls( {
                         value={controls.Regulator * 100}
                         step={1}
                         tipFormatter={( value ) => value + '%'}
-                        tooltipPlacement={'left'}
+                        tooltipPlacement={'right'}
                         disabled={!controlEnabled}
                         marks={{
                             0: '0%',
