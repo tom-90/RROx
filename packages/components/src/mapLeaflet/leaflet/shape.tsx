@@ -10,7 +10,7 @@ export const Shape = React.memo( function Shape( props: React.ComponentProps<typ
     rotation?: number,
     weight  ?: number,
 } ) {
-    let { positions, anchor, rotation, weight, ...restProps } = props;
+    let { positions, anchor, rotation, weight, color, fillColor, ...restProps } = props;
     
     if( !weight )
         weight = 30;
@@ -21,6 +21,11 @@ export const Shape = React.memo( function Shape( props: React.ComponentProps<typ
     return <Polygon
         interactive={false}
         {...restProps}
+        pathOptions={{
+            ...( restProps.pathOptions || {} ),
+            color,
+            fillColor,
+        }}
         positions={calculatedPositions}
         weight={calculatedWeight}
         ref={ref}

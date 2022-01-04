@@ -8,7 +8,7 @@ import EventEmitter from 'events';
 import { WindowType } from './windows';
 import Log from 'electron-log';
 import { Socket } from 'socket.io-client';
-import { SocketConnection } from './utils';
+import { SocketConnection, SocketMode } from './utils';
 
 export declare interface RROx {
     on( event: 'settings-update', listener: () => void ): this;
@@ -41,6 +41,10 @@ export class RROx extends EventEmitter {
             let logLevel = this.settings.get( 'loglevel' );
             Log.transports.file.level = logLevel;
             Log.transports.console.level = logLevel;
+        } );
+
+        this.socket.on( 'broadcast-event', ( type: string, args: any[] ) => {
+            this.broadcast( type, ...args );
         } );
     }
 
@@ -135,7 +139,19 @@ export class RROx extends EventEmitter {
      */
     public broadcast( channel: string, ...args: any[] ) {
         Object.values( this.windows ).forEach( ( w ) => w.webContents.send( channel, ...args ) );
-        this.socket.broadcast( channel, ...args );
+    }
+
+    /**
+     * Broadcast message to all browser windows and websocket
+     *
+     * @param channel 
+     * @param args 
+     */
+    public publicBroadcast( channel: string, ...args: any[] ) {
+        this.broadcast( channel, ...args );
+
+        if( this.socket.mode === SocketMode.HOST )
+            this.socket.broadcast( channel, ...args );
     }
 
 }

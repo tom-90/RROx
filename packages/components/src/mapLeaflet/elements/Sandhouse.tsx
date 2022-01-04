@@ -48,7 +48,7 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: Sandh
         topRight={topRight}
         bottomLeft={bottomLeft}
         url={SandhouseDefinitions.image}
-        interactive={false}
+        interactive={true}
     >
         <MapTooltip
             title={'Sandhouse'}

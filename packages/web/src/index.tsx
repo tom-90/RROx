@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import { message } from "antd";
 
-import 'antd/dist/antd.less';
+import './antd.less';
 import 'leaflet/dist/leaflet.css';
 import './assets/scss/App.scss';
 import { SocketProvider } from "./helpers/socket";

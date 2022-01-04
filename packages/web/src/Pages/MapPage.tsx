@@ -6,6 +6,7 @@ import AppIcon from '@rrox/assets/images/appicon.ico';
 import { useSocketSession } from "../helpers/socket";
 import { useMapData } from "../helpers/mapData";
 import { useSettings } from "../helpers/settings";
+import { schema } from '@rrox/electron/src/config';
 
 export function MapPage() {
     let { serverKey } = useParams();
@@ -23,13 +24,11 @@ export function MapPage() {
     
     // When the map data loads, we check if we have a selected player
     useEffect( () => {
-        if( !mapDataLoaded )
-            return;
         // If we do not have a selected player, or the selected player is not in the world
         // Then we redirect to the select player page
-        if( !settings.selectedPlayer || !mapData.Players.some( ( p ) => p.Name === settings.selectedPlayer ) )
+        if( mapData.Players.length > 0 && ( !settings.selectedPlayer || !mapData.Players.some( ( p ) => p.Name === settings.selectedPlayer ) ) )
             navigate( `/${serverKey}/players` );
-    }, [ mapDataLoaded, settings ] );
+    }, [ mapData, settings ] );
 
     const actions = useMemo<MapActions>( () => ( {
         teleport         : ( x, y, z ) => {
@@ -41,7 +40,7 @@ export function MapPage() {
         setEngineControls: ( id, type, value ) => {
             socket.send( 'set-engine-controls', id, type, value );
         },
-        getColor         : ( key ) => '#000',
+        getColor         : ( key ) => schema[ `colors.${key}` ]?.default as string,
     } ), [ settings, socket ] );
 
     const mapSettings = useMemo<MapSettings>( () => ( {

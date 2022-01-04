@@ -5,13 +5,13 @@ import ReactDOM from 'react-dom';
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import { MapPage } from './pages/Map';
-import { MapNewPage } from './pages/MapNew';
 import { Settings } from './pages/Settings';
 import { Info } from './pages/Info';
 import './app.less';
 import './components/DanglingInjector';
 import { notification } from 'antd';
 import './types';
+import { AttachProvider } from './utils/attach';
 
 window.mode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'overlay' ? 'overlay' : 'normal';
 
@@ -20,15 +20,16 @@ if ( window.mode === 'overlay' )
 
 // Render application in DOM
 ReactDOM.render( <DraggableModalProvider>
-    <MemoryRouter>
-        <Routes>
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/mapNew" element={<MapNewPage />} />
-            <Route path="/info" element={<Info />} />
-            <Route path="/" element={<Navigate to="/mapNew" />} />
-        </Routes>
-    </MemoryRouter>
+    <AttachProvider>
+        <MemoryRouter>
+            <Routes>
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/map" element={<MapPage />} />
+                <Route path="/info" element={<Info />} />
+                <Route path="/" element={<Navigate to="/map" />} />
+            </Routes>
+        </MemoryRouter>
+    </AttachProvider>
 </DraggableModalProvider>, document.getElementById( 'app' ) );
 
 // Hot module replacement

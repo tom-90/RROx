@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { Task } from "../tasks/task";
 import Log from 'electron-log';
 import { RROx } from "../rrox";
+import { SocketMode } from "../utils";
 
 export abstract class IPCTask extends Task {
 
@@ -33,6 +34,9 @@ export abstract class IPCListener<P extends any[] = []> extends IPCTask {
             return;
         
         this.listener = ( event, ...args ) => {
+            if( this.public && this.app.socket.mode === SocketMode.CLIENT )
+                return this.app.socket.send( this.channel, ...args );
+
             let res = this.onMessage( ...args );
             if( res instanceof Promise )
                 res.catch( ( e ) => Log.error( `Error while handling IPC Event '${this.taskName}':`, e ) );    
@@ -76,7 +80,11 @@ export abstract class IPCHandler<P extends any[] = []> extends IPCTask {
     public start(): void {
         if( this.handler )
             return;
-        this.handler = ( event, ...args ) => this.handle( ...args );
+        this.handler = ( event, ...args ) => {
+            if( this.public && this.app.socket.mode === SocketMode.CLIENT )
+                return this.app.socket.invoke( this.channel, ...args );
+            return this.handle( ...args );
+        }
         ipcMain.handle( this.channel, this.handler );
     }
 

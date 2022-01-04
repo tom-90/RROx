@@ -4,7 +4,7 @@ import { Options } from 'electron-store';
 export const schema = {
     'map.background': {
         type: 'number' as const,
-        default: 1,
+        default: 6,
         maximum: 6,
         minimum: 1,
     },
@@ -64,6 +64,9 @@ export const schema = {
         enum: [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
     },
 
+    'multiplayer.client.playerName': {
+        type: 'string' as const,
+    },
 
     [ `colors.${Cars.HANDCAR}`         ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER}`          ]: { type: 'string', default: '#800080' },
@@ -124,6 +127,7 @@ export interface Schema {
     'minizwerg.enabled': boolean;
     'minizwerg.public': boolean;
     'minizwerg.url'?: string;
+    'multiplayer.client.playerName'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
 }
 

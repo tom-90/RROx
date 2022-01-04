@@ -23,6 +23,11 @@ export const Circle = React.memo( function Circle( props: React.ComponentProps<t
         center={center}
         radius={distance}
         {...restProps}
+        pathOptions={{
+            ...( props.pathOptions || {} ),
+            color: props.color,
+            fillColor: props.fillColor,
+        }}
         weight={calculatedWeight}
         ref={ref}
     />;

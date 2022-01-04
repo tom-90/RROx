@@ -11,11 +11,20 @@ import { Cars } from '@rrox/types';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
 
+const getStrokeColor = ( brake: number ) => {
+    if( brake > 0.5 )
+        return 'red';
+    else if( brake > 0.2 )
+        return 'orange';
+    else
+        return 'black';
+};
+
 export const Frame = React.memo( function Frame( { data }: { data: FrameData } ) {
     const { utils, mode, follow, actions, controlEnabled } = useContext( MapContext );
     const map = useMap();
 
-    const { ID, Location, Rotation, Type, Freight, Number, Name } = data;
+    const { ID, Location, Rotation, Type, Freight, Number, Name, Brake } = data;
 
     const definition = FrameDefinitions[ Type ];
 
@@ -42,7 +51,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                 ]}
                 anchor={anchor}
                 rotation={Math.round( Rotation[ 1 ] ) - 90}
-                color={'black'}
+                color={getStrokeColor( Brake )}
                 fillColor={actions.getColor( Type )}
                 fillOpacity={1}
                 interactive
@@ -98,7 +107,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
         ]}
         anchor={anchor}
         rotation={Math.round( Rotation[ 1 ] ) - 90}
-        color={'black'}
+        color={getStrokeColor( Brake )}
         fillColor={definition.freight
                 ? actions.getColor( `${Type}.${Freight && Freight.Amount > 0 ? 'loaded' : 'unloaded'}` )
                 : actions.getColor( Type )}

@@ -9,6 +9,11 @@ export const Line = React.memo( function Line( props: React.ComponentProps<typeo
     return <Polyline
         interactive={false}
         {...props}
+        pathOptions={{
+            ...( props.pathOptions || {} ),
+            color: props.color,
+            fillColor: props.fillColor,
+        }}
         ref={ref}
         weight={weight}
     />;

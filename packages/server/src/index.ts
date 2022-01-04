@@ -20,6 +20,9 @@ const rooms = new RoomManager( io );
 io.on( 'connection', ( socket ) => {
 
     const onJoin = ( key: string, ack?: ( success: boolean ) => void ) => {
+        if( !key )
+            return ack && ack( false );
+
         let res = rooms.join( socket, key );
 
         if( !res )

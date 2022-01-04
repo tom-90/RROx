@@ -17,14 +17,28 @@
 	border-color: green;
 }
 
-.detachButton, .detachButton:focus:not(:hover) {
-	color: red;
-	border-color: red;
+.attachOptionsButton, .attachOptionsButton:focus:not(:hover) {
+	color: @primary-color;
+	border-color: @primary-color;
 }
 
 .processingButton, .processingButton:focus:not(:hover) {
 	color: @primary-color;
 	border-color: @primary-color;
+}
+
+.attachButtonsDisabled {
+	.ant-radio-button-wrapper {
+		cursor: not-allowed;
+	}
+
+	.ant-radio-button-wrapper:hover {
+		color: black;
+	}
+
+	.ant-radio-button-wrapper.ant-radio-button-wrapper-checked:hover {
+		background-color: @primary-color;
+	}
 }
 
 @font-face {

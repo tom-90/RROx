@@ -1,9 +1,10 @@
 import { DataChange, World } from "@rrox/types";
 import { TimerTask } from "./task";
 import { EnsureInGameAction, GameMode, ReadPlayerAddress, ReadWorldAction, ReadWorldMode } from "../actions";
-import { isEqual } from "../utils";
+import { isEqual, SocketMode } from "../utils";
 import Log from 'electron-log';
 import { AttachTask } from './attach';
+import { RROx } from "../rrox";
 
 export class ReadWorldTask extends TimerTask {
 
@@ -21,11 +22,60 @@ export class ReadWorldTask extends TimerTask {
         Sandhouses : [],
     };
 
+    constructor( app: RROx ) {
+        super( app );
+
+        app.socket.on( 'broadcast-event', ( type, args: [ DataChange[] ] ) => {
+            if( type !== 'map-update' ) return;
+
+            let [ changes ] = args;
+
+            // We sort the indices in reverse order, such that we can safely remove all of them
+            changes = changes.sort( ( a, b ) => b.Index - a.Index );
+
+            changes.forEach( ( c ) => {
+                let array = this.world[ c.Array as keyof typeof this.world ];
+
+                if( c.ChangeType === 'ADD' || c.ChangeType === 'UPDATE' )
+                    array[ c.Index ] = c.Data! as any;
+                else if( c.ChangeType === 'REMOVE' )
+                    array.splice( c.Index, 1 );
+            } );
+        } );
+
+        app.socket.on( 'join', () => {
+            Log.error( 'Joined' );
+            app.socket.invoke( 'map-data' ).then( ( data: World ) => {
+                Log.error( 'Retrieved map data' );
+
+                let changes = [
+                    ...this.detectChanges( 'Frames'     , this.world.Frames     , data.Frames      ),
+                    ...this.detectChanges( 'Industries' , this.world.Industries , data.Industries  ),
+                    ...this.detectChanges( 'Players'    , this.world.Players    , data.Players     ),
+                    ...this.detectChanges( 'Switches'   , this.world.Switches   , data.Switches    ),
+                    ...this.detectChanges( 'Turntables' , this.world.Turntables , data.Turntables  ),
+                    ...this.detectChanges( 'WaterTowers', this.world.WaterTowers, data.WaterTowers ),
+                    ...this.detectChanges( 'Sandhouses' , this.world.Sandhouses , data.Sandhouses  ),
+                    ...this.detectChanges( 'Splines'    , this.world.Splines    , data.Splines     ),
+                ];
+        
+                if( changes.length > 0 )
+                    this.app.publicBroadcast( 'map-update', changes );
+
+                this.world = data;
+            } ).catch( ( e ) => {
+                Log.error( 'Failed to retrieve map-data', e );
+            } );
+        } );
+    }
+
     private counter = 0;
 
     private enableControl = false;
 
     protected async execute(): Promise<void> {
+        if( this.app.socket.mode === SocketMode.CLIENT )
+            return;
         const gameStatus = await this.app.getAction( EnsureInGameAction ).run();
 
         if( !gameStatus ) {
@@ -41,7 +91,7 @@ export class ReadWorldTask extends TimerTask {
             ];
     
             if( changes.length > 0 )
-                this.app.broadcast( 'map-update', changes );
+                this.app.publicBroadcast( 'map-update', changes );
 
             this.world.Frames      = [];
             this.world.Industries  = [];
@@ -92,7 +142,7 @@ export class ReadWorldTask extends TimerTask {
         ];
 
         if( changes.length > 0 )
-            this.app.broadcast( 'map-update', changes );
+            this.app.publicBroadcast( 'map-update', changes );
 
         this.world.Frames      = result.Frames;
         this.world.Players     = result.Players;
@@ -112,7 +162,7 @@ export class ReadWorldTask extends TimerTask {
         // Check that the player address is known and not inside F-mode or HOST
         let enableControl = playerResult !== false && ( playerResult[ 1 ] === false || gameStatus === GameMode.HOST );
         if( enableControl !== this.enableControl || full )
-            this.app.broadcast( 'control-enabled', enableControl );
+            this.app.publicBroadcast( 'control-enabled', enableControl );
     }
 
     private detectChanges<T extends object>( name: string, oldArray: T[], newArray: T[] ) {

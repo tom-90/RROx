@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { PageLayout } from "../components/PageLayout";
-import svgPanZoom from 'svg-pan-zoom';
-import { Map } from "../components/map";
-import { DataChange } from "@rrox/types";
+import { AttachContext } from "../utils/attach";
+import { AttachedState, DataChange } from "@rrox/types";
 import { World } from '@rrox/types';
+import { Map, MapActions, MapMode, MapSettings, PlayerSelector } from '@rrox/components';
 
 export function MapPage() {
+    const { status, mode: attachMode } = useContext( AttachContext );
 
     const [ mapData, setMapData ] = useState<World>( {
         Frames     : [],
@@ -17,6 +18,17 @@ export function MapPage() {
         Sandhouses : [],
         Industries : [],
     } );
+
+    const getSettings = () => ( {
+        background: window.settingsStore.get<number>( 'map.background' ),
+        minimapCorner: window.settingsStore.get<number>( 'minimap.corner' ),
+        transparent: window.settingsStore.get<boolean>( 'minimap.transparent' ),
+        playerName: window.settingsStore.get<string>( 'multiplayer.client.playerName' ),
+    } );
+
+    const [ settings, setSettings ] = useState<MapSettings & { playerName?: string }>( useMemo( getSettings, [] ) );
+    const [ mode, setMode ] = useState<MapMode>( window.mode === 'overlay' ? MapMode.MINIMAP : MapMode.NORMAL );
+    const [ controlEnabled, setControlEnabled ] = useState( false );
 
     useEffect( () => {
         let data = { ...mapData };
@@ -43,16 +55,57 @@ export function MapPage() {
             setMapData( data );
         };
 
-        let cleanup = window.ipc.on( 'map-update', onUpdate );
+        const cleanup = window.ipc.on( 'map-update', onUpdate );
+
+        const cleanup2 = window.ipc.on( 'set-mode', ( event, mode ) => {
+            setMode( mode );
+            setSettings( getSettings() );
+        } );
+
+        const cleanup3 = window.ipc.on( 'control-enabled', ( event, enabled ) => {
+            setControlEnabled( enabled );
+        } );
+
+        const cleanup4 = window.ipc.on( 'settings-update', () => {
+            setSettings( getSettings() );
+        } );
 
         return () => {
             cleanup();
+            cleanup2();
+            cleanup3();
+            cleanup4();
         }
     }, [] );
 
+    const actions = useMemo<MapActions>( () => ( {
+        teleport         : ( x, y, z ) => window.ipc.send( 'teleport', x, y, z, attachMode === 'client' ? settings.playerName : undefined ),
+        changeSwitch     : ( id ) => window.ipc.send( 'change-switch', id ),
+        setEngineControls: ( id, type, value ) => window.ipc.send( 'set-engine-controls', id, type, value ),
+        getColor         : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
+    } ), [ settings ] );
+
     return (
         <PageLayout>
-            <Map data={mapData} />
+            <Map
+                data={mapData}
+                settings={settings}
+                actions={actions}
+                mode={mode}
+                controlEnabled={controlEnabled}
+            />
+            {!settings.playerName && attachMode === 'client' && mapData.Players.length > 0 && status === AttachedState.ATTACHED && <PlayerSelector
+                players={mapData.Players}
+                onSelect={( playerName ) => {
+                    window.settingsStore.set( 'multiplayer.client.playerName', playerName );
+                    setSettings( {
+                        ...settings,
+                        playerName
+                    } );
+                    
+                    window.ipc.send( 'update-config' );
+                }}
+            />}
         </PageLayout>
     );
 }
