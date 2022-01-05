@@ -1,0 +1,87 @@
+@import "~antd/lib/style/themes/default.less";
+@import "~antd/dist/antd.less";
+@import "~ant-design-draggable-modal/dist/index.css";
+@import "~leaflet/dist/leaflet.css";
+@primary-color: #fa8c16;
+
+.clickable {
+	cursor: pointer;
+}
+
+#app {
+	height: 100%;
+}
+
+.attachButton, .attachButton:focus:not(:hover) {
+	color: green;
+	border-color: green;
+}
+
+.attachOptionsButton, .attachOptionsButton:focus:not(:hover) {
+	color: @primary-color;
+	border-color: @primary-color;
+}
+
+.processingButton, .processingButton:focus:not(:hover) {
+	color: @primary-color;
+	border-color: @primary-color;
+}
+
+.attachButtonsDisabled {
+	.ant-radio-button-wrapper {
+		cursor: not-allowed;
+	}
+
+	.ant-radio-button-wrapper:hover {
+		color: black;
+	}
+
+	.ant-radio-button-wrapper.ant-radio-button-wrapper-checked:hover {
+		background-color: @primary-color;
+	}
+}
+
+@font-face {
+	font-family: "graduate";
+
+	src: url("@rrox/assets/fonts/Graduate-Regular.woff2");
+}
+
+.appTitle, .appTitleShort {
+	font-family: "graduate", "serif";
+	font-size: 24px!important;
+
+	margin: 0!important;
+}
+
+.appTitle {
+	display: inline-block;
+}
+
+.appTitleShort {
+	display: none;
+}
+
+body {
+	overflow-x: hidden;
+	overflow-y: hidden;
+
+	background: none;
+}
+
+@media only screen and (max-width: 800px) {
+	.appTitle {
+		display: none;
+	}
+
+	.appTitleShort {
+		display: inline-block;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.appTitleShort {
+		display: none;
+	}
+}
+

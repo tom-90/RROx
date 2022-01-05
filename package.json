@@ -1,0 +1,16 @@
+{
+    "name": "rrox",
+    "version": "1.0.0",
+    "description": "RROX Workspace",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "postinstall": "patch-package"
+    },
+     "devDependencies": {
+        "patch-package": "^6.4.7",
+        "postinstall-postinstall": "^2.1.0"
+    }
+}

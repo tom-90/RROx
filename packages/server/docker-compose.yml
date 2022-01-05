@@ -1,0 +1,28 @@
+services:
+    traefik:
+        image: "traefik:v2.5"
+        command:
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:3001"
+        ports:
+            - "3001:3001"
+            - "8080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    web:
+        build: 
+            context: .
+            dockerfile: Dockerfile.dev
+        volumes:
+            - ../..:/var/www/app
+        command: npm run dev:start
+        environment:
+            - REDIS_URL=redis://redis:6379
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.rrox.rule=PathPrefix(`/`)"
+            - "traefik.http.routers.rrox.entrypoints=web"
+            - traefik.http.services.rrox.loadBalancer.sticky.cookie.name=rrox_id
+            - traefik.http.services.rrox.loadBalancer.sticky.cookie.httpOnly=true
