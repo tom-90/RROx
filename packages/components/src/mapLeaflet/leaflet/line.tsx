@@ -13,6 +13,7 @@ export const Line = React.memo( function Line( props: React.ComponentProps<typeo
             ...( props.pathOptions || {} ),
             color: props.color,
             fillColor: props.fillColor,
+            opacity: props.opacity
         }}
         ref={ref}
         weight={weight}

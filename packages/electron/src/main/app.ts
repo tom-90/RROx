@@ -106,6 +106,9 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         rrox.createTasks( ipc );
         await rrox.startTasks( ipc );
 
+        // Clear config key on restart
+        rrox.settings.delete( 'multiplayer.client.playerName' );
+
         if( openURL )
             rrox.getWindow( WindowType.App ).once( 'show', () => {
                 rrox.getTask( SetSocketStateIPCHandler ).handleURL( openURL );

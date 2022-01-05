@@ -15,6 +15,7 @@ import { Sandhouse } from './elements/Sandhouse';
 import { WaterTower } from './elements/WaterTower';
 import { Controls } from './leaflet/controls';
 import './styles.less';
+import { Line } from './leaflet/line';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,
@@ -62,7 +63,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         const maxY = 200000;
 
         // Calibrated against hi-res background
-        const scale = 112000;
+        const scale = 111300;
 
         return {
             bounds     : L.latLngBounds( L.latLng( minY / scale, minX / scale ), L.latLng( maxY / scale, maxX / scale ) ),
@@ -136,12 +137,24 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 ? null
                                 : {
                                     array: 'Players',
-                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() ).ID || data.Players[ 0 ].ID
+                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || data.Players[ 0 ].ID
                                 }
                     )}
                 />
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>
+                        <Line
+                            positions={[
+                                mapProps.bounds.getNorthWest(),
+                                mapProps.bounds.getNorthEast(),
+                                mapProps.bounds.getSouthEast(),
+                                mapProps.bounds.getSouthWest(),
+                                mapProps.bounds.getNorthWest(),
+                            ]}
+                            color={'black'}
+                            weight={1000}
+                            opacity={mode === MapMode.MINIMAP && settings.transparent ? 0 : 1}
+                        />
                         <Background />
                     </Pane>
                     <Pane name='groundwork' style={{ zIndex: 10 }}>

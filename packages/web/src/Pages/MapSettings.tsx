@@ -1,15 +1,39 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, Form, Divider } from "antd";
-import { useMapData } from "../helpers/mapData";
-import { useSocketSession } from "../helpers/socket";
+import React, { useMemo, useEffect } from "react";
+import { Form, Divider, Radio } from "antd";
 import { defaultSettings, useSettings } from "../helpers/settings";
 import { MapPageLayout } from "../components/MapPageLayout";
 import { BackgroundSettings, ColorSettings } from "@rrox/components";
+import { useMapData } from "../helpers/mapData";
 
 export function MapSettings() {
     const [ form ] = Form.useForm();
     const [ settings, setSettings ] = useSettings();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded } = useMapData();
+    
+    // When this page loads, we refresh the map data
+    useEffect( () => {
+        if( !mapDataLoaded )
+            refreshMapData();
+    }, [] );
+
+    const throttleOnValuesChange = useMemo( () => {
+        let values = {};
+        let timeout: NodeJS.Timeout = null;
+
+        return ( changedValues: any, callback: ( changedValues: any ) => void ) => {
+            values = { ...values, ...changedValues };
+
+            if( timeout != null )
+                clearTimeout( timeout );
+
+            timeout = setTimeout( () => {
+                callback( values );
+                clearTimeout( timeout );
+                timeout = null;
+                values = {};
+            }, 500 );
+        };
+    }, [] );
 
     return (
         <MapPageLayout style={{ overflowY: 'auto' }}>
@@ -23,12 +47,17 @@ export function MapSettings() {
                     form={form}
                     
                     onValuesChange={( changed ) => {
-                        setSettings( changed );
+                        throttleOnValuesChange( changed, ( values ) => setSettings( values ) );
                     }}
                     autoComplete="off"
                 >
                     <Divider orientation="left">Map</Divider>
                     <BackgroundSettings name="map.background" />
+                    <Form.Item name="multiplayer.client.playerName" label="Select your playername">
+                        <Radio.Group>
+                            {mapData.Players.map( ( p, i ) => <Radio value={p.Name} key={i}>{p.Name}</Radio> )}
+                        </Radio.Group>
+                    </Form.Item>
                     <Divider orientation="left">Colors</Divider>
                     <ColorSettings
                         resetToDefault={( ...keys: string[] ) => {
