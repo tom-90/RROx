@@ -16,7 +16,7 @@ Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows t
 
 ## Frequently Asked Questions
 
-- **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the correspondign error code [here](./error-codes.md).
+- **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the corresponding error code [here](./error-codes.md).
 - **Minimap not visible**: Please make sure that the game is not running in `Native Fullscreen`-mode. Please switch to any other mode to get the minimap to work.
 - **Attaching works, but the map stays empty**: Please make sure that you are **not** running RROx as administrator.
 
@@ -33,6 +33,16 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 - Teleporting does not work for clients in multiplayer.
 
 ## Changelog
+
+### v1.7.0 - 05-01-2022
+
+- ``Added`` Map sharing ability for viewing on other devices and multiplayer
+- ``Added`` Ability to attach to remote sessions in the desktop RROx app.
+- ``Added`` Web-viewer of map, accessible via [rrox.tom90.nl](https://rrox.tom90.nl)
+- ``Added`` Reworked map drawing for better performance.
+- ``Added`` High-resolution map image.
+- ``Added`` Full customizability of all colors used on the map.
+- ``Added`` Teleport to sandhouses and watertowers.
 
 ### v1.6.2 - 28-12-2021
 
