@@ -10,6 +10,9 @@ const io = new SocketServer(
     server,
     {
         maxHttpBufferSize: 10000000, // 10MB
+        pingInterval     : 25000,
+        pingTimeout      : 60000,
+        allowUpgrades    : false,
     }
 );
 
