@@ -57,7 +57,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                 interactive
             >
                 <MapTooltip
-                    title={`${Name.toUpperCase()}${Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
+                    title={`${Name.replace("<br>", "").toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
                     visible={tooltipVisible && mode !== MapMode.MINIMAP}
                     setVisible={setTooltipVisible}
                 >
@@ -84,7 +84,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                     >Teleport Here</Button>
                 </MapTooltip>
                 <FrameControls
-                    title={`${Name.toUpperCase()}${Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
+                    title={`${Name.replace("<br>", "").toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
                     data={data}
                     id={ID}
                     isVisible={controlsVisible}
