@@ -7,6 +7,7 @@ import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColor
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
 import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 import './types';
+import path from 'path';
 
 const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
 
@@ -34,6 +35,16 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             if ( response === 0 ) autoUpdater.quitAndInstall()
         } )
     } );
+
+    if ( process.defaultApp ) {
+        if ( process.argv.length >= 2 ) {
+            app.setAsDefaultProtocolClient( 'rrox', process.execPath, [ path.resolve( process.argv[ 1 ] ) ] )
+        }
+    } else {
+        app.setAsDefaultProtocolClient( 'rrox' )
+    }
+
+    let openURL = process.argv.find( ( arg ) => arg.startsWith( 'rrox://' ) );
 
     let rrox: RROx;
     app.on( 'ready', async () => {
@@ -94,9 +105,18 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         ];
         rrox.createTasks( ipc );
         await rrox.startTasks( ipc );
+
+        if( openURL )
+            rrox.getWindow( WindowType.App ).once( 'show', () => {
+                rrox.getTask( SetSocketStateIPCHandler ).handleURL( openURL );
+            } );
     } );
 
-    app.on( 'second-instance', () => {
+    app.on( 'second-instance', ( e, argv ) => {
+        let openURL = argv.find( ( arg ) => arg.startsWith( 'rrox://' ) );
+        if( openURL )
+            rrox.getTask( SetSocketStateIPCHandler )?.handleURL( openURL );
+
         let window = rrox?.getWindow(WindowType.App);
         if (window) {
             if (window.isMinimized()) {

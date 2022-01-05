@@ -18,6 +18,7 @@ import Boxcar from '@rrox/assets/images/cars/boxcar.png';
 import Caboose from '@rrox/assets/images/cars/caboose.png';
 import { Cars } from '@rrox/types';
 import { SplineType } from '@rrox/types';
+import './colorSettings.less';
 
 export function ColorSettings( { minizwergSharing, resetToDefault }: { minizwergSharing?: React.ReactNode, resetToDefault: ( ...colorKeys: string[] ) => void } ) {
     return <Collapse style={{ margin: '0 50px' }}>

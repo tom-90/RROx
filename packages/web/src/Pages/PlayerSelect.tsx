@@ -23,7 +23,7 @@ export function PlayerSelect() {
 
     const selectPlayer = ( name: string ) => {
         setSettings( {
-            selectedPlayer: name,
+            [ 'multiplayer.client.playerName' ]: name,
         } );
         navigate( `/${serverKey}` );
     };
@@ -37,7 +37,7 @@ export function PlayerSelect() {
         <div className="page-container key-input-body">
             <div className="player-select-div">
                 <div className="player-select-container">
-                    <h1>Select A Player</h1>
+                    <h1>Select a player</h1>
                     {Players}
                 </div>
             </div>

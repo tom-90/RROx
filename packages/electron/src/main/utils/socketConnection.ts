@@ -7,6 +7,7 @@ export declare interface SocketConnection {
     on( event: 'listener-event' , listener: ( type: string, args: any[]                                  ) => void ): this;
     on( event: 'broadcast-event', listener: ( type: string, args: any[]                                  ) => void ): this;
     on( event: 'disconnect'     , listener: (                                                            ) => void ): this;
+    on( event: 'host-connect'   , listener: (                                                            ) => void ): this;
     on( event: 'join'           , listener: (                                                            ) => void ): this;
 }
 
@@ -110,8 +111,10 @@ export class SocketConnection extends EventEmitter {
             this.socket.emit( 'join', key, ( success: boolean ) => {
                 this.removeListener( 'disconnect', onDisconnect );
 
-                if( !success )
+                if( !success ) {
+                    this.disconnect();
                     return reject( 'Key is invalid' );
+                }
 
                 this.key = key;
 
@@ -152,6 +155,9 @@ export class SocketConnection extends EventEmitter {
                 this.removeListener( 'disconnect', onDisconnect );
         
                 this.key = res;
+                
+                this.emit( 'host-connect' );
+
                 resolve( res );
             } );
 

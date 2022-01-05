@@ -71,6 +71,9 @@ module.exports = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin(),
-        new HtmlWebpackPlugin( { template: "src/index.html.ejs" } )
+        new HtmlWebpackPlugin( {
+            template: "src/index.html.ejs",
+            favicon: require.resolve( "@rrox/assets/images/appIcon.ico" ),
+        } )
     ],
 };

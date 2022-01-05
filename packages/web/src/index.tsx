@@ -13,6 +13,7 @@ import './assets/scss/App.scss';
 import { SocketProvider } from "./helpers/socket";
 import { MapDataProvider } from "./helpers/mapData";
 import { SettingsProvider } from "./helpers/settings";
+import { MapSettings } from "./Pages/MapSettings";
 
 const rootEl = document.getElementById("root");
 
@@ -29,6 +30,7 @@ render(
                         <Routes>
                             <Route path="/" element={<EnterKey />} />
                             <Route path="/:serverKey/players" element={<PlayerSelect />} />
+                            <Route path="/:serverKey/settings" element={<MapSettings />} />
                             <Route path="/:serverKey" element={<MapPage />} />
                         </Routes>
                     </BrowserRouter>
@@ -38,3 +40,6 @@ render(
     </DraggableModalProvider>,
     rootEl
 );
+
+// Hot module replacement
+if ( process.env.NODE_ENV == 'development' && module.hot ) module.hot.accept();

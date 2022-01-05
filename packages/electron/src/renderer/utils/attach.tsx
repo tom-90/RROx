@@ -25,6 +25,8 @@ export function AttachProvider( { children }: { children?: React.ReactNode }) {
 
     useEffect( () => {
         let currentStatus = status;
+        let currentMode = mode;
+
         const setAttached = (
             event: Electron.IpcRendererEvent,
             status: AttachedState,
@@ -61,23 +63,35 @@ export function AttachProvider( { children }: { children?: React.ReactNode }) {
         };
 
         let cleanup = window.ipc.on( 'get-attached-state', setAttached );
+        
         window.ipc.invoke( 'get-attached-state' ).then( ( status ) => setStatus( { status } ) );
 
-        
-        window.ipc.invoke( 'get-socket-state' ).then( ( { active, mode, shareURL }: { active: boolean, mode?: 'host'|'client', shareURL?: string } ) => {
+        const setSocketState = ( { active, mode, shareURL }: { active: boolean, mode?: 'host'|'client', shareURL?: string } ) => {
+            console.log( 'socket state', { active, mode, shareURL } );
             if( active ) {
                 setShared( true );
                 setMode( mode );
                 setShareURL( shareURL );
 
+                currentMode = mode;
+
                 if( mode === 'client' )
                     setStatus( { status: AttachedState.ATTACHED } );
-            } else
+            } else {
                 setShared( false );
-        } );
+                setShareURL( null );
+
+                if( mode === 'client' || currentMode === 'client' )
+                    setStatus( { status: AttachedState.DETACHED } );
+            }
+        };
+        
+        let cleanup2 = window.ipc.on( 'get-socket-state', ( ev, data ) => setSocketState( data ) );
+        window.ipc.invoke( 'get-socket-state' ).then( setSocketState );
 
         return () => {
             cleanup();
+            cleanup2();
         }
     }, [] );
 

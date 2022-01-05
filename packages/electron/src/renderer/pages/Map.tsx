@@ -79,10 +79,11 @@ export function MapPage() {
     }, [] );
 
     const actions = useMemo<MapActions>( () => ( {
-        teleport         : ( x, y, z ) => window.ipc.send( 'teleport', x, y, z, attachMode === 'client' ? settings.playerName : undefined ),
-        changeSwitch     : ( id ) => window.ipc.send( 'change-switch', id ),
-        setEngineControls: ( id, type, value ) => window.ipc.send( 'set-engine-controls', id, type, value ),
-        getColor         : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
+        teleport             : ( x, y, z ) => window.ipc.send( 'teleport', x, y, z, attachMode === 'client' ? settings.playerName : undefined ),
+        changeSwitch         : ( id ) => window.ipc.send( 'change-switch', id ),
+        setEngineControls    : ( id, type, value ) => window.ipc.send( 'set-engine-controls', id, type, value ),
+        getColor             : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
+        getSelectedPlayerName: () => attachMode === 'client' ? settings.playerName : undefined,
     } ), [ settings ] );
 
     return (

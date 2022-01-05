@@ -131,7 +131,14 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
             >
                 <Controls
                     showFocusPlayer={data.Players.length > 0 ? ( following?.array != null && following?.id != null ? 2 : 1 ) : false}
-                    onFocusPlayer={() => setFollowing( following?.array != null && following?.id != null ? null : { array: 'Players', id: data.Players[ 0 ].ID } )}
+                    onFocusPlayer={() => setFollowing(
+                        following?.array != null && following?.id != null
+                                ? null
+                                : {
+                                    array: 'Players',
+                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() ).ID || data.Players[ 0 ].ID
+                                }
+                    )}
                 />
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>

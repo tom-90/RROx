@@ -8,6 +8,12 @@ module.exports = {
         // Set executable name
         executableName: 'RailroadsOnline Extended',
         icon: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
+        protocols: [
+            {
+                name: 'RailroadsOnline Extended',
+                schemes: [ 'rrox' ]
+            }
+        ]
     },
     // Forge Makers
     makers: [
