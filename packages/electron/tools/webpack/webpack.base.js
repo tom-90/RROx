@@ -98,5 +98,5 @@ module.exports = {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
     },
     stats: 'minimal',
-    devtool: process.env.NODE_ENV == 'development' ? 'eval-source-map' : false,
+    devtool: process.env.NODE_ENV == 'development' ? 'eval-source-map' : 'source-map',
 };

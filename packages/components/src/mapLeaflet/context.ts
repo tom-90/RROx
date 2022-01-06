@@ -40,7 +40,7 @@ export interface MapContextData {
         array?: keyof World,
         id?: number;
         enabled: boolean;
-        setFollowing( array?: keyof World, id?: number ): void;
+        setFollowing<A extends keyof World>( array?: A, id?: number, apply?: ( data: World[ A ][ number ], map: L.Map ) => void ): void;
     },
     controlEnabled: boolean,
     mode: MapMode;

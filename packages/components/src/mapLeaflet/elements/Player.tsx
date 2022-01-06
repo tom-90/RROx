@@ -16,18 +16,11 @@ export const Player = React.memo( function Player( { data }: { data: PlayerData 
 
     const anchor = utils.scalePoint( ...Location );
 
-    useEffect( () => {
-        if( follow.array !== 'Players' || follow.id !== ID || !follow.enabled )
-            return;
-        map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
-    }, [ follow.enabled, follow.array, follow.id, anchor[ 0 ], anchor[ 1 ] ] );
-
     return <Shape
         positions={[
             utils.scalePoint( 0, 150 ),
             utils.scalePoint( 100, 50 ),
             utils.scalePoint( 100, -150 ),
-            utils.scalePoint( 0, -50 ),
             utils.scalePoint( -100, -150 ),
             utils.scalePoint( -100, 50 ),
         ]}
@@ -37,6 +30,7 @@ export const Player = React.memo( function Player( { data }: { data: PlayerData 
         fillColor={actions.getColor( 'player' )}
         fillOpacity={1}
         interactive
+        weight={60}
     >
         <MapTooltip
             title={Name}
@@ -47,7 +41,10 @@ export const Player = React.memo( function Player( { data }: { data: PlayerData 
                 if ( follow.array === 'Players' || follow.id === ID )
                     follow.setFollowing();
                 else
-                    follow.setFollowing( 'Players', ID );
+                    follow.setFollowing( 'Players', ID, ( data, map ) => {
+                        const anchor = utils.scalePoint( ...data.Location );
+                        map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                    } );
                 setTooltipVisible( false );
             }}>{follow.array === 'Players' || follow.id === ID ? 'Unfollow' : 'Follow'}</Button>
         </MapTooltip>

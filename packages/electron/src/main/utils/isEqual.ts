@@ -13,7 +13,7 @@ function compareProperties( oldProp: any, newProp: any ): boolean {
     else if( oldIsArray )
         return compareArray( oldProp, newProp );
 
-    if( oldProp === null || oldProp === undefined )
+    if( oldProp === null || oldProp === undefined || newProp === null || newProp === undefined )
         return false;
 
     if( typeof oldProp === 'object' )
@@ -27,6 +27,13 @@ function compareProperties( oldProp: any, newProp: any ): boolean {
 }
 
 function compareObjects( oldObject: { [ key: string ]: any }, newObject: { [ key: string ]: any } ): boolean {
+    if( oldObject === newObject )
+        return true;
+    if( typeof oldObject !== typeof newObject )
+        return false;
+    if( oldObject === null || newObject === undefined || newObject === null || newObject === undefined )
+        return false;
+
     let oldKeys = Object.keys( oldObject );
     let newKeys = Object.keys( newObject );
 

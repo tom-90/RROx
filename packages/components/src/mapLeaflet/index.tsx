@@ -3,7 +3,7 @@ import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
 import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
 import { Background } from './background';
-import { World } from '@rrox/types';
+import { Player as PlayerData, World } from '@rrox/types';
 import { Splines } from './elements/Splines';
 import { Switch } from './elements/Switch';
 import { SplineType } from '@rrox/types';
@@ -16,6 +16,7 @@ import { WaterTower } from './elements/WaterTower';
 import { Controls } from './leaflet/controls';
 import './styles.less';
 import { Line } from './leaflet/line';
+import { usePrevious } from '../hooks/usePrevious';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,
@@ -24,7 +25,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
     mode          : MapMode,
     controlEnabled: boolean,
 } ) {
-    const [ following, setFollowing ] = useState<{ array: keyof World, id: number } | null>( null );
+    const [ following, setFollowing ] = useState<{ array: keyof World, id: number, apply: ( data: any, map: L.Map ) => void } | null>( null );
     const [ map, setMap ] = useState<L.Map>();
 
     const followEnabled = mode !== MapMode.MAP;
@@ -33,7 +34,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         if( !map )
             return;
 
-        const isFollowing = followEnabled && following?.array != null && following?.id != null
+        const isFollowing = followEnabled && following?.array != null && following?.id != null && following.apply != null;
 
         if ( map.dragging.enabled() && isFollowing )
             map.dragging.disable();
@@ -44,16 +45,46 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
             map.options.scrollWheelZoom = 'center';
         else if ( map.options.scrollWheelZoom !== true && !isFollowing )
             map.options.scrollWheelZoom = true;
-    }, [ followEnabled, following?.array, following?.id ] );
+
+        if( isFollowing ) { 
+            let item = data[ following?.array ]?.[ following?.id ];
+            if( item )
+                following.apply( item, map );
+        }
+    }, [ followEnabled, following?.array, following?.id, data[ following?.array ]?.[ following?.id ], map ] );
+
+    const prevMode = usePrevious( mode );
 
     useEffect( () => {
         if( !map )
             return;
 
-        const timeout = setTimeout( () => map?.invalidateSize(), 500 );
+        const applyFollow = () => {
+            if( followEnabled && following?.array != null && following?.id != null && following.apply != null ) {
+                let item = data[ following?.array ]?.[ following?.id ];
+                if( item )
+                    following.apply( item, map );
+            }
+        };
 
-        return () => clearTimeout( timeout );
-    }, [ mode ] );
+        const observer = new ResizeObserver( () => {
+            map.invalidateSize();
+
+            applyFollow();
+        } );
+
+        observer.observe( map.getContainer() );
+
+        applyFollow();
+
+        if( prevMode === MapMode.MINIMAP && mode === MapMode.MAP ) {
+            map.zoomIn( 1, { animate: false } );
+        } else if( prevMode === MapMode.MAP && mode === MapMode.MINIMAP ) {
+            map.zoomOut( 1, { animate: false } );
+        }
+
+        return () => observer.disconnect();
+    }, [ map, mode, followEnabled, following?.array, following?.id, data[ following?.array ]?.[ following?.id ] ] );
 
     const mapProps = useMemo<MapContextData[ 'map' ]>( () => {
         // Game coordinate range
@@ -68,7 +99,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         return {
             bounds     : L.latLngBounds( L.latLng( minY / scale, minX / scale ), L.latLng( maxY / scale, maxX / scale ) ),
             center     : L.latLng( 0, 0 ),
-            initialZoom: 10,
+            initialZoom: 12,
             minZoom    : 0,
             maxZoom    : 18,
             scale
@@ -106,11 +137,11 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                 id     : following?.id,
                 enabled: followEnabled,
 
-                setFollowing( array, id ) {
+                setFollowing( array, id, apply ) {
                     if( array == null || id == null )
                         setFollowing( null );
                     else
-                        setFollowing( { array, id } );
+                        setFollowing( { array, id, apply } );
                 }
             }
         }}
@@ -127,7 +158,10 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                 whenCreated={( map ) => {
                     setMap( map );
                     if( mode !== MapMode.NORMAL )
-                        setFollowing( { array: 'Players', id: 0 } );
+                        setFollowing( { array: 'Players', id: 0, apply: ( data: PlayerData, map: L.Map ) => {
+                            const anchor = utils.scalePoint( ...data.Location );
+                            map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                        } } );
                 }}
             >
                 <Controls
@@ -137,7 +171,11 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 ? null
                                 : {
                                     array: 'Players',
-                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || data.Players[ 0 ].ID
+                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || data.Players[ 0 ].ID,
+                                    apply: ( data: PlayerData, map: L.Map ) => {
+                                        const anchor = utils.scalePoint( ...data.Location );
+                                        map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                                    }
                                 }
                     )}
                 />

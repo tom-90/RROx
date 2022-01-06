@@ -34,12 +34,6 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
     
     const anchor = utils.scalePoint( ...Location );
 
-    useEffect( () => {
-        if ( follow.array !== 'Frames' || follow.id !== ID || !follow.enabled )
-            return;
-        map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
-    }, [ follow.enabled, follow.array, follow.id, anchor[ 0 ], anchor[ 1 ] ] );
-
     if( definition.engine )
         return <Shape
                 positions={[
@@ -72,7 +66,10 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                             if ( follow.array === 'Frames' && follow.id === ID )
                                 follow.setFollowing();
                             else
-                                follow.setFollowing( 'Frames', ID );
+                                follow.setFollowing( 'Frames', ID, ( data, map ) => {
+                                    const anchor = utils.scalePoint( ...data.Location );
+                                    map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                                } );
                             setTooltipVisible( false );
                         }}
                     >
