@@ -44,10 +44,10 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ### v1.7.0 - 05-01-2022
 
-- ``Added`` Map sharing ability for viewing on other devices and multiplayer
+- ``Added`` Map sharing ability for viewing on other devices and multiplayer.
 - ``Added`` Ability to attach to remote sessions in the desktop RROx app.
-- ``Added`` Web-viewer of map, accessible via [rrox.tom90.nl](https://rrox.tom90.nl)
-- ``Added`` Reworked map drawing for better performance.
+- ``Added`` Web-viewer of map, accessible via [rrox.tom90.nl](https://rrox.tom90.nl) (Thanks to [Faab007NL](https://github.com/faab007))
+- ``Added`` Reworked map drawing for better performance. (Thanks to [Faab007NL](https://github.com/faab007))
 - ``Added`` High-resolution map image.
 - ``Added`` Full customizability of all colors used on the map.
 - ``Added`` Teleport to sandhouses and watertowers.
