@@ -34,6 +34,14 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.7.1 - 06-01-2022
+
+- ``Fixed`` Popups would reopen every time when pressing F1.
+- ``Fixed`` The map would not follow the player correctly.
+- ``Fixed`` Blocked panning, even when not following anything.
+- ``Fixed`` Percentages would not be shown on the control sliders.
+- ``Fixed`` Remote connections could silenty fail, not allowing the player to interact with anything.
+
 ### v1.7.0 - 05-01-2022
 
 - ``Added`` Map sharing ability for viewing on other devices and multiplayer
