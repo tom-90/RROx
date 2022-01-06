@@ -12,6 +12,7 @@
     "dev:start": "nodemon --legacy-watch -w dist dist/index.js"
   },
   "dependencies": {
+    "@socket.io/admin-ui": "^0.2.0",
     "cross-env": "^7.0.3",
     "express": "^4.17.2",
     "socket.io": "^4.4.0"

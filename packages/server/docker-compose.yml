@@ -17,9 +17,10 @@ services:
             dockerfile: Dockerfile.dev
         volumes:
             - ../..:/var/www/app
-        command: npm run dev:start
         environment:
-            - REDIS_URL=redis://redis:6379
+            - SOCKETIO_ADMIN_USERNAME=admin
+            - SOCKETIO_ADMIN_PASSWORD=$$2a$$12$$qP4IjY2iFzSsC5sMfIcVduc8rhlwZxzw8.xm9/kGlEq4Z1M50E39C
+        command: npm run dev:start
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.rrox.rule=PathPrefix(`/`)"
