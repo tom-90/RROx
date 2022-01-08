@@ -1,6 +1,8 @@
 import { DataChange, World } from "@rrox/types";
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
 import { useSocket } from "./socket";
+import { useSettings } from "../helpers/settings";
+import { MapActions } from "@rrox/components";
 
 export const MapDataContext = createContext<{
     data   : World;
@@ -8,6 +10,7 @@ export const MapDataContext = createContext<{
     clear  : () => void;
     loaded : boolean;
     controlEnabled: boolean;
+    actions: MapActions
 }>( null );
 
 export function useMapData() {
@@ -97,12 +100,22 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         };
     }, [] );
 
+    const [ settings ] = useSettings();
+    const actions = useMemo<MapActions>( () => ( {
+        teleport             : ( x, y, z         ) => socket.send( 'teleport', x, y, z, settings[ 'multiplayer.client.playerName' ] ),
+        changeSwitch         : ( id              ) => socket.send( 'change-switch', id ) ,
+        setEngineControls    : ( id, type, value ) =>  socket.send( 'set-engine-controls', id, type, value ),
+        getColor             : ( key             ) => ( settings as any )[ `colors.${key}` ],
+        getSelectedPlayerName: (                 ) => settings[ 'multiplayer.client.playerName' ]
+    } ), [ settings, socket ] );
+
     return <MapDataContext.Provider value={{
         data: mapData,
         refresh,
         clear,
         loaded,
-        controlEnabled
+        controlEnabled,
+        actions
     }}>
         {children}
     </MapDataContext.Provider>;
