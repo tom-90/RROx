@@ -1,46 +1,23 @@
-import * as React from "react";
-import {useEffect, useMemo} from "react";
-import { Layout } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
-import { FramesList } from "@rrox/components";
-import { FrameDefinitions } from '@rrox/components/src/mapLeaflet/definitions/Frame';
-import AppIcon from '@rrox/assets/images/appicon.ico';
-import { useSocketSession } from "../helpers/socket";
-import { useMapData } from "../helpers/mapData";
-import { useSettings } from "../helpers/settings";
-import { MapPageLayout } from "../components/MapPageLayout";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FramesList, FrameDefinitions } from "@rrox/components";
+import { PageLayout } from "../components/PageLayout";
 import { Tabs } from "antd";
 import { Cars } from "@rrox/types";
+import { useMapData } from "../hooks/useMapData";
 const { TabPane } = Tabs;
 
-export function ControlsPage() {
-    let { serverKey } = useParams();
+export function RollingStockPage() {
     const navigate = useNavigate();
 
-    useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled } = useMapData();
-    const [ settings ] = useSettings();
-
-    // When this page loads, we refresh the map data
-    useEffect( () => {
-        if( !mapDataLoaded )
-            refreshMapData();
-    }, [] );
-    
-    // When the map data loads, we check if we have a selected player
-    useEffect( () => {
-        // If we do not have a selected player, or the selected player is not in the world
-        // Then we redirect to the select player page
-        if( mapData.Players.length > 0 && ( !settings[ 'multiplayer.client.playerName' ] || !mapData.Players.some( ( p ) => p.Name === settings[ 'multiplayer.client.playerName' ] ) ) )
-            navigate( `/${serverKey}/players` );
-    }, [ mapData, settings ] );
+    const { mapData } = useMapData();
 
     const openControl = ( ID: number ) => {
-        navigate( `/${serverKey}/controls/${ID}` );
+        navigate( `/controls/${ID}` );
     };
 
     const locate = ( ID: number ) => {
-        navigate( `/${serverKey}`, {
+        navigate( '/map', {
             state: {
                 locate: {
                     type: 'Frames',
@@ -51,8 +28,7 @@ export function ControlsPage() {
     }
 
     return (
-
-        <MapPageLayout  style={{ overflowY: 'hidden', marginLeft: '5px', marginRight: '5px' }}>
+        <PageLayout  style={{ overflowY: 'hidden', marginLeft: '5px', marginRight: '5px' }}>
             <div style={{ maxWidth: 1000, width: '100%', marginBottom: '50px' }}>
                 <Tabs defaultActiveKey="1">
 
@@ -82,6 +58,6 @@ export function ControlsPage() {
 
                 </Tabs>
             </div>
-        </MapPageLayout>
+        </PageLayout>
     );
 }

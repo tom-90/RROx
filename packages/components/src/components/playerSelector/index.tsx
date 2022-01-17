@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Radio, Space } from "antd";
 import { Player } from "@rrox/types";
-import './playerSelector.less';
+import './style.less';
 
 export function PlayerSelector( { players, onSelect }: { players?: Player[], onSelect?: ( playerName: string ) => void } ) {
     return <Modal

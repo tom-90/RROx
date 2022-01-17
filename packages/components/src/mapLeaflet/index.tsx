@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
 import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
@@ -26,6 +27,9 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
     mode          : MapMode,
     controlEnabled: boolean,
 } ) {
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [ following, setFollowing ] = useState<{ array: keyof World, id: number, apply: ( data: any, map: L.Map ) => void } | null>( null );
     const [ map, setMap ] = useState<L.Map>();
 
@@ -92,6 +96,27 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
 
         return () => observer.disconnect();
     }, [ map, mode, followEnabled, following?.array, following?.id, data[ following?.array ]?.[ following?.id ] ] );
+
+    useEffect( () => {
+        if( !location.state?.locate || !data || !map )
+            return;
+        
+        const { type, id } = location.state.locate as { type: keyof World, id: number };
+        const arr: { ID: number, Location?: [ number, number, number ] }[] = data[ type ];
+
+        if( !arr )
+            return;
+
+        const item = arr.find( ( d ) => d.ID === id );
+        
+        if( !item || !item.Location )
+            return;
+
+        const anchor = utils.scalePoint( ...item.Location );
+        map.setView( L.latLng( anchor[ 0 ], anchor[ 1 ] ), 14, { animate: false } );
+
+        navigate( location.pathname );
+    }, [ location.state, data, map ] );
 
     const mapProps = useMemo<MapContextData[ 'map' ]>( () => {
         // Game coordinate range
@@ -311,3 +336,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
 }
 
 export * from './context';
+
+export * from './definitions/Frame';
+export * from './definitions/Industry';
+export * from './definitions/Product';
+export * from './definitions/Sandhouse';
+export * from './definitions/Spline';
+export * from './definitions/Switch';
+export * from './definitions/Turntable';
+export * from './definitions/WaterTower';

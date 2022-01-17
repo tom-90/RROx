@@ -12,6 +12,9 @@ import './components/DanglingInjector';
 import { Modal, notification, Progress } from 'antd';
 import './types';
 import { AttachProvider } from './utils/attach';
+import { MapDataProvider } from './hooks/useMapData';
+import { RollingStockPage } from './pages/RollingStock';
+import { RollingStockControlsPage } from './pages/RollingStockControls';
 
 window.mode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'overlay' ? 'overlay' : 'normal';
 
@@ -21,14 +24,18 @@ if ( window.mode === 'overlay' )
 // Render application in DOM
 ReactDOM.render( <DraggableModalProvider>
     <AttachProvider>
-        <MemoryRouter>
-            <Routes>
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/map" element={<MapPage />} />
-                <Route path="/info" element={<Info />} />
-                <Route path="/" element={<Navigate to="/map" />} />
-            </Routes>
-        </MemoryRouter>
+        <MapDataProvider>
+            <MemoryRouter>
+                <Routes>
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/controls/:id" element={<RollingStockControlsPage />} />
+                    <Route path="/controls" element={<RollingStockPage />} />
+                    <Route path="/map" element={<MapPage />} />
+                    <Route path="/info" element={<Info />} />
+                    <Route path="/" element={<Navigate to="/map" />} />
+                </Routes>
+            </MemoryRouter>
+        </MapDataProvider>
     </AttachProvider>
 </DraggableModalProvider>, document.getElementById( 'app' ) );
 

@@ -46,7 +46,6 @@ export function MapPage() {
                 mode={MapMode.NORMAL}
                 controlEnabled={controlEnabled}
             />
-            <img src={AppIcon} alt="App Icon" className="app-logo"/>
         </MapPageLayout>
     );
 }

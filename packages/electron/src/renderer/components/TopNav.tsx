@@ -18,6 +18,10 @@ export function TopNav() {
         selectedKeys.push( 'map' );
     if( matchPath( '/settings', pathname ) )
         selectedKeys.push( 'settings' );
+    if( matchPath( '/controls', pathname ) )
+        selectedKeys.push( 'controls' );
+    if( matchPath( '/controls/:id', pathname ) )
+        selectedKeys.push( 'controls' );
     if( matchPath( '/info', pathname ) )
         selectedKeys.push( 'info' );
 
@@ -78,6 +82,11 @@ export function TopNav() {
             <Menu.Item key="map" >
                 <Link to="/map">
                     Map
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="controls">
+                <Link to="/controls">
+                    Rolling Stock
                 </Link>
             </Menu.Item>
             <Menu.Item key="settings">
