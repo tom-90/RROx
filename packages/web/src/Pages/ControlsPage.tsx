@@ -2,7 +2,7 @@ import * as React from "react";
 import {useEffect, useMemo} from "react";
 import { Layout } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
-import {Map, MapActions, MapMode, MapSettings} from "@rrox/components";
+import { FramesList } from "@rrox/components";
 import { FrameDefinitions } from '@rrox/components/src/mapLeaflet/definitions/Frame';
 import AppIcon from '@rrox/assets/images/appicon.ico';
 import { useSocketSession } from "../helpers/socket";
@@ -10,13 +10,14 @@ import { useMapData } from "../helpers/mapData";
 import { useSettings } from "../helpers/settings";
 import { MapPageLayout } from "../components/MapPageLayout";
 import { Tabs } from "antd";
+import { Cars } from "@rrox/types";
 const { TabPane } = Tabs;
 
 export function ControlsPage() {
     let { serverKey } = useParams();
     const navigate = useNavigate();
 
-    const socket = useSocketSession( serverKey );
+    useSocketSession( serverKey );
     const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled } = useMapData();
     const [ settings ] = useSettings();
 
@@ -34,49 +35,20 @@ export function ControlsPage() {
             navigate( `/${serverKey}/players` );
     }, [ mapData, settings ] );
 
-    const openControl = (id : any) => {
-        let location = window.location.href;
-        let page = `${id}`;
-        window.open(location.endsWith("/") ? location + page : location + `/` + page, '_self').focus();
+    const openControl = ( ID: number ) => {
+        navigate( `/${serverKey}/controls/${ID}` );
     };
 
-    let Locomotives = mapData.Frames.filter(frame => FrameDefinitions[ frame.Type ].engine).map( ( Frame ) => {
-        let Name = Frame.Name.replace("<br>", "");
-        let Number = Frame.Number;
-
-        let BoilerPressure = Frame.BoilerPressure;
-        let BoilerPressureColor = BoilerPressure < 80 ? "red" : "black";
-        let FuelAmount = Frame.FuelAmount;
-        let FuelAmountColor = FuelAmount < 10 ? "red" : "black";
-        let FireTemperature = Frame.FireTemperature;
-        let FireTemperatureColor = FireTemperature < 100 ? "red" : "black";
-        let WaterTemperature = Frame.WaterTemperature;
-        let WaterTemperatureColor = WaterTemperature < 100 ? "red" : "black";
-
-        return (
-            <div className="control-locomotive" key={Frame.ID} onClick={() => {openControl(Frame.ID);}}>
-                <h1> {`${Name.toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}${Name || Number ? ' | ' : ''}`} {FrameDefinitions[ Frame.Type ].name}</h1>
-                <table style={{ width: '50%' }}>
-                    <thead>
-                    <tr>
-                        <th style={{ width: '25%' }}>Boiler Pressure</th>
-                        <th style={{ width: '25%' }}>Fuel Amount</th>
-                        <th style={{ width: '25%' }}>Fire Temp.</th>
-                        <th style={{ width: '25%' }}>Water Temp.</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td style={{ textAlign: 'center', color: BoilerPressureColor }}>{BoilerPressure.toFixed(0)}</td>
-                        <td style={{ textAlign: 'center', color: FuelAmountColor }}>{FuelAmount.toFixed(0)}</td>
-                        <td style={{ textAlign: 'center', color: FireTemperatureColor }}>{FireTemperature.toFixed(0)}</td>
-                        <td style={{ textAlign: 'center', color: WaterTemperatureColor }}>{WaterTemperature.toFixed(0)}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        );
-    });
+    const locate = ( ID: number ) => {
+        navigate( `/${serverKey}`, {
+            state: {
+                locate: {
+                    type: 'Frames',
+                    id  : ID,
+                }
+            }
+        } );
+    }
 
     return (
 
@@ -85,7 +57,27 @@ export function ControlsPage() {
                 <Tabs defaultActiveKey="1">
 
                     <TabPane tab="Locomotives" key="1" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
-                        {Locomotives}
+                        <FramesList
+                            data={mapData.Frames.filter( ( frame ) => FrameDefinitions[ frame.Type ].engine )}
+                            onOpenControls={openControl}
+                            onLocate={locate}
+                        />
+                    </TabPane>
+
+                    <TabPane tab="Freight Cars" key="2" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
+                        <FramesList
+                            data={mapData.Frames.filter( ( frame ) => FrameDefinitions[ frame.Type ].freight )}
+                            onOpenControls={openControl}
+                            onLocate={locate}
+                        />
+                    </TabPane>
+
+                    <TabPane tab="Tenders &#38; Cabooses" key="3" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
+                        <FramesList
+                            data={mapData.Frames.filter( ( frame ) => FrameDefinitions[ frame.Type ].tender || frame.Type === Cars.CABOOSE )}
+                            onOpenControls={openControl}
+                            onLocate={locate}
+                        />
                     </TabPane>
 
                 </Tabs>

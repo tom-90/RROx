@@ -44,7 +44,7 @@ struct ASCharacter : ACharacter {
 	void ServerSetRaycastBake(struct Aairbrake* Brake, float Value); // Function arr.SCharacter.ServerSetRaycastBake // (Net|Native|Event|Protected|NetServer) // @ game+0xac2320
 	void ServerSetRaycastWhistle(struct Awhistle* whistle, float Input); // Function arr.SCharacter.ServerSetRaycastWhistle // (Net|Native|Event|Protected|NetServer) // @ game+0xac2840
 	void ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float Value); // Function arr.SCharacter.ServerSetRaycastHandvalve // (Net|Native|Event|Protected|NetServer) // @ game+0xac25d0
-	void ServerRemoveVegetationAtLocation(struct AVegetationSpawner* spawner, struct FVector WorldLocation, float tolerancedistance, struct FString PlayerName); // Function arr.SCharacter.ServerRemoveVegetationAtLocation // (Net|NetReliableNative|Event|Protected|NetServer|HasDefaults|NetValidate) // @ game+0xac6c80
+	void ServerSpawnSpline(struct FVector Pos, struct FRotator Rot, struct TArray<struct FVector> ControlPoints, char SplineType); // Function arr.SCharacter.ServerSpawnSpline // (Net|NetReliableNative|Event|Protected|NetServer|HasDefaults|NetValidate) // @ game+0xac8790
 
 	void SetPlayerMoney(float money); // Function arr.SCharacter.SetPlayerMoney // (Final|Native|Public|BlueprintCallable) // @ game+0xac4550
 	void SetPlayerXP(int32_t xp); // Function arr.SCharacter.SetPlayerXP // (Final|Native|Public|BlueprintCallable) // @ game+0xac45d0
@@ -136,9 +136,35 @@ struct Ahandvalve : AActor {
 	char pad_220[0x28]; // 0x220(0x28)
 };
 
-// Class arr.VegetationSpawner
-// Size: 0x300 (Inherited: 0x220)
-struct AVegetationSpawner : AActor {
-	char pad_220[0x80]; // 0x220(0x80)
-	void RemoveVegetationAssetAroundWorldLocation(struct FVector WorldLocation, float Radius, bool spawneffects); // Function arr.VegetationSpawner.RemoveVegetationAssetAroundWorldLocation // (Final|Native|Public|HasDefaults|BlueprintCallable) // @ game+0xacd290
+// Class arr.SplineActor
+// Size: 0x6c8 (Inherited: 0x220)
+struct ASplineActor : AActor {
+	char pad_220[0x8]; // 0x220(0x8)
+
+	struct FVector PosNewSplinePoint; // 0x228(0x0c)
+
+	char pad_234[0xEC]; // 0x234(0xEC)
+
+	struct TArray<struct FVector_NetQuantize> SplineControlPoints; // 0x320(0x10)
+
+	char pad_330[0x360]; // 0x330(0x360)
+
+	struct TArray<bool> SplineMeshBoolArray; // 0x690(0x10)
+
+	char pad_6A0[0x10]; // 0x6C0(0x10)
+
+	struct TArray<int32_t> IndicesToShowArray; // 0x6b0(0x10)
+
+	char pad_6C0[0x8]; // 0x6C0(0x8)
+
+
+	void AddNewSplinePoint(struct FVector Position); // Function arr.SplineActor.AddNewSplinePoint // (Final|Native|Public|HasDefaults|BlueprintCallable) // @ game+0xacaa10
+	void MoveLastSplinePoint(struct FVector NewPosition); // Function arr.SplineActor.MoveLastSplinePoint // (Final|Native|Public|HasDefaults|BlueprintCallable) // @ game+0xacb230
+	void UpdateSpline(); // Function arr.SplineActor.UpdateSpline // (Final|Native|Public|BlueprintCallable) // @ game+0xacb7d0
+	void DrawSpline(); // Function arr.SplineActor.DrawSpline // (Final|Native|Public|BlueprintCallable) // @ game+0xacace0
+
+	void DeleteLastSplinePoint(); // Function arr.SplineActor.DeleteLastSplinePoint // (Final|Native|Public|BlueprintCallable) // @ game+0xacac60
+
+	void UpdateSplineVisibility(); // Function arr.SplineActor.UpdateSplineVisibility // (Final|Native|Public|BlueprintCallable) // @ game+0xacb810
+	void UpdateSplineCollision(); // Function arr.SplineActor.UpdateSplineCollision // (Final|Native|Public|BlueprintCallable) // @ game+0xacb7f0
 };

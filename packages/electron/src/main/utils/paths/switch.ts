@@ -1,5 +1,6 @@
 import { Switch as SwitchData } from "@rrox/types";
-import { Edge, Graph, Vector, Vertex } from "./graph";
+import { Edge, Graph, Vertex } from "./graph";
+import { Vector } from "../vector";
 import { Quaternion } from "quaternion";
 
 export class Switch {

@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
 import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
@@ -17,6 +18,7 @@ import { Controls } from './leaflet/controls';
 import './styles.less';
 import { Line } from './leaflet/line';
 import { usePrevious } from '../hooks/usePrevious';
+import { Draw } from './draw/controls';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,
@@ -25,8 +27,17 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
     mode          : MapMode,
     controlEnabled: boolean,
 } ) {
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [ following, setFollowing ] = useState<{ array: keyof World, id: number, apply: ( data: any, map: L.Map ) => void } | null>( null );
     const [ map, setMap ] = useState<L.Map>();
+
+    const [ drawSnapLayers, setDrawSnapLayers ] = useState<L.LayerGroup[]>( null );
+    const groundworkLayer = useRef<L.LayerGroup>();
+    const trackLayer = useRef<L.LayerGroup>();
+    const turntableLayer = useRef<L.LayerGroup>();
+    const switchLayer = useRef<L.LayerGroup>();
 
     const followEnabled = mode !== MapMode.MAP;
 
@@ -86,6 +97,27 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         return () => observer.disconnect();
     }, [ map, mode, followEnabled, following?.array, following?.id, data[ following?.array ]?.[ following?.id ] ] );
 
+    useEffect( () => {
+        if( !location.state?.locate || !data || !map )
+            return;
+        
+        const { type, id } = location.state.locate as { type: keyof World, id: number };
+        const arr: { ID: number, Location?: [ number, number, number ] }[] = data[ type ];
+
+        if( !arr )
+            return;
+
+        const item = arr.find( ( d ) => d.ID === id );
+        
+        if( !item || !item.Location )
+            return;
+
+        const anchor = utils.scalePoint( ...item.Location );
+        map.setView( L.latLng( anchor[ 0 ], anchor[ 1 ] ), 14, { animate: false } );
+
+        navigate( location.pathname );
+    }, [ location.state, data, map ] );
+
     const mapProps = useMemo<MapContextData[ 'map' ]>( () => {
         // Game coordinate range
         const minX = -200000;
@@ -123,6 +155,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
             },
         }
     }, [] );
+
+    useEffect( () => {
+        if( groundworkLayer.current == null || trackLayer.current == null || turntableLayer.current == null || switchLayer.current == null )
+            return setDrawSnapLayers( null );
+        setDrawSnapLayers( [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
+    }, [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
 
     return <MapContext.Provider
         value={{
@@ -179,6 +217,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 }
                     )}
                 />
+                {drawSnapLayers && <Draw snapLayers={drawSnapLayers} />}
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>
                         <Line
@@ -197,7 +236,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='groundwork' style={{ zIndex: 10 }}>
                         <LayersControl.Overlay name="Groundwork" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={groundworkLayer}>
                                 <Splines
                                     data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_BANK )}
                                     type={SplineType.CONSTANT_BANK}
@@ -248,7 +287,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='track' style={{ zIndex: 50 }}>
                         <LayersControl.Overlay name="Tracks" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={trackLayer}>
                                 <Splines
                                     data={data.Splines.filter( ( s ) => s.Type === SplineType.TRACK )}
                                     type={SplineType.TRACK}
@@ -262,14 +301,14 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='turntables' style={{ zIndex: 60 }}>
                         <LayersControl.Overlay name="Turntables" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={turntableLayer}>
                                 {data.Turntables.map( ( s, i ) => <Turntable data={s} key={i} /> )}
                             </LayerGroup>
                         </LayersControl.Overlay>
                     </Pane>
                     <Pane name='switches' style={{ zIndex: 70 }}>
                         <LayersControl.Overlay name="Switches" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={switchLayer}>
                                 {data.Switches.map( ( s, i ) => <Switch data={s} key={i} /> )}
                             </LayerGroup>
                         </LayersControl.Overlay>
@@ -297,3 +336,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
 }
 
 export * from './context';
+
+export * from './definitions/Frame';
+export * from './definitions/Industry';
+export * from './definitions/Product';
+export * from './definitions/Sandhouse';
+export * from './definitions/Spline';
+export * from './definitions/Switch';
+export * from './definitions/Turntable';
+export * from './definitions/WaterTower';

@@ -12,7 +12,10 @@ function cachePlayerAddress()
         return
     end
     local objName = FNameStringAlgo(addr + UObject.FNameIndex)
-    
+    if objName == nil then
+        return
+    end
+
     -- Check that the object name starts with BP_Player_Conductor.
     -- When inside the engine (after pressing F key), this pointer gets replaced with a pointer to the engine.
     -- We need a pointer to the player object for things like changing switches
@@ -30,6 +33,11 @@ function getPlayer(pipe)
     end
 
     local objName = FNameStringAlgo(addr + UObject.FNameIndex)
+    if objName == nil then
+        pipe.writeQword(cachedPlayerAddress)
+        pipe.writeDword(1)
+        return
+    end
     
     if string.sub(objName, 1, 19) == "BP_Player_Conductor" then
         pipe.writeQword(addr)

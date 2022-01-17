@@ -2,16 +2,6 @@
 	filter: drop-shadow(0px 0px 3px black);
 }
 
-.frameControls {
-	overflow-x: auto;
-
-	tr {
-		th {
-			min-width: 100px;
-		}
-	}
-}
-
 .ant-tooltip {
 	z-index: 2000!important;
 }
@@ -75,5 +65,84 @@
 
 	.leaflet-popup-content-wrapper {
 		border-radius: 0;
+	}
+}
+
+.leaflet-draw-draw-add {
+	background-image: linear-gradient(transparent,transparent), url("@ant-design/icons-svg/inline-namespaced-svg/outlined/plus.svg")!important;
+    background-size: 16px 16px!important;
+}
+
+.leaflet-draw-draw-save {
+	background-image: linear-gradient(transparent,transparent), url("@ant-design/icons-svg/inline-namespaced-svg/outlined/save.svg")!important;
+    background-size: 16px 16px!important;
+}
+
+.leaflet-draw-draw-edit {
+	background-image: linear-gradient(transparent,transparent), url("@ant-design/icons-svg/inline-namespaced-svg/outlined/edit.svg")!important;
+    background-size: 16px 16px!important;
+}
+
+.leaflet-draw-actions a {
+	background-color: #efefef!important;
+}
+
+.leaflet-draw-toolbar-button-enabled {
+	background-color: #efefef!important;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-button {
+	background-image: none;
+
+	svg {
+		width: 15px;
+		height: 15px;
+		margin: 8px;
+	}
+}
+
+.draw-mode-controls {
+	&.leaflet-control-layers-expanded {
+		background-color: #252525;
+	}
+
+	.draw-mode-controls-list {	
+		img {
+			&:first-child {
+				filter: invert(1);
+				height: 60px;
+				padding: 20px;
+			}
+			cursor: pointer;
+			height: 100px;
+		}
+	}
+
+	.leaflet-control-layers-toggle {
+		background-image: url("@rrox/assets/images/buildIcon.svg")!important;
+		background-size: 30px 30px;
+	}
+}
+
+.leaflet-control-path  {
+	.leaflet-button-small svg {
+		width: 16px;
+		height: 16px;
+		margin: 7px;
+	}
+
+	.leaflet-button-disabled {
+		position:relative;
+
+		&:after {
+			content: "";
+			position: absolute;
+			border-top: 3px solid #d56969;
+			width: 40px;
+			top: -1px;
+			left: 0;
+			transform: rotate(45deg);
+			transform-origin: 0% 0%;
+		}
 	}
 }

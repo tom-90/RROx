@@ -9,6 +9,7 @@
         "url": "https://github.com/tom-90/RROx.git"
     },
     "scripts": {
-        "start": "node utils/combine.js && ./Injector.CT"
+        "start": "yarn build && ./Injector.CT",
+        "build": "node utils/combine.js"
     }
 }

@@ -5,7 +5,7 @@ import { Shape } from '../leaflet/shape';
 import { FrameDefinitions } from '../definitions/Frame';
 import { MapTooltip } from '../leaflet/tooltip';
 import { Button } from 'antd';
-import { FrameControls } from '../popups/FrameControls';
+import { FrameControlsPopup } from '../popups/FrameControls';
 import { StorageInfo } from '../popups/StorageInfo';
 import { Cars } from '@rrox/types';
 import L from 'leaflet';
@@ -80,7 +80,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                         onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 500 )}
                     >Teleport Here</Button>
                 </MapTooltip>
-                <FrameControls
+                <FrameControlsPopup
                     title={`${Name.replace("<br>", "").toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
                     data={data}
                     id={ID}
@@ -133,7 +133,7 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                 onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] )}
             >Teleport Here</Button>}
         </MapTooltip>
-        <FrameControls
+        <FrameControlsPopup
             title={definition.name || 'Freight Car'}
             data={data}
             id={ID}

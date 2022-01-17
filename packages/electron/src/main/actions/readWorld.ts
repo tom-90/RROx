@@ -1,6 +1,6 @@
 import { Action } from "./action";
 import { PipeType } from "../pipes";
-import { Frame, Player, Spline, Switch, Turntable, WaterTower, Sandhouse, Industry, World } from "@rrox/types";
+import { Frame, Player, Spline, Switch, Turntable, WaterTower, Sandhouse, Industry, World, Products, IndustryType } from "@rrox/types";
 import Log from 'electron-log';
 
 export enum ReadWorldMode {
@@ -295,6 +295,12 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 industry.Products.push( item );
         } );
 
+        if( industry.Type === IndustryType.IRONWORKS )
+            industry.Products = industry.Products.map( ( p ) => p.Type === Products.RAWIRON ? {
+                ...p,
+                Type: Products.STEELPIPES,
+            } : p );
+
         return industry;
     }
 
@@ -304,7 +310,6 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
         let data: Spline = {
             ID      : await pipe.readInt(),
             Type    : await pipe.readInt(),
-            Location: null,
             Segments: [],
         };
 

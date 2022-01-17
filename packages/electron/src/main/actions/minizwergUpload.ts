@@ -33,8 +33,6 @@ export class MinizwergUploadAction extends Action<void, [ slot: number ]> {
 
         reqData.append( 'fileToUpload', file, 'autosave.sav' );
 
-        console.log( playerName );
-
         let res = await axios.post( `${this.server}/upload.php`, reqData, {
             headers: reqData.getHeaders()
         } );
