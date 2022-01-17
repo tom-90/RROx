@@ -1,5 +1,6 @@
 import './types';
 
+export * from './build';
 export * from './cars';
 export * from './controls';
 export * from './data';

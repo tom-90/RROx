@@ -195,4 +195,7 @@ export class ReadWorldTask extends TimerTask {
         return changes;
     }
 
+    public invalidateSplines() {
+        this.counter = 0;
+    }
 }

@@ -52,7 +52,6 @@ export interface Turntable {
 export interface Spline {
     ID: number;
     Type: SplineType;
-    Location: [ X: number, Y: number, Z: number ];
     Segments: SplineSegment[];
 }
 

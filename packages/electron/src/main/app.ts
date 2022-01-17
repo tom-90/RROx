@@ -3,9 +3,9 @@ import Updater from 'update-electron-app';
 import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
-import { ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction } from './actions';
+import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
 import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, PathDataIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 import './types';
 import path from 'path';
 
@@ -55,6 +55,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
         // Initialize all actions
         const actions = [
+            BuildSplineAction,
             ChangeSwitchAction,
             EnsureInGameAction,
             InjectDLLAction,
@@ -62,13 +63,16 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             MinizwergUploadAction,
             ReadAddressAction,
             ReadAddressValueAction,
+            ReadHeightAction,
             ReadPlayerAddress,
             ReadWorldAction,
             SaveAction,
             SetEngineControlsAction,
             SetMoneyAndXPAction,
             ShowInjectorAction,
-            TeleportAction
+            TeleportAction,
+            TogglePauseAction,
+            VegetationSpawnersAction
         ];
         rrox.createActions( actions );
 
@@ -85,6 +89,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
         // Initialize and start all IPC tasks
         const ipc = [
+            BuildSplineIPCHandler,
             AutosaveIPCListener,
             ChangeSwitchIPCListener,
             GetAttachedStateIPCHandler,
@@ -94,7 +99,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             MapDataIPCHandler,
             MinizwergColorsIPCHandler,
             OpenLogIPCListener,
-            PathDataIPCHandler,
+            ReadHeightIPCHandler,
             SetAttachedStateIPCListener,
             SetEngineControlsIPCListener,
             SetMoneyAndXPIPCListener,

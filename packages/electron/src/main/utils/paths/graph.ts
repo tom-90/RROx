@@ -1,3 +1,5 @@
+import { Vector } from "../vector";
+
 export class Graph {
 
     public vertices: Vertex[] = [];
@@ -96,100 +98,5 @@ export class Edge<T = unknown> {
         }
     }
 
-
-}
-
-export class Vector {
-
-    constructor( public coords: [ x: number, y: number, z: number ] ) {}
-    
-    public add( v: Vector ) {
-        return new Vector( [
-            this.coords[ 0 ] + v.coords[ 0 ],
-            this.coords[ 1 ] + v.coords[ 1 ],
-            this.coords[ 2 ] + v.coords[ 2 ],
-        ] );
-    }
-    
-    public sub( v: Vector ) {
-        return new Vector( [
-            this.coords[ 0 ] - v.coords[ 0 ],
-            this.coords[ 1 ] - v.coords[ 1 ],
-            this.coords[ 2 ] - v.coords[ 2 ],
-        ] );
-    }
-    
-    public mul( v: Vector ) {
-        return new Vector( [
-            this.coords[ 1 ] * v.coords[ 2 ] - this.coords[ 2 ] * v.coords[ 1 ],
-            this.coords[ 2 ] * v.coords[ 0 ] - this.coords[ 0 ] * v.coords[ 2 ],
-            this.coords[ 0 ] * v.coords[ 1 ] - this.coords[ 1 ] * v.coords[ 0 ],
-        ] );
-    }
-
-    public scale( s: number ) {
-        return new Vector( [
-            this.coords[ 0 ] * s,
-            this.coords[ 1 ] * s,
-            this.coords[ 2 ] * s,
-        ] );
-    }
-
-    public dot( v: Vector ) {
-        return (
-            this.coords[ 0 ] * v.coords[ 0 ] +
-            this.coords[ 1 ] * v.coords[ 1 ] +
-            this.coords[ 2 ] * v.coords[ 2 ]
-        );
-    }
-    
-    public neg() {
-        return new Vector( [
-            -this.coords[ 0 ],
-            -this.coords[ 1 ],
-            -this.coords[ 2 ],
-        ] );
-    }
-
-    public equals( v: Vector, epsilon?: number ) {
-        if( epsilon )
-            return this.distanceSq( v ) < epsilon * epsilon;
-
-        return (
-            this.coords[ 0 ] == v.coords[ 0 ] &&
-            this.coords[ 1 ] == v.coords[ 1 ] &&
-            this.coords[ 2 ] == v.coords[ 2 ]
-        );
-    }
-
-    public normSq() {
-        return this.dot( this );
-    }
-    
-    public norm() {
-        return Math.sqrt( this.normSq() );
-    }
-    
-    public distanceSq( v: Vector ) {
-        return this.sub( v ).normSq();
-    }
-    
-    public distance( v: Vector ) {
-        return this.sub( v ).norm();
-    }
-
-    public normalize() {
-        const norm = this.norm();
-
-        return new Vector( [
-            this.coords[ 0 ] / norm,
-            this.coords[ 1 ] / norm,
-            this.coords[ 2 ] / norm,
-        ] );
-    }
-
-    toJSON() {
-        return this.coords;
-    }
 
 }

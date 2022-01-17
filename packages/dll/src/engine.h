@@ -18,6 +18,9 @@ struct FVector {
 // ScriptStruct Engine.Vector_NetQuantize
 // Size: 0x0c (Inherited: 0x0c)
 struct FVector_NetQuantize : FVector {
+	FVector_NetQuantize() : FVector() {}
+	FVector_NetQuantize(float X, float Y, float Z) : FVector(X,Y,Z) {}
+	FVector_NetQuantize(float InF) : FVector(InF) { }
 };
 
 // ScriptStruct Engine.Vector_NetQuantizeNormal
@@ -205,6 +208,7 @@ struct APlayerController : AController {
   struct APlayerCameraManager* PlayerCameraManager; // 0x2b8(0x08)15B1DA64D80
 
   bool ProjectWorldLocationToScreen(struct FVector& WorldLocation, struct FVector2D& ScreenLocation, bool bPlayerViewportRelative); // Function Engine.PlayerController.ProjectWorldLocationToScreen
+  void ServerPause(); // Function Engine.PlayerController.ServerPause // (Net|NetReliableNative|Event|Public|NetServer|NetValidate) // @ game+0x25eeab0
 };
 
 // Class Engine.Player

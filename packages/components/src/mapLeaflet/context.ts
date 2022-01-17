@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import L from 'leaflet';
-import { World } from "@rrox/types";
+import { BuildSpline, BuildSplinePoints, World } from "@rrox/types";
 import { EngineControls } from "@rrox/types";
 
 export interface MapSettings {
@@ -15,6 +15,8 @@ export interface MapActions {
     setEngineControls    : ( id: number, type: EngineControls, value: number ) => void;
     getColor             : ( key: string ) => string;
     getSelectedPlayerName: () => string;
+    buildSplines         : ( splines: BuildSpline[], simulate: boolean ) => Promise<false | BuildSplinePoints[]>;
+    openNewTab           : ( url: string ) => void;
 }
 
 export interface MapContextData {

@@ -21,6 +21,12 @@ function retrieveAddressValue(pipe)
 
         local gameModeName = FNameStringAlgo(authorityGameMode + UObject.FNameIndex)
 
+        if gameModeName == nil then
+            pipe.writeDword(2)
+            pipe.writeString("??")
+            return
+        end
+
         pipe.writeDword(#gameModeName)
         pipe.writeString(gameModeName)
         return

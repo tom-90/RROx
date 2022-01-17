@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
 import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
@@ -17,6 +17,7 @@ import { Controls } from './leaflet/controls';
 import './styles.less';
 import { Line } from './leaflet/line';
 import { usePrevious } from '../hooks/usePrevious';
+import { Draw } from './draw/controls';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,
@@ -27,6 +28,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
 } ) {
     const [ following, setFollowing ] = useState<{ array: keyof World, id: number, apply: ( data: any, map: L.Map ) => void } | null>( null );
     const [ map, setMap ] = useState<L.Map>();
+
+    const [ drawSnapLayers, setDrawSnapLayers ] = useState<L.LayerGroup[]>( null );
+    const groundworkLayer = useRef<L.LayerGroup>();
+    const trackLayer = useRef<L.LayerGroup>();
+    const turntableLayer = useRef<L.LayerGroup>();
+    const switchLayer = useRef<L.LayerGroup>();
 
     const followEnabled = mode !== MapMode.MAP;
 
@@ -124,6 +131,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
         }
     }, [] );
 
+    useEffect( () => {
+        if( groundworkLayer.current == null || trackLayer.current == null || turntableLayer.current == null || switchLayer.current == null )
+            return setDrawSnapLayers( null );
+        setDrawSnapLayers( [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
+    }, [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
+
     return <MapContext.Provider
         value={{
             settings,
@@ -179,6 +192,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 }
                     )}
                 />
+                {drawSnapLayers && <Draw snapLayers={drawSnapLayers} />}
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>
                         <Line
@@ -197,7 +211,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='groundwork' style={{ zIndex: 10 }}>
                         <LayersControl.Overlay name="Groundwork" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={groundworkLayer}>
                                 <Splines
                                     data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_BANK )}
                                     type={SplineType.CONSTANT_BANK}
@@ -248,7 +262,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='track' style={{ zIndex: 50 }}>
                         <LayersControl.Overlay name="Tracks" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={trackLayer}>
                                 <Splines
                                     data={data.Splines.filter( ( s ) => s.Type === SplineType.TRACK )}
                                     type={SplineType.TRACK}
@@ -262,14 +276,14 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='turntables' style={{ zIndex: 60 }}>
                         <LayersControl.Overlay name="Turntables" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={turntableLayer}>
                                 {data.Turntables.map( ( s, i ) => <Turntable data={s} key={i} /> )}
                             </LayerGroup>
                         </LayersControl.Overlay>
                     </Pane>
                     <Pane name='switches' style={{ zIndex: 70 }}>
                         <LayersControl.Overlay name="Switches" checked>
-                            <LayerGroup>
+                            <LayerGroup ref={switchLayer}>
                                 {data.Switches.map( ( s, i ) => <Switch data={s} key={i} /> )}
                             </LayerGroup>
                         </LayersControl.Overlay>

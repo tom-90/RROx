@@ -53,6 +53,8 @@ function starttransmitter()
                 retrieveAddress(pipe)
             elseif command == "V" then -- Get Address Value
                 retrieveAddressValue(pipe)
+            elseif command == "T" then -- Get Tree Vegetation Spawner addresses
+                getVegetationSpawners(pipe)
             elseif command == "I" then -- Inject DLL
                 injectDLLFile(pipe)
             elseif command == nil and not thread.Terminated then

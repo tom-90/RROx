@@ -5,6 +5,8 @@ import * as config from '../config';
 const store = new Store<config.Schema>( config );
 
 const validChannels = [
+    'build-spline',
+    'build-progress',
     'map-data',
     'path-data',
     'map-update',
@@ -28,7 +30,8 @@ const validChannels = [
     'kill-dangling-injector',
     'get-version',
     'show-injector',
-    'teleport'
+    'teleport',
+    'test'
 ];
 
 contextBridge.exposeInMainWorld( 'ipc', {

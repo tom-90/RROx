@@ -31,6 +31,9 @@ export class SocketConnection extends EventEmitter {
         this.socket = io( SocketConnection.SOCKET_SERVER, {
             transports  : [ 'websocket' ],
             reconnection: false,
+            extraHeaders: {
+                'User-Agent': 'RROX'
+            }
         } );
         this.mode = mode;
 

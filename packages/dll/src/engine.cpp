@@ -150,6 +150,14 @@ bool APlayerController::ProjectWorldLocationToScreen(FVector& WorldLocation, FVe
   return parms.ReturnValue;
 }
 
+void APlayerController::ServerPause()
+{
+    static auto fn = ObjObjects->FindObject("Function Engine.PlayerController.ServerPause");
+    struct {} parms;
+    parms = {};
+    ProcessEvent(fn, &parms);
+}
+
 bool EngineInit()
 {
   auto main = GetModuleHandleA(nullptr);

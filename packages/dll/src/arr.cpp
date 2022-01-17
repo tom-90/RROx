@@ -157,25 +157,68 @@ void ASCharacter::SetPlayerMoney(float money) {
     ProcessEvent(fn, &parms);
 }
 
-void ASCharacter::ServerRemoveVegetationAtLocation(struct AVegetationSpawner* spawner, struct FVector WorldLocation, float tolerancedistance, struct FString PlayerName) {
-    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ServerRemoveVegetationAtLocation");
+void ASCharacter::ServerSpawnSpline(struct FVector Pos, struct FRotator Rot, struct TArray<struct FVector> ControlPoints, char SplineType) {
+    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ServerSpawnSpline");
     struct {
-        AVegetationSpawner* spawner;
-        FVector WorldLocation;
-        float tolerancedistance;
-        FString PlayerName;
+        FVector Pos;
+        FRotator Rot;
+        TArray<struct FVector> ControlPoints;
+        char SplineType;
     } parms;
-    parms = { spawner, WorldLocation, tolerancedistance, PlayerName };
+    parms = { Pos, Rot, ControlPoints, SplineType };
     ProcessEvent(fn, &parms);
 }
 
-void AVegetationSpawner::RemoveVegetationAssetAroundWorldLocation(struct FVector WorldLocation, float Radius, bool spawneffects) {
-    static auto fn = ObjObjects->FindObject("Function arr.VegetationSpawner.RemoveVegetationAssetAroundWorldLocation");
+void ASplineActor::AddNewSplinePoint(struct FVector Position) {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.AddNewSplinePoint");
     struct {
-        FVector WorldLocation;
-        float Radius;
-        bool spawneffects;
+        FVector Position;
     } parms;
-    parms = { WorldLocation, Radius, spawneffects };
+    parms = { Position };
+    ProcessEvent(fn, &parms);
+}
+
+void ASplineActor::MoveLastSplinePoint(struct FVector NewPosition) {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.MoveLastSplinePoint");
+    struct {
+        FVector NewPosition;
+    } parms;
+    parms = { NewPosition };
+    ProcessEvent(fn, &parms);
+}
+
+void ASplineActor::UpdateSpline() {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.UpdateSpline");
+    struct {} parms;
+    parms = {};
+    ProcessEvent(fn, &parms);
+}
+
+
+void ASplineActor::DrawSpline() {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.DrawSpline");
+    struct {} parms;
+    parms = {};
+    ProcessEvent(fn, &parms);
+}
+
+void ASplineActor::DeleteLastSplinePoint() {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.DeleteLastSplinePoint");
+    struct {} parms;
+    parms = {};
+    ProcessEvent(fn, &parms);
+}
+
+void ASplineActor::UpdateSplineVisibility() {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.UpdateSplineVisibility");
+    struct {} parms;
+    parms = {};
+    ProcessEvent(fn, &parms);
+}
+
+void ASplineActor::UpdateSplineCollision() {
+    static auto fn = ObjObjects->FindObject("Function arr.SplineActor.UpdateSplineCollision");
+    struct {} parms;
+    parms = {};
     ProcessEvent(fn, &parms);
 }

@@ -16,6 +16,7 @@ include( 'actions/addressValue.lua' );
 include( 'actions/injectDLL.lua' );
 include( 'actions/readWorld.lua' );
 include( 'actions/player.lua' );
+include( 'actions/vegetationSpawners.lua' );
 include( 'transmitter.lua' );
 
 let data = XML.xml2js( fs.readFileSync( path.resolve( __dirname, '../Injector.CT' ) ) );

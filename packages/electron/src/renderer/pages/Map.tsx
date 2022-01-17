@@ -84,6 +84,8 @@ export function MapPage() {
         setEngineControls    : ( id, type, value ) => window.ipc.send( 'set-engine-controls', id, type, value ),
         getColor             : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
         getSelectedPlayerName: () => attachMode === 'client' ? settings.playerName : undefined,
+        buildSplines         : ( splines, simulate ) => window.ipc.invoke( 'build-spline', splines, simulate ),
+        openNewTab           : ( url ) => window.openBrowser( url ),
     } ), [ settings ] );
 
     return (

@@ -13,7 +13,7 @@ export interface ControlsProps extends ZoomControlProps {
 
 const ControlsClass = L.Control.Zoom.extend( {
     onAdd: function ( map: L.Map ) {
-        let container = L.Control.Zoom.prototype.onAdd.call( this, map )
+        let container = L.Control.Zoom.prototype.onAdd.call( this, map );
         
         this._followPlayerButton = this._createButton( LocateSVG, 'Follow Player', 'leaflet-control-follow', container, this._followPlayer );
         this._stopFollowPlayerButton = this._createButton( StopSVG, 'Stop Following', 'leaflet-control-stop-follow', container, this._followPlayer );
