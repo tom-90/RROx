@@ -16,6 +16,7 @@ import { SettingsProvider } from "./helpers/settings";
 import { MapSettings } from "./Pages/MapSettings";
 import { ControlsPage } from "./Pages/ControlsPage";
 import { ControlPage } from "./Pages/ControlPage";
+import { Temp } from './Pages/Temp';
 
 const rootEl = document.getElementById("root");
 
@@ -31,6 +32,7 @@ render(
                     <BrowserRouter>
                         <Routes>
                             <Route path="/" element={<EnterKey />} />
+                            <Route path="/temp" element={<Temp />} />
                             <Route path="/:serverKey" element={<MapPage />} />
                             <Route path="/:serverKey/players" element={<PlayerSelect />} />
                             <Route path="/:serverKey/settings" element={<MapSettings />} />
