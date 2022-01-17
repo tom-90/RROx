@@ -28,10 +28,7 @@ export function PlayerSelect() {
         navigate( `/${serverKey}` );
     };
 
-    let Players = [
-        (<Button className="player-select-item" type="primary" size="large" loading={true} key="loading">Loading</Button>)
-    ];
-    Players = mapData.Players.map( ( p, i ) => <Button className="player-select-item" type="primary" size="large" key={i} onClick={() => selectPlayer( p.Name )}>{p.Name}</Button>);
+    let Players = mapData.Players.map( ( p, i ) => <Button className="player-select-item" type="primary" size="large" key={i} onClick={() => selectPlayer( p.Name )}>{p.Name}</Button>);
 
     return (
         <div className="page-container key-input-body">

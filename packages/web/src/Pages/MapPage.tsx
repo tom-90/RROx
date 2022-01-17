@@ -14,7 +14,7 @@ export function MapPage() {
     const navigate = useNavigate();
 
     const socket = useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled, actions: actions } = useMapData();
     const [ settings ] = useSettings();
 
     // When this page loads, we refresh the map data
@@ -30,14 +30,6 @@ export function MapPage() {
         if( mapData.Players.length > 0 && ( !settings[ 'multiplayer.client.playerName' ] || !mapData.Players.some( ( p ) => p.Name === settings[ 'multiplayer.client.playerName' ] ) ) )
             navigate( `/${serverKey}/players` );
     }, [ mapData, settings ] );
-
-    const actions = useMemo<MapActions>( () => ( {
-        teleport             : ( x, y, z         ) => socket.send( 'teleport', x, y, z, settings[ 'multiplayer.client.playerName' ] ),
-        changeSwitch         : ( id              ) => socket.send( 'change-switch', id ) ,
-        setEngineControls    : ( id, type, value ) =>  socket.send( 'set-engine-controls', id, type, value ),
-        getColor             : ( key             ) => ( settings as any )[ `colors.${key}` ],
-        getSelectedPlayerName: (                 ) => settings[ 'multiplayer.client.playerName' ]
-    } ), [ settings, socket ] );
 
     const mapSettings = useMemo<MapSettings>( () => ( {
         background   : settings[ 'map.background' ],

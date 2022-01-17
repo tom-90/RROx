@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { Slider, Button } from "antd";
-import { CompressOutlined, ExpandOutlined } from "@ant-design/icons";
+import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/icons";
 import { Frame } from '@rrox/types';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { EngineControls } from '@rrox/types';
@@ -58,6 +58,12 @@ export function FrameControls( {
 
     const [ compact, setCompact ] = useState( false );
 
+    const openExternal = () => {
+        let location = window.location.href;
+        let page = `controls/${id}`;
+        window.open(location.endsWith("/") ? location + page : location + `/` + page, '_blank').focus();
+    };
+
     const setWhistle = useMemo( () => {
         return throttle( ( value: number ) => {
             actions.setEngineControls( id, EngineControls.WHISTLE, value / 100 );
@@ -84,8 +90,17 @@ export function FrameControls( {
                 type='text'
                 style={{ marginLeft: 10, padding: 5 }}
                 onClick={() => setCompact( !compact )}
+                title={compact ? "Switch to advanced view" : "Switch to compact view"}
             >
                 {compact ? <ExpandOutlined /> : <CompressOutlined />}
+            </Button>}
+            {isEngine && <Button
+                type='text'
+                style={{ marginLeft: 10, padding: 5 }}
+                onClick={() => openExternal()}
+                title="Open controls in new window"
+            >
+                <ControlOutlined />
             </Button>}
         </>}
         visible={isVisible}

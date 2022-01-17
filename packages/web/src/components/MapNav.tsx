@@ -13,6 +13,8 @@ export function MapNav() {
 
     if( matchPath( `/${serverKey}`, pathname ) )
         selectedKeys.push( 'map' );
+    if( matchPath( `/${serverKey}/controls`, pathname ) )
+        selectedKeys.push( 'controls' );
     if( matchPath( `/${serverKey}/settings`, pathname ) )
         selectedKeys.push( 'settings' );
 
@@ -50,6 +52,11 @@ export function MapNav() {
             <Menu.Item key="map" >
                 <Link to={`/${serverKey}`}>
                     Map
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="controls" >
+                <Link to={`/${serverKey}/controls`}>
+                    Controls
                 </Link>
             </Menu.Item>
             <Menu.Item key="settings">

@@ -14,6 +14,8 @@ import { SocketProvider } from "./helpers/socket";
 import { MapDataProvider } from "./helpers/mapData";
 import { SettingsProvider } from "./helpers/settings";
 import { MapSettings } from "./Pages/MapSettings";
+import { ControlsPage } from "./Pages/ControlsPage";
+import { ControlPage } from "./Pages/ControlPage";
 
 const rootEl = document.getElementById("root");
 
@@ -29,9 +31,11 @@ render(
                     <BrowserRouter>
                         <Routes>
                             <Route path="/" element={<EnterKey />} />
+                            <Route path="/:serverKey" element={<MapPage />} />
                             <Route path="/:serverKey/players" element={<PlayerSelect />} />
                             <Route path="/:serverKey/settings" element={<MapSettings />} />
-                            <Route path="/:serverKey" element={<MapPage />} />
+                            <Route path="/:serverKey/controls" element={<ControlsPage />} />
+                            <Route path="/:serverKey/controls/:id" element={<ControlPage />} />
                         </Routes>
                     </BrowserRouter>
                 </SettingsProvider>
