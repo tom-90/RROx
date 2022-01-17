@@ -2,7 +2,14 @@ import { Vector2D } from '../../../vector';
 
 export class PathCoordinates {
 
-    private constructor( private path: L.Curve, private coordinates: [ number, number ] ) {}
+    private oldPath: string;
+
+    private constructor(
+        private path: L.Curve,
+        private coordinates: [ number, number ]
+    ) {
+        this.oldPath = JSON.stringify( this.path.getPath() );
+    }
 
     public static fromCommandIndex( path: L.Curve, index: number ) {
         let pathData = path.getPath();
@@ -233,7 +240,12 @@ export class PathCoordinates {
     }
 
     update() {
-        this.path.pointData = null;
+        let path = JSON.stringify( this.path.getPath() );
+        if( this.oldPath !== path ) {
+            this.oldPath = path;
+            this.path.pointData = null;
+        }
+
         this.path.setPath( this.path.getPath() );
     }
 

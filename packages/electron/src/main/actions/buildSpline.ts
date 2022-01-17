@@ -4,7 +4,7 @@ import { PipeType } from "../pipes";
 import { EnsureInGameAction } from "./ensureInGame";
 import Log from 'electron-log';
 import { BuildSpline, BuildSplineMode, BuildSplinePath, BuildSplinePoints, BuildSplineSegment, HeightData, Spline, SplineType } from '@rrox/types';
-import { Geometry, Path } from "../utils";
+import { Geometry, Path, PathSettings } from "../utils";
 import { ReadWorldTask } from "../tasks";
 
 export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ splines: BuildSpline[], simulate: boolean ]> {
@@ -80,6 +80,7 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
 
         let worldSplines = this.app.getTask( ReadWorldTask ).world.Splines;
         let splinesToBuild: BuildSplinePoints[] = [];
+        let highResPaths: Path[] = [];
 
         for( let i = 0; i < splines.length; i++ ) {
             let spline = splines[ i ];
@@ -92,12 +93,28 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
                 let path = new Path( spline.path, BuildSplineAction.SPLINE_SETTINGS[ spline.type ] );
 
                 let generatedSpline = this.splineFromPath( spline.type, path, heightData );
-                generatedSpline.ID = -1 * i - 1;
+                generatedSpline.ID = -1 * i - 2;
                 splinesToBuild.push( generatedSpline );
+                highResPaths.push( highResPath );
             } else if( spline.mode === BuildSplineMode.POINTS ) {
-                spline.ID = -1 * i - 1;
+                let highResPath = this.pathFromSpline( spline, { straightSegmentLength: 200, curvedSegmentLength: 200 } );
+
+                spline.ID = -1 * i - 2;
+
+                spline.HeightData.forEach( ( d ) => d.heights = d.heights.filter( ( h ) => h.id >= 0 || h.type === 'TERRAIN' ) );
+
+                await this.readHeight(
+                    highResPath,
+                    [],
+                    splinesToBuild,
+                    false,
+                    spline.HeightData
+                );
+
                 splinesToBuild.push( spline );
-            }
+                highResPaths.push( highResPath );
+            } else
+                throw new Error( 'Unknown spline mode' );
         }
 
         if( !simulate ) {
@@ -106,18 +123,15 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
             await this.app.getAction( TogglePauseAction ).run();
         } else {
             for( let i = 0; i < splinesToBuild.length; i++ ) {
-                let spline = splines[ i ] as BuildSplinePath;
-                if( spline.mode !== BuildSplineMode.PATH )
-                    continue;
-
-                let highResPath = new Path( spline.path, { straightSegmentLength: 200, curvedSegmentLength: 200 } );
+                let spline = splinesToBuild[ i ];
+                let highResPath = highResPaths[ i ];
 
                 await this.readHeight(
                     highResPath,
                     [],
                     splinesToBuild.filter( ( s, index ) => index > i ),
                     false,
-                    splinesToBuild[ i ].HeightData
+                    spline.HeightData
                 );
             }
         }
@@ -271,6 +285,17 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
         }
 
         return data;
+    }
+
+    protected pathFromSpline( spline: BuildSplinePoints, settings: PathSettings ) {
+        let path: ( string | [ number, number ] )[] = [];
+
+        if( spline.Segments.length > 0 )    
+            path.push( 'M', [ spline.Segments[ 0 ].LocationStart[ 0 ], spline.Segments[ 0 ].LocationStart[ 1 ] ] );
+
+        spline.Segments.forEach( ( s ) => path.push( 'L', [ s.LocationEnd[ 0 ], s.LocationEnd[ 1 ] ] ) );
+
+        return new Path( path, settings );
     }
 
     protected splineFromPath( type: SplineType, path: Path, heightData: HeightData[] ): BuildSplinePoints {

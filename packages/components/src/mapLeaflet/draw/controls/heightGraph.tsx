@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { SplineType, BuildSplinePoints } from '@rrox/types';
+import { SplineType, BuildSplinePoints, BuildSplineSegment } from '@rrox/types';
 import * as d3 from 'd3';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { MapContext } from '../..';
@@ -58,7 +58,7 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
             .domain( [ 0, distance ] )
             .range( [ 0, width ] );
         const y = d3.scaleLinear()
-            .domain( [ d3.min( heightData, ( d ) => Math.min( ...d.heights.map( ( h ) => h.height ) ) ) - 1000, d3.max( heightData, ( d ) => Math.max( ...d.heights.map( ( h ) => h.height ) ) ) + 1000 ] )
+            .domain( [ d3.min( heightData, ( d ) => Math.min( ...d.heights.map( ( h ) => h.height ) ) ) - 2000, d3.max( heightData, ( d ) => Math.max( ...d.heights.map( ( h ) => h.height ) ) ) + 2000 ] )
             .range(  [ height, 0 ] );
 
         // Create Selector scales
@@ -107,16 +107,32 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
             .y0( height2 )
             .y1( ( data ) => y2( data.height ) );
 
-        let line: { distance: number, point: [ number, number, number ] }[] = [];
-        if( Segments.length > 0 )
-            line.push( { distance: 0, point: Segments[ 0 ].LocationStart } );
-        for( let segment of Segments )
-            line.push( { distance: segment.PathDistance, point: segment.LocationEnd } );
+        let line: { distance: number, height: number, points: [ number, number, number ][] }[] = [];
+        for( let i = 0; i < Segments.length; i++ ) {
+            let segment = Segments[ i ];
+            let point: ( typeof line )[ number ] = {
+                distance: 0,
+                height: segment.LocationStart[ 2 ],
+                points: [ segment.LocationStart ]
+            };
+
+            if( i > 0 ) {
+                point.distance = Segments[ i - 1 ].PathDistance;
+                point.points.push( Segments[ i - 1 ].LocationEnd );
+            }
+
+            line.push( point );
+        }
+        
+        if( Segments.length > 0 ) {
+            let lastSegment = Segments[ Segments.length - 1 ];
+            line.push( { distance: lastSegment.PathDistance, height: lastSegment.LocationEnd[ 2 ], points: [ lastSegment.LocationEnd ] } );
+        }
 
         const currentSplineArea = d3.area<( typeof line )[ number ]>()
             .x( ( d ) => x( d.distance ) )
-            .y0( ( d ) => y( d.point[ 2 ] - SplineDefinitions[ Type ].height ) )
-            .y1( ( d ) => y( d.point[ 2 ] ) );
+            .y0( ( d ) => y( d.height - SplineDefinitions[ Type ].height ) )
+            .y1( ( d ) => y( d.height ) );
 
         focus.append( 'path' )
             .datum( line )
@@ -159,11 +175,11 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
                 let s = ( e.selection || x2.range() ) as [ number, number ];
                 x.domain( s.map( x2.invert, x2 ) );
                 focus.select(".terrain").attr("d", terrainArea);
-                focus.select(".spline").attr("d", splineArea);
+                focus.selectAll(".spline").attr("d", splineArea);
                 focus.select(".current-spline").attr("d", currentSplineArea);
                 clickable?.selectAll(".points")
                     .attr( 'cx', ( d: ( typeof line )[ number ] ) => x( d.distance ) )
-                    .attr( 'cy', ( d: ( typeof line )[ number ] ) => y( d.point[ 2 ] ) );
+                    .attr( 'cy', ( d: ( typeof line )[ number ] ) => y( d.height ) );
                 blocked = true;
                 svg.select( ".zoom" ).call( zoom.transform as any, d3.zoomIdentity
                     .scale( width / ( s[ 1 ] - s[ 0 ] ) )
@@ -181,11 +197,11 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
                 let t = e.transform;
                 x.domain( t.rescaleX( x2 ).domain() );
                 focus.select(".terrain").attr("d", terrainArea);
-                focus.select(".spline").attr("d", splineArea);
+                focus.selectAll(".spline").attr("d", splineArea);
                 focus.select(".current-spline").attr("d", currentSplineArea);
                 clickable?.selectAll(".points")
                     .attr( 'cx', ( d: ( typeof line )[ number ] ) => x( d.distance ) )
-                    .attr( 'cy', ( d: ( typeof line )[ number ] ) => y( d.point[ 2 ] ) );
+                    .attr( 'cy', ( d: ( typeof line )[ number ] ) => y( d.height ) );
                 blocked = true;
                 svg.select( '.brush' ).call( brush.move as any, x.range().map( t.invertX, t ) );
                 blocked = false
@@ -249,16 +265,23 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
             .attr( 'class', 'points' )
             .attr( 'r', 5 )
             .attr( 'cx', ( d ) => x( d.distance ) )
-            .attr( 'cy', ( d ) => y( d.point[ 2 ] ) )
+            .attr( 'cy', ( d ) => y( d.height ) )
             .style( 'cursor', 'pointer' )
             .style( 'fill', 'steelblue' );
 
         clickable.selectAll( 'circle' )
             .call( d3.drag()
                 .on( 'drag', function( e: MouseEvent, d: ( typeof line )[ number ] ) {
-                    d.point[ 2 ] = y.invert( e.y );
-                    d3.select( this ).attr( 'cy', y( d.point[ 2 ] ) );
+                    const [ min, max ] = y.domain();
+                    d.height = Math.min( max, Math.max( min, y.invert( e.y ) ) );
+
+                    for( let point of d.points )
+                        point[ 2 ] = d.height;
+    
+                    d3.select( this ).attr( 'cy', y( d.height ) );
                     focus.select(".current-spline").attr("d", currentSplineArea);
+
+                    
                 } )
             );
 

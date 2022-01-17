@@ -29,6 +29,14 @@ export const Add = ControlHandler.extend( {
         path.toolbar?.off( 'remove', this._removeShape, this );
 	},
 
+	disable: function() {
+		let path: Path = this.path;
+		if( !path.path || path.markers.length < 2 )
+			path.disable();
+		else
+			this.completeShape();
+	},
+
 	completeShape: function() {
 		let map: L.Map = this.map;
 		let path: Path = this.path;

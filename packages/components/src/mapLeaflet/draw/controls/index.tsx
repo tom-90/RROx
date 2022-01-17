@@ -126,6 +126,8 @@ export function Draw( props: { snapLayers: L.LayerGroup[] } ) {
 
                 setHeightGraphData( 'loading' );
 
+                console.log( splines );
+
                 actions.buildSplines( splines, true ).then( ( data ) => {
                     if( !data ) {
                         message.error( 'Failed to generate heightmap' );

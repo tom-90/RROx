@@ -1,6 +1,10 @@
 import { Vector2D } from "./vector";
-import { SplineType } from "@rrox/types";
 import { Bezier } from "bezier-js";
+
+export interface PathSettings {
+    straightSegmentLength: number,
+    curvedSegmentLength  : number,
+}
 
 export class Path {
     public readonly points: Vector2D[];
@@ -10,7 +14,7 @@ export class Path {
 
     constructor(
         public readonly pathData: ( string | [ number, number ] )[],
-        public settings: { straightSegmentLength: number, curvedSegmentLength: number }
+        public settings: PathSettings
     ) {
         const { points, lengths, totalLength } = this.generate();
         this.points = points;

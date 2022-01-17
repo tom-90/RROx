@@ -28,6 +28,8 @@ export const Edit = ControlHandler.extend( {
         this.path.toolbar?.on( 'remove', this._removeShape, this );
         this.path.toolbar?.on( 'duplicate', this._duplicateShape, this );
 
+		this.map.on( 'layeradd', this._onNewLayer, this );
+
 		this.drawnLayers.eachLayer( ( layer: L.Layer ) => layer.on( 'click', this._onClick, this ) );
 	},
 
@@ -38,8 +40,19 @@ export const Edit = ControlHandler.extend( {
         this.path.toolbar?.off( 'submit', this._completeShape, this );
         this.path.toolbar?.off( 'remove', this._removeShape, this );
         this.path.toolbar?.off( 'duplicate', this._duplicateShape, this );
+		
+		this.map.off( 'layeradd', this._onNewLayer, this );
 
 		this.drawnLayers.eachLayer( ( layer: L.Layer ) => layer.off( 'click', this._onClick, this ) );
+	},
+
+	_onNewLayer: function( e: L.LayerEvent ) {
+		let drawnLayers: L.FeatureGroup = this.drawnLayers;
+
+		if( !drawnLayers.hasLayer( e.layer ) )
+			return;
+		
+		e.layer.on( 'click', this._onClick, this );
 	},
 
 	_onClick: function ( e: L.LeafletMouseEvent ) {
