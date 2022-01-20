@@ -6,7 +6,6 @@ const store = new Store<config.Schema>( config );
 
 const validChannels = [
     'build-spline',
-    'build-progress',
     'map-data',
     'path-data',
     'map-update',

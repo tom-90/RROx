@@ -1,10 +1,11 @@
 import React, { useRef, useState, useContext, useEffect, useCallback } from 'react';
-import L from 'leaflet';
+import L, { map } from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet-draw/dist/leaflet.draw.css';
-import 'leaflet-geometryutil';
+import './geometry';
+import './leaflet-layerindex';
 import './leaflet-snap';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { createElementHook, createLeafComponent, useLeafletContext, ElementHook } from '@react-leaflet/core';
 import { ModeControls } from './mode';
 import { MapContext } from '../..';
@@ -13,6 +14,8 @@ import { BuildSpline, BuildSplineMode, BuildSplinePoints } from '@rrox/types';
 import { ControlsClass } from './controls';
 import { HeightGraph } from './heightGraph';
 import { usePrompt } from '../../../hooks/usePrompt';
+
+L.LayerGroup.include( L.LayerIndexMixin );
 
 const useControlsElement = createElementHook( ( props, context ) => ( { instance: new ControlsClass( props ), context } ) );
 const useDrawnItemsElement = createElementHook( ( props, context ) => ( { instance: new L.FeatureGroup( [], props ), context } ) );
@@ -85,9 +88,11 @@ export const DrawControls = createLeafComponent( ( props: DrawControlsProps ): R
 } );
 
 export function Draw( props: { snapLayers: L.LayerGroup[] } ) {
+    const map = useMap();
     const ref = useRef<L.FeatureGroup>();
     const [ heightGraphData, setHeightGraphData ] = useState<'loading' | BuildSplinePoints>();
     const { actions, utils } = useContext( MapContext );
+    const isSaving = useRef<boolean>( false );
 
     usePrompt( {
         title: 'Do you want to leave the page?',
@@ -118,15 +123,61 @@ export function Draw( props: { snapLayers: L.LayerGroup[] } ) {
         return splines;
     }, [ utils ] );
 
+    useEffect( () => {
+        const indexed: Map<L.LayerGroup,L.FeatureGroup[]> = new Map();
+
+        for( let snapLayer of props.snapLayers )
+            indexed.set( snapLayer, [] );
+
+        const shouldIndex  = ( layer: any ): layer is L.FeatureGroup => typeof layer?.[ 'getLatLng' ] === 'function' || typeof layer?.[ 'getBounds' ] === 'function';
+        const getSnapLayer = ( layer: L.FeatureGroup ) => props.snapLayers.find( ( l ) => l.hasLayer( layer ) );
+
+        const onLayerAdd = ( e: { layer: L.Layer } ) => {
+            if( !shouldIndex( e.layer ) )
+                return;
+            let snapLayer = getSnapLayer( e.layer );
+
+            if( !snapLayer )
+                return;
+
+            snapLayer.indexLayer( e.layer );
+            indexed.get( snapLayer ).push( e.layer );
+        }
+
+        const onLayerRemove = ( e: { layer: L.Layer } ) => {
+            if( !shouldIndex( e.layer ) )
+                return;
+            let snapLayer = getSnapLayer( e.layer );
+
+            if( !snapLayer )
+                return;
+
+            snapLayer.unindexLayer( e.layer );
+            const layers = indexed.get( snapLayer );
+            layers.splice( layers.indexOf( e.layer ), 1 );
+        }
+        
+        map.eachLayer( ( layer ) => onLayerAdd( { layer } ) );
+
+        map.on( 'layeradd', onLayerAdd );
+        map.on( 'layerremove', onLayerRemove );
+
+        return () => {
+            for( let snapLayer of props.snapLayers )
+                indexed.get( snapLayer ).forEach( ( l ) => snapLayer.unindexLayer( l ) );
+        }
+    }, [ props.snapLayers ] );
+
     return <>
         <DrawControls
             snapLayers={props.snapLayers}
             onShowHeightGraph={( index ) => {
                 let splines = generateSplines();
+                
+                if( splines.length === 0 )
+                    return;
 
                 setHeightGraphData( 'loading' );
-
-                console.log( splines );
 
                 actions.buildSplines( splines, true ).then( ( data ) => {
                     if( !data ) {
@@ -149,21 +200,47 @@ export function Draw( props: { snapLayers: L.LayerGroup[] } ) {
             }}
             onSave={() => {
                 let splines = generateSplines();
-
-                message.loading( 'Building...' );
-                actions.buildSplines( splines, false ).then( ( data ) => {
-                    if( !data ) {
-                        message.error( 'Building failed.' );
-                        return;
-                    }
-
-                    let layers = ref.current.getLayers() as L.Curve[];
-                    layers.forEach( ( l ) => ref.current.removeLayer( l ) );
+                
+                if( splines.length === 0 || isSaving.current === true )
+                    return;
                     
-                    message.success( 'Building finished.' );
-                } ).catch( ( e ) => {
-                    console.log( 'Error while building splines', e );
-                    message.error( 'Failed to build splines' );
+                let instance = Modal.confirm( {
+                    title: 'Are you sure?',
+                    width: 500,
+                    maskClosable: true,
+                    content: <p>
+                        Are you sure you want to build this? Building will freeze the game temporarily.
+                        <br/>
+                        <i>Segments that have been built cannot be destroyed from RROx.</i>
+                    </p>,
+                    onOk: () => {
+                        if( isSaving.current === true )
+                            return;
+                        isSaving.current = true;
+
+                        instance.destroy();
+                        message.loading( { content: 'Building...', key: 'building-message' }, 30 );
+                        actions.buildSplines( splines, false ).then( ( data ) => {
+                            if( !data ) {
+                                message.error( 'Building failed.' );
+                                return;
+                            }
+
+                            let layers = ref.current.getLayers() as L.Curve[];
+                            layers.forEach( ( l ) => ref.current.removeLayer( l ) );
+                            
+                            message.destroy( 'building-message' );
+                            message.success( 'Building finished.' );
+                            
+                            isSaving.current = false;
+                        } ).catch( ( e ) => {
+                            console.log( 'Error while building splines', e );
+                            message.destroy( 'building-message' );
+                            message.error( 'Failed to build splines' );
+                            
+                            isSaving.current = false;
+                        } );
+                    },
                 } );
             }}
             ref={ref}

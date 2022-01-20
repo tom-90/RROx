@@ -61,8 +61,8 @@ L.Snap.processGuide = function (latlng, marker, guide, snaplist, buffer) {
     // Search snaplist around mouse
     else if (typeof guide.searchBuffer === 'function') {
         var nearlayers = guide.searchBuffer(latlng, buffer);
-        snaplist = snaplist.concat(nearlayers.filter(function(layer) {
-            return L.Snap.isDifferentLayer(layer);
+        snaplist.push(...nearlayers.filter(function(layer) {
+            return L.Snap.isDifferentLayer(layer, guide);
         }));
     }
     
@@ -280,8 +280,8 @@ L.Handler.MarkerSnap = L.Handler.extend({
         // Convert snap distance in pixels into buffer in degres, for searching around mouse
         // It changes at each zoom change.
         function computeBuffer() {
-            this._buffer = map.layerPointToLatLng(new L.Point(0,0)).lat -
-                           map.layerPointToLatLng(new L.Point(this.options.snapDistance, 0)).lat;
+            this._buffer = map.layerPointToLatLng(new L.Point(0,0)).lng -
+                           map.layerPointToLatLng(new L.Point(this.options.snapDistance, 0)).lng;
         }
         map.on('zoomend', computeBuffer, this);
         map.whenReady(computeBuffer, this);

@@ -166,9 +166,6 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
 
     protected async build( splines: BuildSplinePoints[] ) {
         await this.acquire();
-
-        let totalPoints = splines.reduce( ( total, s ) => total += s.Segments.length > 0 ? s.Segments.length + 1 : 0, 0 );
-        let pointCount = 0;
         
         let lastSplineAddr = await this.getLastSpline();
 
@@ -185,9 +182,6 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
                 points.push( segment.LocationEnd );
 
             for( let from = 0; from < points.length - 1; from += settings.maxSegmentsCount - 2 ) {
-                pointCount += settings.maxSegmentsCount - 2;
-                this.app.publicBroadcast( 'build-progress', pointCount, totalPoints );
-
                 let to = Math.min( points.length, from + settings.maxSegmentsCount + 1 );
 
                 let length = to - from;
@@ -234,8 +228,6 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
                 }
             }
         }
-    
-        this.app.publicBroadcast( 'build-progress', 0, 0 );
 
         this.release();
     }

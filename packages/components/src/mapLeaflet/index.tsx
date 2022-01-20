@@ -33,7 +33,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
     const [ following, setFollowing ] = useState<{ array: keyof World, id: number, apply: ( data: any, map: L.Map ) => void } | null>( null );
     const [ map, setMap ] = useState<L.Map>();
 
-    const [ drawSnapLayers, setDrawSnapLayers ] = useState<L.LayerGroup[]>( null );
+    const [ drawSnapLayers, setDrawSnapLayers ] = useState<L.LayerGroup[]>( [] );
     const groundworkLayer = useRef<L.LayerGroup>();
     const trackLayer = useRef<L.LayerGroup>();
     const turntableLayer = useRef<L.LayerGroup>();
@@ -157,9 +157,12 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
     }, [] );
 
     useEffect( () => {
-        if( groundworkLayer.current == null || trackLayer.current == null || turntableLayer.current == null || switchLayer.current == null )
-            return setDrawSnapLayers( null );
-        setDrawSnapLayers( [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
+        if( drawSnapLayers.length === 4 && groundworkLayer.current === drawSnapLayers[ 0 ] && trackLayer.current === drawSnapLayers[ 1 ] && turntableLayer.current === drawSnapLayers[ 2 ] && switchLayer.current === drawSnapLayers[ 3 ] )
+            return;
+        else if( groundworkLayer.current == null || trackLayer.current == null || turntableLayer.current == null || switchLayer.current == null )
+            return drawSnapLayers.length > 0 && setDrawSnapLayers( [] );
+        else
+            setDrawSnapLayers( [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
     }, [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
 
     return <MapContext.Provider
@@ -217,7 +220,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 }
                     )}
                 />
-                {drawSnapLayers && <Draw snapLayers={drawSnapLayers} />}
+                {mode === MapMode.NORMAL && drawSnapLayers.length > 0 && <Draw snapLayers={drawSnapLayers} />}
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>
                         <Line
@@ -236,7 +239,10 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     </Pane>
                     <Pane name='groundwork' style={{ zIndex: 10 }}>
                         <LayersControl.Overlay name="Groundwork" checked>
-                            <LayerGroup ref={groundworkLayer}>
+                            <LayerGroup
+                                ref={groundworkLayer}
+                                eventHandlers={{ add: () => setDrawSnapLayers( [] ) }}
+                            >
                                 <Splines
                                     data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_BANK )}
                                     type={SplineType.CONSTANT_BANK}

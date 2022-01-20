@@ -6,7 +6,7 @@ export function useScalingWeight( weight: number ) {
     const ref = useRef();
 
     const map = useMapEvents( {
-        zoomend: () => { ( ref.current as Path ).setStyle( { weight: calculateWeight( weight ) } ); }
+        zoomend: () => { ( ref.current as Path )?.setStyle( { weight: calculateWeight( weight ) } ); }
     } );
 
     const calculateWeight = ( weight: number ) => {
