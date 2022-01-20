@@ -148,6 +148,11 @@ declare module 'leaflet' {
         pointData?: BuildSplinePoints;
         splineType?: SplineType;
     }
+
+    interface LayerGroup {
+        indexLayer( layer: L.FeatureGroup ): void;
+        unindexLayer( layer: L.FeatureGroup ): void;
+    }
 }
 
 export type ClassConstructor<S, T> = S & { new( ...args: any[] ): T }; 

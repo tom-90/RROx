@@ -17,20 +17,23 @@ const DrawToolbarClass: typeof L.DrawToolbar = L.DrawToolbar.extend( {
             utils      : this.options.utils,
         };
 
+        let add = new Add( map, pathOptions );
+        let edit = new Edit( map, pathOptions, this.options.drawnItems )
+
         return [
             {
 				enabled: true,
-                handler: new Add( map, pathOptions ),
+                handler: add,
 				title  : 'Add',
 			},
             {
 				enabled: true,
-                handler: new Edit( map, pathOptions, this.options.drawnItems ),
+                handler: edit,
 				title  : 'Edit',
 			},
             {
 				enabled: true,
-                handler: new Save( map, pathOptions ),
+                handler: new Save( map, add, edit ),
 				title  : 'Save',
 			}
 		];
