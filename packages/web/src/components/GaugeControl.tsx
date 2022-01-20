@@ -1,15 +1,15 @@
 import React from 'react';
 
 import '@rrox/assets/css/controls/GuageControl.scss';
-import GuageBorder from '@rrox/assets/images/controls/border.png';
-import BigNeedle from '@rrox/assets/images/controls/big_needle.png';
-import MaxNeedle from '@rrox/assets/images/controls/max_needle.png';
+import GuageBorder from '@rrox/assets/images/controls/guage/border.png';
+import BigNeedle from '@rrox/assets/images/controls/guage/big_needle.png';
+import MaxNeedle from '@rrox/assets/images/controls/guage/max_needle.png';
 
-import BoilerPressure from '@rrox/assets/images/controls/boiler_pressure.png';
-import BrakePressure from '@rrox/assets/images/controls/brake_pressure.png';
-import FireTemp from '@rrox/assets/images/controls/fire_temprature.png';
-import WaterTemp from '@rrox/assets/images/controls/water_temprature.png';
-import CurrentSpeed from '@rrox/assets/images/controls/current_speed.png';
+import BoilerPressure from '@rrox/assets/images/controls/guage/boiler_pressure.png';
+import BrakePressure from '@rrox/assets/images/controls/guage/brake_pressure.png';
+import FireTemp from '@rrox/assets/images/controls/guage/fire_temprature.png';
+import WaterTemp from '@rrox/assets/images/controls/guage/water_temprature.png';
+import CurrentSpeed from '@rrox/assets/images/controls/guage/current_speed.png';
 
 const TypeDefinitions : any = {
     [ 0 ]: { Background: BoilerPressure, MaxVal: 160 },
@@ -19,11 +19,20 @@ const TypeDefinitions : any = {
     [ 4 ]: { Background: CurrentSpeed, MaxVal: 32},
 };
 
-export function Gauge( { type, value, max }: {
+export function Gauge( { type, value, max, size}: {
     type: number,
     value: number
-    max?: number
+    max?: number,
+    size?: number
 } ) {
+
+    let mainCss = {};
+    if (size != undefined){
+        mainCss = {
+            width: size+'px',
+            height: size+'px'
+        };
+    }
 
     let TypeDef = TypeDefinitions[type];
     let BigNeedleRotation = (290 / TypeDef.MaxVal) * value;
@@ -37,7 +46,7 @@ export function Gauge( { type, value, max }: {
     };
 
     return (
-        <div className="guage-control">
+        <div className="guage-control" style={mainCss}>
             <img src={GuageBorder} alt="GuageBorder" className="GuageBorder"/>
             <img src={BigNeedle} alt="BigNeedle" style={BigNeedleCss}/>
             <img src={MaxNeedle} alt="MaxNeedle" style={MaxNeedleCss}/>
