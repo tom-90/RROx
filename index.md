@@ -14,6 +14,8 @@ All of the code is open-source, such that it can be verified by others to make s
 
 Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows the basic usage of RROx. In addition, the Info tab gives more a more detailed explanation of how to use it.
 
+Instructions for build mode can be found [here](./build-mode.md).
+
 ## Frequently Asked Questions
 
 - **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the corresponding error code [here](./error-codes.md).
@@ -33,6 +35,11 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 - Teleporting does not work for clients in multiplayer.
 
 ## Changelog
+
+### v1.8.0 - 20-01-2022
+
+- ``Added`` Experimental build mode.
+- ``Added`` Rolling stock list (Thanks to [Faab007NL](https://github.com/faab007)).
 
 ### v1.7.1 - 06-01-2022
 
