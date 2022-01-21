@@ -11,16 +11,24 @@ import FireTemp from '@rrox/assets/images/controls/guage/fire_temprature.png';
 import WaterTemp from '@rrox/assets/images/controls/guage/water_temprature.png';
 import CurrentSpeed from '@rrox/assets/images/controls/guage/current_speed.png';
 
+export enum GuageType {
+    BOILER_PRESSUERE = 0,
+    BRAKE_PRESSUERE = 1,
+    FIRE_TEMPRATURE = 2,
+    WATER_TEMPRATURE = 3,
+    SPEED = 4
+}
+
 const TypeDefinitions : any = {
-    [ 0 ]: { Background: BoilerPressure, MaxVal: 160 },
-    [ 1 ]: { Background: BrakePressure, MaxVal: 160 },
-    [ 2 ]: { Background: FireTemp, MaxVal: 640 },
-    [ 3 ]: { Background: WaterTemp, MaxVal: 160 },
-    [ 4 ]: { Background: CurrentSpeed, MaxVal: 32},
+    [ GuageType.BOILER_PRESSUERE ]: { Background: BoilerPressure, MaxVal: 160 },
+    [ GuageType.BRAKE_PRESSUERE ]: { Background: BrakePressure, MaxVal: 160 },
+    [ GuageType.FIRE_TEMPRATURE ]: { Background: FireTemp, MaxVal: 640 },
+    [ GuageType.WATER_TEMPRATURE ]: { Background: WaterTemp, MaxVal: 160 },
+    [ GuageType.SPEED ]: { Background: CurrentSpeed, MaxVal: 32},
 };
 
 export function Gauge( { type, value, max, size}: {
-    type: number,
+    type: GuageType,
     value: number
     max?: number,
     size?: number
