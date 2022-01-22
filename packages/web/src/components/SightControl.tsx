@@ -4,8 +4,8 @@ import '@rrox/assets/css/controls/WaterSight.scss';
 import SightBorder from '@rrox/assets/images/controls/sight/border.png';
 import WaterBackground from '@rrox/assets/images/controls/sight/water_texture.jpg';
 
-export function Sight( { value, size }: {
-    value: number,
+export function Sight( { percentage, size }: {
+    percentage: number,
     size?: number
 }){
 
@@ -18,7 +18,7 @@ export function Sight( { value, size }: {
     }
 
     let fillLevelCss = {
-        height: `${value}%`,
+        height: `${percentage}%`,
         backgroundImage: `url("${WaterBackground}"), linear-gradient(rgba(0, 146, 203, 0.8), rgba(0, 146, 203, 0.8))`
     };
 
