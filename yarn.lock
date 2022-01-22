@@ -4410,6 +4410,11 @@ klona@^2.0.4:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
 
+konva@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/konva/-/konva-8.3.2.tgz#3823a6ea0eb3605142c637f327c4cc29fd188c02"
+  integrity sha512-vWi51qFTFkEIp+HxMek1eH1fA1zFo0DPD3uqUez+v2gy/IfZF2eLu9DcEj7Exk532hxfHJi/2oZ0GQYHlhg/dQ==
+
 latest-version@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/latest-version/-/latest-version-5.1.0.tgz#119dfe908fe38d15dfa43ecd13fa12ec8832face"
@@ -6118,6 +6123,14 @@ react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
 
+react-konva@^17.0.2-5:
+  version "17.0.2-5"
+  resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-17.0.2-5.tgz#e70b0acf323402de0a540f27b300fbe7ed151849"
+  integrity sha512-IyzdfqRDK8r1ulp/jbLPX18AuO+n5yNtL0+4T0QEUsgArRqIl/VRCG1imA5mYJBk0cBNC5+fWDHN+HWEW62ZEQ==
+  dependencies:
+    react-reconciler "~0.26.2"
+    scheduler "^0.20.2"
+
 react-leaflet@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-3.2.2.tgz#3d779662c32a1d8729e73d24e8ad96ee5b38beef"
@@ -6127,6 +6140,15 @@ react-leaflet@^3.2.2:
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-reconciler@~0.26.2:
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.26.2.tgz#bbad0e2d1309423f76cf3c3309ac6c96e05e9d91"
+  integrity sha512-nK6kgY28HwrMNwDnMui3dvm3rCFjZrcGiuwLc5COUipBK5hWHLOxMJhSnSomirqWwjPBJKV1QcbkI0VJr7Gl1Q==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    scheduler "^0.20.2"
 
 react-router-dom@^6.0.2:
   version "6.0.2"
