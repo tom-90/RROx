@@ -5,8 +5,9 @@ import { Slider } from "antd";
 import '@rrox/assets/css/controls/SliderControl.scss';
 import LeverBg from '@rrox/assets/images/controls/lever/background.png';
 
-export function CustomSlider( { callback, disabled, value, min, max, step, text }: {
-    callback : any,
+export function CustomSlider( { onChange, onAfterChange, disabled, value, min, max, step, text }: {
+    onChange? : any,
+    onAfterChange? : any,
     disabled?: boolean,
     value?: number,
     min?: number,
@@ -23,6 +24,17 @@ export function CustomSlider( { callback, disabled, value, min, max, step, text 
         return (<span/>);
     };
 
+    const localOnChange = (value : number) => {
+        if (onChange != undefined){
+            onChange(value);
+        }
+    }
+    const localOnAfterChange = (value : number) => {
+        if (onAfterChange != undefined){
+            onAfterChange(value);
+        }
+    }
+
     return (
         <div className="slider-control">
 
@@ -37,8 +49,11 @@ export function CustomSlider( { callback, disabled, value, min, max, step, text 
                 tipFormatter={( value ) => value + '%'}
                 tooltipPlacement={'left'}
                 disabled={disabled}
-                onChange={( value: number ) => setSliderVal(value) }
-                onAfterChange={( value: number ) => callback(value) }
+                onChange={( value: number ) => {
+                    setSliderVal(value);
+                    localOnChange(value);
+                } }
+                onAfterChange={( value: number ) => localOnAfterChange(value) }
             />
 
         </div>
