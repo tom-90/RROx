@@ -46,9 +46,9 @@ export function FrameControls( {
     const selectedData = frames.find( ( f ) => f.ID === selectedFrame );
 
     const {
-        Regulator, Reverser, Brake, Whistle, Generator, Compressor,
-        BoilerPressure, WaterTemperature, FireTemperature, FuelAmount,
-        AirPressure, WaterLevel, Speed, MaxSpeed, Type, SyncControls
+        Regulator, Reverser, Brake, Whistle, Generator, Compressor, MaxBoilerPressure, MaxWaterLevel,
+        BoilerPressure, WaterTemperature, FireTemperature, FuelAmount, MaxFuelAmount,
+        AirPressure, WaterLevel, Speed, MaxSpeed, Type, SyncControls, Tender
     } = selectedData || {};
 
     const definition = FrameDefinitions[ Type ];
@@ -257,8 +257,8 @@ export function FrameControls( {
                 </thead>
                 <tbody>
                     <tr>
-                        <td style={{ textAlign: 'center' }}>{BoilerPressure?.toFixed( 0 )}</td>
-                        <td style={{ textAlign: 'center' }}>{FuelAmount?.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{BoilerPressure?.toFixed( 0 )} / {MaxBoilerPressure?.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{FuelAmount?.toFixed( 0 )} / {MaxFuelAmount?.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{FireTemperature?.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{WaterTemperature?.toFixed( 0 )}</td>
                     </tr>
@@ -276,13 +276,13 @@ export function FrameControls( {
                 <tbody>
                     <tr>
                         <td style={{ textAlign: 'center' }}>{AirPressure?.toFixed( 0 )}</td>
-                        <td style={{ textAlign: 'center' }}>{WaterLevel?.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{WaterLevel?.toFixed( 0 )} / {MaxWaterLevel?.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{( Speed * 2.236936 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( MaxSpeed * 2.236936 )?.toFixed( 0 )}</td>
                     </tr>
                 </tbody>
             </table>}
-            {( !isEngine || compact ) && <table style={{ width: '100%' }}>
+            {( ( !isEngine && !definition.tender ) || compact ) && <table style={{ width: '100%' }}>
                 <thead>
                     <tr>
                         <th style={{ width: '50%' }}>Current Speed</th>
@@ -293,6 +293,24 @@ export function FrameControls( {
                     <tr>
                         <td style={{ textAlign: 'center' }}>{( Speed * 2.236936 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( MaxSpeed * 2.236936 )?.toFixed( 0 )}</td>
+                    </tr>
+                </tbody>
+            </table>}
+            {( definition.tender && !compact ) && <table style={{ width: '100%' }}>
+                <thead>
+                    <tr>
+                        <th style={{ width: '25%' }}>Current Speed</th>
+                        <th style={{ width: '25%' }}>Max Speed</th>
+                        <th style={{ width: '25%' }}>Water Level</th>
+                        <th style={{ width: '25%' }}>Firewood Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style={{ textAlign: 'center' }}>{( Speed * 2.236936 )?.toFixed( 1 )}</td>
+                        <td style={{ textAlign: 'center' }}>{( MaxSpeed * 2.236936 )?.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{Tender?.WaterLevel?.toFixed( 0 )} / {Tender?.MaxWaterLevel?.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{Tender?.FuelAmount?.toFixed( 0 )} / {Tender?.MaxFuelAmount?.toFixed( 0 )}</td>
                     </tr>
                 </tbody>
             </table>}

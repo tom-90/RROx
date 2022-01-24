@@ -35,10 +35,6 @@ export function ControlPage() {
 
     const frameId = parseInt( id );
 
-    const setEngineControls = useCallback( ( type: EngineControls, value: number ) => {
-        actions.setEngineControls( frameId, type, value );
-    }, [ actions.setEngineControls, frameId ] );
-
     let data = mapData?.Frames.filter( frame => frame.ID === frameId ).filter( frame => FrameDefinitions[ frame.Type ].engine )[ 0 ];
 
     if ( !mapDataLoaded || !data ) 
@@ -58,7 +54,8 @@ export function ControlPage() {
                 <FrameControls
                     data={data}
                     frames={mapData?.Frames}
-                    setEngineControls={setEngineControls}
+                    setEngineControls={actions.setEngineControls}
+                    setControlsSynced={actions.setControlsSynced}
                 />
             </div>
         </MapPageLayout>

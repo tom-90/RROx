@@ -67,6 +67,16 @@ body {
 	overflow-y: hidden;
 
 	background: none;
+	
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+
+	.allow-select{
+		user-select: text;
+		-moz-user-select: text;
+		-webkit-user-select: text;
+	}
 }
 
 @media only screen and (max-width: 800px) {

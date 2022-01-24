@@ -104,7 +104,8 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
     const actions = useMemo<MapActions>( () => ( {
         teleport             : ( x, y, z           ) => socket.send( 'teleport', x, y, z, settings[ 'multiplayer.client.playerName' ] ),
         changeSwitch         : ( id                ) => socket.send( 'change-switch', id ) ,
-        setEngineControls    : ( id, type, value   ) =>  socket.send( 'set-engine-controls', id, type, value ),
+        setEngineControls    : ( id, type, value   ) => socket.send( 'set-engine-controls', id, type, value ),
+        setControlsSynced    : ( id, enabled       ) => socket.send( 'set-sync-controls', id, enabled ),
         getColor             : ( key               ) => ( settings as any )[ `colors.${key}` ],
         getSelectedPlayerName: (                   ) => settings[ 'multiplayer.client.playerName' ],
         buildSplines         : ( splines, simulate ) => socket.invoke( 'build-spline', splines, simulate ),

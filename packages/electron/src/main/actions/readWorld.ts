@@ -154,21 +154,30 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
             ],
-            Regulator       : await pipe.readFloat(),
-            Reverser        : await pipe.readFloat(),
-            Brake           : await pipe.readFloat(),
-            Whistle         : await pipe.readFloat(),
-            Generator       : await pipe.readFloat(),
-            Compressor      : await pipe.readFloat(),
-            BoilerPressure  : await pipe.readFloat(),
-            WaterTemperature: await pipe.readFloat(),
-            WaterLevel      : await pipe.readFloat(),
-            AirPressure     : await pipe.readFloat(),
-            FireTemperature : await pipe.readFloat(),
-            FuelAmount      : await pipe.readFloat(),
-            Speed           : await pipe.readFloat(),
-            MaxSpeed        : await pipe.readInt(),
-            Freight         : {
+            Regulator        : await pipe.readFloat(),
+            Reverser         : await pipe.readFloat(),
+            Brake            : await pipe.readFloat(),
+            Whistle          : await pipe.readFloat(),
+            Generator        : await pipe.readFloat(),
+            Compressor       : await pipe.readFloat(),
+            BoilerPressure   : await pipe.readFloat(),
+            MaxBoilerPressure: await pipe.readFloat(),
+            WaterTemperature : await pipe.readFloat(),
+            WaterLevel       : await pipe.readFloat(),
+            MaxWaterLevel    : await pipe.readFloat(),
+            AirPressure      : await pipe.readFloat(),
+            FireTemperature  : await pipe.readFloat(),
+            FuelAmount       : await pipe.readFloat(),
+            MaxFuelAmount    : await pipe.readFloat(),
+            Speed            : await pipe.readFloat(),
+            MaxSpeed         : await pipe.readInt(),
+            Tender           : {
+                FuelAmount   : await pipe.readFloat(),
+                MaxFuelAmount: await pipe.readFloat(),
+                WaterLevel   : await pipe.readFloat(),
+                MaxWaterLevel: await pipe.readFloat(),
+            },
+            Freight          : {
                 Amount: await pipe.readInt(),
                 Max   : await pipe.readInt(),
                 Type  : await pipe.readString( await pipe.readInt() ),
@@ -184,6 +193,8 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
 
         if( frame.Freight.Max === 0 )
             frame.Freight = null;
+        if( frame.Tender.MaxFuelAmount === 0 )
+            frame.Tender = null;
 
         let frontCouplerAddr   = await pipe.readInt64();
         let frontCoupledToAddr = await pipe.readInt64();

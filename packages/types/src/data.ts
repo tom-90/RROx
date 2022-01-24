@@ -17,14 +17,23 @@ export interface Frame {
     Generator?: number;
     Compressor?: number;
     BoilerPressure?: number;
+    MaxBoilerPressure?: number;
     WaterTemperature?: number;
     WaterLevel?: number;
+    MaxWaterLevel?: number;
     AirPressure?: number;
     FireTemperature?: number;
     FuelAmount?: number;
+    MaxFuelAmount?: number;
     Speed?: number;
     MaxSpeed?: number;
     Freight?: Storage;
+    Tender?: {
+        FuelAmount: number;
+        MaxFuelAmount: number;
+        WaterLevel: number;
+        MaxWaterLevel: number;
+    };
     Couplings: {
         RearID?: number;
         FrontID?: number;
