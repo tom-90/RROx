@@ -20,7 +20,7 @@ const getStrokeColor = ( brake: number ) => {
         return 'black';
 };
 
-export const Frame = React.memo( function Frame( { data }: { data: FrameData } ) {
+export const Frame = React.memo( function Frame( { data, frames }: { data: FrameData, frames: FrameData[] } ) {
     const { utils, mode, follow, actions, controlEnabled } = useContext( MapContext );
     const map = useMap();
 
@@ -83,11 +83,11 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
                 <FrameControlsPopup
                     title={`${Name.replace("<br>", "").toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
                     data={data}
+                    frames={frames}
                     id={ID}
                     isVisible={controlsVisible}
                     className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
                     controlEnabled={controlEnabled}
-                    isEngine={true}
                     onClose={() => {
                         setControlsVisible( false );
                         setTooltipVisible( false );
@@ -136,10 +136,10 @@ export const Frame = React.memo( function Frame( { data }: { data: FrameData } )
         <FrameControlsPopup
             title={definition.name || 'Freight Car'}
             data={data}
+            frames={frames}
             id={ID}
             isVisible={controlsVisible}
             className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
-            isEngine={false}
             controlEnabled={controlEnabled}
             onClose={() => {
                 setControlsVisible( false );

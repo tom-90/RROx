@@ -25,6 +25,13 @@ export interface Frame {
     Speed?: number;
     MaxSpeed?: number;
     Freight?: Storage;
+    Couplings: {
+        RearID?: number;
+        FrontID?: number;
+        FrontCoupled: boolean;
+        RearCoupled: boolean;
+    };
+    SyncControls: boolean;
 }
 
 export interface Player {

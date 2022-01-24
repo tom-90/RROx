@@ -4,8 +4,8 @@ import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
-import { AttachTask, AutosaveTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AttachTask, AutosaveTask, ControlsSyncTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
+import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 import './types';
 import path from 'path';
 
@@ -80,6 +80,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         const tasks = [
             AttachTask,
             AutosaveTask,
+            ControlsSyncTask,
             ReadWorldTask,
             LoggerTask,
             OverlayTask
@@ -104,6 +105,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             SetEngineControlsIPCListener,
             SetMoneyAndXPIPCListener,
             SetSocketStateIPCHandler,
+            SetSyncControlsIPCListener,
             ShowInjectorIPCListener,
             UpdateConfigIPCListener,
             TeleportIPCListener,

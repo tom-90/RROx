@@ -13,6 +13,7 @@ export interface MapActions {
     teleport             : ( x: number, y: number, z: number ) => void;
     changeSwitch         : ( id: number ) => void;
     setEngineControls    : ( id: number, type: EngineControls, value: number ) => void;
+    setControlsSynced    : ( id: number, enabled: boolean ) => void;
     getColor             : ( key: string ) => string;
     getSelectedPlayerName: () => string;
     buildSplines         : ( splines: BuildSpline[], simulate: boolean ) => Promise<false | BuildSplinePoints[]>;

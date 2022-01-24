@@ -322,7 +322,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                     <Pane name='frames' style={{ zIndex: 80 }}>
                         <LayersControl.Overlay name="Locomotives and Carts" checked>
                             <LayerGroup>
-                                {data.Frames.map( ( s, i ) => <Frame data={s} key={i} /> )}
+                                {data.Frames.map( ( s, i ) => <Frame data={s} frames={data.Frames} key={i} /> )}
                             </LayerGroup>
                         </LayersControl.Overlay>
                     </Pane>

@@ -57,7 +57,7 @@ export function ControlPage() {
             <div className='controls-container'>
                 <FrameControls
                     data={data}
-                    isEngine
+                    frames={mapData?.Frames}
                     setEngineControls={setEngineControls}
                 />
             </div>

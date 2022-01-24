@@ -22,6 +22,19 @@ export class ReadWorldTask extends TimerTask {
         Sandhouses : [],
     };
 
+    private staticData: {
+        [ K in keyof World ]: ( Partial<World[ K ][ number ]> & { ID: number } )[]
+    } = {
+        Frames     : [],
+        Industries : [],
+        Players    : [],
+        Splines    : [],
+        Switches   : [],
+        Turntables : [],
+        WaterTowers: [],
+        Sandhouses : [],
+    };
+
     constructor( app: RROx ) {
         super( app );
 
@@ -129,6 +142,8 @@ export class ReadWorldTask extends TimerTask {
         if( result === false )
             throw new Error( 'Failed to read world.' );
 
+        this.populateStaticData( result );
+
         let changes = [
             ...this.detectChanges( 'Frames'    , this.world.Frames    , result.Frames     ),
             ...this.detectChanges( 'Players'   , this.world.Players   , result.Players    ),
@@ -197,5 +212,37 @@ export class ReadWorldTask extends TimerTask {
 
     public invalidateSplines() {
         this.counter = 0;
+    }
+
+    public getStaticData<K extends keyof World, V extends World[ K ][ number ]>( type: K, ID: number ): Partial<V> & { ID: number } {
+        return ( this.staticData[ type ] as V[] ).find( ( v ) => v.ID === ID ) || { ID } as V;
+    }
+
+    public setStaticData<K extends keyof World, V extends World[ K ][ number ]>( type: K, ID: number, value?: Partial<V> ) {
+        this.staticData[ type ] = ( this.staticData[ type ] as V[] ).filter( ( v ) => v.ID !== ID ) as any[];
+
+        if( value && Object.keys( value ).filter( ( k ) => k !== 'ID' ).length > 0 ) // Check that the object contains more than just the ID
+            ( this.staticData[ type ] as V[] ).push( {
+                ...value,
+                ID
+            } as V );
+    }
+
+    private populateStaticData( world: World ) {
+        for( const key of Object.keys( this.staticData ) as ( keyof World )[] ) {
+            for( const data of this.staticData[ key ] ) {
+                const array = world[ key ];
+
+                const index = array.findIndex( ( v ) => v.ID === data.ID );
+
+                if( index === -1 )
+                    continue;
+
+                array[ index ] = {
+                    ...array[ index ],
+                    ...data as any,
+                };
+            }
+        }
     }
 }
