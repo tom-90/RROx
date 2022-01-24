@@ -8,6 +8,12 @@ export const schema = {
         maximum: 6,
         minimum: 1,
     },
+    'map.refresh': {
+        type: 'number' as const,
+        default: 500,
+        minimum: 500,
+        maximum: 30000,
+    },
     'minimap.enabled': {
         type: 'boolean' as const,
         default: true
@@ -117,6 +123,7 @@ export const accessPropertiesByDotNotation = false;
 
 export interface Schema {
     'map.background': number;
+    'map.refresh': number;
     'minimap.enabled': boolean;
     'minimap.transparent': boolean;
     'minimap.corner': number;

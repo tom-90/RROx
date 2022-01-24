@@ -9,7 +9,7 @@ import { RROx } from "../rrox";
 export class ReadWorldTask extends TimerTask {
 
     public taskName = "Read World";
-    public interval = 500;
+    public interval: number;
 
     public world: World = {
         Frames     : [],
@@ -37,6 +37,14 @@ export class ReadWorldTask extends TimerTask {
 
     constructor( app: RROx ) {
         super( app );
+
+        this.interval = this.app.settings.get( 'map.refresh' );
+
+        app.on( 'settings-update', () => {
+            const interval = this.app.settings.get( 'map.refresh' );
+            if( this.interval !== interval )
+                this.setInterval( interval );
+        } );
 
         app.socket.on( 'broadcast-event', ( type, args: [ DataChange[] ] ) => {
             if( type !== 'map-update' ) return;
@@ -82,7 +90,7 @@ export class ReadWorldTask extends TimerTask {
         } );
     }
 
-    private counter = 0;
+    private lastSplineRead: number;
 
     private enableControl = false;
 
@@ -92,6 +100,8 @@ export class ReadWorldTask extends TimerTask {
         const gameStatus = await this.app.getAction( EnsureInGameAction ).run();
 
         if( !gameStatus ) {
+            this.lastSplineRead = null;
+
             let changes = [
                 ...this.detectChanges( 'Frames'     , this.world.Frames     , [] ),
                 ...this.detectChanges( 'Industries' , this.world.Industries , [] ),
@@ -124,10 +134,11 @@ export class ReadWorldTask extends TimerTask {
             return;
         }
 
-        let full = this.counter == 0;
-        this.counter++;
-        if( this.counter > 30 )
-            this.counter = 0;
+        let full = false;
+        if( !this.lastSplineRead || new Date().getTime() - this.lastSplineRead > 15000 ) {
+            full = true;
+            this.lastSplineRead = new Date().getTime();
+        }
 
         let readMode: ReadWorldMode;
         if( gameStatus === GameMode.HOST )
@@ -211,7 +222,7 @@ export class ReadWorldTask extends TimerTask {
     }
 
     public invalidateSplines() {
-        this.counter = 0;
+        this.lastSplineRead = null;
     }
 
     public getStaticData<K extends keyof World, V extends World[ K ][ number ]>( type: K, ID: number ): Partial<V> & { ID: number } {
