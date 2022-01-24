@@ -69,6 +69,11 @@ export const schema = {
         default: 'info',
         enum: [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
     },
+    
+    'install-message-shown': {
+        type: 'boolean' as const,
+        default: false
+    },
 
     'multiplayer.client.playerName': {
         type: 'string' as const,
@@ -136,6 +141,7 @@ export interface Schema {
     'minizwerg.url'?: string;
     'multiplayer.client.playerName'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
+    'install-message-shown': boolean;
 }
 
 export const migrations: Options<Schema>[ 'migrations' ] = {
