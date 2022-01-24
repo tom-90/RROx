@@ -69,7 +69,7 @@ if ( window.mode === 'normal' ) {
     } );
 
     if( !window.settingsStore.get( 'install-message-shown' ) ) {
-        // window.settingsStore.set( 'install-message-shown', true );
+        window.settingsStore.set( 'install-message-shown', true );
         Modal.info( {
             title: 'RROx was installed sucessfully',
             width: 420,
