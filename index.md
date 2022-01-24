@@ -24,17 +24,21 @@ Instructions for build mode can be found [here](./build-mode.md).
 
 ## Support
 
-For any other questions or issues, you can contact me on Discord:
-[_tom()#0056](https://discordapp.com/users/178197960457322497)
+To keep all information about RROx in one place, I have set-up a Discord server where you can contact me about any questions or issues you have:
+[RROx Discord Server](https://discord.gg/vPxGPCDFBp)
 
 Troubleshooting information for RROx error codes can be found [here](./error-codes.md).
 
-## Known issues
-
-- When running RROx on a client in a multiplayer session, controlling switches and remotely controlling locomotives is disabled while driving in F-mode. This is a limitation of the way RROx interacts with the game.
-- Teleporting does not work for clients in multiplayer.
-
 ## Changelog
+
+### v1.9.0 - 24-01-2022
+
+- ``Added`` Icon bar to control window representing the entire train
+- ``Added`` Synchronization of regulator, reverser and brake between coupled locomotives.
+- ``Added`` Tender water and firewood levels
+- ``Added`` Maximum boiler pressure, fuel amount and water level statistics.
+- ``Added`` Map refresh setting, to improve performance on slower PCs.
+- ``Added`` Post-install message with information about the [discord Server](https://discord.gg/vPxGPCDFBp).
 
 ### v1.8.0 - 20-01-2022
 
