@@ -55,10 +55,10 @@ export function FramesList( {
                             </thead>
                             <tbody>
                             <tr>
-                                <td style={{ textAlign: 'center', color: BoilerPressure < 80 ? "red" : "black" }}>{BoilerPressure.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: FuelAmount < 10 ? "red" : "black" }}>{FuelAmount.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: FireTemperature < 100 ? "red" : "black" }}>{FireTemperature.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: WaterTemperature < 100 ? "red" : "black" }}>{WaterTemperature.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: BoilerPressure < 80 ? "red" : "black" }} className={BoilerPressure < 80 ? "dnt" : ""}>{BoilerPressure.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: FuelAmount < 10 ? "red" : "black" }} className={FuelAmount < 10 ? "dnt" : ""}>{FuelAmount.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: FireTemperature < 100 ? "red" : "black" }} className={FireTemperature < 100 ? "dnt" : ""}>{FireTemperature.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: WaterTemperature < 100 ? "red" : "black" }} className={WaterTemperature < 100 ? "dnt" : ""}>{WaterTemperature.toFixed(0)}</td>
                             </tr>
                             </tbody>
                         </table> : null

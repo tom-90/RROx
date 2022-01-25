@@ -17,6 +17,15 @@ export function CustomSlider( { onChange, onAfterChange, disabled, value, min, m
 } ) {
     const [ sliderVal, setSliderVal] = useState(value);
 
+    useEffect( () => {
+        if(sliderVal == value)
+            return;
+
+        if(value != undefined){
+            setSliderVal(value);
+        }
+    }, [ value ] );
+
     const generateLabel = () => {
         if (text != undefined){
             return (<span className="slider-label">{text.substring(0, 11)}</span>);
