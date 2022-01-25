@@ -12,7 +12,7 @@ export function CouplingsBar( {
     selectedID: number,
     setSelectedID: ( ID: number ) => void,
 } ) {
-    return <div style={{ display: 'flex', justifyContent: 'center', overflowX: 'auto', width: '100%', minHeight: 50 }}>
+    return <div style={{ display: 'flex', overflowX: 'auto', maxWidth: '100%', minHeight: 50 }}>
         {coupledFrames.map( ( { frame, flipped, isCoupled }, i ) => {
             const definition = FrameDefinitions[ frame.Type ];
 
