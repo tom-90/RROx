@@ -9,7 +9,7 @@ import { RROx } from "../rrox";
 export class ReadWorldTask extends TimerTask {
 
     public taskName = "Read World";
-    public interval = 500;
+    public interval: number;
 
     public world: World = {
         Frames     : [],
@@ -22,8 +22,29 @@ export class ReadWorldTask extends TimerTask {
         Sandhouses : [],
     };
 
+    private staticData: {
+        [ K in keyof World ]: ( Partial<World[ K ][ number ]> & { ID: number } )[]
+    } = {
+        Frames     : [],
+        Industries : [],
+        Players    : [],
+        Splines    : [],
+        Switches   : [],
+        Turntables : [],
+        WaterTowers: [],
+        Sandhouses : [],
+    };
+
     constructor( app: RROx ) {
         super( app );
+
+        this.interval = this.app.settings.get( 'map.refresh' );
+
+        app.on( 'settings-update', () => {
+            const interval = this.app.settings.get( 'map.refresh' );
+            if( this.interval !== interval )
+                this.setInterval( interval );
+        } );
 
         app.socket.on( 'broadcast-event', ( type, args: [ DataChange[] ] ) => {
             if( type !== 'map-update' ) return;
@@ -69,7 +90,7 @@ export class ReadWorldTask extends TimerTask {
         } );
     }
 
-    private counter = 0;
+    private lastSplineRead: number;
 
     private enableControl = false;
 
@@ -79,6 +100,8 @@ export class ReadWorldTask extends TimerTask {
         const gameStatus = await this.app.getAction( EnsureInGameAction ).run();
 
         if( !gameStatus ) {
+            this.lastSplineRead = null;
+
             let changes = [
                 ...this.detectChanges( 'Frames'     , this.world.Frames     , [] ),
                 ...this.detectChanges( 'Industries' , this.world.Industries , [] ),
@@ -111,10 +134,11 @@ export class ReadWorldTask extends TimerTask {
             return;
         }
 
-        let full = this.counter == 0;
-        this.counter++;
-        if( this.counter > 30 )
-            this.counter = 0;
+        let full = false;
+        if( !this.lastSplineRead || new Date().getTime() - this.lastSplineRead > 15000 ) {
+            full = true;
+            this.lastSplineRead = new Date().getTime();
+        }
 
         let readMode: ReadWorldMode;
         if( gameStatus === GameMode.HOST )
@@ -128,6 +152,8 @@ export class ReadWorldTask extends TimerTask {
 
         if( result === false )
             throw new Error( 'Failed to read world.' );
+
+        this.populateStaticData( result );
 
         let changes = [
             ...this.detectChanges( 'Frames'    , this.world.Frames    , result.Frames     ),
@@ -196,6 +222,38 @@ export class ReadWorldTask extends TimerTask {
     }
 
     public invalidateSplines() {
-        this.counter = 0;
+        this.lastSplineRead = null;
+    }
+
+    public getStaticData<K extends keyof World, V extends World[ K ][ number ]>( type: K, ID: number ): Partial<V> & { ID: number } {
+        return ( this.staticData[ type ] as V[] ).find( ( v ) => v.ID === ID ) || { ID } as V;
+    }
+
+    public setStaticData<K extends keyof World, V extends World[ K ][ number ]>( type: K, ID: number, value?: Partial<V> ) {
+        this.staticData[ type ] = ( this.staticData[ type ] as V[] ).filter( ( v ) => v.ID !== ID ) as any[];
+
+        if( value && Object.keys( value ).filter( ( k ) => k !== 'ID' ).length > 0 ) // Check that the object contains more than just the ID
+            ( this.staticData[ type ] as V[] ).push( {
+                ...value,
+                ID
+            } as V );
+    }
+
+    private populateStaticData( world: World ) {
+        for( const key of Object.keys( this.staticData ) as ( keyof World )[] ) {
+            for( const data of this.staticData[ key ] ) {
+                const array = world[ key ];
+
+                const index = array.findIndex( ( v ) => v.ID === data.ID );
+
+                if( index === -1 )
+                    continue;
+
+                array[ index ] = {
+                    ...array[ index ],
+                    ...data as any,
+                };
+            }
+        }
     }
 }

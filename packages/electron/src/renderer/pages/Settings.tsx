@@ -11,7 +11,8 @@ export function Settings() {
 
     const [ settings, setSettings ] = useState( window.settingsStore.getAll() );
 
-    const SliderSeconds = { 0: 10, 7: 30, 15: 60, 23: 120, 35: 300, 50: 600, 65: 900, 80: 1200, 100: 1800 };
+    const AutosaveSliderSeconds = { 0: 10, 7: 30, 15: 60, 23: 120, 35: 300, 50: 600, 65: 900, 80: 1200, 100: 1800 };
+    const MapSliderMilliseconds = { 0: 500, 10: 1000, 20: 2000, 30: 3000, 40: 4000, 50: 5000, 70: 7000, 100: 30000 };
     
     const throttleOnValuesChange = useMemo( () => {
         let values = {};
@@ -67,6 +68,30 @@ export function Settings() {
                 >
                     <Divider orientation="left">Map</Divider>
                     <BackgroundSettings name="map.background" />
+                    <Form.Item
+                        label="Refresh Interval"
+                        name="map.refresh"
+                        help="Use this slider to adjust the map refresh time for optimized performance."
+                        normalize={( sliderVal ) => {
+                            return ( MapSliderMilliseconds as any )[ sliderVal ];
+                        }}
+                        getValueProps={( savedVal ) => {
+                            return {
+                                value: Object.entries( MapSliderMilliseconds ).find( ( [ mark, seconds ] ) => seconds === savedVal )?.[ 0 ]
+                            };
+                        }}
+                    >
+                        <Slider style={{ marginLeft: 20 }} marks={{
+                            0: '0.5s',
+                            10: '1s',
+                            20: '2s',
+                            30: '3s',
+                            40: '4s',
+                            50: '5s',
+                            70: '10s',
+                            100: '30s',
+                        }} step={null} tooltipVisible={false} included={false}/>
+                    </Form.Item>
                     <Divider orientation="left">Minimap</Divider>
                     <Form.Item
                         label="Show Minimap"
@@ -125,11 +150,11 @@ export function Settings() {
                         label="Interval"
                         name="autosave.interval"
                         normalize={( sliderVal ) => {
-                            return ( SliderSeconds as any )[ sliderVal ];
+                            return ( AutosaveSliderSeconds as any )[ sliderVal ];
                         }}
                         getValueProps={( savedVal ) => {
                             return {
-                                value: Object.entries( SliderSeconds ).find( ( [ mark, seconds ] ) => seconds === savedVal )?.[ 0 ]
+                                value: Object.entries( AutosaveSliderSeconds ).find( ( [ mark, seconds ] ) => seconds === savedVal )?.[ 0 ]
                             };
                         }}
                     >

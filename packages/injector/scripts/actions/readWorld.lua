@@ -90,6 +90,10 @@ function transmitItem(pipe, baseAddr, properties, array, id)
             pipe.writeFloat(readFloat(address) or 0)
         elseif propType == "i" then
             pipe.writeDword(readInteger(address) or 0)
+        elseif propType == "p" then
+            pipe.writeQword(readPointer(address) or 0)
+        elseif propType == "a" then
+            pipe.writeQword(address or 0)
         elseif propType == "s" then
             local str = readString(address, property[3], true)
             if str == nil then

@@ -6,23 +6,24 @@ import { DraggableModal } from 'ant-design-draggable-modal';
 import { EngineControls } from '@rrox/types';
 import { MapContext } from '../context';
 import { FrameControls } from '../../components/frameControls';
+import { FrameDefinitions } from '../definitions/Frame';
 
 export function FrameControlsPopup( {
     className,
     title,
     data,
+    frames,
     id,
     isVisible,
-    isEngine,
     onClose,
     controlEnabled
 }: {
     className?: string,
     title: string,
     data: Frame,
+    frames: Frame[],
     id: number,
     isVisible: boolean,
-    isEngine: boolean,
     onClose: () => void, controlEnabled: boolean
 } ) {
     const { actions } = useContext( MapContext );
@@ -34,9 +35,8 @@ export function FrameControlsPopup( {
         window.open(location.endsWith("/") ? location + page : location + `/` + page, '_blank').focus();
     };
 
-    const setEngineControls = useCallback( ( type: EngineControls, value: number ) => {
-        actions.setEngineControls( id, type, value );
-    }, [ actions.setEngineControls, id ] );
+    const definition = FrameDefinitions[ data.Type ];
+    const isEngine = definition.engine;
 
     return <DraggableModal
         title={<>
@@ -59,11 +59,11 @@ export function FrameControlsPopup( {
             </Button>}
         </>}
         visible={isVisible}
-        className={className}
+        className={[ className || '', 'frame-controls-modal' ].join( ' ' )}
         footer={null}
         onCancel={onClose}
         initialWidth={800}
-        initialHeight={450}
+        initialHeight={550}
         zIndex={2000}
         modalRender={( content ) => {
             if ( !React.isValidElement( content ) )
@@ -77,10 +77,11 @@ export function FrameControlsPopup( {
     >
         <FrameControls
             data={data}
-            isEngine={isEngine}
-            setEngineControls={setEngineControls}
+            setEngineControls={actions.setEngineControls}
+            setControlsSynced={actions.setControlsSynced}
             compact={compact}
             controlEnabled={controlEnabled}
+            frames={frames}
         />
     </DraggableModal>;
 }

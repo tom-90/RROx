@@ -13,6 +13,7 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
 
     const { actions } = useContext( MapContext );
     const container = useRef<HTMLDivElement>();
+    const gradeText = useRef<HTMLParagraphElement>();
 
     useEffect( () => {
         if( data === 'loading' )
@@ -269,19 +270,75 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
             .style( 'cursor', 'pointer' )
             .style( 'fill', 'steelblue' );
 
+        const setHeight = ( height: number, d: ( typeof line )[ number ] ) => {
+            const [ min, max ] = y.domain();
+            d.height = Math.min( max, Math.max( min, height ) );
+
+            for( let point of d.points )
+                point[ 2 ] = d.height;
+        }
+
+        const updateGrade = ( from: ( typeof line )[ number ], to: ( typeof line )[ number ] ) => {
+            const grade = ( ( to.height - from.height ) / Math.abs( to.distance - from.distance ) * 100 ).toFixed( 1 );
+
+            gradeText.current.innerText = `Current grade: ${grade}%`;
+        }
+
+        let selectedPoint: d3.BaseType | null = null;
+
         clickable.selectAll( 'circle' )
+            .on( 'click', function( e: MouseEvent, d: ( typeof line )[ number ] ) {
+                if( selectedPoint === this ) {
+                    selectedPoint = null;
+                    d3.select( this ).style( 'fill', 'steelblue' )
+                } else {
+                    clickable.selectAll( '.points' ).style( 'fill', 'steelblue' );
+
+                    if( selectedPoint )
+                        updateGrade( d3.select( selectedPoint ).datum() as ( typeof line )[ number ], d3.select( this ).datum() as ( typeof line )[ number ] );
+
+                    selectedPoint = this;
+                    d3.select( this ).style( 'fill', 'red' );
+                }
+            } )
             .call( d3.drag()
                 .on( 'drag', function( e: MouseEvent, d: ( typeof line )[ number ] ) {
-                    const [ min, max ] = y.domain();
-                    d.height = Math.min( max, Math.max( min, y.invert( e.y ) ) );
+                    setHeight( y.invert( e.y ), d );
 
-                    for( let point of d.points )
-                        point[ 2 ] = d.height;
-    
-                    d3.select( this ).attr( 'cy', y( d.height ) );
-                    focus.select(".current-spline").attr("d", currentSplineArea);
+                    if( selectedPoint && this !== selectedPoint ) {
+                        const anchor = d3.select( selectedPoint ).datum() as ( typeof line )[ number ];
 
-                    
+                        let start: ( typeof line )[ number ];
+                        let end: ( typeof line )[ number ];
+
+                        if( anchor.distance < d.distance ) {
+                            start = anchor;
+                            end = d;
+                        } else {
+                            start = d;
+                            end = anchor;
+                        }
+
+                        updateGrade( start, end );
+
+                        const heightDiff = end.height - start.height;
+                        const distanceDiff = end.distance - start.distance;
+
+                        for( const point of line ) {
+                            if( point.distance < start.distance || point.distance > end.distance )
+                                continue;
+
+                            point.height = start.height + ( point.distance - start.distance ) / distanceDiff * heightDiff;
+
+                            for( let p of point.points )
+                                p[ 2 ] = point.height;
+                        }
+
+                        d3.selectAll( '.points' ).attr( 'cy', ( d: ( typeof line )[ number ] ) => y( d.height ) );
+                    } else
+                        d3.select( this ).attr( 'cy', y( d.height ) );
+
+                    focus.select(".current-spline").attr( "d", currentSplineArea );
                 } )
             );
 
@@ -304,7 +361,7 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
         width={650}
         maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
         style={{
-            top: 'calc(100vh - 555px)',
+            top: 'calc(100vh - 580px)',
             marginRight: 10,
             paddingBottom: 0,
         }}
@@ -312,6 +369,7 @@ export function HeightGraph( { data, onClose }: { data: 'loading' | BuildSplineP
         {data === 'loading'
             ? <Spin style={{ width: 600, height: 440, padding: 210 }} tip='Generating heightmap...' />
             : <>
+                <p style={{ textAlign: 'center', marginBottom: 0 }} ref={gradeText}>Click on a point to set an anchor for gradient modifications.</p>
                 <div ref={container} />
                 <p style={{ textAlign: 'center' }}>When modifying track/groundwork positions, height data will be lost.</p>
             </>}

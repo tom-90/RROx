@@ -2,7 +2,7 @@
     "name": "@rrox/types",
     "private": true,
     "version": "1.6.2",
-    "description": "RailroadsOnline Extended types",
+    "description": "RailroadsOnline Extended utils",
     "author": "_tom()",
     "main": "src/index.ts",
     "repository": {

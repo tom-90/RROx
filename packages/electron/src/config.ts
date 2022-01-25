@@ -8,6 +8,12 @@ export const schema = {
         maximum: 6,
         minimum: 1,
     },
+    'map.refresh': {
+        type: 'number' as const,
+        default: 500,
+        minimum: 500,
+        maximum: 30000,
+    },
     'minimap.enabled': {
         type: 'boolean' as const,
         default: true
@@ -63,6 +69,11 @@ export const schema = {
         default: 'info',
         enum: [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
     },
+    
+    'install-message-shown': {
+        type: 'boolean' as const,
+        default: false
+    },
 
     'multiplayer.client.playerName': {
         type: 'string' as const,
@@ -117,6 +128,7 @@ export const accessPropertiesByDotNotation = false;
 
 export interface Schema {
     'map.background': number;
+    'map.refresh': number;
     'minimap.enabled': boolean;
     'minimap.transparent': boolean;
     'minimap.corner': number;
@@ -129,6 +141,7 @@ export interface Schema {
     'minizwerg.url'?: string;
     'multiplayer.client.playerName'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
+    'install-message-shown': boolean;
 }
 
 export const migrations: Options<Schema>[ 'migrations' ] = {

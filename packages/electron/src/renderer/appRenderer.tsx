@@ -9,7 +9,7 @@ import { Settings } from './pages/Settings';
 import { Info } from './pages/Info';
 import './app.less';
 import './components/DanglingInjector';
-import { notification } from 'antd';
+import { Modal, notification } from 'antd';
 import './types';
 import { AttachProvider } from './utils/attach';
 import { MapDataProvider } from './hooks/useMapData';
@@ -67,4 +67,20 @@ if ( window.mode === 'normal' ) {
                 duration: 10,
             } );
     } );
+
+    if( !window.settingsStore.get( 'install-message-shown' ) ) {
+        window.settingsStore.set( 'install-message-shown', true );
+        Modal.info( {
+            title: 'RROx was installed sucessfully',
+            width: 420,
+            maskClosable: true,
+            content: <>
+                <p>A shortcut has been added to your desktop and start-menu which you can use to open RROx.</p>
+                <p>Please use <a
+                    onClick={() => window.openBrowser( 'https://discord.gg/vPxGPCDFBp' )}
+                >this Discord server</a> to get info about RROx or ask for help if you encounter any issues.</p>
+            </>,
+            cancelButtonProps: { style: { display: 'none' } },
+        } );
+    }
 }

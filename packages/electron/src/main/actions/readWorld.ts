@@ -1,6 +1,6 @@
 import { Action } from "./action";
 import { PipeType } from "../pipes";
-import { Frame, Player, Spline, Switch, Turntable, WaterTower, Sandhouse, Industry, World, Products, IndustryType } from "@rrox/types";
+import { Frame, Player, Spline, Switch, Turntable, WaterTower, Sandhouse, Industry, World, Products, IndustryType, Cars } from "@rrox/types";
 import Log from 'electron-log';
 
 export enum ReadWorldMode {
@@ -8,6 +8,14 @@ export enum ReadWorldMode {
     HOST_PARTIAL = 1, // When server host: read world excluding splines
     CLIENT       = 2, // When client: will read limited data as not the entire world is transmitted
 }
+
+type CouplingsData = {
+    fromFrame?: Frame,
+    toFrame  ?: Frame,
+    type     ?: 'front'|'rear',
+    isCoupled?: boolean;
+};
+type CouplingsMap = Map<bigint, CouplingsData>;
 
 export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
 
@@ -35,6 +43,8 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
             Splines    : [],
         };
 
+        const couplings: CouplingsMap = new Map();
+
         pipe.writeString( this.actionID );
         pipe.writeInt( Number( mode ) );
 
@@ -57,7 +67,7 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 method = () => this.readPlayer();
             } else if ( arrayName === 'FrameCar' ) {
                 array = data.Frames;
-                method = () => this.readFrame();
+                method = () => this.readFrame( couplings );
             } else if ( arrayName === 'Turntable' ) {
                 array = data.Turntables;
                 method = () => this.readTurntable();
@@ -95,6 +105,8 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                     await read( i );
         }
 
+        this.processFrameCouplings( couplings );
+
         return data;
     }
 
@@ -117,7 +129,7 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
         }
     }
 
-    private async readFrame(): Promise<Frame> {
+    private async readFrame( couplings: CouplingsMap ): Promise<Frame> {
         let pipe = this.app.getPipe( PipeType.CheatEngineData );
 
         let ID   = await pipe.readInt();
@@ -127,9 +139,9 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
         if( Name.endsWith( '<br>' ) )
             Name = Name.slice( 0, -4 );
 
-        let frame = {
+        let frame: Frame = {
             ID    : ID,
-            Type  : Type,
+            Type  : Type as Cars,
             Name  : Name,
             Number: await pipe.readString( await pipe.readInt() ),
             Location: [
@@ -142,31 +154,98 @@ export class ReadWorldAction extends Action<World, [ mode: ReadWorldMode ]> {
                 await pipe.readFloat(),
                 await pipe.readFloat(),
             ],
-            Regulator       : await pipe.readFloat(),
-            Reverser        : await pipe.readFloat(),
-            Brake           : await pipe.readFloat(),
-            Whistle         : await pipe.readFloat(),
-            Generator       : await pipe.readFloat(),
-            Compressor      : await pipe.readFloat(),
-            BoilerPressure  : await pipe.readFloat(),
-            WaterTemperature: await pipe.readFloat(),
-            WaterLevel      : await pipe.readFloat(),
-            AirPressure     : await pipe.readFloat(),
-            FireTemperature : await pipe.readFloat(),
-            FuelAmount      : await pipe.readFloat(),
-            Speed           : await pipe.readFloat(),
-            MaxSpeed        : await pipe.readInt(),
-            Freight         : {
+            Regulator        : await pipe.readFloat(),
+            Reverser         : await pipe.readFloat(),
+            Brake            : await pipe.readFloat(),
+            Whistle          : await pipe.readFloat(),
+            Generator        : await pipe.readFloat(),
+            Compressor       : await pipe.readFloat(),
+            BoilerPressure   : await pipe.readFloat(),
+            MaxBoilerPressure: await pipe.readFloat(),
+            WaterTemperature : await pipe.readFloat(),
+            WaterLevel       : await pipe.readFloat(),
+            MaxWaterLevel    : await pipe.readFloat(),
+            AirPressure      : await pipe.readFloat(),
+            FireTemperature  : await pipe.readFloat(),
+            FuelAmount       : await pipe.readFloat(),
+            MaxFuelAmount    : await pipe.readFloat(),
+            Speed            : await pipe.readFloat(),
+            MaxSpeed         : await pipe.readInt(),
+            Tender           : {
+                FuelAmount   : await pipe.readFloat(),
+                MaxFuelAmount: await pipe.readFloat(),
+                WaterLevel   : await pipe.readFloat(),
+                MaxWaterLevel: await pipe.readFloat(),
+            },
+            Freight          : {
                 Amount: await pipe.readInt(),
                 Max   : await pipe.readInt(),
                 Type  : await pipe.readString( await pipe.readInt() ),
-            }
-        } as Frame;
+            },
+            Couplings: {
+                FrontID: null,
+                RearID : null,
+                FrontCoupled: false,
+                RearCoupled : false,
+            },
+            SyncControls: false,
+        };
 
         if( frame.Freight.Max === 0 )
             frame.Freight = null;
+        if( frame.Tender.MaxFuelAmount === 0 )
+            frame.Tender = null;
+
+        let frontCouplerAddr   = await pipe.readInt64();
+        let frontCoupledToAddr = await pipe.readInt64();
+        let isCoupledFront     = Boolean( await pipe.readByte() );
+        let rearCouplerAddr   = await pipe.readInt64();
+        let rearCoupledToAddr = await pipe.readInt64();
+        let isCoupledRear     = Boolean( await pipe.readByte() );
+
+        const setCoupler = ( type: 'front-from' | 'rear-from' | 'front-to' | 'rear-to', addr: bigint, isCoupled: boolean ) => {
+            let data: CouplingsData = {};
+
+            if( couplings.has( addr ) ) 
+                data = couplings.get( addr );
+            else
+                couplings.set( addr, data );
+
+            if( type === 'front-from' ) {
+                data.type = 'front';
+                data.isCoupled = isCoupled;
+                data.fromFrame = frame;
+            } else if( type === 'rear-from' ) {
+                data.type = 'rear';
+                data.isCoupled = isCoupled;
+                data.fromFrame = frame;
+            } else if( type === 'front-to' )
+                data.toFrame = frame;
+            else if( type === 'rear-to' )
+                data.toFrame = frame;
+        }
+
+        setCoupler( 'front-from', frontCouplerAddr  , isCoupledFront );
+        setCoupler( 'rear-from' , rearCouplerAddr   , isCoupledRear );
+        setCoupler( 'front-to'  , frontCoupledToAddr, isCoupledFront );
+        setCoupler( 'rear-to'   , rearCoupledToAddr , isCoupledRear );
 
         return frame;
+    }
+
+    private processFrameCouplings( couplings: CouplingsMap ) {
+        couplings.forEach( ( { type, isCoupled, fromFrame, toFrame } ) => {
+            if( !type || !fromFrame || !toFrame )
+                return; //Incomplete data, cannot set
+
+            if( type === 'front' ) {
+                fromFrame.Couplings.FrontID      = toFrame.ID;
+                fromFrame.Couplings.FrontCoupled = isCoupled;
+            } else if( type === 'rear' ) {
+                fromFrame.Couplings.RearID      = toFrame.ID;
+                fromFrame.Couplings.RearCoupled = isCoupled;
+            }
+        } );
     }
 
     private async readSwitch(): Promise<Switch> {

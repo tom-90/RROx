@@ -10,6 +10,7 @@ export * from './openLog';
 export * from './readHeight';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';
+export * from './setSyncControls';
 export * from './socketState';
 export * from './showInjector';
 export * from './teleport';

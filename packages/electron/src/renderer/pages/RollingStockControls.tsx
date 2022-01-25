@@ -17,8 +17,12 @@ export function RollingStockControlsPage() {
 
     const frameId = parseInt( id );
 
-    const setEngineControls = useCallback( ( type: EngineControls, value: number ) => {
-        window.ipc.send( 'set-engine-controls', frameId, type, value );
+    const setEngineControls = useCallback( ( id: number, type: EngineControls, value: number ) => {
+        window.ipc.send( 'set-engine-controls', id, type, value );
+    }, [ frameId ] );
+
+    const setControlsSynced = useCallback( ( id: number, enabled: boolean ) => {
+        window.ipc.send( 'set-sync-controls', id, enabled );
     }, [ frameId ] );
 
     let data = mapData.Frames.filter( frame => frame.ID === frameId ).filter( frame => FrameDefinitions[ frame.Type ].engine )[ 0 ];
@@ -36,8 +40,9 @@ export function RollingStockControlsPage() {
             <div className='controls-container'>
                 <FrameControls
                     data={data}
-                    isEngine
                     setEngineControls={setEngineControls}
+                    setControlsSynced={setControlsSynced}
+                    frames={mapData.Frames}
                 />
             </div>
         </PageLayout>

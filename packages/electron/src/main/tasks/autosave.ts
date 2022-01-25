@@ -14,7 +14,7 @@ export class AutosaveTask extends TimerTask {
     constructor( app: RROx ) {
         super( app );
 
-        this.interval = this.app.settings.get( 'autosave.interval' ) * 1000
+        this.interval = this.app.settings.get( 'autosave.interval' ) * 1000;
 
         app.on( 'settings-update', () => this.update() );
     }
