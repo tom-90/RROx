@@ -31,6 +31,12 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.10.0 - 25-01-2022
+
+- ``Added`` Functions to heightgraph for modifying multiple points at once.
+- ``Added`` Dark mode (Thanks to [Faab007NL](https://github.com/faab007)).
+- ``Added`` Cheat mode: flying, fast sprint and modify XP and money
+
 ### v1.9.1 - 25-01-2022
 
 - ``Fixed`` Icon bar in control window now correctly scrolls.
