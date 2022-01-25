@@ -11,6 +11,10 @@ export function Whistle({ onChange, onAfterChange }: {
     onAfterChange? : any
 } ) {
 
+    let canvasHeight = 200;
+    const [ wissleVal, setWissleVal] = useState(0);
+    const [ springEnabled, setSpringEnabled] = useState(true);
+
     const localOnChange = (value : number) => {
         let value_ = value;
         if (value_ < 2){ value_ = 0; }
@@ -27,10 +31,6 @@ export function Whistle({ onChange, onAfterChange }: {
             onAfterChange(value_ * 2);
         }
     }
-
-    let canvasHeight = 200;
-    const [ wissleVal, setWissleVal] = useState(0);
-    const [ springEnabled, setSpringEnabled] = useState(true);
 
     return (
         <div className="whistle-control">
@@ -79,6 +79,11 @@ export function Whistle({ onChange, onAfterChange }: {
                             setSpringEnabled(!springEnabled);
                             localOnChange(0);
                         }}
+                        onTap={() => {
+                            setWissleVal(0);
+                            setSpringEnabled(!springEnabled);
+                            localOnChange(0);
+                        }}
                     />
                     <Circle
                         x={(wissleVal * 0.1) + 180}
@@ -86,6 +91,11 @@ export function Whistle({ onChange, onAfterChange }: {
                         radius={6}
                         fill='#525252'
                         onClick={() => {
+                            setWissleVal(0);
+                            setSpringEnabled(!springEnabled);
+                            localOnChange(0);
+                        }}
+                        onTap={() => {
                             setWissleVal(0);
                             setSpringEnabled(!springEnabled);
                             localOnChange(0);
@@ -103,6 +113,11 @@ export function Whistle({ onChange, onAfterChange }: {
                             setSpringEnabled(!springEnabled);
                             localOnChange(0);
                         }}
+                        onTap={() => {
+                            setWissleVal(0);
+                            setSpringEnabled(!springEnabled);
+                            localOnChange(0);
+                        }}
                     />
 
                     <Rect
@@ -113,9 +128,7 @@ export function Whistle({ onChange, onAfterChange }: {
                         fill='rgba(255, 0, 0, 0)'
                         draggable
                         onDragMove={(e) => {
-                            let x = e.target.attrs.x;
                             let y = e.target.attrs.y;
-                            let height = e.target.attrs.height;
 
                             e.target.attrs.x = (wissleVal * 0.1) + 30;
                             if (y <= 45){

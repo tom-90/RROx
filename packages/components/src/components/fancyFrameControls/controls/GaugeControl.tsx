@@ -47,6 +47,7 @@ export function Gauge( { type, value, max, size}: {
     let BigNeedleCss = {
         transform: `rotate(${BigNeedleRotation}deg)`
     };
+
     let MaxNeedleRotation = (290 / TypeDef.MaxVal) * max;
     let MaxNeedleCss = {
         transform: `rotate(${MaxNeedleRotation}deg)`,

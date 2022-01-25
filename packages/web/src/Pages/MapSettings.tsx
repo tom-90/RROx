@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect } from "react";
-import { Form, Divider, Radio } from "antd";
+import React, {useMemo, useEffect, useState} from "react";
+import { Form, Divider, Radio, Switch } from "antd";
 import { defaultSettings, useSettings } from "../helpers/settings";
 import { MapPageLayout } from "../components/MapPageLayout";
 import { BackgroundSettings, ColorSettings } from "@rrox/components";
@@ -9,7 +9,7 @@ export function MapSettings() {
     const [ form ] = Form.useForm();
     const [ settings, setSettings ] = useSettings();
     const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded } = useMapData();
-    
+
     // When this page loads, we refresh the map data
     useEffect( () => {
         if( !mapDataLoaded )
@@ -67,6 +67,16 @@ export function MapSettings() {
                             form.setFieldsValue( setSettings( newValues ) );
                         }}
                     />
+                    <Divider orientation="left">Other</Divider>
+                    <Form.Item name="site.darkMode" label="Site Theme" valuePropName="checked">
+                        <Switch
+                            checkedChildren="Dark"
+                            unCheckedChildren="Light"
+                            onChange={(checked) => {
+                                document.body.setAttribute('data-theme', checked ? 'dark' : 'light');
+                            }}
+                        />
+                    </Form.Item>
                 </Form>
             </div>
         </MapPageLayout>

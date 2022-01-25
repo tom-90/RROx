@@ -1,9 +1,7 @@
 import * as React from "react";
 import {useEffect, useMemo} from "react";
-import { Layout } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
-import {Map, MapActions, MapMode, MapSettings} from "@rrox/components";
-import AppIcon from '@rrox/assets/images/appicon.ico';
+import {Map, MapMode, MapSettings} from "@rrox/components";
 import { useSocketSession } from "../helpers/socket";
 import { useMapData } from "../helpers/mapData";
 import { useSettings } from "../helpers/settings";
