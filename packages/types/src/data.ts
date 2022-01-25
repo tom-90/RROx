@@ -48,6 +48,8 @@ export interface Player {
     Name: string;
     Location: [ X: number, Y: number, Z: number ];
     Rotation: [ Pitch: number, Yaw: number, Roll: number ];
+    WalkSpeed?: number;
+    FlySpeed?: number;
 }
 
 export interface Switch {

@@ -22,6 +22,7 @@ const validChannels = [
     'set-engine-controls',
     'get-attached-state',
     'set-attached-state',
+    'set-cheats',
     'get-socket-state',
     'set-socket-state',
     'set-sync-controls',

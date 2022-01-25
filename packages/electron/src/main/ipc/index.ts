@@ -8,6 +8,7 @@ export * from './mapData';
 export * from './minizwergColors';
 export * from './openLog';
 export * from './readHeight';
+export * from './setCheats';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';
 export * from './setSyncControls';

@@ -82,8 +82,10 @@ void setMoneyAndXP(uint64_t addrCharacter, float money, int32_t xp)
 {
     ASCharacter* ch = (ASCharacter*)addrCharacter;
 
-    ch->SetPlayerMoney(money);
-    ch->SetPlayerXP(xp);
+    if( money >= 0 )
+        ch->SetPlayerMoney(money);
+    if( xp >= 0 )
+        ch->SetPlayerXP(xp);
 }
 
 void spawnSpline(uint64_t addrCharacter, char type, FVector* controlPoints, int length)

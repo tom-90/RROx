@@ -2,7 +2,7 @@ import { TimerTask } from "./task";
 import { ReadWorldTask } from './readWorld';
 import Log from 'electron-log';
 import { getCoupledFrames, isEngine } from "@rrox/utils";
-import { SetEngineControlsAction } from "../actions";
+import { EnsureInGameAction, SetEngineControlsAction } from "../actions";
 import { EngineControls } from "@rrox/types";
 
 export class ControlsSyncTask extends TimerTask {
@@ -11,6 +11,10 @@ export class ControlsSyncTask extends TimerTask {
     public interval = 500;
 
     protected async execute() {
+        let gameMode = await this.app.getAction( EnsureInGameAction ).run();
+        if( !gameMode )
+            return;
+
         const readWorldTask = this.app.getTask( ReadWorldTask );
         const setControlsAction = this.app.getAction( SetEngineControlsAction );
         const world = readWorldTask.world;

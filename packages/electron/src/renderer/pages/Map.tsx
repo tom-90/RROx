@@ -13,8 +13,10 @@ export function MapPage() {
     const actions = useMemo<MapActions>( () => ( {
         teleport             : ( x, y, z ) => window.ipc.send( 'teleport', x, y, z, attachMode === 'client' ? settings.playerName : undefined ),
         changeSwitch         : ( id ) => window.ipc.send( 'change-switch', id ),
+        setCheats            : ( name, walkSpeed, flySpeed ) => window.ipc.send( 'set-cheats', name, walkSpeed, flySpeed ),
         setEngineControls    : ( id, type, value ) => window.ipc.send( 'set-engine-controls', id, type, value ),
         setControlsSynced    : ( id, enabled ) => window.ipc.send( 'set-sync-controls', id, enabled ),
+        setMoneyAndXP        : ( name, money, xp ) => window.ipc.send( 'set-money-and-xp', name, money, xp ),
         getColor             : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
         getSelectedPlayerName: () => attachMode === 'client' ? settings.playerName : undefined,
         buildSplines         : ( splines, simulate ) => window.ipc.invoke( 'build-spline', splines, simulate ),

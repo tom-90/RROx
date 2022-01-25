@@ -13,6 +13,8 @@ export interface MapActions {
     teleport             : ( x: number, y: number, z: number ) => void;
     changeSwitch         : ( id: number ) => void;
     setEngineControls    : ( id: number, type: EngineControls, value: number ) => void;
+    setMoneyAndXP        : ( name: string, money?: number, xp?: number ) => void;
+    setCheats            : ( name: string, walkSpeed?: number, flySpeed?: number ) => void;
     setControlsSynced    : ( id: number, enabled: boolean ) => void;
     getColor             : ( key: string ) => string;
     getSelectedPlayerName: () => string;

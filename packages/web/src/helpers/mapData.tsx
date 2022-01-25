@@ -102,14 +102,16 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
 
     const [ settings ] = useSettings();
     const actions = useMemo<MapActions>( () => ( {
-        teleport             : ( x, y, z           ) => socket.send( 'teleport', x, y, z, settings[ 'multiplayer.client.playerName' ] ),
-        changeSwitch         : ( id                ) => socket.send( 'change-switch', id ) ,
-        setEngineControls    : ( id, type, value   ) => socket.send( 'set-engine-controls', id, type, value ),
-        setControlsSynced    : ( id, enabled       ) => socket.send( 'set-sync-controls', id, enabled ),
-        getColor             : ( key               ) => ( settings as any )[ `colors.${key}` ],
-        getSelectedPlayerName: (                   ) => settings[ 'multiplayer.client.playerName' ],
-        buildSplines         : ( splines, simulate ) => socket.invoke( 'build-spline', splines, simulate ),
-        openNewTab           : ( url               ) => window.open( url, '_blank' ),
+        teleport             : ( x, y, z                   ) => socket.send( 'teleport', x, y, z, settings[ 'multiplayer.client.playerName' ] ),
+        changeSwitch         : ( id                        ) => socket.send( 'change-switch', id ) ,
+        setCheats            : ( name, walkSpeed, flySpeed ) => socket.send( 'set-cheats', name, walkSpeed, flySpeed ),
+        setEngineControls    : ( id, type, value           ) => socket.send( 'set-engine-controls', id, type, value ),
+        setControlsSynced    : ( id, enabled               ) => socket.send( 'set-sync-controls', id, enabled ),
+        setMoneyAndXP        : ( name, money, xp           ) => socket.send( 'set-money-and-xp', name, money, xp ),
+        getColor             : ( key                       ) => ( settings as any )[ `colors.${key}` ],
+        getSelectedPlayerName: (                           ) => settings[ 'multiplayer.client.playerName' ],
+        buildSplines         : ( splines, simulate         ) => socket.invoke( 'build-spline', splines, simulate ),
+        openNewTab           : ( url                       ) => window.open( url, '_blank' ),
     } ), [ settings, socket ] );
 
     return <MapDataContext.Provider value={{

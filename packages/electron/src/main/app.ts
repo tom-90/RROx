@@ -3,9 +3,9 @@ import Updater from 'update-electron-app';
 import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
-import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
-import { AttachTask, AutosaveTask, ControlsSyncTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
+import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetAddressValueAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
+import { AttachTask, AutosaveTask, CheatsTask, ControlsSyncTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
+import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetCheatsIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
 import './types';
 import path from 'path';
 
@@ -67,6 +67,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             ReadPlayerAddress,
             ReadWorldAction,
             SaveAction,
+            SetAddressValueAction,
             SetEngineControlsAction,
             SetMoneyAndXPAction,
             ShowInjectorAction,
@@ -80,6 +81,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         const tasks = [
             AttachTask,
             AutosaveTask,
+            CheatsTask,
             ControlsSyncTask,
             ReadWorldTask,
             LoggerTask,
@@ -102,6 +104,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             OpenLogIPCListener,
             ReadHeightIPCHandler,
             SetAttachedStateIPCListener,
+            SetCheatsIPCListener,
             SetEngineControlsIPCListener,
             SetMoneyAndXPIPCListener,
             SetSocketStateIPCHandler,

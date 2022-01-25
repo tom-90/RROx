@@ -18,7 +18,7 @@ export class EnsureInGameAction extends Action<false | GameMode> {
         if( !this.canRun() )
             return false;
 
-        let inGameTest = await this.app.getAction( ReadAddressValueAction ).run( 'InGameTest' );
+        let inGameTest = ( await this.app.getAction( ReadAddressValueAction ).run( 'InGameTest' ) ) as string;
 
         // We check if the in game test has some (sensible) value
         if ( !inGameTest || inGameTest === '??' || inGameTest.includes( 'MainMenu' ) ) {

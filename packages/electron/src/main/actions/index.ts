@@ -10,6 +10,7 @@ export * from './readHeight';
 export * from './readPlayerAddress';
 export * from './readWorld';
 export * from './save';
+export * from './setAddressValue';
 export * from './setEngineControls';
 export * from './setMoneyAndXP';
 export * from './showInjector';
