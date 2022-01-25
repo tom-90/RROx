@@ -71,7 +71,7 @@ export function Settings() {
                     <Form.Item
                         label="Refresh Interval"
                         name="map.refresh"
-                        help="Use this slider to adjust the map refresh time for optimized performance."
+                        help={<p style={{ padding: '10px 0' }}>Use this slider to adjust the map refresh time for optimized performance.</p>}
                         normalize={( sliderVal ) => {
                             return ( MapSliderMilliseconds as any )[ sliderVal ];
                         }}
@@ -91,6 +91,15 @@ export function Settings() {
                             70: '10s',
                             100: '30s',
                         }} step={null} tooltipVisible={false} included={false}/>
+                    </Form.Item>
+                    <Form.Item name="site.darkMode" label="App Theme" valuePropName="checked">
+                        <Switch
+                            checkedChildren="Dark"
+                            unCheckedChildren="Light"
+                            onChange={(checked) => {
+                                document.body.setAttribute('data-theme', checked ? 'dark' : 'light');
+                            }}
+                        />
                     </Form.Item>
                     <Divider orientation="left">Minimap</Divider>
                     <Form.Item
@@ -293,6 +302,7 @@ export function Settings() {
                     >
                         <Switch />
                     </Form.Item>
+                    
                 </Form>
             </div>
         </PageLayout>

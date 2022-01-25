@@ -78,6 +78,11 @@ export const schema = {
     'multiplayer.client.playerName': {
         type: 'string' as const,
     },
+    
+    'site.darkMode': {
+        type: 'boolean' as const,
+        default: false
+    },
 
     [ `colors.${Cars.HANDCAR}`         ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER}`          ]: { type: 'string', default: '#800080' },
@@ -142,6 +147,7 @@ export interface Schema {
     'multiplayer.client.playerName'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
     'install-message-shown': boolean;
+    'site.darkMode': boolean;
 }
 
 export const migrations: Options<Schema>[ 'migrations' ] = {

@@ -8,6 +8,7 @@ import { MapPage } from './pages/Map';
 import { Settings } from './pages/Settings';
 import { Info } from './pages/Info';
 import './app.less';
+import '@rrox/assets/css/DarkMode.scss';
 import './components/DanglingInjector';
 import { Modal, notification } from 'antd';
 import './types';
@@ -44,6 +45,8 @@ if ( process.env.NODE_ENV == 'development' && module.hot ) module.hot.accept();
 
 
 if ( window.mode === 'normal' ) {
+    document.body.setAttribute('data-theme', window.settingsStore.get( 'site.darkMode' ) ? 'dark' : 'light');
+
     window.ipc.on( 'popup-message', ( event, type: 'warn' | 'info' | 'error', title: string, description: string ) => {
         if ( type === 'warn' )
             notification.warn( {

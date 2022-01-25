@@ -54,6 +54,11 @@ module.exports = {
                 ],
             },
             {
+                // SCSS/Sass loader
+                test: /\.(scss|sass)$/,
+                use: [ "style-loader", "css-loader", "sass-loader" ],
+            },
+            {
                 // Assets loader
                 // More information here https://webpack.js.org/guides/asset-modules/
                 test: /\.(gif|jpe?g|tiff|png|webp|bmp|svg|eot|ttf|woff|woff2|ico)$/i,
