@@ -31,9 +31,14 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.9.1 - 25-01-2022
+
+- ``Fixed`` Icon bar in control window now correctly scrolls.
+- ``Fixed`` Logging camp graphics platform positions.
+
 ### v1.9.0 - 24-01-2022
 
-- ``Added`` Icon bar to control window representing the entire train
+- ``Added`` Icon bar to control window representing the entire train.
 - ``Added`` Synchronization of regulator, reverser and brake between coupled locomotives.
 - ``Added`` Tender water and firewood levels
 - ``Added`` Maximum boiler pressure, fuel amount and water level statistics.
