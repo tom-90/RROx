@@ -21,7 +21,13 @@ context.keys().forEach(( filename )=> Background6[ filename ] = context( filenam
 export function Background() {
     const { map, settings, mode } = useContext( MapContext );
 
-    if( settings.background === 6 )
+    if (settings.background === 7) {
+        document.body.setAttribute('data-map-theme', 'dark');
+    }else{
+        document.body.setAttribute('data-map-theme', 'light');
+    }
+
+    if( settings.background === 6 || settings.background === 7 )
         return <TileLayer
             getTileUrl={( { x, y, z } ) => Background6[ `./${z}/${x}/${y}.webp` ]}
             minNativeZoom={8}

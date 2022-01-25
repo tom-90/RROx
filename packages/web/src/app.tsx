@@ -6,8 +6,8 @@ import {MapSettings} from "./Pages/MapSettings";
 import {ControlsPage} from "./Pages/ControlsPage";
 import {ControlPage} from "./Pages/ControlPage";
 import {FancyControlPage} from "./Pages/FancyControlPage";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useSettings } from "./helpers/settings";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {useSettings} from "./helpers/settings";
 
 export function App(){
     const [ settings ] = useSettings();

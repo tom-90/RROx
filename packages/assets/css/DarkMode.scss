@@ -215,5 +215,10 @@
 	.ant-modal-confirm-title, .ant-modal-confirm-content{
 		color: #ffffff!important;
 	}
+}
 
+[data-map-theme='dark']{
+	.leaflet-pane .leaflet-background-pane{
+		filter: invert(1)!important;
+	}
 }
