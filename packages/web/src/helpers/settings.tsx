@@ -4,10 +4,12 @@ import React, { createContext, useState, useContext, useMemo } from "react";
 export interface Settings {
     'multiplayer.client.playerName'?: string;
     'map.background': number;
+    'site.darkMode': boolean;
 }
 
 export const defaultSettings = {
     'map.background': 6,
+    'site.darkMode': false,
 
     [ `colors.${Cars.HANDCAR}`         ]: '#800080',
     [ `colors.${Cars.PORTER}`          ]: '#800080',
