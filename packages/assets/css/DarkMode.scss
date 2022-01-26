@@ -23,8 +23,16 @@
 	.ant-menu-item-selected a{
 		color: #fa8c16!important;
 	}
-	.ant-btn{
-		background: #2e2e2e!important;
+	.ant-btn {
+		&:not(.attachButton){
+			&:not(.processingButton){
+				background: #2e2e2e!important;
+				color: #ffffff!important;
+			}
+		}
+	}
+	.attachButton{
+		background: transparent;
 		color: #ffffff!important;
 	}
 	.disconnectButton{
@@ -193,7 +201,6 @@
 						left: 0;
 					}
 				}
-
 			}
 		}
 		.leaflet-control-layers {
@@ -201,6 +208,20 @@
 			border-color: rgba(0,0,0,0.2)!important;
 			.leaflet-control-layers-toggle{
 				filter: invert(1)!important;
+			}
+		}
+		.leaflet-control-path{
+			background: #424242!important;
+			border-color: rgba(0,0,0,0.2)!important;
+
+			a{
+				background: #424242!important;
+				svg{
+					filter: invert(1);
+				}
+			}
+			a:hover{
+				background: #575757!important;
 			}
 		}
 	}
@@ -215,6 +236,15 @@
 	.ant-modal-confirm-title, .ant-modal-confirm-content{
 		color: #ffffff!important;
 	}
+
+	.ant-modal-header{
+		background: #424242!important;
+		color: #ffffff!important;
+		.ant-modal-title{
+			color: #ffffff!important;
+		}
+	}
+
 }
 
 [data-map-theme='dark']{

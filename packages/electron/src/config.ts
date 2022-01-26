@@ -5,7 +5,7 @@ export const schema = {
     'map.background': {
         type: 'number' as const,
         default: 6,
-        maximum: 6,
+        maximum: 7,
         minimum: 1,
     },
     'map.refresh': {

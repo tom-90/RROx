@@ -34,7 +34,7 @@ export function MapNav() {
                         navigate( '/' );
                     }}
                     icon={<DisconnectOutlined />}
-                >
+                    >
                     Disconnect
                 </Button>
             </Menu.Item>
