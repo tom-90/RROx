@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
+import { Line } from './leaflet/line';
 import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
 import { Background } from './background';
 import { Player as PlayerData, World } from '@rrox/types';
@@ -16,9 +17,9 @@ import { Sandhouse } from './elements/Sandhouse';
 import { WaterTower } from './elements/WaterTower';
 import { Controls } from './leaflet/controls';
 import './styles.less';
-import { Line } from './leaflet/line';
 import { usePrevious } from '../hooks/usePrevious';
 import { Draw } from './draw/controls';
+import { Paths } from './Paths';
 
 export function Map( { data, settings, actions, mode, controlEnabled }: {
     data          : World,
@@ -334,6 +335,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                         </LayersControl.Overlay>
                     </Pane>
                     <Pane name='popups' style={{ zIndex: 100 }} />
+                    <Paths />
                 </LayersControl>
             </MapContainer>
         </div>

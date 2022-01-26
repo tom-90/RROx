@@ -16,3 +16,4 @@ export * from './socketState';
 export * from './showInjector';
 export * from './teleport';
 export * from './updateConfig';
+export * from './pathData';

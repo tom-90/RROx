@@ -5,7 +5,7 @@ import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetAddressValueAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
 import { AttachTask, AutosaveTask, CheatsTask, ControlsSyncTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
-import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetCheatsIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener } from './ipc';
+import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetCheatsIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener, PathDataIPCHandler } from './ipc';
 import './types';
 import path from 'path';
 
@@ -112,6 +112,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             ShowInjectorIPCListener,
             UpdateConfigIPCListener,
             TeleportIPCListener,
+            PathDataIPCHandler,
         ];
         rrox.createTasks( ipc );
         await rrox.startTasks( ipc );
