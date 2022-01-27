@@ -31,6 +31,10 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.11.1 - 27-01-2022
+
+- ``Fixed`` Fixed issue where map stays empty after attaching.
+
 ### v1.11.0 - 27-01-2022
 
 - ``Added`` Dark high-res map (Thanks to [Faab007NL](https://github.com/faab007)).
