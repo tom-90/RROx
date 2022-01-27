@@ -163,4 +163,32 @@
 	}
 }
 
+.layout-control{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	.layout-map{
+		width: 100%;
+		height: 100%;
+	}
+	.toolbar{
+		position: absolute;
+		top: 64px;
+		right: 0;
+		width: 300px;
+		height: calc(100% - 64px);
+		padding: 10px;
+		background-color: gray;
+		h1{
+			text-align: center;
+			color: white;
+		}
+		.tools{
+			.ant-radio-wrapper{
+				display: block;
+			}
+		}
+	}
+}
+
 @import "~@rrox/assets/css/DarkMode.scss";

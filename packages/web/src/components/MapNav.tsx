@@ -13,8 +13,10 @@ export function MapNav() {
 
     if( matchPath( `/${serverKey}`, pathname ) )
         selectedKeys.push( 'map' );
-    if( matchPath( `/${serverKey}/controls`, pathname ) || matchPath( `/${serverKey}/controls/:id`, pathname ) )
-        selectedKeys.push( 'controls' );
+    if( matchPath( `/${serverKey}/controls/frames`, pathname ) || matchPath( `/${serverKey}/controls/frames/:id`, pathname ) )
+        selectedKeys.push( 'controls/frames' );
+    if( matchPath( `/${serverKey}/controls/layout`, pathname ) )
+        selectedKeys.push( 'controls/layout' );
     if( matchPath( `/${serverKey}/settings`, pathname ) )
         selectedKeys.push( 'settings' );
 
@@ -45,7 +47,7 @@ export function MapNav() {
                         window.location.href = `rrox://${serverKey}`;
                     }}
                     icon={<DesktopOutlined />}
-                >
+                    >
                     Open in desktop app
                 </Button>
             </Menu.Item>}
@@ -54,9 +56,14 @@ export function MapNav() {
                     Map
                 </Link>
             </Menu.Item>
-            <Menu.Item key="controls" >
-                <Link to={`/${serverKey}/controls`}>
+            <Menu.Item key="controls/frames" >
+                <Link to={`/${serverKey}/controls/frames`}>
                     Rolling Stock
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="controls/layout" >
+                <Link to={`/${serverKey}/controls/layout`}>
+                    Layout Control
                 </Link>
             </Menu.Item>
             <Menu.Item key="settings">

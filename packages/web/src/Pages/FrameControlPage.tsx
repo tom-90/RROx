@@ -8,10 +8,9 @@ import { useSocketSession } from "../helpers/socket";
 import { useMapData } from "../helpers/mapData";
 import { useSettings } from "../helpers/settings";
 import { MapPageLayout } from "../components/MapPageLayout";
-import { EngineControls } from '@rrox/types';
 import { FrameControls } from "@rrox/components/src/components/frameControls";
 
-export function ControlPage() {
+export function FrameControlPage() {
     let { serverKey, id } = useParams();
     const navigate = useNavigate();
 

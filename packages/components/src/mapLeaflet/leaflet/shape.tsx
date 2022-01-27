@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import L from 'leaflet';
 import { Polygon } from 'react-leaflet';
-import { MapContext } from '../context';
 import { useScalingWeight } from '../hooks/useScalingWeight';
 import { usePositions } from '../hooks/usePositions';
 

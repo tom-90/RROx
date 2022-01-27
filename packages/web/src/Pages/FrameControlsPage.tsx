@@ -13,7 +13,7 @@ import { Tabs } from "antd";
 import { Cars } from "@rrox/types";
 const { TabPane } = Tabs;
 
-export function ControlsPage() {
+export function FrameControlsPage() {
     let { serverKey } = useParams();
     const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export function ControlsPage() {
     }, [ mapData, settings ] );
 
     const openControl = ( ID: number ) => {
-        navigate( `/${serverKey}/controls/${ID}` );
+        navigate( `/${serverKey}/controls/frames/${ID}` );
     };
 
     const locate = ( ID: number ) => {
