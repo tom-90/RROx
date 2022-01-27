@@ -49,7 +49,7 @@ export class KeybindsTask extends Task {
     private isPressed( key: string ) {
         const keys: number[] = this.app.settings.get( key );
         
-        return keys.every( ( code ) => this.pressedKeys.includes( code ) );
+        return keys.length > 0 && keys.every( ( code ) => this.pressedKeys.includes( code ) );
     }
 
     public start() {
