@@ -14,16 +14,14 @@ export function App(){
     document.body.setAttribute('data-theme', settings["site.darkMode"] ? 'dark' : 'light');
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<EnterKey />} />
-                <Route path="/:serverKey" element={<MapPage />} />
-                <Route path="/:serverKey/players" element={<PlayerSelect />} />
-                <Route path="/:serverKey/settings" element={<MapSettings />} />
-                <Route path="/:serverKey/controls" element={<FrameControlsPage />} />
-                <Route path="/:serverKey/controls/:id" element={<FrameControlPage />} />
-                <Route path="/:serverKey/controls/:id/fancy" element={<FancyControlPage />} />
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+            <Route path="/" element={<EnterKey />} />
+            <Route path="/:serverKey" element={<MapPage />} />
+            <Route path="/:serverKey/players" element={<PlayerSelect />} />
+            <Route path="/:serverKey/settings" element={<MapSettings />} />
+            <Route path="/:serverKey/controls" element={<FrameControlsPage />} />
+            <Route path="/:serverKey/controls/:id" element={<FrameControlPage />} />
+            <Route path="/:serverKey/controls/:id/fancy" element={<FancyControlPage />} />
+        </Routes>
     );
 }
