@@ -4,6 +4,7 @@ import path from 'path';
 import { Server as SocketServer } from 'socket.io';
 import { RoomManager } from './room';
 import { instrument } from '@socket.io/admin-ui';
+const apiRouter = require('./api');
 
 const app = express();
 const server = http.createServer( app );
@@ -35,7 +36,6 @@ instrument( io, {
     },
 } );
 
-
 app.use( express.static( path.join( __dirname, '../public' ) ) );
 app.use( express.static( path.dirname( require.resolve( '@socket.io/admin-ui/ui/dist/index.html' ) ) ) );
 
@@ -44,6 +44,8 @@ app.get( "/admin", ( req, res ) => {
         if ( err ) res.sendStatus( 500 );
     } );
 } );
+
+app.get( "/api", apiRouter);
 
 app.get( "/*", ( req, res ) => {
     res.sendFile( path.join( __dirname, "../public/index.html" ), err => {
