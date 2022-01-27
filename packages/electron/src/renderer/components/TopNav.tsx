@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React, {useContext, useState} from 'react';
 import { Menu, Button, Spin, Typography, Modal } from "antd";
 import { ApiOutlined, SettingOutlined } from '@ant-design/icons';
 import { useLocation, matchPath, Link } from "react-router-dom";
-import { AttachedState } from '@rrox/types';
 import { AttachModal } from './AttachModal';
 import { AttachContext } from "../utils/attach";
 
@@ -24,6 +23,14 @@ export function TopNav() {
         selectedKeys.push( 'controls' );
     if( matchPath( '/info', pathname ) )
         selectedKeys.push( 'info' );
+    
+    const attachBtnBackground = () => {
+        if  (window.settingsStore.get('site.darkMode')){
+            return status === 'ATTACHING' || status === 'DETACHING' ? `linear-gradient(90deg, rgba(250,140,22,0.2) 0%, rgba(250,140,22,0.2) ${progress}%, #2e2e2e ${progress}%)` : undefined;
+        }else{
+            return status === 'ATTACHING' || status === 'DETACHING' ? `linear-gradient(90deg, rgba(250,140,22,0.2) 0%, rgba(250,140,22,0.2) ${progress}%, rgba(0,0,0,0) ${progress}%)` : undefined;
+        }
+    }
 
     return (
         <Menu mode="horizontal" selectedKeys={selectedKeys}>
@@ -65,9 +72,9 @@ export function TopNav() {
                         : (status === 'ATTACHED' ? <SettingOutlined /> : <ApiOutlined /> )
                     }
                     style={{
-                        background: status === 'ATTACHING' || status === 'DETACHING' ? `linear-gradient(90deg, rgba(250,140,22,0.2) 0%, rgba(250,140,22,0.2) ${progress}%, rgba(0,0,0,0) ${progress}%)` : undefined
+                        background: attachBtnBackground()
                     }}
-                >
+                    >
                     {status === 'ATTACHED'
                             ? 'Options'
                             : ( status === 'DETACHED'

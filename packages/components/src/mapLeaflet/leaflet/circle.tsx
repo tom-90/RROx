@@ -12,7 +12,7 @@ export const Circle = React.memo( function Circle( props: React.ComponentProps<t
 
     const { ref, weight: calculatedWeight } = useScalingWeight( weight || 0 );
 
-    const distance = useMemo( () => edge ? L.latLng( center ).distanceTo( L.latLng( edge ) ) : 0, [ ...edge, ...center ] );
+    const distance = useMemo( () => edge ? L.latLng( center ).distanceTo( L.latLng( edge ) ) : 0, [ ...(edge || []), ...center ] );
 
     /*const map = useMap();
 
