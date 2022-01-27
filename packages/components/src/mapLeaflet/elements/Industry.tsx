@@ -11,7 +11,7 @@ import { usePositions } from '../hooks/usePositions';
 import { useImageAdjust } from '../hooks/useImageAdjust';
 
 export const Industry = React.memo( function Industry( { data }: { data: IndustryData } ) {
-    const { utils, mode, actions } = useContext( MapContext );
+    const { utils, mode, actions, features } = useContext( MapContext );
     const [ infoVisible, setInfoVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     
@@ -28,10 +28,10 @@ export const Industry = React.memo( function Industry( { data }: { data: Industr
             setTooltipVisible( false );
             setInfoVisible( true );
         }}>Show Info</Button>}
-        <Button
+        {features.teleport && <Button
             style={{ marginTop: 5 }}
             onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 1000 )}
-        >Teleport Here</Button>
+        >Teleport Here</Button>}
         <StorageInfo
             title={definition.name}
             storages={{

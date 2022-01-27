@@ -16,7 +16,7 @@ export function ControlPage() {
     const navigate = useNavigate();
 
     useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled, actions: actions } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, features, actions: actions } = useMapData();
     const [ settings ] = useSettings();
 
     // When this page loads, we refresh the map data
@@ -54,6 +54,7 @@ export function ControlPage() {
                 <FrameControls
                     data={data}
                     frames={mapData?.Frames}
+                    controlEnabled={features.controlEngines}
                     setEngineControls={actions.setEngineControls}
                     setControlsSynced={actions.setControlsSynced}
                 />

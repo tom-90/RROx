@@ -18,7 +18,7 @@ export function ControlsPage() {
     const navigate = useNavigate();
 
     useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded } = useMapData();
     const [ settings ] = useSettings();
 
     // When this page loads, we refresh the map data

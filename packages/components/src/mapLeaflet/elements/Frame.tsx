@@ -21,7 +21,7 @@ const getStrokeColor = ( brake: number ) => {
 };
 
 export const Frame = React.memo( function Frame( { data, frames }: { data: FrameData, frames: FrameData[] } ) {
-    const { utils, mode, follow, actions, controlEnabled } = useContext( MapContext );
+    const { utils, mode, follow, actions, features } = useContext( MapContext );
     const map = useMap();
 
     const { ID, Location, Rotation, Type, Freight, Number, Name, Brake } = data;
@@ -75,10 +75,10 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                     >
                         {follow && follow.array === 'Frames' && follow.id === ID ? 'Unfollow' : 'Follow'}
                     </Button>
-                    <Button
+                    {features.teleport && <Button
                         style={{ marginTop: 5 }}
                         onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 500 )}
-                    >Teleport Here</Button>
+                    >Teleport Here</Button>}
                 </MapTooltip>
                 <FrameControlsPopup
                     title={`${Name.replace("<br>", "").toUpperCase()}${Name && Number ? ' - ' : ''}${Number.toUpperCase() || ''}`}
@@ -87,7 +87,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                     id={ID}
                     isVisible={controlsVisible}
                     className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
-                    controlEnabled={controlEnabled}
+                    controlEnabled={features.controlEngines}
                     onClose={() => {
                         setControlsVisible( false );
                         setTooltipVisible( false );
@@ -128,7 +128,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                     setStorageVisible( true );
                 }}
             >Show Freight</Button>}
-            {Type === Cars.CABOOSE && <Button
+            {features.teleport && Type === Cars.CABOOSE && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] )}
             >Teleport Here</Button>}
@@ -140,7 +140,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
             id={ID}
             isVisible={controlsVisible}
             className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
-            controlEnabled={controlEnabled}
+            controlEnabled={features.controlEngines}
             onClose={() => {
                 setControlsVisible( false );
                 setTooltipVisible( false );

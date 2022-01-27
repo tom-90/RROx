@@ -11,6 +11,8 @@ export class SetCheatsIPCListener extends IPCListener<[ name?: string, walkSpeed
     public public = true;
     
     protected async onMessage( name?: string, walkSpeed?: number, flySpeed?: number ): Promise<void> {
+        if( !this.app.settings.get( 'features.cheats' ) )
+            return;
         const readWorldTask = this.app.getTask( ReadWorldTask );
 
         let gameMode = await this.app.getAction( EnsureInGameAction ).run();

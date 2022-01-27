@@ -9,7 +9,7 @@ import { useMapData } from "../hooks/useMapData";
 export function MapPage() {
     const { status, mode: attachMode } = useContext( AttachContext );
 
-    const { controlEnabled, mapData, mode, settings, setSettings } = useMapData();
+    const { features, mapData, mode, settings, setSettings } = useMapData();
 
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export function MapPage() {
                 settings={settings}
                 actions={actions}
                 mode={mode}
-                controlEnabled={controlEnabled}
+                features={features}
             />
             {!settings.playerName && attachMode === 'client' && mapData.Players.length > 0 && status === AttachedState.ATTACHED && <PlayerSelector
                 players={mapData.Players}

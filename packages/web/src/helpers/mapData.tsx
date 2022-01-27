@@ -3,15 +3,15 @@ import React, { createContext, useState, useEffect, useContext, useMemo } from "
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSocket } from "./socket";
 import { useSettings } from "../helpers/settings";
-import { MapActions } from "@rrox/components";
+import { MapActions, MapFeatures } from "@rrox/components";
 
 export const MapDataContext = createContext<{
-    data   : World;
-    refresh: () => void;
-    clear  : () => void;
-    loaded : boolean;
-    controlEnabled: boolean;
-    actions: MapActions
+    data    : World;
+    refresh : () => void;
+    clear   : () => void;
+    loaded  : boolean;
+    features: MapFeatures;
+    actions : MapActions
 }>( null );
 
 export function useMapData() {
@@ -38,7 +38,13 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [ controlEnabled, setControlEnabled ] = useState( true );
+    const [ features, setFeatures ] = useState<MapFeatures>( {
+        build: false,
+        cheats: false,
+        controlEngines: false,
+        controlSwitches: false,
+        teleport: false,
+    } );
 
     const socket = useSocket();
 
@@ -63,8 +69,8 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             setMapData( data );
         };
 
-        const onControlEnabled = ( enabled: boolean ) => {
-            setControlEnabled( enabled );
+        const onFeaturesChanged = ( features: MapFeatures ) => {
+            setFeatures( features );
         };
 
         const onLeave = () => {
@@ -72,16 +78,16 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             setLoaded( false );
         };
 
-        socket.on( 'map-update'     , onMapUpdate      );
-        socket.on( 'control-enabled', onControlEnabled );
-        socket.on( 'leave'          , onLeave          );
+        socket.on( 'map-update'      , onMapUpdate       );
+        socket.on( 'enabled-features', onFeaturesChanged );
+        socket.on( 'leave'           , onLeave           );
 
         // Callback function that gets called when the component disappears
         // So this contains all cleanup logic (removing event listeners)
         return () => {
-            socket.removeListener( 'map-update'     , onMapUpdate      );
-            socket.removeListener( 'control-enabled', onControlEnabled );
-            socket.removeListener( 'leave'          , onLeave          );
+            socket.removeListener( 'map-update'      , onMapUpdate       );
+            socket.removeListener( 'enabled-features', onFeaturesChanged );
+            socket.removeListener( 'leave'           , onLeave           );
         };
     }, [ socket, mapData ] );
 
@@ -92,6 +98,12 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
                 setLoaded( true );
             } ).catch( ( e ) => {
                 console.log( 'Failed retrieving map data', e );
+            } );
+
+            socket.invoke( 'enabled-features' ).then( ( features: MapFeatures ) => {
+                setFeatures( features );
+            } ).catch( ( e ) => {
+                console.log( 'Failed retrieving enabled features', e );
             } );
         };
     }, [ socket ] );
@@ -116,14 +128,14 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         buildSplines         : ( splines, simulate         ) => socket.invoke( 'build-spline', splines, simulate ),
         openControlsExternal : ( id                        ) => navigate( `${location.pathname.split( '/' )[ 1 ]}/controls/${id}` ),
         openNewTab           : ( url                       ) => window.open( url, '_blank' ),
-    } ), [ settings, socket ] );
+    } ), [ settings, socket, location ] );
 
     return <MapDataContext.Provider value={{
         data: mapData,
         refresh,
         clear,
         loaded,
-        controlEnabled,
+        features,
         actions
     }}>
         {children}

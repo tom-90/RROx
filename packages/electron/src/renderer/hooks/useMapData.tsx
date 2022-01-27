@@ -1,4 +1,4 @@
-import { MapMode, MapSettings } from "@rrox/components";
+import { MapFeatures, MapMode, MapSettings } from "@rrox/components";
 import { DataChange, World } from "@rrox/types";
 import React, { useState, useMemo, useEffect, useContext } from "react";
 
@@ -8,7 +8,7 @@ export const MapDataContext = React.createContext<{
         playerName?: string;
     };
     mode: MapMode;
-    controlEnabled: boolean;
+    features: MapFeatures;
     setSettings: React.Dispatch<React.SetStateAction<MapSettings & { playerName?: string; }>>
 }>( null );
 
@@ -34,13 +34,23 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
 
     const [ settings, setSettings ] = useState<MapSettings & { playerName?: string }>( useMemo( getSettings, [] ) );
     const [ mode, setMode ] = useState<MapMode>( window.mode === 'overlay' ? MapMode.MINIMAP : MapMode.NORMAL );
-    const [ controlEnabled, setControlEnabled ] = useState( false );
+    const [ features, setFeatures ] = useState<MapFeatures>( {
+        build: false,
+        cheats: false,
+        controlEngines: false,
+        controlSwitches: false,
+        teleport: false,
+    } );
 
     useEffect( () => {
         let data = { ...mapData };
         window.ipc.invoke( 'map-data' ).then( ( newData ) => {
             data = newData;
             setMapData( newData );
+        } );
+
+        window.ipc.invoke( 'enabled-features' ).then( ( features ) => {
+            setFeatures( features );
         } );
 
         const onUpdate = ( event: Electron.IpcRendererEvent, changes: DataChange[] ) => {
@@ -68,8 +78,8 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             setSettings( getSettings() );
         } );
 
-        const cleanup3 = window.ipc.on( 'control-enabled', ( event, enabled ) => {
-            setControlEnabled( enabled );
+        const cleanup3 = window.ipc.on( 'enabled-features', ( event, features ) => {
+            setFeatures( features );
         } );
 
         const cleanup4 = window.ipc.on( 'settings-update', () => {
@@ -91,7 +101,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             mapData,
             settings,
             mode,
-            controlEnabled,
+            features,
             setSettings
         }}
     >

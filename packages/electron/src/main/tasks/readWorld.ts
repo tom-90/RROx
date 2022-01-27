@@ -181,14 +181,6 @@ export class ReadWorldTask extends TimerTask {
             this.world.Sandhouses  = result.Sandhouses;
             this.world.Splines     = result.Splines;
         }
-
-
-        let playerResult = await this.app.getAction( ReadPlayerAddress ).run();
-
-        // Check that the player address is known and not inside F-mode or HOST
-        let enableControl = playerResult !== false && ( playerResult[ 1 ] === false || gameStatus === GameMode.HOST );
-        if( enableControl !== this.enableControl || full )
-            this.app.publicBroadcast( 'control-enabled', enableControl );
     }
 
     private detectChanges<T extends object>( name: string, oldArray: T[], newArray: T[] ) {

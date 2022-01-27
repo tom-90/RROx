@@ -12,7 +12,7 @@ import { useImageAdjust } from '../hooks/useImageAdjust';
 import { Circle, Marker } from 'react-leaflet';
 
 export const Sandhouse = React.memo( function Sandhouse( { data }: { data: SandhouseData } ) {
-    const { utils, mode, actions } = useContext( MapContext );
+    const { utils, mode, actions, features } = useContext( MapContext );
 
     const [ infoVisible, setInfoVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
@@ -59,10 +59,10 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: Sandh
                 setTooltipVisible( false );
                 setInfoVisible( true );
             }}>Show Info</Button>
-            <Button
+            {features.teleport && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 1000 )}
-            >Teleport Here</Button>
+            >Teleport Here</Button>}
             <StorageInfo
                 title={'Sandhouse'}
                 storages={{

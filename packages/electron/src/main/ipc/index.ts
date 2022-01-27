@@ -3,6 +3,7 @@ export * from './autosave';
 export * from './buildSpline';
 export * from './changeSwitch';
 export * from './danglingInjector';
+export * from './enabledFeatures';
 export * from './getVersion';
 export * from './mapData';
 export * from './minizwergColors';

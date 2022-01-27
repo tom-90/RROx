@@ -9,7 +9,7 @@ import { Button } from 'antd';
 import { Cheats } from '../popups/Cheats';
 
 export const Player = React.memo( function Player( { data }: { data: PlayerData } ) {
-    const { utils, follow, mode, actions } = useContext( MapContext );
+    const { utils, follow, mode, actions, features } = useContext( MapContext );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     const [ cheatsVisible, setCheatsVisible ] = useState( false );
 
@@ -48,13 +48,13 @@ export const Player = React.memo( function Player( { data }: { data: PlayerData 
                     } );
                 setTooltipVisible( false );
             }}>{follow.array === 'Players' || follow.id === ID ? 'Unfollow' : 'Follow'}</Button>
-            <Button
+            {features.cheats && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => {
                     setTooltipVisible( false );
                     setCheatsVisible( true );
                 }}
-            >Cheats</Button>
+            >Cheats</Button>}
         </MapTooltip>
         <Cheats
             data={data}

@@ -48,8 +48,16 @@ export interface MapContextData {
         enabled: boolean;
         setFollowing<A extends keyof World>( array?: A, id?: number, apply?: ( data: World[ A ][ number ], map: L.Map ) => void ): void;
     },
-    controlEnabled: boolean,
+    features: MapFeatures;
     mode: MapMode;
+}
+
+export interface MapFeatures {
+    teleport: boolean;
+    controlEngines: boolean;
+    controlSwitches: boolean;
+    build: boolean;
+    cheats: boolean;
 }
 
 export enum MapMode {

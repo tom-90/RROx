@@ -9,6 +9,8 @@ export class TeleportIPCListener extends IPCListener<[ x: number, y: number, z: 
     public public = true;
     
     protected async onMessage( x: number, y: number, z: number, name?: string ): Promise<void> {
+        if( !this.app.settings.get( 'features.teleport' ) )
+            return;
         await this.app.getAction( TeleportAction ).run( x, y, z, name );
     }
 }
