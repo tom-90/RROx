@@ -58,15 +58,15 @@ export function Cheats( {
             }}
         >
             <Divider orientation="left">Money &amp; XP</Divider>
-            <Form.Item label='Money' name='money'>
-                <InputNumber min={0} style={{ width: 200 }} />
+            <Form.Item label='Increase Money by' name='money'>
+                <InputNumber style={{ width: 200 }} />
             </Form.Item>
             <Form.Item
-                label='XP'
+                label='Increase XP by'
                 name='xp'
                 help={<p style={{ padding: '10px 0 0 0' }}>Fill in the values that you want to modify.</p>}
             >
-                <InputNumber min={0} style={{ width: 200 }} />
+                <InputNumber style={{ width: 200 }} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 15 }}>
                 <Button type='primary' onClick={() => {

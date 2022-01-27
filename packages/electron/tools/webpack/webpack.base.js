@@ -1,5 +1,7 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const relocateLoader = require('@vercel/webpack-asset-relocator-loader');
+const CopyPlugin = require("copy-webpack-plugin");
+const path = require("path");
 
 module.exports = {
     // Put your normal webpack config below here
@@ -12,7 +14,7 @@ module.exports = {
             },
             {
                 // Webpack asset relocator loader
-                test: /\.(m?js|node)$/,
+                test: /\.(m?js|node|dll)$/,
                 parser: { amd: false },
                 use: {
                     loader: '@vercel/webpack-asset-relocator-loader',
@@ -88,6 +90,14 @@ module.exports = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin(),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve( __dirname, '../../../../node_modules/iohook/builds/electron-v98-win32-x64/build/Release/uiohook.dll' ),
+                    to: "native_modules/builds/electron-v98-win32-x64/build/Release/uiohook.dll"
+                },
+            ],
+        }),
         {
             apply( compiler ) {
                 compiler.hooks.compilation.tap(

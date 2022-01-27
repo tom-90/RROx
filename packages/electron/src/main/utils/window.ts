@@ -82,3 +82,13 @@ export function focusGame() {
     user32.SetForegroundWindow( window );
     user32.SetFocus( window );
 }
+
+export function focusOverlay() {
+    const window = user32.FindWindowA( null, "RROxOverlay" );
+
+    if ( ref.isNull( window ) )
+        return;
+
+    user32.SetForegroundWindow( window );
+    user32.SetFocus( window );
+}

@@ -1,11 +1,11 @@
-import { Cars, SplineType } from '@rrox/types';
+import { Cars, KeyCodes, SplineType } from '@rrox/types';
 import { Options } from 'electron-store';
 
 export const schema = {
     'map.background': {
         type: 'number' as const,
         default: 6,
-        maximum: 6,
+        maximum: 7,
         minimum: 1,
     },
     'map.refresh': {
@@ -84,6 +84,18 @@ export const schema = {
         default: false
     },
 
+    'keybind.openMap': {
+        type: 'array' as const,
+        items: { type: 'number' as const },
+        default: [ KeyCodes.VK_F1 ] as const,
+    },
+
+    'keybind.autosave': {
+        type: 'array' as const,
+        items: { type: 'number' as const },
+        default: [ KeyCodes.VK_F2 ] as const,
+    },
+
     [ `colors.${Cars.HANDCAR}`         ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER}`          ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER2}`         ]: { type: 'string', default: '#800080' },
@@ -148,6 +160,8 @@ export interface Schema {
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
     'install-message-shown': boolean;
     'site.darkMode': boolean;
+    'keybind.openMap': number[];
+    'keybind.autosave': number[];
 }
 
 export const migrations: Options<Schema>[ 'migrations' ] = {

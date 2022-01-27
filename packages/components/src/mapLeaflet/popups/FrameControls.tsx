@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useContext, useCallback } from 'react';
 import { Button } from "antd";
 import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/icons";
+import { useNavigate } from 'react-router-dom';
 import { Frame } from '@rrox/types';
 import { DraggableModal } from 'ant-design-draggable-modal';
-import { EngineControls } from '@rrox/types';
 import { MapContext } from '../context';
 import { FrameControls } from '../../components/frameControls';
 import { FrameDefinitions } from '../definitions/Frame';
@@ -29,12 +29,6 @@ export function FrameControlsPopup( {
     const { actions } = useContext( MapContext );
     const [ compact, setCompact ] = useState( false );
 
-    const openExternal = () => {
-        let location = window.location.href;
-        let page = `controls/${id}`;
-        window.open(location.endsWith("/") ? location + page : location + `/` + page, '_blank').focus();
-    };
-
     const definition = FrameDefinitions[ data.Type ];
     const isEngine = definition.engine;
 
@@ -52,7 +46,7 @@ export function FrameControlsPopup( {
             {isEngine && <Button
                 type='text'
                 style={{ marginLeft: 10, padding: 5 }}
-                onClick={() => openExternal()}
+                onClick={() => actions.openControlsExternal( id )}
                 title="Open controls in new window"
             >
                 <ControlOutlined />

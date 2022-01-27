@@ -19,6 +19,7 @@ export interface MapActions {
     getColor             : ( key: string ) => string;
     getSelectedPlayerName: () => string;
     buildSplines         : ( splines: BuildSpline[], simulate: boolean ) => Promise<false | BuildSplinePoints[]>;
+    openControlsExternal : ( ID: number ) => void;
     openNewTab           : ( url: string ) => void;
 }
 

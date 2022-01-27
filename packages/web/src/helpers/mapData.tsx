@@ -1,5 +1,6 @@
 import { DataChange, World } from "@rrox/types";
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSocket } from "./socket";
 import { useSettings } from "../helpers/settings";
 import { MapActions } from "@rrox/components";
@@ -20,7 +21,6 @@ export function useMapData() {
 }
 
 export function MapDataProvider( { children }: { children?: React.ReactNode } ) {
-
     const emptyData: World = {
         Frames     : [],
         Splines    : [],
@@ -34,6 +34,9 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
 
     const [ mapData, setMapData ] = useState( emptyData );
     const [ loaded , setLoaded  ] = useState( false );
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const [ controlEnabled, setControlEnabled ] = useState( true );
 
@@ -111,6 +114,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         getColor             : ( key                       ) => ( settings as any )[ `colors.${key}` ],
         getSelectedPlayerName: (                           ) => settings[ 'multiplayer.client.playerName' ],
         buildSplines         : ( splines, simulate         ) => socket.invoke( 'build-spline', splines, simulate ),
+        openControlsExternal : ( id                        ) => navigate( `${location.pathname.split( '/' )[ 1 ]}/controls/${id}` ),
         openNewTab           : ( url                       ) => window.open( url, '_blank' ),
     } ), [ settings, socket ] );
 

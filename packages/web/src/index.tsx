@@ -1,5 +1,6 @@
 import * as React from "react";
 import { render } from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import { message } from "antd";
 import { App } from './app';
@@ -19,13 +20,15 @@ message.config({
 
 render(
     <DraggableModalProvider>
-        <SocketProvider>
-            <MapDataProvider>
-                <SettingsProvider>
-                    <App />
-                </SettingsProvider>
-            </MapDataProvider>
-        </SocketProvider>
+        <BrowserRouter>
+            <SocketProvider>
+                <MapDataProvider>
+                    <SettingsProvider>
+                        <App />
+                    </SettingsProvider>
+                </MapDataProvider>
+            </SocketProvider>
+        </BrowserRouter>
     </DraggableModalProvider>,
     rootEl
 );

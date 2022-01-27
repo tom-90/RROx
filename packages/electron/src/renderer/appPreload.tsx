@@ -27,6 +27,7 @@ const validChannels = [
     'set-socket-state',
     'set-sync-controls',
     'set-mode',
+    'settings-update',
     'dangling-injector',
     'kill-dangling-injector',
     'get-version',

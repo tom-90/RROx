@@ -6,8 +6,14 @@
     "workspaces": [
         "packages/*"
     ],
+    "iohook": {
+      "targets": [
+        "node-88"
+      ]
+    },
     "scripts": {
-        "postinstall": "patch-package"
+        "postinstall": "patch-package && yarn run postinstall:iohook",
+        "postinstall:iohook": "node packages/electron/tools/iohook/postinstall.js"
     },
      "devDependencies": {
         "patch-package": "^6.4.7",

@@ -1,9 +1,8 @@
 import { TimerTask } from "./task";
 import { RROx } from "../rrox";
 import { WindowType } from "../windows";
-import { globalShortcut, screen } from "electron";
-import { focusGame, getActiveWindow, getGameWindow } from "../utils";
-import { AutosaveTask } from ".";
+import { screen } from "electron";
+import { focusGame, focusOverlay, getActiveWindow, getGameWindow } from "../utils";
 
 export enum OverlayStates {
     HIDDEN = 0,
@@ -39,38 +38,16 @@ export class OverlayTask extends TimerTask {
     }
 
     public stop() {
-        this.unregisterShortcuts();
-
         return super.stop();
     }
 
-    private registerShortcuts() {
-        if( this.shortcutsRegistered )
+    public onToggleMap() {
+        if( !this.isGameFocussed() )
             return;
-        this.shortcutsRegistered = true;
-
-        globalShortcut.register( 'F1', () => {
-            if( !this.isGameFocussed() )
-                return;
-            this.toggleMap();
-        } );
-
-        globalShortcut.register( 'F2', () => {
-            if( !this.isGameFocussed() )
-                return;
-            this.app.getTask( AutosaveTask ).runNow();
-        } );
+        this.toggleMap();
     }
 
-    private unregisterShortcuts() {
-        if( !this.shortcutsRegistered )
-            return;
-        this.shortcutsRegistered = false;
-        globalShortcut.unregister( 'F1' );
-        globalShortcut.unregister( 'F2' );
-    }
-
-    private isGameFocussed() {
+    public isGameFocussed() {
         let activeWindow = getActiveWindow();
         return activeWindow && ( activeWindow.title === 'arr  ' || activeWindow.title === 'RROxOverlay' );
     }
@@ -86,8 +63,10 @@ export class OverlayTask extends TimerTask {
         } else if ( isMinimapEnabled && this.state !== OverlayStates.MINIMAP ) {
             this.showMinimap();
             focusGame();
-        } else if ( !isMinimapEnabled || this.state === OverlayStates.MINIMAP )
+        } else if ( !isMinimapEnabled || this.state === OverlayStates.MINIMAP ) {
             this.showMap();
+            focusOverlay();
+        }
     }
 
     private update() {
@@ -206,11 +185,6 @@ export class OverlayTask extends TimerTask {
             this.showMinimap();
             focusGame();
         }
-
-        if( focussed )
-            this.registerShortcuts();
-        else
-            this.unregisterShortcuts();
     }
 
 }

@@ -4,6 +4,7 @@ import { Modal, Input, Tooltip } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { PageLayout } from "../components/PageLayout";
 import { BackgroundSettings, ColorSettings } from '@rrox/components';
+import { KeybindInput } from '../components/KeybindInput';
 
 export function Settings() {
 
@@ -261,6 +262,19 @@ export function Settings() {
                             </td>
                         </tr>}
                     />
+                    <Divider orientation="left">Keybindings</Divider>
+                    <Form.Item
+                        label="Open Map"
+                        name="keybind.openMap"
+                    >
+                        <KeybindInput />
+                    </Form.Item>
+                    <Form.Item
+                        label="Autosave Now"
+                        name="keybind.autosave"
+                    >
+                        <KeybindInput />
+                    </Form.Item>
                     <Divider orientation="left">Minizwerg</Divider>
                     <Form.Item
                         label="Upload autosaves to Minizwerg"

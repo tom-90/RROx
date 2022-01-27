@@ -73,6 +73,8 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         } );
 
         const cleanup4 = window.ipc.on( 'settings-update', () => {
+            document.body.setAttribute('data-theme', window.settingsStore.get( 'site.darkMode' ) ? 'dark' : 'light');
+            
             setSettings( getSettings() );
         } );
 

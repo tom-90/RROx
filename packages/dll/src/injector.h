@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <string>
 #include "arr.h"
 
 void save(uint64_t addrGameMode, int slotIndex);
