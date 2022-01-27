@@ -31,6 +31,14 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.11.0 - 27-01-2022
+
+- ``Added`` Dark high-res map (Thanks to [Faab007NL](https://github.com/faab007)).
+- ``Added`` Configurable keybinds for opening the map and autosaving (more will come in the next updates).
+- ``Added`` Feature toggles for cheating, building, teleporting, changing switches and controlling engines.
+- ``Fixed`` Changing Money and XP now works correctly.
+- ``Fixed`` Dark mode color issues.
+
 ### v1.10.0 - 25-01-2022
 
 - ``Added`` Functions to heightgraph for modifying multiple points at once.
