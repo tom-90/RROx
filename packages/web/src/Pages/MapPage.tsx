@@ -12,7 +12,7 @@ export function MapPage() {
     const navigate = useNavigate();
 
     const socket = useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled, actions: actions } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, features, actions: actions } = useMapData();
     const [ settings ] = useSettings();
 
     // When this page loads, we refresh the map data
@@ -42,7 +42,7 @@ export function MapPage() {
                 settings={mapSettings}
                 actions={actions}
                 mode={MapMode.NORMAL}
-                controlEnabled={controlEnabled}
+                features={features}
             />
         </MapPageLayout>
     );

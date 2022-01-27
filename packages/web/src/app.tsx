@@ -8,7 +8,6 @@ import {FrameControlPage} from "./Pages/FrameControlPage";
 import {FancyControlPage} from "./Pages/FancyControlPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {useSettings} from "./helpers/settings";
-import {LayoutControlPage} from "./Pages/LayoutControlPage";
 
 export function App(){
     const [ settings ] = useSettings();
@@ -21,10 +20,9 @@ export function App(){
                 <Route path="/:serverKey" element={<MapPage />} />
                 <Route path="/:serverKey/players" element={<PlayerSelect />} />
                 <Route path="/:serverKey/settings" element={<MapSettings />} />
-                <Route path="/:serverKey/controls/layout" element={<LayoutControlPage />} />
-                <Route path="/:serverKey/controls/frames" element={<FrameControlsPage />} />
-                <Route path="/:serverKey/controls/frames/:id" element={<FrameControlPage />} />
-                <Route path="/:serverKey/controls/frames/:id/fancy" element={<FancyControlPage />} />
+                <Route path="/:serverKey/controls" element={<FrameControlsPage />} />
+                <Route path="/:serverKey/controls/:id" element={<FrameControlPage />} />
+                <Route path="/:serverKey/controls/:id/fancy" element={<FancyControlPage />} />
             </Routes>
         </BrowserRouter>
     );

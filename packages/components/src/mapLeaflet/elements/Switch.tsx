@@ -8,7 +8,7 @@ import { Tooltip } from 'react-leaflet';
 import { message } from 'antd';
 
 export const Switch = React.memo( function Switch( { data }: { data: SwitchData } ) {
-    const { utils, controlEnabled, actions } = useContext( MapContext );
+    const { utils, features, actions } = useContext( MapContext );
 
     const { ID, Type, Side, Location, Rotation } = data;
 
@@ -62,8 +62,8 @@ export const Switch = React.memo( function Switch( { data }: { data: SwitchData 
         interactive={true}
         eventHandlers={{
             click: () => {
-                if ( !controlEnabled ) {
-                    message.error( 'Flipping a switch is not possible while in this mode.' );
+                if ( !features.controlSwitches ) {
+                    message.error( 'Flipping switches is disabled.' );
                     return;
                 }
                 actions.changeSwitch( ID );

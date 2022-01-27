@@ -9,6 +9,8 @@ export class ChangeSwitchIPCListener extends IPCListener<[ id: number ]> {
     public public = true;
     
     protected async onMessage( id: number ): Promise<void> {
+        if( !this.app.settings.get( 'features.controlSwitches' ) )
+            return;
         await this.app.getAction( ChangeSwitchAction ).run( id );
     }
 }

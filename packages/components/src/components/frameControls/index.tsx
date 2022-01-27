@@ -228,7 +228,7 @@ export function FrameControls( {
                             </tr>
                         </tbody>
                     </table>}
-            {isEngine && !compact && <div style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
+            {isEngine && !compact && controlEnabled && <div style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
                 <Switch
                     checked={SyncControls}
                     onChange={( checked ) => {

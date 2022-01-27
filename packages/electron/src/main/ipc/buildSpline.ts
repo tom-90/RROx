@@ -10,6 +10,8 @@ export class BuildSplineIPCHandler extends IPCHandler<[ splines: BuildSpline[], 
     public public = true;
     
     protected handle( splines: BuildSpline[], simulate: boolean ) {
+        if( !this.app.settings.get( 'features.build' ) )
+            return;
         return this.app.getAction( BuildSplineAction ).run( splines, simulate );
     }
 }

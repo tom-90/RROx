@@ -2,6 +2,12 @@
 	filter: drop-shadow(0px 0px 3px black);
 }
 
+body[data-map-theme="dark"] {
+	.tooltipControls .highlight, .highlight:hover, .leaflet-interactive:hover {
+		filter: drop-shadow(0px 0px 3px white);
+	}
+}
+
 .ant-tooltip {
 	z-index: 2000!important;
 }

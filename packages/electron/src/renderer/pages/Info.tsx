@@ -21,13 +21,6 @@ export function Info() {
                     To test if autosaving is working, click the 'Autosave now'-button and check whether the game saved.
                 </p>
                 <p>
-                    Within the game, there are two shortcuts available: 
-                </p>
-                <ul>
-                    <li><code>F1</code>: Show/hide map</li>
-                    <li><code>F2</code>: Trigger autosave</li>
-                </ul>
-                <p>
                     The minimap can follow players or locomotives.
                     To select a target to follow, click on the player or locomotive on the map and choose follow.
                     If you want to follow your own player, you can also click the 'Follow Player'-button under the zoom-controls.

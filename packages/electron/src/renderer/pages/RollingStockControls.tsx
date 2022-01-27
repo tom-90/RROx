@@ -13,7 +13,7 @@ export function RollingStockControlsPage() {
     let { serverKey, id } = useParams();
     const navigate = useNavigate();
 
-    const { mapData } = useMapData();
+    const { mapData, features } = useMapData();
 
     const frameId = parseInt( id );
 
@@ -43,6 +43,7 @@ export function RollingStockControlsPage() {
                     setEngineControls={setEngineControls}
                     setControlsSynced={setControlsSynced}
                     frames={mapData.Frames}
+                    controlEnabled={features.controlEngines}
                 />
             </div>
         </PageLayout>

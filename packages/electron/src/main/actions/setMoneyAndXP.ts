@@ -57,8 +57,8 @@ export class SetMoneyAndXPAction extends Action<void, [ name?: string, money?: n
 
         pipe.writeInt( this.actionID );
         pipe.writeUInt64( addrPlayer );
-        pipe.writeFloat( money ?? -1 );
-        pipe.writeInt( xp ?? -1 );
+        pipe.writeFloat( money ?? 0 );
+        pipe.writeInt( xp ?? 0 );
     }
 
 }

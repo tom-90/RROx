@@ -2,8 +2,8 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
+import { MapContext, MapContextData, MapMode, MapSettings, MapActions, MapFeatures } from './context';
 import { Line } from './leaflet/line';
-import { MapContext, MapContextData, MapMode, MapSettings, MapActions } from './context';
 import { Background } from './background';
 import { Player as PlayerData, World } from '@rrox/types';
 import { Splines } from './elements/Splines';
@@ -21,12 +21,12 @@ import { usePrevious } from '../hooks/usePrevious';
 import { Draw } from './draw/controls';
 import { Paths } from './Paths';
 
-export function Map( { data, settings, actions, mode, controlEnabled }: {
-    data          : World,
-    settings      : MapSettings,
-    actions       : MapActions,
-    mode          : MapMode,
-    controlEnabled: boolean,
+export function Map( { data, settings, actions, mode, features }: {
+    data    : World,
+    settings: MapSettings,
+    actions : MapActions,
+    mode    : MapMode,
+    features: MapFeatures,
 } ) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -173,7 +173,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
             actions,
             mode,
             utils,
-            controlEnabled,
+            features,
             follow: {
                 array  : following?.array,
                 id     : following?.id,
@@ -221,7 +221,7 @@ export function Map( { data, settings, actions, mode, controlEnabled }: {
                                 }
                     )}
                 />
-                {mode === MapMode.NORMAL && drawSnapLayers.length > 0 && <Draw snapLayers={drawSnapLayers} />}
+                {mode === MapMode.NORMAL && drawSnapLayers.length > 0 && features.build && <Draw snapLayers={drawSnapLayers} />}
                 <LayersControl>
                     <Pane name='background' style={{ zIndex: 0 }}>
                         <Line

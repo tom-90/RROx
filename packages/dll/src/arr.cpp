@@ -139,21 +139,21 @@ void ASCharacter::ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float 
     ProcessEvent(fn, &parms);
 }
 
-void ASCharacter::SetPlayerXP(int32_t xp) {
-    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.SetPlayerXP");
+void ASCharacter::ChangePlayerXP(int32_t xpadd) {
+    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ChangePlayerXP");
     struct {
-        int32_t xp;
+        int32_t xpadd;
     } parms;
-    parms = { xp };
+    parms = { xpadd };
     ProcessEvent(fn, &parms);
 }
 
-void ASCharacter::SetPlayerMoney(float money) {
-    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.SetPlayerMoney");
+void ASCharacter::ChangePlayerMoney(float deltamoney) {
+    static auto fn = ObjObjects->FindObject("Function arr.SCharacter.ChangePlayerMoney");
     struct {
-        float xp;
+        float deltamoney;
     } parms;
-    parms = { money };
+    parms = { deltamoney };
     ProcessEvent(fn, &parms);
 }
 

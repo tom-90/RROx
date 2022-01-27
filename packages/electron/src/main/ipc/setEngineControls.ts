@@ -10,6 +10,8 @@ export class SetEngineControlsIPCListener extends IPCListener<[ id: number, type
     public public = true;
     
     protected async onMessage( id: number, type: EngineControls, value: number ): Promise<void> {
+        if( !this.app.settings.get( 'features.controlEngines' ) )
+            return;
         await this.app.getAction( SetEngineControlsAction ).run( id, type, value );
     }
 }

@@ -35,7 +35,9 @@ struct UBlueprintFunctionLibrary : UObject {
 // Class arr.SCharacter
 // Size: 0xbb0 (Inherited: 0x4c0)
 struct ASCharacter : ACharacter {
-	char pad_4C0[0x6F0]; // 0x4c0(0x6F0)
+	char pad_4C0[0x18]; // 0x4c0(0x18)
+	struct FString myplayername; // 0x4d8(0x10)
+	char pad_4E8[0x6C8]; // 0x4c0(0x6C8)
 
 	void ServerSwitchUp(struct ASwitch* MySwitch); // Function arr.SCharacter.ServerSwitchUp // (Net|Native|Event|Protected|NetServer) // @ game+0xac36f0
 	void ServerSwitchDown(struct ASwitch* MySwitch); // Function arr.SCharacter.ServerSwitchDown // (Net|Native|Event|Protected|NetServer) // @ game+0xac3660
@@ -46,8 +48,8 @@ struct ASCharacter : ACharacter {
 	void ServerSetRaycastHandvalve(struct Ahandvalve* handvalve, float Value); // Function arr.SCharacter.ServerSetRaycastHandvalve // (Net|Native|Event|Protected|NetServer) // @ game+0xac25d0
 	void ServerSpawnSpline(struct FVector Pos, struct FRotator Rot, struct TArray<struct FVector> ControlPoints, char SplineType); // Function arr.SCharacter.ServerSpawnSpline // (Net|NetReliableNative|Event|Protected|NetServer|HasDefaults|NetValidate) // @ game+0xac8790
 
-	void SetPlayerMoney(float money); // Function arr.SCharacter.SetPlayerMoney // (Final|Native|Public|BlueprintCallable) // @ game+0xac4550
-	void SetPlayerXP(int32_t xp); // Function arr.SCharacter.SetPlayerXP // (Final|Native|Public|BlueprintCallable) // @ game+0xac45d0
+	void ChangePlayerXP(int32_t xpadd); // Function arr.SCharacter.ChangePlayerXP // (Final|Native|Public|BlueprintCallable) // @ game+0xac5d40
+	void ChangePlayerMoney(float deltamoney); // Function arr.SCharacter.ChangePlayerMoney // (Final|Native|Public|BlueprintCallable) // @ game+0xac5cc0
 };
 
 // Enum Engine.EDrawDebugTrace

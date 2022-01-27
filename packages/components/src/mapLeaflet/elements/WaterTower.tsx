@@ -13,7 +13,7 @@ import { useMapEvents } from 'react-leaflet';
 import { useAutoHide } from './../hooks/useAutoHide';
 
 export const WaterTower = React.memo( function WaterTower( { data }: { data: WaterTowerData } ) {
-    const { utils, mode, actions } = useContext( MapContext );
+    const { utils, mode, actions, features } = useContext( MapContext );
 
     const { Location, Rotation, Storage } = data;
 
@@ -56,10 +56,10 @@ export const WaterTower = React.memo( function WaterTower( { data }: { data: Wat
                     setTooltipVisible( false );
                     setInfoVisible( true );
                 }}>Show Info</Button>
-                <Button
+                {features.teleport && <Button
                     style={{ marginTop: 5 }}
                     onClick={() => actions.teleport( data.Location[ 0 ], data.Location[ 1 ], data.Location[ 2 ] + 1000 )}
-                >Teleport Here</Button>
+                >Teleport Here</Button>}
                 <StorageInfo
                     title={'Water Tower'}
                     storages={{

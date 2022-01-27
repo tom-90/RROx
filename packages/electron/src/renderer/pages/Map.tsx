@@ -1,4 +1,5 @@
 import React, { useMemo, useContext } from "react";
+import { useNavigate } from "react-router-dom"
 import { PageLayout } from "../components/PageLayout";
 import { AttachContext } from "../utils/attach";
 import { AttachedState } from "@rrox/types";
@@ -8,7 +9,9 @@ import { useMapData } from "../hooks/useMapData";
 export function MapPage() {
     const { status, mode: attachMode } = useContext( AttachContext );
 
-    const { controlEnabled, mapData, mode, settings, setSettings } = useMapData();
+    const { features, mapData, mode, settings, setSettings } = useMapData();
+
+    const navigate = useNavigate();
 
     const actions = useMemo<MapActions>( () => ( {
         teleport             : ( x, y, z ) => window.ipc.send( 'teleport', x, y, z, attachMode === 'client' ? settings.playerName : undefined ),
@@ -20,6 +23,7 @@ export function MapPage() {
         getColor             : ( key ) => window.settingsStore.get( `colors.${key}` ) || '#000',
         getSelectedPlayerName: () => attachMode === 'client' ? settings.playerName : undefined,
         buildSplines         : ( splines, simulate ) => window.ipc.invoke( 'build-spline', splines, simulate ),
+        openControlsExternal : ( id ) => navigate( `/controls/${id}` ),
         openNewTab           : ( url ) => window.openBrowser( url ),
     } ), [ settings ] );
 
@@ -30,7 +34,7 @@ export function MapPage() {
                 settings={settings}
                 actions={actions}
                 mode={mode}
-                controlEnabled={controlEnabled}
+                features={features}
             />
             {!settings.playerName && attachMode === 'client' && mapData.Players.length > 0 && status === AttachedState.ATTACHED && <PlayerSelector
                 players={mapData.Players}

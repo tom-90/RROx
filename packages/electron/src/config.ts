@@ -1,4 +1,4 @@
-import { Cars, SplineType } from '@rrox/types';
+import { Cars, KeyCodes, SplineType } from '@rrox/types';
 import { Options } from 'electron-store';
 
 export const schema = {
@@ -84,6 +84,43 @@ export const schema = {
         default: false
     },
 
+    'keybind.openMap': {
+        type: 'array' as const,
+        items: { type: 'number' as const },
+        default: [ KeyCodes.VK_F1 ] as const,
+    },
+
+    'keybind.autosave': {
+        type: 'array' as const,
+        items: { type: 'number' as const },
+        default: [ KeyCodes.VK_F2 ] as const,
+    },
+
+    'features.teleport': {
+        type: 'boolean' as const,
+        default: true
+    },
+
+    'features.controlEngines': {
+        type: 'boolean' as const,
+        default: true
+    },
+
+    'features.controlSwitches': {
+        type: 'boolean' as const,
+        default: true
+    },
+
+    'features.build': {
+        type: 'boolean' as const,
+        default: true
+    },
+
+    'features.cheats': {
+        type: 'boolean' as const,
+        default: true
+    },
+
     [ `colors.${Cars.HANDCAR}`         ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER}`          ]: { type: 'string', default: '#800080' },
     [ `colors.${Cars.PORTER2}`         ]: { type: 'string', default: '#800080' },
@@ -148,6 +185,13 @@ export interface Schema {
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
     'install-message-shown': boolean;
     'site.darkMode': boolean;
+    'keybind.openMap': number[];
+    'keybind.autosave': number[];
+    'features.teleport': boolean;
+    'features.controlEngines': boolean;
+    'features.controlSwitches': boolean;
+    'features.build': boolean;
+    'features.cheats': boolean;
 }
 
 export const migrations: Options<Schema>[ 'migrations' ] = {

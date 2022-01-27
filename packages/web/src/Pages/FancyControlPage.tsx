@@ -16,7 +16,7 @@ export function FancyControlPage() {
     const navigate = useNavigate();
 
     useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled, actions: actions } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, features, actions: actions } = useMapData();
     const [ settings ] = useSettings();
 
     // When this page loads, we refresh the map data
@@ -58,6 +58,7 @@ export function FancyControlPage() {
                 <FancyFrameControls
                     data={data}
                     isEngine
+                    controlEnabled={features.controlEngines}
                     setEngineControls={setEngineControls}
                 />
             </div>

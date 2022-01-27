@@ -44,9 +44,9 @@ ReactDOM.render( <DraggableModalProvider>
 if ( process.env.NODE_ENV == 'development' && module.hot ) module.hot.accept();
 
 
-if ( window.mode === 'normal' ) {
-    document.body.setAttribute('data-theme', window.settingsStore.get( 'site.darkMode' ) ? 'dark' : 'light');
+document.body.setAttribute('data-theme', window.settingsStore.get( 'site.darkMode' ) ? 'dark' : 'light');
 
+if ( window.mode === 'normal' ) {
     window.ipc.on( 'popup-message', ( event, type: 'warn' | 'info' | 'error', title: string, description: string ) => {
         if ( type === 'warn' )
             notification.warn( {
