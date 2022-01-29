@@ -18,44 +18,51 @@ body[data-map-theme="dark"] {
 
 .map {
 	position: relative;
-
-	&.map-normal {
-		width: 100%;
-		height: 100%;
-	}
-
-	&.map-map {
-		width: 50vw;
-		height: 70vh;
-		margin-top: 15vh;
-	}
+	width: 100%;
+	height: 100%;
 
 	&.map-minimap {
-		width: 20vw;
-		height: 25vh;
-
-		&.corner-1 {
-			margin-top: 0;
-			margin-right: 80vw;
-		}
-
-		&.corner-2 {
-			margin-top: 0;
-			margin-left: 80vw;
-		}
-
-		&.corner-3 {
-			margin-top: 75vh;
-			margin-right: 80vw;
-		}
-
-		&.corner-4 {
-			margin-top: 75vh;
-			margin-left: 80vw;
-		}
-
 		.leaflet-control-container {
 			visibility: hidden;
+		}
+	}
+}
+
+.ant-design-draggable-modal .map-modal {
+	.ant-modal-close-x {
+		width: 30px;
+		height: 30px;
+		margin: -15px -2px;
+	}
+
+	.ant-design-draggable-modal-title {
+		padding: 2px;
+	}
+
+	.ant-modal-body {
+		padding: 0;
+	}
+
+	.ant-design-draggable-modal-resize-handle-inner {
+		z-index: 3000;
+	}
+
+	&.minimap {
+		.ant-modal-header {
+			display: none;
+		}
+
+		.ant-modal-content {
+			background: none!important;
+			box-shadow: none;
+		}
+		
+		.ant-modal-close-x {
+			display: none;
+		}
+
+		.ant-design-draggable-modal-resize-handle-inner {
+			display: none;
 		}
 	}
 }

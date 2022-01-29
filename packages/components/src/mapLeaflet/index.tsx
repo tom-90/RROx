@@ -20,6 +20,7 @@ import './styles.less';
 import { usePrevious } from '../hooks/usePrevious';
 import { Draw } from './draw/controls';
 import { Paths } from './Paths';
+import { Modal } from './modal';
 
 export function Map( { data, settings, actions, mode, features }: {
     data    : World,
@@ -188,157 +189,163 @@ export function Map( { data, settings, actions, mode, features }: {
             }
         }}
     >
-        <div className={[ 'map', `map-${mode}`, `corner-${settings.minimapCorner}` ].join( ' ' )}>
-            <MapContainer
-                center={mapProps.center}
-                bounds={mapProps.bounds}
-                zoom={mapProps.initialZoom}
-                zoomControl={false}
-                attributionControl={false}
-                scrollWheelZoom={true}
-                style={{ width: '100%', height: '100%' }}
-                whenCreated={( map ) => {
-                    setMap( map );
-                    if( mode !== MapMode.NORMAL )
-                        setFollowing( { array: 'Players', id: 0, apply: ( data: PlayerData, map: L.Map ) => {
-                            const anchor = utils.scalePoint( ...data.Location );
-                            map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
-                        } } );
-                }}
-            >
-                <Controls
-                    showFocusPlayer={data.Players.length > 0 ? ( following?.array != null && following?.id != null ? 2 : 1 ) : false}
-                    onFocusPlayer={() => setFollowing(
-                        following?.array != null && following?.id != null
-                                ? null
-                                : {
-                                    array: 'Players',
-                                    id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || data.Players[ 0 ].ID,
-                                    apply: ( data: PlayerData, map: L.Map ) => {
-                                        const anchor = utils.scalePoint( ...data.Location );
-                                        map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
-                                    }
+        <Modal>
+            <div className={[ 'map', `map-${mode}` ].join( ' ' )}>
+                <MapContainer
+                    center={mapProps.center}
+                    bounds={mapProps.bounds}
+                    zoom={mapProps.initialZoom}
+                    zoomControl={false}
+                    attributionControl={false}
+                    scrollWheelZoom={true}
+                    style={{ width: '100%', height: '100%' }}
+                    whenCreated={( map ) => {
+                        setMap( map );
+                        if( mode !== MapMode.NORMAL )
+                            setFollowing( {
+                                array: 'Players', 
+                                id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || 0, 
+                                apply: ( data: PlayerData, map: L.Map ) => {
+                                    const anchor = utils.scalePoint( ...data.Location );
+                                    map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
                                 }
-                    )}
-                />
-                {mode === MapMode.NORMAL && drawSnapLayers.length > 0 && features.build && <Draw snapLayers={drawSnapLayers} />}
-                <LayersControl>
-                    <Pane name='background' style={{ zIndex: 0 }}>
-                        <Line
-                            positions={[
-                                mapProps.bounds.getNorthWest(),
-                                mapProps.bounds.getNorthEast(),
-                                mapProps.bounds.getSouthEast(),
-                                mapProps.bounds.getSouthWest(),
-                                mapProps.bounds.getNorthWest(),
-                            ]}
-                            color={'black'}
-                            weight={1000}
-                            opacity={mode === MapMode.MINIMAP && settings.transparent ? 0 : 1}
-                        />
-                        <Background />
-                    </Pane>
-                    <Pane name='groundwork' style={{ zIndex: 10 }}>
-                        <LayersControl.Overlay name="Groundwork" checked>
-                            <LayerGroup
-                                ref={groundworkLayer}
-                                eventHandlers={{ add: () => setDrawSnapLayers( [] ) }}
-                            >
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_BANK )}
-                                    type={SplineType.CONSTANT_BANK}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.VARIABLE_BANK )}
-                                    type={SplineType.VARIABLE_BANK}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_WALL )}
-                                    type={SplineType.CONSTANT_WALL}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.VARIABLE_WALL )}
-                                    type={SplineType.VARIABLE_WALL}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.WOODEN_BRIDGE )}
-                                    type={SplineType.WOODEN_BRIDGE}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.IRON_BRIDGE )}
-                                    type={SplineType.IRON_BRIDGE}
-                                />
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='industries' style={{ zIndex: 20 }}>
-                        <LayersControl.Overlay name="Industries" checked>
-                            <LayerGroup>
-                                {data.Industries.map( ( s, i ) => <Industry data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='sandhouses' style={{ zIndex: 30 }}>
-                        <LayersControl.Overlay name="Sandhouses" checked>
-                            <LayerGroup>
-                                {data.Sandhouses.map( ( s, i ) => <Sandhouse data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='watertowers' style={{ zIndex: 40 }}>
-                        <LayersControl.Overlay name="Watertowers" checked>
-                            <LayerGroup>
-                                {data.WaterTowers.map( ( s, i ) => <WaterTower data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='track' style={{ zIndex: 50 }}>
-                        <LayersControl.Overlay name="Tracks" checked>
-                            <LayerGroup ref={trackLayer}>
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.TRACK )}
-                                    type={SplineType.TRACK}
-                                />
-                                <Splines
-                                    data={data.Splines.filter( ( s ) => s.Type === SplineType.TRENDLE_TRACK )}
-                                    type={SplineType.TRENDLE_TRACK}
-                                />
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='turntables' style={{ zIndex: 60 }}>
-                        <LayersControl.Overlay name="Turntables" checked>
-                            <LayerGroup ref={turntableLayer}>
-                                {data.Turntables.map( ( s, i ) => <Turntable data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='switches' style={{ zIndex: 70 }}>
-                        <LayersControl.Overlay name="Switches" checked>
-                            <LayerGroup ref={switchLayer}>
-                                {data.Switches.map( ( s, i ) => <Switch data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='frames' style={{ zIndex: 80 }}>
-                        <LayersControl.Overlay name="Locomotives and Carts" checked>
-                            <LayerGroup>
-                                {data.Frames.map( ( s, i ) => <Frame data={s} frames={data.Frames} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='players' style={{ zIndex: 90 }}>
-                        <LayersControl.Overlay name="Players" checked>
-                            <LayerGroup>
-                                {data.Players.map( ( s, i ) => <Player data={s} key={i} /> )}
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </Pane>
-                    <Pane name='popups' style={{ zIndex: 100 }} />
-                    <Paths />
-                </LayersControl>
-            </MapContainer>
-        </div>
+                            } );
+                    }}
+                >
+                    <Controls
+                        showFocusPlayer={data.Players.length > 0 ? ( following?.array != null && following?.id != null ? 2 : 1 ) : false}
+                        onFocusPlayer={() => setFollowing(
+                            following?.array != null && following?.id != null
+                                    ? null
+                                    : {
+                                        array: 'Players',
+                                        id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || data.Players[ 0 ].ID,
+                                        apply: ( data: PlayerData, map: L.Map ) => {
+                                            const anchor = utils.scalePoint( ...data.Location );
+                                            map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                                        }
+                                    }
+                        )}
+                    />
+                    {mode === MapMode.NORMAL && drawSnapLayers.length > 0 && features.build && <Draw snapLayers={drawSnapLayers} />}
+                    <LayersControl>
+                        <Pane name='background' style={{ zIndex: 0 }}>
+                            <Line
+                                positions={[
+                                    mapProps.bounds.getNorthWest(),
+                                    mapProps.bounds.getNorthEast(),
+                                    mapProps.bounds.getSouthEast(),
+                                    mapProps.bounds.getSouthWest(),
+                                    mapProps.bounds.getNorthWest(),
+                                ]}
+                                color={'black'}
+                                weight={1000}
+                                opacity={mode === MapMode.MINIMAP && settings.transparent ? 0 : 1}
+                            />
+                            <Background />
+                        </Pane>
+                        <Pane name='groundwork' style={{ zIndex: 10 }}>
+                            <LayersControl.Overlay name="Groundwork" checked>
+                                <LayerGroup
+                                    ref={groundworkLayer}
+                                    eventHandlers={{ add: () => setDrawSnapLayers( [] ) }}
+                                >
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_BANK )}
+                                        type={SplineType.CONSTANT_BANK}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.VARIABLE_BANK )}
+                                        type={SplineType.VARIABLE_BANK}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.CONSTANT_WALL )}
+                                        type={SplineType.CONSTANT_WALL}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.VARIABLE_WALL )}
+                                        type={SplineType.VARIABLE_WALL}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.WOODEN_BRIDGE )}
+                                        type={SplineType.WOODEN_BRIDGE}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.IRON_BRIDGE )}
+                                        type={SplineType.IRON_BRIDGE}
+                                    />
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='industries' style={{ zIndex: 20 }}>
+                            <LayersControl.Overlay name="Industries" checked>
+                                <LayerGroup>
+                                    {data.Industries.map( ( s, i ) => <Industry data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='sandhouses' style={{ zIndex: 30 }}>
+                            <LayersControl.Overlay name="Sandhouses" checked>
+                                <LayerGroup>
+                                    {data.Sandhouses.map( ( s, i ) => <Sandhouse data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='watertowers' style={{ zIndex: 40 }}>
+                            <LayersControl.Overlay name="Watertowers" checked>
+                                <LayerGroup>
+                                    {data.WaterTowers.map( ( s, i ) => <WaterTower data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='track' style={{ zIndex: 50 }}>
+                            <LayersControl.Overlay name="Tracks" checked>
+                                <LayerGroup ref={trackLayer}>
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.TRACK )}
+                                        type={SplineType.TRACK}
+                                    />
+                                    <Splines
+                                        data={data.Splines.filter( ( s ) => s.Type === SplineType.TRENDLE_TRACK )}
+                                        type={SplineType.TRENDLE_TRACK}
+                                    />
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='turntables' style={{ zIndex: 60 }}>
+                            <LayersControl.Overlay name="Turntables" checked>
+                                <LayerGroup ref={turntableLayer}>
+                                    {data.Turntables.map( ( s, i ) => <Turntable data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='switches' style={{ zIndex: 70 }}>
+                            <LayersControl.Overlay name="Switches" checked>
+                                <LayerGroup ref={switchLayer}>
+                                    {data.Switches.map( ( s, i ) => <Switch data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='frames' style={{ zIndex: 80 }}>
+                            <LayersControl.Overlay name="Locomotives and Carts" checked>
+                                <LayerGroup>
+                                    {data.Frames.map( ( s, i ) => <Frame data={s} frames={data.Frames} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='players' style={{ zIndex: 90 }}>
+                            <LayersControl.Overlay name="Players" checked>
+                                <LayerGroup>
+                                    {data.Players.map( ( s, i ) => <Player data={s} key={i} /> )}
+                                </LayerGroup>
+                            </LayersControl.Overlay>
+                        </Pane>
+                        <Pane name='popups' style={{ zIndex: 100 }} />
+                        <Paths />
+                    </LayersControl>
+                </MapContainer>
+            </div>
+        </Modal>
     </MapContext.Provider>;
 
 }

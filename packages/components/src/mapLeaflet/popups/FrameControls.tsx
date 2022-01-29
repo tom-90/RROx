@@ -4,7 +4,7 @@ import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/i
 import { useNavigate } from 'react-router-dom';
 import { Frame } from '@rrox/types';
 import { DraggableModal } from 'ant-design-draggable-modal';
-import { MapContext } from '../context';
+import { MapContext, MapMode } from '../context';
 import { FrameControls } from '../../components/frameControls';
 import { FrameDefinitions } from '../definitions/Frame';
 
@@ -26,7 +26,7 @@ export function FrameControlsPopup( {
     isVisible: boolean,
     onClose: () => void, controlEnabled: boolean
 } ) {
-    const { actions } = useContext( MapContext );
+    const { actions, mode } = useContext( MapContext );
     const [ compact, setCompact ] = useState( false );
 
     const definition = FrameDefinitions[ data.Type ];
@@ -43,11 +43,11 @@ export function FrameControlsPopup( {
             >
                 {compact ? <ExpandOutlined /> : <CompressOutlined />}
             </Button>}
-            {isEngine && <Button
+            {isEngine && mode === MapMode.NORMAL && <Button
                 type='text'
                 style={{ marginLeft: 10, padding: 5 }}
                 onClick={() => actions.openControlsExternal( id )}
-                title="Open controls in new window"
+                title="Open controls"
             >
                 <ControlOutlined />
             </Button>}

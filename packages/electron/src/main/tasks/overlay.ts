@@ -65,7 +65,14 @@ export class OverlayTask extends TimerTask {
             focusGame();
         } else if ( !isMinimapEnabled || this.state === OverlayStates.MINIMAP ) {
             this.showMap();
-            focusOverlay();
+            setTimeout( async () => {
+                let attempts = 0;
+                while( getActiveWindow()?.title !== 'RROxOverlay' && attempts < 10 ) {
+                    focusOverlay();
+                    attempts++;
+                    await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+                }
+            }, 50 );
         }
     }
 
@@ -164,7 +171,6 @@ export class OverlayTask extends TimerTask {
             width: Math.floor( bounds.width ),
             height: Math.floor( bounds.height )
         } ), false );
-        overlay.focus();
 
         this.background = this.app.settings.get( 'map.background' );
 

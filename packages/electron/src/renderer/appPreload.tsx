@@ -16,6 +16,7 @@ const validChannels = [
     'enabled-features',
     'minizwerg-colors',
     'open-log',
+    'log',
     'popup-message',
     'read-height',
     'remove-vegetation',

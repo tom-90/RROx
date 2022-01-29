@@ -5,6 +5,7 @@ export * from './changeSwitch';
 export * from './danglingInjector';
 export * from './enabledFeatures';
 export * from './getVersion';
+export * from './log';
 export * from './mapData';
 export * from './minizwergColors';
 export * from './openLog';

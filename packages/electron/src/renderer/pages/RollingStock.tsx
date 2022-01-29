@@ -26,7 +26,6 @@ export function RollingStockPage() {
             }
         } );
     }
-
     return (
         <PageLayout  style={{ overflowY: 'hidden', marginLeft: '5px', marginRight: '5px' }}>
             <div style={{ maxWidth: 1000, width: '100%', marginBottom: '50px' }}>

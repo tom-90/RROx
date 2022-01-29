@@ -16,6 +16,7 @@ import { AttachProvider } from './utils/attach';
 import { MapDataProvider } from './hooks/useMapData';
 import { RollingStockPage } from './pages/RollingStock';
 import { RollingStockControlsPage } from './pages/RollingStockControls';
+import './utils/log';
 
 window.mode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'overlay' ? 'overlay' : 'normal';
 

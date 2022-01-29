@@ -6,6 +6,8 @@ export class SetMoneyAndXPIPCListener extends IPCListener<[ name?: string, money
     
     public channel = 'set-money-and-xp';
     
+    public public = true;
+
     protected async onMessage( name?: string, money?: number, xp?: number ): Promise<void> {
         await this.app.getAction( SetMoneyAndXPAction ).run( name, money, xp );
     }
