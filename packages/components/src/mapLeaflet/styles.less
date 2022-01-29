@@ -165,3 +165,56 @@ body[data-map-theme="dark"] {
 		}
 	}
 }
+
+.search-popup{
+	margin: 5% auto;
+	min-width: 300px;
+	width: 40%;
+	padding: 10px;
+	position: relative;
+	border-radius: 5px;
+	.search-close{
+		position: absolute;
+		top: 5px;
+		right: 0;
+		button{
+			background: transparent;
+			border: none;
+		}
+	}
+	input{
+		font-size: 20px;
+		margin-bottom: 5px;
+		margin-top: 20px;
+		background: transparent;
+	}
+	.search-results{
+		width: 100%;
+		max-height: 50vh;
+		overflow: auto;
+		padding-right: 2px;
+		.search-result{
+			border: 1px solid black;
+			border-radius: 2px;
+			margin-bottom: 2px;
+			padding: 5px;
+			display: flex;
+			.text{
+				span{
+					line-height: normal;
+					display: block;
+				}
+				.result-title{
+					font-size: 20px;
+				}
+				width: 100%;
+			}
+			.buttons{
+				line-height: normal;
+				width: 20%;
+				display: flex;
+				justify-content: end;
+			}
+		}
+	}
+}
