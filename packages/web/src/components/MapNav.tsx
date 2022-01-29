@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu, Button, Spin, Typography } from "antd";
 import { DisconnectOutlined, DesktopOutlined } from '@ant-design/icons';
 import { useLocation, matchPath, Link, useParams, useNavigate } from "react-router-dom";
+import { SearchPopup } from './SearchPopup';
 import './style.less';
 
 export function MapNav() {
@@ -71,6 +72,8 @@ export function MapNav() {
                     Settings
                 </Link>
             </Menu.Item>
+
+            <SearchPopup/>
         </Menu>
     );
 }

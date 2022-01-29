@@ -10,7 +10,7 @@ export function LayoutControlPage() {
     let { serverKey } = useParams();
 
     const socket = useSocketSession( serverKey );
-    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, controlEnabled, actions: actions } = useMapData();
+    const { data: mapData, refresh: refreshMapData, loaded: mapDataLoaded, actions: actions } = useMapData();
     const [ settings ] = useSettings();
 
     return (
