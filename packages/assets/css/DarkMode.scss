@@ -245,6 +245,19 @@
 		}
 	}
 
+	.search-popup{
+		input{
+			color: white;
+		}
+		.search-result{
+			border-color: white;
+		}
+	}
+
+	.couplingBar img{
+		filter: invert(1);
+	}
+
 }
 
 [data-map-theme='dark']{

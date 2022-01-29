@@ -1,7 +1,6 @@
 import React from 'react';
 import { CoupledFrameItem } from '@rrox/utils';
 import { FrameDefinitions } from '../../mapLeaflet';
-import { Frame } from '@rrox/types';
 
 export function CouplingsBar( {
     coupledFrames,
@@ -12,7 +11,7 @@ export function CouplingsBar( {
     selectedID: number,
     setSelectedID: ( ID: number ) => void,
 } ) {
-    return <div style={{ display: 'flex', overflowX: 'auto', maxWidth: '100%', minHeight: 50 }}>
+    return <div style={{ display: 'flex', overflowX: 'auto', maxWidth: '100%', minHeight: 50 }} className="couplingBar">
         {coupledFrames.map( ( { frame, flipped, isCoupled }, i ) => {
             const definition = FrameDefinitions[ frame.Type ];
 
@@ -27,6 +26,7 @@ export function CouplingsBar( {
                 src={definition.imageIcon}
                 onClick={() => setSelectedID( frame.ID )}
                 key={i}
+                alt="Coupling Bar Icon"
             />
         } )}
     </div>;
