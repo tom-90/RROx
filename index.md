@@ -31,6 +31,13 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v1.12.0 - 29-01-2022
+
+- ``Added`` Movable and closable map popup.
+- ``Fixed`` Button to open controls in new window now works properly.
+- ``Fixed`` Players connecting via a shared URL can now also set money and xp.
+- ``Fixed`` When opening the overlay, the in-game camera will stop moving.
+
 ### v1.11.1 - 27-01-2022
 
 - ``Fixed`` Fixed issue where map stays empty after attaching.
