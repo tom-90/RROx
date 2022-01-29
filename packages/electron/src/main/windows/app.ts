@@ -14,10 +14,6 @@ declare const APP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
  * @returns {BrowserWindow} Application Window Instance
  */
 export function createAppWindow(): BrowserWindow {
-    session.defaultSession.loadExtension( path.resolve(
-        'C:/Users/20201781/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0'
-    ) )
-
     // Create new window instance
     let appWindow = new BrowserWindow( {
         width: 800,

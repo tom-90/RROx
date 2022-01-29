@@ -29,7 +29,9 @@ export class KeybindsTask extends Task {
         const keycode = this.getKeyCode( e );
         if( !this.listenKeys.includes( keycode ) )
             return;
-        if( !this.app.getTask( OverlayTask ).isGameFocussed() )
+        const gameFocussed = this.app.getTask( OverlayTask ).isGameFocussed();
+        Log.info( 'Key Down', keycode, gameFocussed );
+        if( !gameFocussed )
             return;
 
         this.onKeyDown( keycode );
@@ -56,6 +58,7 @@ export class KeybindsTask extends Task {
         this.app.on( 'settings-update', this.onConfigUpdate );
         iohook.on( 'keydown', this.onGlobalKeyDown );
         iohook.on( 'keyup'  , this.onGlobalKeyUp   );
+        iohook.setDebug( true );
         iohook.start();
 
         this.onConfigUpdate();
@@ -89,6 +92,8 @@ export class KeybindsTask extends Task {
     }
 
     public onKeyUp( code: number ) {
+        if( this.pressedKeys.includes( code ) )
+            Log.info( 'Key Up', code );
         this.pressedKeys = this.pressedKeys.filter( ( c ) => c !== code );
     }
 }

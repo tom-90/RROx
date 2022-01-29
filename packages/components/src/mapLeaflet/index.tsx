@@ -21,6 +21,7 @@ import { usePrevious } from '../hooks/usePrevious';
 import { Draw } from './draw/controls';
 import { Paths } from './Paths';
 import { SearchPopup } from "@rrox/components/src/mapLeaflet/popups/Search";
+import { Modal } from './modal';
 
 export function Map( { data, settings, actions, mode, features }: {
     data    : World,
@@ -169,10 +170,6 @@ export function Map( { data, settings, actions, mode, features }: {
             setDrawSnapLayers( [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
     }, [ groundworkLayer.current, trackLayer.current, turntableLayer.current, switchLayer.current ] );
 
-    useEffect(() => {
-        console.log('value changed: '+searchVisible);
-    }, [searchVisible]);
-
     return <MapContext.Provider
             value={{
                 settings,
@@ -186,15 +183,16 @@ export function Map( { data, settings, actions, mode, features }: {
                     id     : following?.id,
                     enabled: followEnabled,
 
-                    setFollowing( array, id, apply ) {
-                        if( array == null || id == null )
-                            setFollowing( null );
-                        else
-                            setFollowing( { array, id, apply } );
-                    }
+                setFollowing( array, id, apply ) {
+                    if( array == null || id == null )
+                        setFollowing( null );
+                    else
+                        setFollowing( { array, id, apply } );
                 }
-            }}
-        >
+            }
+        }}
+    >
+        <Modal>
             <div className={[ 'map', `map-${mode}`, `corner-${settings.minimapCorner}` ].join( ' ' )}>
                 <MapContainer
                     center={mapProps.center}
@@ -207,10 +205,14 @@ export function Map( { data, settings, actions, mode, features }: {
                     whenCreated={( map ) => {
                         setMap( map );
                         if( mode !== MapMode.NORMAL )
-                            setFollowing( { array: 'Players', id: 0, apply: ( data: PlayerData, map: L.Map ) => {
-                                const anchor = utils.scalePoint( ...data.Location );
-                                map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
-                            } } );
+                            setFollowing( {
+                                array: 'Players',
+                                id: data.Players.find( ( p ) => p.Name === actions.getSelectedPlayerName() )?.ID || 0,
+                                apply: ( data: PlayerData, map: L.Map ) => {
+                                    const anchor = utils.scalePoint( ...data.Location );
+                                    map.panTo( L.latLng( anchor[ 0 ], anchor[ 1 ] ), { animate: true, duration: 0.5 } );
+                                }
+                            } );
                     }}
                 >
                     <Controls
@@ -349,8 +351,9 @@ export function Map( { data, settings, actions, mode, features }: {
                     </LayersControl>
                 </MapContainer>
             </div>
-            <SearchPopup visible={searchVisible} setVisible={(visible) => setSearchVisible(visible)}/>
-        </MapContext.Provider>;
+        </Modal>
+        <SearchPopup visible={searchVisible} setVisible={(visible) => setSearchVisible(visible)}/>
+    </MapContext.Provider>;
 
 }
 

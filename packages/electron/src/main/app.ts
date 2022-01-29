@@ -4,7 +4,7 @@ import Logger from 'electron-log';
 import { createAppWindow, createOverlayWindow, WindowType } from './windows';
 import { RROx } from './rrox';
 import { BuildSplineAction, ChangeSwitchAction, EnsureInGameAction, InjectDLLAction, MinizwergColorsAction, MinizwergUploadAction, ReadAddressAction, ReadAddressValueAction, ReadHeightAction, ReadPlayerAddress, ReadWorldAction, SaveAction, SetAddressValueAction, SetEngineControlsAction, SetMoneyAndXPAction, ShowInjectorAction, TeleportAction, TogglePauseAction, VegetationSpawnersAction } from './actions';
-import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, EnabledFeaturesIPCHandler, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetCheatsIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener, PathDataIPCHandler } from './ipc';
+import { AutosaveIPCListener, BuildSplineIPCHandler, ChangeSwitchIPCListener, EnabledFeaturesIPCHandler, GetAttachedStateIPCHandler, GetSocketStateIPCHandler, GetVersionIPCHandler, KillDanglingInjector, LogIPCListener, MapDataIPCHandler, MinizwergColorsIPCHandler, OpenLogIPCListener, ReadHeightIPCHandler, SetAttachedStateIPCListener, SetCheatsIPCListener, SetEngineControlsIPCListener, SetMoneyAndXPIPCListener, SetSocketStateIPCHandler, SetSyncControlsIPCListener, ShowInjectorIPCListener, TeleportIPCListener, UpdateConfigIPCListener, PathDataIPCHandler } from './ipc';
 import { AttachTask, AutosaveTask, CheatsTask, ControlsSyncTask, KeybindsTask, LoggerTask, OverlayTask, ReadWorldTask } from './tasks';
 import './types';
 import path from 'path';
@@ -100,6 +100,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             GetSocketStateIPCHandler,
             GetVersionIPCHandler,
             KillDanglingInjector,
+            LogIPCListener,
             EnabledFeaturesIPCHandler,
             MapDataIPCHandler,
             MinizwergColorsIPCHandler,
