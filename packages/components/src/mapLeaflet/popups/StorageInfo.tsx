@@ -61,6 +61,7 @@ export function StorageInfo( {
                             </td>
                             <td style={{ width: Math.round( 50 / storages[ storage ].length ) + '%' }}>
                                 {Type.split( ' ' ).map( ( item: Products, i: number ) => <img
+                                    className="StorageInfoImg"
                                     src={ProductDefinitions[ item ]?.image}
                                     height={50}
                                     key={i.toString()}
