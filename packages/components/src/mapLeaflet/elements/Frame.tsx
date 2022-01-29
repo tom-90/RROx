@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Frame as FrameData } from "@rrox/types";
 import { MapContext, MapMode } from '../context';
 import { Shape } from '../leaflet/shape';
@@ -9,7 +9,6 @@ import { FrameControlsPopup } from '../popups/FrameControls';
 import { StorageInfo } from '../popups/StorageInfo';
 import { Cars } from '@rrox/types';
 import L from 'leaflet';
-import { useMap } from 'react-leaflet';
 
 const getStrokeColor = ( brake: number ) => {
     if( brake > 0.5 )
@@ -22,7 +21,6 @@ const getStrokeColor = ( brake: number ) => {
 
 export const Frame = React.memo( function Frame( { data, frames }: { data: FrameData, frames: FrameData[] } ) {
     const { utils, mode, follow, actions, features } = useContext( MapContext );
-    const map = useMap();
 
     const { ID, Location, Rotation, Type, Freight, Number, Name, Brake } = data;
 
@@ -55,7 +53,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                     visible={tooltipVisible && mode !== MapMode.MINIMAP}
                     setVisible={setTooltipVisible}
                 >
-                    <img src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} />
+                    <img src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon" />
                     <Button onClick={() => {
                         setTooltipVisible( false );
                         setControlsVisible( true );
@@ -95,6 +93,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                 />
             </Shape>;
 
+    let frameTitle = Name || Number ? (Name.replace("<br>", "").toUpperCase()) + (Name && Number ? ' - ' : '') + (Number.toUpperCase() || '') : (definition.name || 'Freight Car');
     return <Shape
         positions={[
             utils.scalePoint( 100, definition.length / 2 ),
@@ -112,11 +111,11 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
         interactive
     >
         <MapTooltip
-            title={definition.name || 'Freight Car'}
+            title={frameTitle}
             visible={tooltipVisible && mode !== MapMode.MINIMAP}
             setVisible={setTooltipVisible}
         >
-            <img src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} />
+            <img src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon"/>
             <Button onClick={() => {
                 setTooltipVisible( false );
                 setControlsVisible( true );
@@ -134,7 +133,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
             >Teleport Here</Button>}
         </MapTooltip>
         <FrameControlsPopup
-            title={definition.name || 'Freight Car'}
+            title={frameTitle}
             data={data}
             frames={frames}
             id={ID}
@@ -147,7 +146,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
             }}
         />
         <StorageInfo
-            title={definition.name || 'Freight Car'}
+            title={frameTitle}
             className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
             storages={{
                 Freight: Freight ? [ Freight ] : []
