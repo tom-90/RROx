@@ -6,7 +6,7 @@ import { useSettings } from "../helpers/settings";
 import { MapPageLayout } from "../components/MapPageLayout";
 import { LayoutControl } from '@rrox/components/src/components/layoutControl/LayoutControl';
 
-export function LayoutControlPage() {
+export function LayoutControlEditPage() {
     let { serverKey } = useParams();
 
     const socket = useSocketSession( serverKey );
@@ -15,7 +15,7 @@ export function LayoutControlPage() {
 
     return (
         <MapPageLayout>
-            <LayoutControl editMode={false} />
+            <LayoutControl editMode={true} />
         </MapPageLayout>
     );
 }

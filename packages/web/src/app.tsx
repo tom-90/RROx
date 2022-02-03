@@ -11,6 +11,7 @@ import {FrameControlsPage} from "./Pages/FrameControlsPage";
 import {FrameControlPage} from "./Pages/FrameControlPage";
 import {FancyControlPage} from "./Pages/FancyControlPage";
 import {LayoutControlPage} from "./Pages/LayoutControlPage";
+import {LayoutControlEditPage} from "./Pages/LayoutControlEditPage";
 
 export function App(){
     const [ settings ] = useSettings();
@@ -23,6 +24,7 @@ export function App(){
             <Route path="/:serverKey/players" element={<PlayerSelect />} />
             <Route path="/:serverKey/settings" element={<MapSettings />} />
             <Route path="/:serverKey/controls/layout" element={<LayoutControlPage />} />
+            <Route path="/:serverKey/controls/layout/edit" element={<LayoutControlEditPage />} />
             <Route path="/:serverKey/controls/frames" element={<FrameControlsPage />} />
             <Route path="/:serverKey/controls/frames/:id" element={<FrameControlPage />} />
             <Route path="/:serverKey/controls/frames/:id/fancy" element={<FancyControlPage />} />

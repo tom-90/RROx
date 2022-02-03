@@ -178,12 +178,19 @@
 		width: 300px;
 		height: calc(100% - 64px);
 		padding: 10px;
-		background-color: gray;
+		background-color: #f1f1f1;
+		.menuBtn{
+			position: absolute;
+			top: 5px;
+			right: 10px;
+		}
 		h1{
 			text-align: center;
 			color: white;
 		}
 		.tools{
+			height: calc(100vh - 150px);
+			overflow: auto;
 			.ant-radio-wrapper{
 				display: block;
 			}
