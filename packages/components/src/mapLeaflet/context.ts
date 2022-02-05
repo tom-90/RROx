@@ -10,7 +10,7 @@ export interface MapSettings {
 }
 
 export interface MapActions {
-    teleport             : ( x: number, y: number, z: number ) => void;
+    teleport             : ( x: number, y: number, z?: number ) => void;
     changeSwitch         : ( id: number ) => void;
     setEngineControls    : ( id: number, type: EngineControls, value: number ) => void;
     setMoneyAndXP        : ( name: string, money?: number, xp?: number ) => void;
@@ -21,6 +21,7 @@ export interface MapActions {
     buildSplines         : ( splines: BuildSpline[], simulate: boolean ) => Promise<false | BuildSplinePoints[]>;
     openControlsExternal : ( ID: number ) => void;
     openNewTab           : ( url: string ) => void;
+    locate               : ( ID: number, type: keyof World ) => void;
 }
 
 export interface MapContextData {

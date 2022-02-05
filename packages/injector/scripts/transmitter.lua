@@ -57,6 +57,8 @@ function starttransmitter()
                 getVegetationSpawners(pipe)
             elseif command == "I" then -- Inject DLL
                 injectDLLFile(pipe)
+            elseif command == "N" then -- Name of Object
+                getObjectName(pipe)
             elseif command == "W" then -- Write Address Value
                 setAddressValue(pipe)
             elseif command == nil and not thread.Terminated then

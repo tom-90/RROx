@@ -16,6 +16,7 @@ import { Frame } from './elements/Frame';
 import { Sandhouse } from './elements/Sandhouse';
 import { WaterTower } from './elements/WaterTower';
 import { Controls } from './leaflet/controls';
+import { ContextMenu } from './leaflet/contextMenu';
 import './styles.less';
 import { usePrevious } from '../hooks/usePrevious';
 import { Draw } from './draw/controls';
@@ -349,10 +350,11 @@ export function Map( { data, settings, actions, mode, features }: {
                         <Pane name='popups' style={{ zIndex: 100 }} />
                         <Paths />
                     </LayersControl>
+                    <ContextMenu />
                 </MapContainer>
             </div>
         </Modal>
-        <SearchPopup visible={searchVisible} setVisible={(visible) => setSearchVisible(visible)}/>
+        <SearchPopup data={data} visible={searchVisible} setVisible={(visible) => setSearchVisible(visible)}/>
     </MapContext.Provider>;
 
 }

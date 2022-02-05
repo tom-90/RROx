@@ -128,6 +128,14 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         buildSplines         : ( splines, simulate         ) => socket.invoke( 'build-spline', splines, simulate ),
         openControlsExternal : ( id                        ) => window.open( `${location.pathname.split( '/' )[ 1 ]}/controls/${id}`, '_blank' ),
         openNewTab           : ( url                       ) => window.open( url, '_blank' ),
+        locate               : ( ID, type                  ) => navigate( `${location.pathname.split( '/' )[ 1 ]}`, {
+            state: {
+                locate: {
+                    type: type,
+                    id  : ID,
+                }
+            }
+        } ),
     } ), [ settings, socket, location ] );
 
     return <MapDataContext.Provider value={{

@@ -15,40 +15,19 @@ export class SetMoneyAndXPAction extends Action<void, [ name?: string, money?: n
         if( !gameMode )
             throw new Error( 'Not in game' );
     
-        let addrPlayer = null;
 
-        if( !name ) {
-            let playerRead = await this.app.getAction( ReadPlayerAddress ).run();
-        
-            if( playerRead === false ) {
-                Log.info( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
-                return;
-            }
+        let playerRead = await this.app.getAction( ReadPlayerAddress ).run( name );
+    
+        if( playerRead === false ) {
+            Log.info( 'Player address is unavailable. Player has probably been in third-person-driving mode since RROx was attached' );
+            return;
+        }
 
-            let [ addr, insideEngine ] = playerRead;
+        let [ addrPlayer, insideEngine ] = playerRead;
 
-            if( insideEngine ) {
-                Log.info( 'Cannot set money and xp for player while driving engines.' );
-                return;
-            }
-
-            addrPlayer = addr;
-        } else {
-            let player = this.app.getTask( ReadWorldTask ).world.Players.find( ( p ) => p.Name === name );
-
-            if( !player ) {
-                Log.info( `Player with name '${name}' could not be found. Unable to teleport.` );
-                return;
-            }
-            
-            let addr = await this.app.getAction( ReadAddressAction ).run( ReadAddressMode.ARRAY, 'Player', player.ID, gameMode, '[$BASE+PlayerState.PawnPrivate]' );
-        
-            if( addr === false ) {
-                Log.info( 'Player address is unavailable. Unable to set money and xp.' );
-                return;
-            }
-
-            addrPlayer = addr;
+        if( insideEngine ) {
+            Log.info( 'Cannot set money and xp for player while driving engines.' );
+            return;
         }
 
         await this.acquire();

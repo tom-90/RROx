@@ -4,6 +4,7 @@ export * from './ensureInGame';
 export * from './injectDLL';
 export * from './minizwergColors';
 export * from './minizwergUpload';
+export * from './objectName';
 export * from './readAddress';
 export * from './readAddressValue';
 export * from './readHeight';

@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input, Button, Modal } from 'antd';
-import { useMapData } from "@rrox/web/src/helpers/mapData";
+import { MapContext } from '../context';
 import {FrameDefinitions} from "@rrox/components";
 import {AimOutlined, ControlOutlined} from '@ant-design/icons';
+import { World } from "@rrox/types";
 
-export function SearchPopup({ visible, setVisible } : {
+export function SearchPopup({ visible, setVisible, data: mapData } : {
     visible : boolean,
-    setVisible: (visible : boolean) => void
+    setVisible: (visible : boolean) => void,
+    data: World
 }){
     let { serverKey } = useParams();
     const navigate = useNavigate();
-    const { data: mapData, actions: actions } = useMapData();
+    const { actions } = useContext( MapContext );
     const [ inputValue, setInputValue] = useState('');
 
     let searchItems : {
@@ -21,38 +23,27 @@ export function SearchPopup({ visible, setVisible } : {
         type: 'engine' | 'tender' | 'freight' | 'player'
     }[] = [];
 
-    const locate = ( ID: number ) => {
-        navigate( `/${serverKey}`, {
-            state: {
-                locate: {
-                    type: 'Frames',
-                    id  : ID,
-                }
-            }
-        });
-    }
-
     mapData.Frames.forEach(frame => {
         let title = `${frame.Name.toUpperCase()}${frame.Name && Number ? ' - ' : ''}${frame.Number.toUpperCase() || ''}`;
         if(FrameDefinitions[ frame.Type ].engine){
             searchItems.push({
                 ID: frame.ID,
                 title: title,
-                desc: 'Locomotive - '+frame.Type.toUpperCase(),
+                desc: 'Locomotive - '+ FrameDefinitions[ frame.Type ].name,
                 type: 'engine'
             });
         }else if(FrameDefinitions[ frame.Type ].tender){
             searchItems.push({
                 ID: frame.ID,
                 title: title.length != 0 ? title : 'Tender',
-                desc: 'Tender - '+frame.Type.toUpperCase(),
+                desc: 'Tender - '+ FrameDefinitions[ frame.Type ].name,
                 type: 'tender'
             });
         }else if(FrameDefinitions[ frame.Type ].freight){
             searchItems.push({
                 ID: frame.ID,
                 title: title.length != 0 ? title : 'Freight',
-                desc: 'Freight - '+frame.Type.toUpperCase(),
+                desc: 'Freight - '+ FrameDefinitions[ frame.Type ].name,
                 type: 'freight'
             });
         }
@@ -99,8 +90,8 @@ export function SearchPopup({ visible, setVisible } : {
                         title="Locate on the map"
                         icon={<AimOutlined />}
                         onClick={() => {
-                            setVisible(false);
-                            locate( ID );
+                            setVisible( false );
+                            actions.locate( ID, type === 'player' ? 'Players' : 'Frames' );
                         }}
                         size='large'
                     />

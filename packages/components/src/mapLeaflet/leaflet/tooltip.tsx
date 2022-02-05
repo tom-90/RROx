@@ -3,9 +3,10 @@ import { Popup, Pane, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Divider } from 'antd';
 
-export function MapTooltip( { title, children, visible, setVisible }: {
-    title: string,
+export function MapTooltip( { title, children, visible, position, setVisible }: {
+    title?: string,
     children?: React.ReactNode,
+    position?: L.LatLngExpression,
     visible: boolean,
     setVisible: ( visible: boolean ) => void
 } ) {
@@ -23,9 +24,9 @@ export function MapTooltip( { title, children, visible, setVisible }: {
 
     const { onOpen, onClose } = useMemo( () => ( { onOpen: () => setVisible( true ), onClose: () => setVisible( false ) } ), [] );
 
-    return <Popup pane='popups' ref={ref} onOpen={onOpen} onClose={onClose}>
+    return <Popup pane='popups' ref={ref} onOpen={onOpen} onClose={onClose} position={position}>
         <div style={{ margin: '0 10px 10px 10px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <Divider orientation={'center'} style={{ margin: '0 0 10px 0' }}>{title}</Divider>
+            {title && <Divider orientation={'center'} style={{ margin: '0 0 10px 0' }}>{title}</Divider>}
             {children}
         </div>
     </Popup>;

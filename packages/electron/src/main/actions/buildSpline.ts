@@ -9,16 +9,16 @@ import { ReadWorldTask } from "../tasks";
 
 export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ splines: BuildSpline[], simulate: boolean ]> {
     public static SPLINE_SETTINGS: { [ key in SplineType ]: { straightSegmentLength: number, curvedSegmentLength: number, maxSegmentsCount: number } } = {
-        [ SplineType.TRACK         ]: { straightSegmentLength: 1000 , curvedSegmentLength: 1000, maxSegmentsCount: 80 },
+        [ SplineType.TRACK         ]: { straightSegmentLength: 1000 , curvedSegmentLength: 500 , maxSegmentsCount: 80 },
 
-        [ SplineType.VARIABLE_BANK ]: { straightSegmentLength: 10000, curvedSegmentLength: 2000, maxSegmentsCount: 80 },
-        [ SplineType.CONSTANT_BANK ]: { straightSegmentLength: 10000, curvedSegmentLength: 2000, maxSegmentsCount: 80 },
+        [ SplineType.VARIABLE_BANK ]: { straightSegmentLength: 10000, curvedSegmentLength: 1000, maxSegmentsCount: 80 },
+        [ SplineType.CONSTANT_BANK ]: { straightSegmentLength: 10000, curvedSegmentLength: 1000, maxSegmentsCount: 80 },
 
-        [ SplineType.WOODEN_BRIDGE ]: { straightSegmentLength: 10000, curvedSegmentLength: 2000, maxSegmentsCount: 80 },
-        [ SplineType.TRENDLE_TRACK ]: { straightSegmentLength: 1000 , curvedSegmentLength: 1000, maxSegmentsCount: 80 },
+        [ SplineType.WOODEN_BRIDGE ]: { straightSegmentLength: 10000, curvedSegmentLength: 1000, maxSegmentsCount: 80 },
+        [ SplineType.TRENDLE_TRACK ]: { straightSegmentLength: 1000 , curvedSegmentLength: 500 , maxSegmentsCount: 80 },
 
-        [ SplineType.VARIABLE_WALL ]: { straightSegmentLength: 5000 , curvedSegmentLength: 2000, maxSegmentsCount: 80 },
-        [ SplineType.CONSTANT_WALL ]: { straightSegmentLength: 5000 , curvedSegmentLength: 2000, maxSegmentsCount: 80 },
+        [ SplineType.VARIABLE_WALL ]: { straightSegmentLength: 5000 , curvedSegmentLength: 1000, maxSegmentsCount: 80 },
+        [ SplineType.CONSTANT_WALL ]: { straightSegmentLength: 5000 , curvedSegmentLength: 1000, maxSegmentsCount: 80 },
 
         [ SplineType.IRON_BRIDGE   ]: { straightSegmentLength: 1650 , curvedSegmentLength: 1000, maxSegmentsCount: 80 },
     };
@@ -237,7 +237,13 @@ export class BuildSplineAction extends Action<false | BuildSplinePoints[], [ spl
     
         for( let i = 0; i < path.points.length; i++ ) {
             let distance = path.lengths[ i ];
-            let point = path.points[ i ];
+
+            let startPoint = path.points[ i ];
+            let endPoint = i < path.points.length - 1 ? path.points[ i + 1 ] : ( i > 0 ? path.points[ i - 1 ] : path.points[ i ] );
+
+            let direction = endPoint.sub( startPoint ).scale( 0.05 );
+
+            let point = startPoint.add( direction );
 
             let heightData = data.find( ( h ) => h.distance === distance );
             if ( !heightData ) {
