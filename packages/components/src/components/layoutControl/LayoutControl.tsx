@@ -1,9 +1,11 @@
-import React, {ReactElement, useEffect, useState} from "react";
-import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
-import { Button, Input, InputNumber, Radio, Tabs} from "antd";
-import { MenuOutlined } from '@ant-design/icons';
-import { TrackTypes, TrackPieces } from "@rrox/types/src/layout/trackPieces";
+import React, {useEffect, useMemo, useState, useRef, useLayoutEffect} from "react";
+import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
+import {Button, Input, InputNumber, Radio, Tabs} from "antd";
+import {MenuOutlined} from '@ant-design/icons';
+import {TrackPieces, TrackTypes} from "@rrox/types/src/layout/trackPieces";
 import TextArea from "antd/es/input/TextArea";
+import Canvg from 'canvg';
+
 const { TabPane } = Tabs;
 
 interface valueObject {
@@ -21,10 +23,10 @@ interface valueObject {
 export function LayoutControl({ editMode }: {
     editMode?: boolean
 }){
+    const Viewer = useRef(null);
     const [ currentTool, setCurrentTool ] : [ TrackTypes, any ] = useState(TrackTypes.none);
     const [ rows, setRows ] = useState(20);
     const [ columns, setColumns] = useState(60);
-    const [ svgSquares, setSvgSquares ] : [ ReactElement<any, any>, any ] = useState();
     const [ layoutName, setLayoutName] = useState('');
     const [ layoutDescription, setLayoutDescription] = useState('');
     const width = 20;
@@ -39,37 +41,18 @@ export function LayoutControl({ editMode }: {
             }
         }, any ] = useState({});
 
-    const drawMap = () => {
-        setSvgSquares(
-            (<g>
-                {squares.map(({key, x, y, props}) => <g key={'layout-square-'+key}>
-                        <rect
-                            x={x}
-                            y={y}
-                            width={width}
-                            height={height}
-                            fill={props.color}
-                            stroke={editable ? props.fillColor : 'transparent'}
-                            strokeWidth={editable ? props.strokeWidth : 0}
-                            style={{zIndex: 20}}
-                            onClick={() => {
-                                if (editable) {
-                                    let newSquareContent = {...squareContent};
-                                    newSquareContent[key].trackType = currentTool;
-                                    setSquareContent(newSquareContent);
-                                }else if (squareContent[key].trackType === TrackTypes.switch_horizontal_bottom_left){
-                                    let newSquareContent = {...squareContent};
-                                    newSquareContent[key].switchState = !newSquareContent[key].switchState;
-                                    setSquareContent(newSquareContent);
-                                }
-                            }}
-                        />
-                        <TrackPieces trackKey={key} type={squareContent[key].trackType} switchState={squareContent[key].switchState} x={x} y={y} width={width} height={height} />
-                    </g>
-                )}
-            </g>)
-        );
-    }
+    const saveToImg = async () => {
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        const svgViewer = '<svg>'+document.querySelector('.layout-map svg g').innerHTML+'</svg>';
+
+        let pngRenderer = await Canvg.from(ctx, svgViewer);
+        pngRenderer.resize(columns * width, rows * height);
+        await pngRenderer.render();
+
+        Viewer.current.fitToViewer();
+        return canvas.toDataURL();
+    };
 
     useEffect(() => {
         if (Object.keys(squareContent).length === 0) return;
@@ -86,8 +69,7 @@ export function LayoutControl({ editMode }: {
     }, [squareContent, rows, columns]);
 
     useEffect(() => {
-        setSquares([]);
-
+        const newSquares = [];
         if (window.localStorage.getItem('LayoutSquareContent')){
             let data = JSON.parse(window.localStorage.getItem('LayoutSquareContent'));
 
@@ -100,13 +82,13 @@ export function LayoutControl({ editMode }: {
             setSquareContent(data.content);
         }
 
-        let key = 0;
         for (let i1 = 0; i1 < columns; i1++) {
             for (let i2 = 0; i2 < rows; i2++) {
                 let x = i1 * width;
                 let y = i2 * height;
+                let key = x+';'+y;
 
-                squares.push({
+                newSquares.push({
                     key: key,
                     x: x,
                     y: y,
@@ -124,17 +106,48 @@ export function LayoutControl({ editMode }: {
                         switchState: false
                     };
                 }
-
-                key++;
             }
         }
-        drawMap();
+        Viewer.current.setPointOnViewerCenter(rows * width * 1.5, columns * height / 5, 1.2);
+        setSquares(newSquares);
     }, [rows, columns]);
+
+    const drawSquares = useMemo(() => {
+        return (<g>
+            {squares.map(({key, x, y, props}) => <g key={'layout-square-'+key}>
+                    <rect
+                        x={x}
+                        y={y}
+                        width={width}
+                        height={height}
+                        fill={props.color}
+                        stroke={editable ? props.fillColor : 'transparent'}
+                        strokeWidth={editable ? props.strokeWidth : 0}
+                        style={{zIndex: 20}}
+                        onClick={() => {
+                            if (editable) {
+                                let newSquareContent = {...squareContent};
+                                newSquareContent[key].trackType = currentTool;
+                                setSquareContent(newSquareContent);
+                            }else if (squareContent[key].trackType === TrackTypes.switch_horizontal_bottom_left){
+                                let newSquareContent = {...squareContent};
+                                newSquareContent[key].switchState = !newSquareContent[key].switchState;
+                                setSquareContent(newSquareContent);
+                            }
+                        }}
+                    />
+                    <TrackPieces trackKey={key} type={squareContent[key]?.trackType} switchState={squareContent[key]?.switchState} x={x} y={y} width={width} height={height} />
+                </g>
+            )}
+        </g>);
+    }, [squares, squareContent, rows, columns, currentTool]);
 
     return (
         <div className="layout-control">
+            <canvas style={{display: 'none'}} />
+
             <UncontrolledReactSVGPanZoom
-                width={window.innerWidth}
+                width={window.innerWidth - 300}
                 height={window.innerHeight - 64}
                 tool="auto"
                 toolbarProps={{position: 'none'}}
@@ -145,7 +158,8 @@ export function LayoutControl({ editMode }: {
                 scaleFactorMin={0.5}
                 scaleFactorMax={6}
                 scaleFactor={0.8}
-            ><svg width={0} height={0}>{svgSquares}</svg></UncontrolledReactSVGPanZoom>
+                ref={Viewer}
+            ><svg width={0} height={0}>{drawSquares}</svg></UncontrolledReactSVGPanZoom>
 
             <div className="toolbar">
 
@@ -217,7 +231,10 @@ export function LayoutControl({ editMode }: {
                         <TextArea rows={4} allowClear={true} style={{width: '100%'}} onChange={(e) => setLayoutDescription(e.target.value)} />
 
                         <Button style={{marginTop: '5px'}} type="primary" block={true} onClick={() => {
-                            alert("TODO // PUBLISHED AS "+layoutName);
+                            saveToImg().then(r => {
+                                console.log(r);
+                            });
+                            //alert("TODO // PUBLISHED AS "+layoutName);
                         }}>Publish</Button>
                         <small>All fields with a * are required</small>
 

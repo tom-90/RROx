@@ -168,13 +168,10 @@
 	height: 100%;
 	display: flex;
 	.layout-map{
-		width: 100%;
+		width: calc(100% - 300px);
 		height: 100%;
 	}
 	.toolbar{
-		position: absolute;
-		top: 64px;
-		right: 0;
 		width: 300px;
 		height: calc(100% - 64px);
 		padding: 10px;
@@ -194,6 +191,88 @@
 			.ant-radio-wrapper{
 				display: block;
 			}
+		}
+	}
+}
+
+.layout-select-siv{
+	padding: 10px;
+	width: 80%;
+	.layout-search{
+		padding-bottom: 10px;
+		display: flex;
+		input{
+			width: 80%;
+			height: 40px;
+			font-size: 20px;
+		}
+		.ant-select{
+			width: 20%;
+			margin-left: 5px;
+		}
+	}
+	.layout-select{
+		display: grid;
+		grid-template-columns: repeat(auto-fit, 200px);
+		gap: 5px;
+		padding-right: 2px;
+		height: calc(100vh - 200px);
+		width: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+		.ant-card-meta-detail{
+			margin-bottom: 30px;
+		}
+		.layout-option{
+			position: relative;
+			small{
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+			}
+			button{
+				position: absolute;
+				bottom: 10px;
+				right: 10px;
+			}
+		}
+	}
+	.layout-pagination{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+}
+
+.notfound-container{
+	height: 100%;
+	padding: 20px;
+	.center{
+		margin-inline: auto;
+		font-size: 50px;
+		text-align: center;
+		.title{
+			font-size: 100px;
+			font-weight: bold;
+			margin: 0;
+			color: #fa8c16;
+		}
+		.sub-title{
+			font-size: 80px;
+			font-weight: bold;
+			margin-bottom: 50px;
+		}
+		.info{
+			margin: -10px;
+			font-size: 40px;
+			font-weight: bold;
+			color: #fa8c16;
+		}
+		button{
+			margin-top: 40px;
+			font-size: 50px;
+			height: 90px;
+			width: 50%;
 		}
 	}
 }
