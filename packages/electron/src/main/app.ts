@@ -46,10 +46,15 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
     let openURL = process.argv.find( ( arg ) => arg.startsWith( 'rrox://' ) );
 
-    let rrox: RROx;
-    app.on( 'ready', async () => {
-        rrox = new RROx();
+    let rrox = new RROx();
 
+    if( !rrox.settings.get( 'hardware-acceleration' ) ) {
+        app.disableHardwareAcceleration();
+        Logger.info( 'Hardware acceleration is disabled.' );
+    } else
+        Logger.info( 'Hardware acceleration is enabled.' );
+
+    app.on( 'ready', async () => {
         rrox.addWindow( WindowType.App    , createAppWindow    () );
         rrox.addWindow( WindowType.Overlay, createOverlayWindow() );
 

@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import { MapPage } from './pages/Map';
-import { Settings } from './pages/Settings';
+import { Settings } from './pages/settings';
 import { Info } from './pages/Info';
 import './app.less';
 import '@rrox/assets/css/DarkMode.scss';

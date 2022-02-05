@@ -68,7 +68,7 @@
 		border-color: #424242!important;
 	}
 
-	.ant-collapse{
+	.ant-collapse:not(.ant-collapse-ghost) {
 		border-color: #575757 !important;
 		background: #424242 !important;
 		.ant-collapse-item{
@@ -76,8 +76,13 @@
 			.ant-collapse-header, .ant-collapse-content-box, .ant-collapse-content{
 				border-color: #575757!important;
 				background: #3d3d3d !important;
-				color: #ffffff!important;
 			}
+		}
+	}
+
+	.ant-collapse .ant-collapse-item {
+		.ant-collapse-header, .ant-collapse-content-box, .ant-collapse-content{
+			color: #ffffff!important;
 		}
 	}
 

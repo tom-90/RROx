@@ -75,6 +75,11 @@ export const schema = {
         default: false
     },
 
+    'hardware-acceleration': {
+        type: 'boolean' as const,
+        default: true,
+    },
+
     'multiplayer.client.playerName': {
         type: 'string' as const,
     },
@@ -184,6 +189,7 @@ export interface Schema {
     'multiplayer.client.playerName'?: string;
     'loglevel': 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
     'install-message-shown': boolean;
+    'hardware-acceleration': boolean;
     'site.darkMode': boolean;
     'keybind.openMap': number[];
     'keybind.autosave': number[];
