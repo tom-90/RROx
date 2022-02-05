@@ -109,7 +109,7 @@ export class Path {
         const bezier = new Bezier( ...from.coords, ...controlPoint1.coords, ...controlPoint2.coords, ...to.coords );
         const length = bezier.length();
 
-        const pointsToAdd = Math.ceil( length / curvedSegmentLength ) * 2;
+        const pointsToAdd = Math.ceil( length / curvedSegmentLength );
 
         // from does not get included, as it is already in the points array
         let points: Vector2D[] = [];

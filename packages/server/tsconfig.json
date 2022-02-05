@@ -4,6 +4,7 @@
         "esModuleInterop": true,
         "target": "es2017",
         "noImplicitAny": true,
+        "skipLibCheck": true,
         "moduleResolution": "node",
         "sourceMap": true,
         "strict": true,
@@ -16,7 +17,7 @@
         "src/**/*"
     ],
     "exclude": [
-        "node_modules",
+        "**/node_modules/**",
         "dist"
     ]
 }

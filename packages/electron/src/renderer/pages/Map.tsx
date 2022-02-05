@@ -25,6 +25,14 @@ export function MapPage() {
         buildSplines         : ( splines, simulate ) => window.ipc.invoke( 'build-spline', splines, simulate ),
         openControlsExternal : ( id ) => navigate( `/controls/${id}` ),
         openNewTab           : ( url ) => window.openBrowser( url ),
+        locate               : ( ID, type ) => navigate( `/map`, {
+            state: {
+                locate: {
+                    type: type,
+                    id  : ID,
+                }
+            }
+        } ),
     } ), [ settings ] );
 
     return (
