@@ -7,6 +7,7 @@ export const MapDataContext = React.createContext<{
     settings: MapSettings & {
         playerName?: string;
     };
+    hidden: boolean;
     mode: MapMode;
     features: MapFeatures;
     setSettings: React.Dispatch<React.SetStateAction<MapSettings & { playerName?: string; }>>
@@ -34,6 +35,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
 
     const [ settings, setSettings ] = useState<MapSettings & { playerName?: string }>( useMemo( getSettings, [] ) );
     const [ mode, setMode ] = useState<MapMode>( window.mode === 'overlay' ? MapMode.MINIMAP : MapMode.NORMAL );
+    const [ hidden, setHidden ] = useState( window.mode === 'overlay' );
     const [ features, setFeatures ] = useState<MapFeatures>( {
         build: false,
         cheats: false,
@@ -73,8 +75,9 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
 
         const cleanup = window.ipc.on( 'map-update', onUpdate );
 
-        const cleanup2 = window.ipc.on( 'set-mode', ( event, mode ) => {
+        const cleanup2 = window.ipc.on( 'set-mode', ( event, mode, hidden ) => {
             setMode( mode );
+            setHidden( hidden );
             setSettings( getSettings() );
         } );
 
@@ -100,6 +103,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         value={{
             mapData,
             settings,
+            hidden,
             mode,
             features,
             setSettings

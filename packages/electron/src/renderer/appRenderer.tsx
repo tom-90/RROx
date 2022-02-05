@@ -23,6 +23,7 @@ window.mode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'ov
 if ( window.mode === 'overlay' )
     document.title = 'RROxOverlay';
 
+
 // Render application in DOM
 ReactDOM.render( <DraggableModalProvider>
     <AttachProvider>

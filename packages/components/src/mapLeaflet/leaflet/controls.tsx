@@ -25,6 +25,10 @@ const ControlsClass = L.Control.Zoom.extend( {
 
         this._followPlayerButton.style.display = this.options.showFocusPlayer === 1 ? 'block' : 'none';
         this._stopFollowPlayerButton.style.display = this.options.showFocusPlayer === 2 ? 'block' : 'none';
+
+        // @ts-ignore
+        if( window.mode === 'overlay' )
+            this._searchButton.style.display = 'none';
         
         this._updateDisabled();
         map.on( 'zoomend zoomlevelschange', this._updateDisabled, this );

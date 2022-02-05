@@ -7,7 +7,7 @@ import { MapContext, MapMode } from '..';
 export function ContextMenu() {
     const [ visible, setVisible ] = useState( false );
     const [ position, setPosition ] = useState<[ lat: number, lng: number ]>( [ 0, 0 ] );
-    const { actions, utils, mode } = useContext( MapContext );
+    const { actions, utils, mode, features } = useContext( MapContext );
 
     useMapEvents( {
         contextmenu: ( e ) => {
@@ -16,7 +16,7 @@ export function ContextMenu() {
         }
     } );
 
-    if( !visible )
+    if( !visible || !features.teleport )
         return null;
 
     return <MapTooltip

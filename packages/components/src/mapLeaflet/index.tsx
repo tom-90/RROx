@@ -24,12 +24,13 @@ import { Paths } from './Paths';
 import { SearchPopup } from "@rrox/components/src/mapLeaflet/popups/Search";
 import { Modal } from './modal';
 
-export function Map( { data, settings, actions, mode, features }: {
+export function Map( { data, settings, actions, mode, features, hidden }: {
     data    : World,
     settings: MapSettings,
     actions : MapActions,
     mode    : MapMode,
     features: MapFeatures,
+    hidden ?: boolean,
 } ) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -177,6 +178,7 @@ export function Map( { data, settings, actions, mode, features }: {
                 map: mapProps,
                 actions,
                 mode,
+                hidden,
                 utils,
                 features,
                 follow: {

@@ -94,6 +94,8 @@ export class OverlayTask extends TimerTask {
 
         overlay.minimize();
         overlay.setIgnoreMouseEvents( true );
+        
+        overlay.webContents.send( 'set-mode', 'minimap', true );
 
         this.state = OverlayStates.HIDDEN;
     }
@@ -144,7 +146,7 @@ export class OverlayTask extends TimerTask {
         this.transparent = this.app.settings.get( 'minimap.transparent' );
         this.background = this.app.settings.get( 'map.background' );
 
-        overlay.webContents.send( 'set-mode', 'minimap', this.transparent, this.background, this.minimapCorner );
+        overlay.webContents.send( 'set-mode', 'minimap', false );
 
         this.state = OverlayStates.MINIMAP;
 
@@ -174,7 +176,7 @@ export class OverlayTask extends TimerTask {
 
         this.background = this.app.settings.get( 'map.background' );
 
-        overlay.webContents.send( 'set-mode', 'map', false, this.background );
+        overlay.webContents.send( 'set-mode', 'map', false );
 
         this.state = OverlayStates.MAP;
 

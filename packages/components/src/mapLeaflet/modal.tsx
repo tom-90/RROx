@@ -5,15 +5,20 @@ import { MapMode } from '.';
 import { ControllableModal, ControllableModalRef } from '../components/controllableModal';
 
 export function Modal( { children }: { children?: React.ReactNode }): JSX.Element {
-    const { mode, settings } = useContext( MapContext );
+    const { mode, hidden, settings } = useContext( MapContext );
     const ref = useRef<ControllableModalRef>();
 
     const [ savedPosition, setSavedPosition ] = useState<{ x: number, y: number, width: number, height: number } | null>( null );
     const [ isVisible, setVisible ] = useState( true );
 
+    const [ , setForceUpdate ] = useState( 0 );
+
     useEffect( () => {
+        let counter = 0;
+
         const listener = () => {
             setSavedPosition( null );
+            setForceUpdate( ++counter );
         };
 
         window.addEventListener( 'resize', listener );
@@ -56,7 +61,7 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
             ref.current.move( savedPosition.x, savedPosition.y );
             setSavedPosition( null );
         }
-    }, [ mode, settings.minimapCorner, isVisible ] );
+    }, [ mode, settings.minimapCorner, isVisible, hidden ] );
 
     if( mode === MapMode.NORMAL )
         return children as JSX.Element;

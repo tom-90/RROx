@@ -51,6 +51,7 @@ export interface MapContextData {
     },
     features: MapFeatures;
     mode: MapMode;
+    hidden: boolean;
 }
 
 export interface MapFeatures {
