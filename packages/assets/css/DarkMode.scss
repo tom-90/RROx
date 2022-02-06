@@ -26,8 +26,10 @@
 	.ant-btn {
 		&:not(.attachButton){
 			&:not(.processingButton){
-				background: #2e2e2e!important;
-				color: #ffffff!important;
+				&:not(.ant-btn-primary) {
+					background: #2e2e2e !important;
+					color: #ffffff !important;
+				}
 			}
 		}
 	}
