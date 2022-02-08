@@ -39,8 +39,8 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 - ``Added`` Collapsible sections on the settings page.
 - ``Fixed`` Teleport bug where multiplayer clients could teleport with the locomotive.
 - ``Fixed`` For people having issues where the game window is black: disable hardware acceleration in the minimap settings.
-- ``Fixed`` When opening the overlay, the in-game camera will stop moving.
-- ``Fixed`` The popup title now correctly shows the name of the freight car.
+- ``Fixed`` Minimap now positions itself correctly on first load.
+- ``Fixed`` The popup title now correctly shows the name of the freight car (Thanks to [Faab007NL](https://github.com/faab007)).
 
 ### v1.12.0 - 29-01-2022
 
