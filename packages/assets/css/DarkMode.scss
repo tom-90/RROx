@@ -46,7 +46,7 @@
 	}
 	.ant-list-item{
 		background: #424242!important;
-		.ant-list-item-meta-title, .ant-list-item-meta-description th{
+		.ant-list-item-meta-title, .ant-list-item-meta-description, .ant-list-item-meta-description th{
 			color: #ffffff;
 		}
 		.ant-list-item-meta-description td:not(.dnt){
@@ -263,6 +263,12 @@
 
 	.couplingBar img, .StorageInfoImg{
 		filter: invert(1);
+	}
+
+	.notfound-container{
+		.ant-result-title, .ant-result-subtitle {
+			color: white;
+		}
 	}
 
 }

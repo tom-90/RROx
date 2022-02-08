@@ -126,7 +126,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         getColor             : ( key                       ) => ( settings as any )[ `colors.${key}` ],
         getSelectedPlayerName: (                           ) => settings[ 'multiplayer.client.playerName' ],
         buildSplines         : ( splines, simulate         ) => socket.invoke( 'build-spline', splines, simulate ),
-        openControlsExternal : ( id                        ) => window.open( `${location.pathname.split( '/' )[ 1 ]}/controls/${id}`, '_blank' ),
+        openControlsExternal : ( id                        ) => window.open( `${location.pathname.split( '/' )[ 1 ]}/controls/frames/${id}`, '_blank' ),
         openNewTab           : ( url                       ) => window.open( url, '_blank' ),
         locate               : ( ID, type                  ) => navigate( `${location.pathname.split( '/' )[ 1 ]}`, {
             state: {

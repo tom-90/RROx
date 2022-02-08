@@ -1,18 +1,21 @@
 import * as React from "react";
 import { MapPageLayout } from "../components/MapPageLayout";
-import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Button, Result } from "antd";
 
 export function PageNotFound() {
+    const navigate = useNavigate();
+
     return (
         <MapPageLayout>
             <div className="notfound-container">
                 <div className="center">
-                    <h1 className="title">404</h1>
-                    <p className="sub-title">Page Not Found</p>
-
-                    <p className="info">It looks like that page does not exists</p>
-                    <p className="info">Would you like to go home</p>
-                    <Button size="large" type="primary">Home</Button>
+                    <Result
+                        status="404"
+                        title="404"
+                        subTitle="Sorry, the page you visited could not be found."
+                        extra={<Button type="primary" onClick={() => navigate( '/' )}>Back Home</Button>}
+                    />
                 </div>
             </div>
         </MapPageLayout>
