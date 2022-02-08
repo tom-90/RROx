@@ -133,6 +133,9 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             rrox.getWindow( WindowType.App ).once( 'show', () => {
                 rrox.getTask( SetSocketStateIPCHandler ).handleURL( openURL );
             } );
+
+        if( process.env.NODE_ENV === 'development' ) 
+            rrox.server.start();
     } );
 
     app.on( 'second-instance', ( e, argv ) => {

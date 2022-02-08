@@ -48,10 +48,10 @@ export class KeybindsTask extends Task {
         ];
     };
 
-    private isPressed( key: string ) {
+    private isPressed( key: string, keyDownCode: number ) {
         const keys: number[] = this.app.settings.get( key );
         
-        return keys.length > 0 && keys.every( ( code ) => this.pressedKeys.includes( code ) );
+        return keys.length > 0 && keys.every( ( code ) => this.pressedKeys.includes( code ) ) && keys.includes( keyDownCode );
     }
 
     public start() {
@@ -85,9 +85,9 @@ export class KeybindsTask extends Task {
 
         this.pressedKeys.push( code );
 
-        if( this.isPressed( 'keybind.openMap' ) )
+        if( this.isPressed( 'keybind.openMap', code ) )
             this.app.getTask( OverlayTask ).onToggleMap();
-        else if( this.isPressed( 'keybind.autosave' ) )
+        else if( this.isPressed( 'keybind.autosave', code ) )
             this.app.getTask( AutosaveTask ).runNow();
     }
 

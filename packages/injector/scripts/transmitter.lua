@@ -13,6 +13,8 @@ function connectPipe()
     pipe.writeString("CED") -- CheatEngine Data
 end
 
+closeOnDisconnect = true
+
 function starttransmitter()
     staticAddresses["KismetSystemLibrary"] = StaticFindObjectAlgo('/Script/Engine.Default__KismetSystemLibrary')
     staticAddresses["GameplayStatics"] = StaticFindObjectAlgo('/Script/Engine.Default__GameplayStatics')
@@ -26,7 +28,11 @@ function starttransmitter()
         end
 
         while not thread.Terminated do
-            command = pipe.readString(1)
+            command = nil
+            if pipe ~= nil then
+                command = pipe.readString(1)
+            end
+            
             if command == "R" then -- Read tables
                 local readMode = pipe.readDword()
                 if readMode == 2 then -- CLIENT read mode
@@ -70,7 +76,7 @@ function starttransmitter()
                     sleep(2000)
                     print("Attempting to reconnect...")
                     connectPipe()
-                    if pipe == nil then
+                    if pipe == nil and closeOnDisconnect == true then
                         print("Pipe connection lost. Closing...")
                         closeCE()
                     end
