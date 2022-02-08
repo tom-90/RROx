@@ -21,6 +21,7 @@ Instructions for build mode can be found [here](./build-mode.md).
 - **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the corresponding error code [here](./error-codes.md).
 - **Minimap not visible**: Please make sure that the game is not running in `Native Fullscreen`-mode. Please switch to any other mode to get the minimap to work.
 - **Attaching works, but the map stays empty**: Please make sure that you are **not** running RROx as administrator.
+- **The game screen is black**: Disable hardware acceleration in the minimap settings and restart RROx.
 
 ## Support
 
@@ -30,6 +31,16 @@ To keep all information about RROx in one place, I have set-up a Discord server 
 Troubleshooting information for RROx error codes can be found [here](./error-codes.md).
 
 ## Changelog
+
+### v1.13.0 - 29-01-2022
+
+- ``Added`` Teleport here button when right-clicking on the map to teleport anywhere.
+- ``Added`` Search box on the map (Thanks to [Faab007NL](https://github.com/faab007)).
+- ``Added`` Collapsible sections on the settings page.
+- ``Fixed`` Teleport bug where multiplayer clients could teleport with the locomotive.
+- ``Fixed`` For people having issues where the game window is black: disable hardware acceleration in the minimap settings.
+- ``Fixed`` When opening the overlay, the in-game camera will stop moving.
+- ``Fixed`` The popup title now correctly shows the name of the freight car.
 
 ### v1.12.0 - 29-01-2022
 
