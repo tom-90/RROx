@@ -61,11 +61,11 @@ export function MapNav() {
                     Rolling Stock
                 </Link>
             </Menu.Item>
-            <Menu.Item key="controls/layout" >
+            {/*<Menu.Item key="controls/layout" >
                 <Link to={`/${serverKey}/controls/layout`}>
                     Layout Control
                 </Link>
-            </Menu.Item>
+            </Menu.Item>*/}
             <Menu.Item key="settings">
                 <Link to={`/${serverKey}/settings`}>
                     Settings
