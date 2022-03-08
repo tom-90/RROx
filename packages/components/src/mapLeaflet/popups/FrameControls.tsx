@@ -4,7 +4,7 @@ import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/i
 import { useNavigate } from 'react-router-dom';
 import { Frame } from '@rrox/types';
 import { DraggableModal } from 'ant-design-draggable-modal';
-import { MapContext, MapMode } from '../context';
+import { MapContext, MapMode, GamepadSettings } from '../context';
 import { FrameControls } from '../../components/frameControls';
 import { FrameDefinitions } from '../definitions/Frame';
 
@@ -16,7 +16,8 @@ export function FrameControlsPopup( {
     id,
     isVisible,
     onClose,
-    controlEnabled
+    controlEnabled,
+    gamepadSettings
 }: {
     className?: string,
     title: string,
@@ -24,7 +25,9 @@ export function FrameControlsPopup( {
     frames: Frame[],
     id: number,
     isVisible: boolean,
-    onClose: () => void, controlEnabled: boolean
+    onClose: () => void,
+    controlEnabled: boolean
+    gamepadSettings: GamepadSettings
 } ) {
     const { actions, mode } = useContext( MapContext );
     const [ compact, setCompact ] = useState( false );
@@ -76,6 +79,7 @@ export function FrameControlsPopup( {
             compact={compact}
             controlEnabled={controlEnabled}
             frames={frames}
+            gamepadSettings={gamepadSettings}
         />
     </DraggableModal>;
 }

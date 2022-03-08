@@ -13,7 +13,7 @@ export function RollingStockControlsPage() {
     let { serverKey, id } = useParams();
     const navigate = useNavigate();
 
-    const { mapData, features } = useMapData();
+    const { mapData, features, gamepadSettings } = useMapData();
 
     const frameId = parseInt( id );
 
@@ -44,6 +44,7 @@ export function RollingStockControlsPage() {
                     setControlsSynced={setControlsSynced}
                     frames={mapData.Frames}
                     controlEnabled={features.controlEngines}
+                    gamepadSettings={gamepadSettings}
                 />
             </div>
         </PageLayout>

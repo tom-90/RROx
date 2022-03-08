@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Frame as FrameData } from "@rrox/types";
-import { MapContext, MapMode } from '../context';
+import { MapContext, MapMode, GamepadSettings } from '../context';
 import { Shape } from '../leaflet/shape';
 import { FrameDefinitions } from '../definitions/Frame';
 import { MapTooltip } from '../leaflet/tooltip';
@@ -19,7 +19,7 @@ const getStrokeColor = ( brake: number ) => {
         return 'black';
 };
 
-export const Frame = React.memo( function Frame( { data, frames }: { data: FrameData, frames: FrameData[] } ) {
+export const Frame = React.memo( function Frame( { data, frames, gamepadSettings }: { data: FrameData, frames: FrameData[], gamepadSettings: GamepadSettings } ) {
     const { utils, mode, follow, actions, features } = useContext( MapContext );
 
     const { ID, Location, Rotation, Type, Freight, Number, Name, Brake } = data;
@@ -90,6 +90,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                         setControlsVisible( false );
                         setTooltipVisible( false );
                     }}
+                    gamepadSettings={gamepadSettings}
                 />
             </Shape>;
 
@@ -144,6 +145,7 @@ export const Frame = React.memo( function Frame( { data, frames }: { data: Frame
                 setControlsVisible( false );
                 setTooltipVisible( false );
             }}
+            gamepadSettings={gamepadSettings}
         />
         <StorageInfo
             title={frameTitle}

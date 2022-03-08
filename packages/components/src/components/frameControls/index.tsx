@@ -4,7 +4,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Frame } from '@rrox/types';
 import { EngineControls } from '@rrox/types';
 import { CouplingsBar } from './couplingsBar';
-import { FrameDefinitions } from '../../mapLeaflet';
+import { FrameDefinitions, GamepadAxisSettings, GamepadSettings } from '../../mapLeaflet';
 import { getCoupledFrames, isEngine as checkIsEngine } from '@rrox/utils';
 
 function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): ( ...args: P ) => void {
@@ -32,7 +32,8 @@ export function FrameControls( {
     compact = false,
     controlEnabled = true,
     setEngineControls,
-    setControlsSynced
+    setControlsSynced,
+    gamepadSettings
 }: {
     data: Frame,
     frames: Frame[],
@@ -40,6 +41,7 @@ export function FrameControls( {
     controlEnabled?: boolean,
     setEngineControls: ( ID: number, type: EngineControls, value: number ) => void,
     setControlsSynced: ( ID: number, enabled: boolean ) => void,
+    gamepadSettings: GamepadSettings
 } ) {
     const [ selectedFrame, setSelectedFrame ] = useState( data.ID );
 
@@ -92,6 +94,44 @@ export function FrameControls( {
     const controlledBy = checkIsEngine( selectedData ) ? coupledFrames.find(
         ( coupled ) => coupled.isCoupled && coupled.frame.SyncControls && checkIsEngine( coupled.frame ) && coupled.frame !== selectedData
     )?.frame : undefined;
+
+    const getControlValue = (axis: GamepadAxisSettings, controlMin: number, controlMax: number, gamepad: Gamepad) => {
+        if (axis.index === null || axis.index < 0 || axis.index >= gamepad.axes.length) {
+            return null;
+        }
+
+        const axisValue = gamepad.axes[axis.index];
+        const controlRange = controlMax - controlMin;
+
+        if (axis.invert)
+        {
+            return controlMax - ((axisValue + 1) * (controlRange / 2));
+        }
+        else
+        {
+            return controlMin + ((axisValue + 1) * (controlRange / 2));
+        }
+    }
+    
+    useEffect( () => {
+        const interval = setInterval(() => {
+            const gamepad = [...navigator.getGamepads()].find(gp => gp.id == gamepadSettings.device);
+            if (gamepad) {
+                const regulator = getControlValue(gamepadSettings.regulatorAxis, 0, 1, gamepad) ?? controls.Regulator;
+                const brake = getControlValue(gamepadSettings.brakeAxis, 0, 1, gamepad) ?? controls.Brake;
+                const reverser = getControlValue(gamepadSettings.reverserAxis, -1, 1, gamepad) ?? controls.Reverser;
+
+                setControls( { ...controls, Regulator: regulator, Brake: brake, Reverser: reverser } );
+                setEngineControls( selectedFrame, EngineControls.REGULATOR, regulator );
+                setEngineControls( selectedFrame, EngineControls.BRAKE, brake );
+                setEngineControls( selectedFrame, EngineControls.REVERSER, reverser );
+            }
+        }, 500);
+
+        return () => {
+            clearInterval(interval);
+        }
+    }, [] );
 
     return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
         <div style={{ width: '100%' }}>

@@ -1,4 +1,4 @@
-import { MapFeatures, MapMode, MapSettings } from "@rrox/components";
+import { GamepadSettings, MapFeatures, MapMode, MapSettings } from "@rrox/components";
 import { DataChange, World } from "@rrox/types";
 import React, { useState, useMemo, useEffect, useContext } from "react";
 
@@ -10,6 +10,7 @@ export const MapDataContext = React.createContext<{
     hidden: boolean;
     mode: MapMode;
     features: MapFeatures;
+    gamepadSettings: GamepadSettings;
     setSettings: React.Dispatch<React.SetStateAction<MapSettings & { playerName?: string; }>>
 }>( null );
 
@@ -33,6 +34,22 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         playerName: window.settingsStore.get<string>( 'multiplayer.client.playerName' ),
     } );
 
+    const getGamepad = (): GamepadSettings => ( {
+        device: window.settingsStore.get<string>('gamepad.device'),
+        regulatorAxis: {
+            index: window.settingsStore.get<number>('gamepad.regulatorAxis.index'),
+            invert: window.settingsStore.get<boolean>('gamepad.regulatorAxis.invert')
+        },
+        brakeAxis: {
+            index: window.settingsStore.get<number>('gamepad.brakeAxis.index'),
+            invert: window.settingsStore.get<boolean>('gamepad.brakeAxis.invert')
+        },
+        reverserAxis: {
+            index: window.settingsStore.get<number>('gamepad.reverserAxis.index'),
+            invert: window.settingsStore.get<boolean>('gamepad.reverserAxis.invert')
+        }
+    } );
+
     const [ settings, setSettings ] = useState<MapSettings & { playerName?: string }>( useMemo( getSettings, [] ) );
     const [ mode, setMode ] = useState<MapMode>( window.mode === 'overlay' ? MapMode.MINIMAP : MapMode.NORMAL );
     const [ hidden, setHidden ] = useState( window.mode === 'overlay' );
@@ -43,6 +60,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
         controlSwitches: false,
         teleport: false,
     } );
+    const [ gamepadSettings, setGamepadSettings ] = useState<GamepadSettings>( useMemo( getGamepad, [] ) );
 
     useEffect( () => {
         let data = { ...mapData };
@@ -89,6 +107,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             document.body.setAttribute('data-theme', window.settingsStore.get( 'site.darkMode' ) ? 'dark' : 'light');
             
             setSettings( getSettings() );
+            setGamepadSettings( getGamepad() );
         } );
 
         return () => {
@@ -106,6 +125,7 @@ export function MapDataProvider( { children }: { children?: React.ReactNode } ) 
             hidden,
             mode,
             features,
+            gamepadSettings,
             setSettings
         }}
     >

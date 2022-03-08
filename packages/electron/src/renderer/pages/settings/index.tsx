@@ -6,6 +6,7 @@ import { MinimapSettings } from './minimap';
 import { AutosaveSettings } from './autosave';
 import { ColorsSettings } from './colors';
 import { KeybindingsSettings } from './keybindings';
+import { GamepadSettings } from './gamepad';
 import { FeaturesSettings } from './features';
 import { MinizwergSettings } from './minizwerg';
 import { DebuggingSettings } from './debugging';
@@ -77,6 +78,9 @@ export function Settings() {
                         </Collapse.Panel>
                         <Collapse.Panel key='keybindings' header={<Divider orientation="left">Keybindings</Divider>}>
                             <KeybindingsSettings form={form} settings={settings} />
+                        </Collapse.Panel>
+                        <Collapse.Panel key='gamepad' header={<Divider orientation="left">Gamepad</Divider>}>
+                            <GamepadSettings form={form} settings={settings} />
                         </Collapse.Panel>
                         <Collapse.Panel key='features' header={<Divider orientation="left">Features</Divider>}>
                             <FeaturesSettings form={form} settings={settings} />

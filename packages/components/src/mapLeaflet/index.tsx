@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LayerGroup, LayersControl, MapContainer, Pane } from 'react-leaflet';
 import L from 'leaflet';
-import { MapContext, MapContextData, MapMode, MapSettings, MapActions, MapFeatures } from './context';
+import { MapContext, MapContextData, MapMode, MapSettings, MapActions, MapFeatures, GamepadSettings } from './context';
 import { Line } from './leaflet/line';
 import { Background } from './background';
 import { Player as PlayerData, World } from '@rrox/types';
@@ -24,12 +24,13 @@ import { Paths } from './Paths';
 import { SearchPopup } from "@rrox/components/src/mapLeaflet/popups/Search";
 import { Modal } from './modal';
 
-export function Map( { data, settings, actions, mode, features, hidden }: {
+export function Map( { data, settings, actions, mode, features, gamepadSettings, hidden }: {
     data    : World,
     settings: MapSettings,
     actions : MapActions,
     mode    : MapMode,
     features: MapFeatures,
+    gamepadSettings: GamepadSettings,
     hidden ?: boolean,
 } ) {
     const location = useLocation();
@@ -338,7 +339,7 @@ export function Map( { data, settings, actions, mode, features, hidden }: {
                         <Pane name='frames' style={{ zIndex: 80 }}>
                             <LayersControl.Overlay name="Locomotives and Carts" checked>
                                 <LayerGroup>
-                                    {data.Frames.map( ( s, i ) => <Frame data={s} frames={data.Frames} key={i} /> )}
+                                    {data.Frames.map( ( s, i ) => <Frame data={s} frames={data.Frames} gamepadSettings={gamepadSettings} key={i} /> )}
                                 </LayerGroup>
                             </LayersControl.Overlay>
                         </Pane>

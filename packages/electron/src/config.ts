@@ -101,6 +101,34 @@ export const schema = {
         default: [ KeyCodes.VK_F2 ] as const,
     },
 
+    'gamepad.device': {
+        type: 'string' as const
+    },
+
+    'gamepad.regulatorAxis.index': {
+        type: 'number' as const
+    },
+
+    'gamepad.regulatorAxis.invert': {
+        type: 'boolean' as const
+    },
+
+    'gamepad.brakeAxis.index': {
+        type: 'number' as const
+    },
+
+    'gamepad.brakeAxis.invert': {
+        type: 'boolean' as const
+    },
+
+    'gamepad.reverserAxis.index': {
+        type: 'number' as const
+    },
+
+    'gamepad.reverserAxis.invert': {
+        type: 'boolean' as const
+    },
+
     'features.teleport': {
         type: 'boolean' as const,
         default: true

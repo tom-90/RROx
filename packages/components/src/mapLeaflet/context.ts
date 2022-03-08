@@ -62,6 +62,18 @@ export interface MapFeatures {
     cheats: boolean;
 }
 
+export interface GamepadAxisSettings {
+    index: number;
+    invert: boolean;
+}
+
+export interface GamepadSettings {
+    device: string;
+    regulatorAxis: GamepadAxisSettings;
+    brakeAxis: GamepadAxisSettings;
+    reverserAxis: GamepadAxisSettings;
+}
+
 export enum MapMode {
     // Normal mode, when showing map in desktop app
     NORMAL = 'normal',
