@@ -64,19 +64,20 @@ module.exports = {
                     entryPoints: [
                         {
                             // Window process name
-                            name: 'app_window',
+                            name: 'app_window_bootstrap',
                             // React Hot Module Replacement (HMR)
                             rhmr: 'react-hot-loader/patch',
                             // HTML index file template
                             html: path.join( rootDir, 'src/renderer/app.html' ),
                             // Renderer
-                            js: path.join( rootDir, 'src/renderer/appRenderer.tsx' ),
+                            js: path.join( rootDir, 'src/renderer/bootstrap/index.ts' ),
                             // Main Window
                             // Preload
                             preload: {
-                                js: path.join( rootDir, 'src/renderer/appPreload.tsx' ),
+                                name: 'app_window_bootstrap_preload',
+                                js  : path.join( rootDir, 'src/renderer/bootstrap/preload.ts' ),
                             },
-                        },
+                        }
                     ],
                 },
                 devServer: {

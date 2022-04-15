@@ -1,0 +1,31 @@
+{
+    "name": "@rrox/devtools",
+    "private": true,
+    "version": "1.6.2",
+    "description": "RailroadsOnline Extended Developer Tools",
+    "author": "_tom()",
+    "rrox": {
+        "controller": "dist/controller/controller.js",
+        "renderer": "dist/renderer/renderer.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tom-90/RROx.git"
+    },
+    "devDependencies": {
+        "@rrox/api": "^1.6.2",
+        "@types/react-inspector": "^4.0.2",
+        "console-feed": "^3.3.0",
+        "@monaco-editor/react": "^4.3.1",
+        "monaco-editor": "^0.33.0",
+        "react": "^17.0.2",
+        "react-inspector": "^5.1.1",
+        "typescript": "^4.4.4",
+        "webpack": "^5.69.1"
+    },
+    "scripts": {
+        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
+    },
+    "dependencies": {
+    }
+}

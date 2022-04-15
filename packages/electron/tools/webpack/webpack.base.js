@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const relocateLoader = require('@vercel/webpack-asset-relocator-loader');
 const CopyPlugin = require("copy-webpack-plugin");
@@ -98,6 +99,11 @@ module.exports = {
                 },
             ],
         }),
+        new webpack.DefinePlugin( {
+            PluginInfo: JSON.stringify({
+                name: "@rrox/electron",
+            })
+        } ),
         {
             apply( compiler ) {
                 compiler.hooks.compilation.tap(

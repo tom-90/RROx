@@ -1,0 +1,21 @@
+{
+    "name": "@rrox/api",
+    "private": true,
+    "version": "1.6.2",
+    "description": "RailroadsOnline Extended API",
+    "author": "_tom()",
+    "main": "src/index.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tom-90/RROx.git"
+    },
+    "devDependencies": {
+        "@types/deep-diff": "^1.0.1",
+        "typescript": "^4.4.4"
+    },
+    "dependencies": {
+        "deep-diff": "^1.0.2",
+        "react": "^17.0.2",
+        "reflect-metadata": "^0.1.13"
+    }
+}

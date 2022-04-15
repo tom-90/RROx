@@ -1,186 +1,156 @@
+#pragma once
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include "./UE425/fname.h"
+#include "./UE425/uobjectarray.h"
+#include "./wrappers/uobject.h"
 #include "injector.h"
-#include "engine.h"
-#include "utils.h"
-#include "arr.h"
-#include "pipe.h"
-#include <fstream>
+#include "generator.h"
+#include "./net/messages/log.h"
+#include "./net/messages/getdata.h"
+#include "./net/messages/getinstances.h"
+#include "./net/messages/getstatic.h"
+#include "./net/messages/getstruct.h"
+#include "./net/messages/getstructlist.h"
+#include "./net/messages/ready.h"
 
-void save(uint64_t addrGameMode, int slotIndex)
-{
-  AarrGameModeBase* mode = (AarrGameModeBase*)addrGameMode;
+size_t FNameEntryAllocator::NumEntries = 0;
+std::unordered_map<uint32_t, std::string> FNameEntryAllocator::Cache = {};
 
-  std::wstring wstring = std::wstring(L"slot") + std::to_wstring(slotIndex);
-  wchar_t* str = const_cast<wchar_t*>(wstring.c_str());
+bool Injector::load() {
+	if (!memory.retrieveSymbol<FUObjectArray>("48 8B 05 * * * * 48 8B 0C C8 48 8D 04 D1 EB", -0x10)) {
+		log("Could not find FUObjectArray");
+		return false;
+	}
+	log("Found FUObjectArray address.");
 
-  FString slot{
-    str,
-    wcslen(str) + 1,
-    16
-  };
+	if (!memory.retrieveSymbol<FNamePool>("48 8D 35 * * * * EB 16")) {
+		log("Could not find FNamePool");
+		return false;
+	}
+	log("Found FNamePool address.");
 
-  mode->SaveGame(slot);
+	NamePoolData = memory.getSymbol<FNamePool>();
+
+	ReadyMessage readyMsg;
+	readyMsg.Send();
+
+	processMessages();
+
+	return true;
 }
 
-void changeSwitch(uint64_t addrSwitch, uint64_t addrCharacter)
-{
-    ASwitch* sw = (ASwitch*)addrSwitch;
-    ASCharacter* ch = (ASCharacter*)addrCharacter;
-
-    if (sw->switchstate == 0)
-        ch->ServerSwitchUp(sw);
-    else if (sw->switchstate == 1)
-        ch->ServerSwitchDown(sw);
+void Injector::stop() {
+	log("Stopping Injector");
+	communicator.Close();
 }
 
-void setEngineControls(int type, uint64_t addrCharacter, uint64_t addrControl, uint64_t addrFramecar, float value)
-{
-    ASCharacter* ch = (ASCharacter*)addrCharacter;
-    Aframecar* frame = (Aframecar*)addrFramecar;
+void Injector::parseTable() {
+	auto namePool = memory.getSymbol<FNamePool>();
+	auto objArray = memory.getSymbol<FUObjectArray>();
 
-    if( type == 1 )
-        ch->ServerSetRaycastRegulator((Aregulator*)addrControl, value);
-    else if( type == 2 )
-        ch->ServerSetRaycastReverser((Ajohnsonbar*)addrControl, value);
-    else if( type == 3 )
-        ch->ServerSetRaycastBake((Aairbrake*)addrControl, value);
-    else if( type == 4 ) {
-        frame->SetWhistle(value);
-        ch->ServerSetRaycastWhistle((Awhistle*)addrControl, value);
-    }
-    else if( type == 5 || type == 6 )
-        ch->ServerSetRaycastHandvalve((Ahandvalve*)addrControl, value);
+	if (namePool == nullptr || objArray == nullptr)
+		return;
+
+	// Dump all names into the cache
+	namePool->Entries.Dump();
+
+	uint32_t GUObjectSize = objArray->ObjObjects.NumChunks;
+
+	log("GUObjectArray\n");
+
+	std::vector<GeneratedFunction> functions;
+	std::vector<GeneratedEnum> enums;
+	std::vector<GeneratedStruct> structs;
+
+	for (int i = 0; i < objArray->ObjObjects.Num(); i++)
+	{
+		WUObject object = objArray->ObjObjects.GetObjectPtr(i)->Object;
+
+		if (object.IsA<WUFunction>())
+			functions.push_back(GeneratedFunction(object.Cast<WUFunction>()));
+		else if (object.IsA<WUStruct>())
+			structs.push_back(GeneratedStruct(object.Cast<WUStruct>()));
+		else if (object.IsA<WUEnum>())
+			enums.push_back(GeneratedEnum(object.Cast<WUEnum>()));
+	}
+
+	log("Finished\n");
 }
 
-bool isServerHost(uint64_t addrKismet, uint64_t addrWorld)
-{
-    UKismetSystemLibrary* kismet = (UKismetSystemLibrary*)addrKismet;
-    UWorld* world = (UWorld*)addrWorld;
+void Injector::log(std::string message) {
+	LogMessage msg = LogMessage(message);
 
-    return kismet->IsServer(world);
+	msg.Send();
 }
 
-bool isLoggedIn(uint64_t addrKismet, uint64_t addrPlayer)
-{
-    UKismetSystemLibrary* kismet = (UKismetSystemLibrary*)addrKismet;
-    APlayerController* player = (APlayerController*)addrPlayer;
-
-    return kismet->IsLoggedIn(player);
+bool Injector::stopRequested() {
+	return stopToken.stop_requested();
 }
 
-void teleport(uint64_t addrCharacter, float x, float y, float z)
-{
-    ASCharacter* ch = (ASCharacter*)addrCharacter;
+void Injector::processMessages() {
+	log("Listening for messages...");
+	while (!stopRequested()) {
+		if (!communicator.IsConnected()) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			communicator.Connect();
 
-    // This is unused
-    FHitResult result = {};
+			ReadyMessage readyMsg;
+			readyMsg.Send();
+		}
 
-	ch->K2_SetActorLocation(FVector(x,y,z), false, result, true);
+		auto sizeBuffer = communicator.Read(sizeof(std::size_t));
+		if (sizeBuffer.Size() == 0) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+		auto size = sizeBuffer.Read<std::size_t>();
+		if (size == 0) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+
+		auto message = communicator.Read(size);
+		MessageType type = message.Read<MessageType>();
+		message.SetOffset(0); // Reset read position back to 0
+
+		log("Received message of type " + std::to_string(static_cast<uint16_t>(type)));
+
+		switch (type) {
+		case MessageType::GET_STRUCT: {
+			GetStructRequest req = GetStructRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_STRUCT_LIST: {
+			GetStructListRequest req = GetStructListRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_DATA: {
+			GetDataRequest req = GetDataRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_INSTANCES: {
+			GetInstancesRequest req = GetInstancesRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_STATIC: {
+			GetStaticRequest req = GetStaticRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		}
+	}
 }
 
-
-void setMoneyAndXP(uint64_t addrCharacter, float money, int32_t xp)
-{
-    ASCharacter* ch = (ASCharacter*)addrCharacter;
-
-    if (money != 0)
-        ch->ChangePlayerMoney(money);
-    if (xp != 0)
-        ch->ChangePlayerXP(xp);
-}
-
-void spawnSpline(uint64_t addrCharacter, char type, FVector* controlPoints, int length)
-{
-    ASCharacter* ch = (ASCharacter*)addrCharacter;
-
-    logger->WriteString("Setting type=");
-    logger->WriteString(std::to_string((int)type));
-    logger->WriteString("\n");
-    for (int i = 0; i < length; i++) {
-        logger->WriteString("Setting control point: X=");
-        logger->WriteString(std::to_string(controlPoints[i].X));
-        logger->WriteString("; Y=");
-        logger->WriteString(std::to_string(controlPoints[i].Y));
-        logger->WriteString("; Z=");
-        logger->WriteString(std::to_string(controlPoints[i].Z));
-        logger->WriteString("\n");
-    }
-
-    ch->ServerSpawnSpline(controlPoints[0], FRotator(0,0,0), {
-        controlPoints,
-        length,
-        sizeof(FVector)
-    }, type);
-}
-
-void addToSpline(uint64_t addrSpline, float x, float y, float z)
-{
-    ASplineActor* spline = (ASplineActor*)addrSpline;
-
-    int count = spline->SplineControlPoints.Count;
-
-    FVector_NetQuantize* controlPoints = new FVector_NetQuantize[count + 1];
-    for (int i = 0; i < count; i++) {
-        controlPoints[i] = FVector_NetQuantize(spline->SplineControlPoints.Data[i].X, spline->SplineControlPoints.Data[i].Y, spline->SplineControlPoints.Data[i].Z);
-    }
-
-    int32_t* indicesToShow = new int32_t[count];
-    for (int i = 1; i < count; i++) {
-        indicesToShow[i - 1] = i;
-    }
-
-    indicesToShow[count - 1] = count;
-
-    controlPoints[count] = FVector_NetQuantize(x, y, z);
-
-    spline->SplineControlPoints = {
-        controlPoints,
-        count + 1,
-        sizeof(FVector_NetQuantize)
-    };
-
-    /*spline->IndicesToShowArray = {
-        indicesToShow,
-        count,
-        sizeof(int32_t)
-    };*/
-
-    spline->AddNewSplinePoint(FVector(x, y, z));
-
-    spline->UpdateSpline();
-    spline->DrawSpline();
-}
-
-float readHeight(uint64_t addrKismet, uint64_t addrWorldObject, AActor** ignoredActors, int ignoredActorsLength, float x, float y) {
-    UKismetSystemLibrary* kismet = (UKismetSystemLibrary*)addrKismet;
-    UObject* obj = (UObject*)addrWorldObject;
-
-
-    TArray<AActor*> ignoredActorsArray = {
-        ignoredActors,
-        ignoredActorsLength,
-        sizeof(AActor*)
-    };
-    FHitResult result = {};
-
-    bool hasHit = kismet->LineTraceSingle(obj, FVector(x, y, 50000), FVector(x, y, 0), ETraceTypeQuery::TraceTypeQuery1, false, ignoredActorsArray, EDrawDebugTrace::None, result, false, FLinearColor(), FLinearColor(), 0);
-    
-    if (!hasHit)
-        return 0;
-
-    return result.ImpactPoint.Z;
-}
-
-void hideLastSplinePoint(uint64_t addrSpline, int index) {
-    ASplineActor* spline = (ASplineActor*)addrSpline;
-
-    spline->SplineMeshBoolArray.Data[index] = false;
-
-    spline->UpdateSpline();
-    spline->DrawSpline();
-}
-
-void toggleGamePause(uint64_t addrPlayerController) {
-    APlayerController* player = (APlayerController*)addrPlayerController;
-
-    player->ServerPause();
-}
+/** Global reference to injector class */
+Injector injector;

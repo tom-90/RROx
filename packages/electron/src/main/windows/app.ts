@@ -6,14 +6,15 @@ import appIcon from '@rrox/assets/images/appIcon.ico';
 const dir = __dirname;
 
 // Electron Forge automatically creates these entry points
-declare const APP_WINDOW_WEBPACK_ENTRY: string;
-declare const APP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+declare const APP_WINDOW_BOOTSTRAP_WEBPACK_ENTRY: string;
+declare const APP_WINDOW_BOOTSTRAP_PRELOAD_WEBPACK_ENTRY: string;
 
 /**
  * Create Application Window
  * @returns {BrowserWindow} Application Window Instance
  */
 export function createAppWindow(): BrowserWindow {
+
     // Create new window instance
     let appWindow = new BrowserWindow( {
         width: 800,
@@ -28,12 +29,15 @@ export function createAppWindow(): BrowserWindow {
             contextIsolation: true,
             nodeIntegrationInWorker: false,
             nodeIntegrationInSubFrames: false,
-            preload: APP_WINDOW_PRELOAD_WEBPACK_ENTRY,
+            preload: APP_WINDOW_BOOTSTRAP_PRELOAD_WEBPACK_ENTRY,
+            // Disable web security for development as we need to load files from disk (file:///) while using the dev-server on http://localhost:XXXX
+            // On production, regular files are loaded using file:/// as well
+            webSecurity: process.env.NODE_ENV === 'development' ? false : true
         },
     } );
 
     // Load the index.html of the app window.
-    appWindow.loadURL( convertEntryPath( APP_WINDOW_WEBPACK_ENTRY ).toString() );
+    appWindow.loadURL( convertEntryPath( APP_WINDOW_BOOTSTRAP_WEBPACK_ENTRY ).toString() );
 
     // Show window when its ready to
     appWindow.on( 'ready-to-show', () => appWindow.show() );
