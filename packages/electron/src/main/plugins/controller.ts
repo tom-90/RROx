@@ -1,5 +1,5 @@
 import { Actions, ActionType, Controller, ControllerCommunicator, IPluginController, SetupFunction } from "@rrox/api";
-import { GetDataAction, GetStructAction } from "../actions";
+import { QueryAction, GetStructAction } from "../actions";
 import { RROxApp } from "../app";
 import { EventEmitter } from "events";
 import { IPlugin } from "./type";
@@ -87,8 +87,8 @@ export class PluginController extends EventEmitter implements IPluginController 
 
     getAction<A extends Actions>( action: A ): ActionType<A> {
         switch( action ) {
-            case Actions.GET_DATA:
-                return this.app.getAction( GetDataAction ) as ActionType<A>;
+            case Actions.QUERY:
+                return this.app.getAction( QueryAction ) as ActionType<A>;
             case Actions.GET_STRUCT:
                 return this.app.getAction( GetStructAction ) as ActionType<A>;
         }

@@ -1,5 +1,5 @@
 import { LinkedStructRef, StructRef, StructConstructor } from "@rrox/api";
-import { GetDataAction, GetDataError, GetStructAction } from "../actions";
+import { QueryActionError, GetStructAction, QueryAction } from "../actions";
 import { RROxApp } from "../app";
 import { GetInstancesRequest, GetInstancesResponse, GetStaticRequest, GetStaticResponse } from "../net";
 import { GlobalTraverserStep, StructInstance } from "../query";
@@ -10,13 +10,13 @@ export class StructReference<S extends object> implements StructRef<S> {
     constructor( protected app: RROxApp, protected struct?: Struct, protected structName?: string ) {}
 
     async getInstances<T extends S>( base: StructConstructor<T>, count?: number ): Promise<T[] | null> {
-        const name = this.app.getAction( GetDataAction ).getStructName( base );
+        const name = this.app.getAction( QueryAction ).getStructName( base );
 
         if( !this.app.isConnected() )
             return null;
 
         if( !( await this.isA( base ) ) )
-            throw new GetDataError( 'Invalid struct passed to getStatic' );
+            throw new QueryActionError( 'Invalid struct passed to getStatic' );
 
         const pipe = this.app.getPipe()!;
         const req  = new GetInstancesRequest( this.app, name, count );
@@ -34,13 +34,13 @@ export class StructReference<S extends object> implements StructRef<S> {
     }
 
     async getStatic<T extends S>( base: StructConstructor<T> ): Promise<T | null> {
-        const name = this.app.getAction( GetDataAction ).getStructName( base );
+        const name = this.app.getAction( QueryAction ).getStructName( base );
 
         if( !this.app.isConnected() )
             return null;
 
         if( !( await this.isA( base ) ) )
-            throw new GetDataError( 'Invalid struct passed to getStatic' );
+            throw new QueryActionError( 'Invalid struct passed to getStatic' );
 
         const pipe = this.app.getPipe()!;
         const req  = new GetStaticRequest( this.app, name );
@@ -59,7 +59,7 @@ export class StructReference<S extends object> implements StructRef<S> {
     }
 
     async isA<T extends S>( base: StructConstructor<T> ): Promise<boolean> {
-        const name = this.app.getAction( GetDataAction ).getStructName( base );
+        const name = this.app.getAction( QueryAction ).getStructName( base );
 
         const allowedNames: string[] = [];
         let structTmp: Struct | null = await this.getStruct();

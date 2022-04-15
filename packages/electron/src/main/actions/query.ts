@@ -1,11 +1,11 @@
-import { IGetDataAction, IQuery, QueryBuilderFunction, STRUCT_NAME_METADATA, PROPERTY_LIST_METADATA, QueryBuilder, PROPERTY_NAME_METADATA, PROPERTY_TYPE_METADATA, PropertyType, StructConstructor, PROPERTY_ARGS_METADATA } from "@rrox/api";
+import { IQueryAction, IQuery, QueryBuilderFunction, STRUCT_NAME_METADATA, PROPERTY_LIST_METADATA, QueryBuilder, PROPERTY_NAME_METADATA, PROPERTY_TYPE_METADATA, PropertyType, StructConstructor, PROPERTY_ARGS_METADATA } from "@rrox/api";
 import 'reflect-metadata';
 import { Query, StructInstance, GlobalTraverserStep, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler } from "../query";
 import { LinkedStructReference, Property } from "../struct";
 import { Action } from "./action";
 import { GetStructAction } from "./getStruct";
 
-export class GetDataAction extends Action implements IGetDataAction {
+export class QueryAction extends Action implements IQueryAction {
 
     async getStructProperties<T extends object>( base: StructConstructor<T> ) {
         const structName = this.getStructName( base );
@@ -13,12 +13,12 @@ export class GetDataAction extends Action implements IGetDataAction {
         const propertyKeys = Reflect.getMetadata( PROPERTY_LIST_METADATA, base.prototype ) as string[];
 
         if( !propertyKeys || !Array.isArray( propertyKeys ) || !propertyKeys.every( ( p ) => typeof p === 'string' ) )
-            throw new GetDataError( 'Class does not contain a valid property list.' );
+            throw new QueryActionError( 'Class does not contain a valid property list.' );
 
         const struct = await this.app.getAction( GetStructAction ).getStruct( structName );
 
         if( !struct )
-            throw new GetDataError( `Unable to find struct '${structName}'.` );
+            throw new QueryActionError( `Unable to find struct '${structName}'.` );
 
         const properties = await struct.getAllProperties();
         
@@ -35,18 +35,18 @@ export class GetDataAction extends Action implements IGetDataAction {
             const propertyArgs = Reflect.getMetadata( PROPERTY_ARGS_METADATA, base.prototype, key );
 
             if( !propertyName || typeof propertyName !== 'string' )
-                throw new GetDataError( `Property '${key}' has an invalid name.` );
+                throw new QueryActionError( `Property '${key}' has an invalid name.` );
             if( propertyType == null || typeof propertyType !== 'number' || !availablePropertyTypes.includes( propertyType ) )
-                throw new GetDataError( `Property '${key}' has an invalid property type.` );
+                throw new QueryActionError( `Property '${key}' has an invalid property type.` );
             if( propertyArgs == null || !Array.isArray( propertyArgs ) )
-                throw new GetDataError( `Property '${key}' has invalid arguments.` );
+                throw new QueryActionError( `Property '${key}' has invalid arguments.` );
 
             const property = properties.find( ( property ) => property.name === propertyName );
 
             if( !property )
-                throw new GetDataError( `Property '${propertyName}' does not exist on struct '${structName}'.` );
+                throw new QueryActionError( `Property '${propertyName}' does not exist on struct '${structName}'.` );
             if( property.type !== propertyType )
-                throw new GetDataError( `Property '${propertyName}' has a different type than defined on struct '${structName}' in the game. The game code might have changed.` );
+                throw new QueryActionError( `Property '${propertyName}' has a different type than defined on struct '${structName}' in the game. The game code might have changed.` );
 
             mapped[ key ] = {
                 property,
@@ -92,7 +92,7 @@ export class GetDataAction extends Action implements IGetDataAction {
         const structName = Reflect.getMetadata( STRUCT_NAME_METADATA, base ) as string;
 
         if( !structName || typeof structName !== 'string' )
-            throw new GetDataError( 'Class is not a valid struct.' );
+            throw new QueryActionError( 'Class is not a valid struct.' );
 
         return structName;
     }
@@ -125,19 +125,19 @@ export class GetDataAction extends Action implements IGetDataAction {
 
     async query<T extends object>( query: IQuery<T>, base: T ): Promise<T | null> {
         if( !( query instanceof Query ) )
-            throw new GetDataError( 'Invalid query object' );
+            throw new QueryActionError( 'Invalid query object' );
 
         const instance = StructInstance.get( base );
 
         if( !instance )
-            throw new GetDataError( 'Invalid base object' );
+            throw new QueryActionError( 'Invalid base object' );
 
         return ( query as Query<T> ).query( instance );
     }
 
     async queryGlobal<T extends object>( query: IQuery<T>, base: StructConstructor<T> ): Promise<T | null> {
         if( !( query instanceof Query ) )
-            throw new GetDataError( 'Invalid query object' );
+            throw new QueryActionError( 'Invalid query object' );
 
         const name = this.getStructName( base );
         const instance = new StructInstance( this.app, base );
@@ -162,7 +162,7 @@ export class GetDataAction extends Action implements IGetDataAction {
         const struct = await this.app.getAction( GetStructAction ).getStruct( structName );
 
         if( !struct || struct.isClass )
-            throw new GetDataError( `Cannot create struct of type ${base?.name}. Only simple structs, starting with the letter F (e.g. FVector) can be created by RROx.` );
+            throw new QueryActionError( `Cannot create struct of type ${base?.name}. Only simple structs, starting with the letter F (e.g. FVector) can be created by RROx.` );
 
         // TODO: Validate whether struct or gameobject
         // Gameobjects cannot be created, but structs like FVector can
@@ -174,16 +174,16 @@ export class GetDataAction extends Action implements IGetDataAction {
         const struct = StructInstance.get( instance );
 
         if( !struct )
-            throw new GetDataError( 'Invalid instance' );
+            throw new QueryActionError( 'Invalid instance' );
 
         return struct.save();
     }
 }
 
-export class GetDataError extends Error {
+export class QueryActionError extends Error {
     constructor( message: string ) {
         super( message );
 
-        this.name = 'GetDataError';
+        this.name = 'QueryActionError';
     }
 }

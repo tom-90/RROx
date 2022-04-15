@@ -3,7 +3,7 @@ import { RROxApp } from "../../app";
 import { IPropertyConfig } from ".";
 import { Struct } from "../struct";
 import { BasicProperty } from "./basic";
-import { GetDataAction, GetStructAction } from "../../actions";
+import { QueryAction, GetStructAction } from "../../actions";
 import { ObjectTraverserStep, QueryCommands, QueryError, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler, StructInstance } from "../../query";
 
 export class ObjectProperty extends BasicProperty<PropertyType.ObjectProperty> implements IObjectProperty {
@@ -81,10 +81,10 @@ export class ObjectProperty extends BasicProperty<PropertyType.ObjectProperty> i
 
         this.objectQueries.set( classRef, query );
 
-        const getData = this.app.getAction( GetDataAction );
+        const queryAction = this.app.getAction( QueryAction );
         const getStruct = this.app.getAction( GetStructAction );
         
-        const queryStructName = getData.getStructName( classRef );
+        const queryStructName = queryAction.getStructName( classRef );
         const queryStruct = await getStruct.getStruct( queryStructName );
 
         if( !queryStruct )
@@ -112,7 +112,7 @@ export class ObjectProperty extends BasicProperty<PropertyType.ObjectProperty> i
         if( !superNames.some( ( name ) => allowedNames.includes( name ) ) )
             throw new QueryError( `Unable to use struct '${queryStructName}' in the query. It does not overlap with '${this.propertyClassName}'.` );
 
-        await getData.createQueryBuilder( classRef, query );
+        await queryAction.createQueryBuilder( classRef, query );
 
         return query;
     }

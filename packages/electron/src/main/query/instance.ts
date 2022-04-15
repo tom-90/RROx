@@ -1,6 +1,6 @@
 import { StructInfo, StructConstructor, PROPERTY_LIST_METADATA, FUNCTION_LIST_METADATA, PROPERTY_NAME_METADATA, FUNCTION_NAME_METADATA, IProperty, FUNCTION_ARGS_METADATA } from "@rrox/api";
 import { Query } from ".";
-import { GetDataAction, GetStructAction } from "../actions";
+import { QueryAction, GetStructAction } from "../actions";
 import { RROxApp } from "../app";
 import { GetDataRequest, GetDataResponse } from "../net";
 import { BufferIO } from "../net/io";
@@ -212,7 +212,7 @@ export class StructInstance<T extends object> implements StructInfo<T> {
         if( Object.keys( changes ).length === 0 )
             return;
         
-        const name = await this.app.getAction( GetDataAction ).getStructName( this.base );
+        const name = await this.app.getAction( QueryAction ).getStructName( this.base );
         const struct = await this.app.getAction( GetStructAction ).getStruct( name );
     
         if( !struct )
@@ -258,7 +258,7 @@ export class StructInstance<T extends object> implements StructInfo<T> {
         if( !this.base )
             throw new StructInstanceError( 'Cannot execute function for struct as no class is available' );
 
-        const name = await this.app.getAction( GetDataAction ).getStructName( this.base );
+        const name = await this.app.getAction( QueryAction ).getStructName( this.base );
         const struct = await this.app.getAction( GetStructAction ).getStruct( name );
     
         if( !struct )

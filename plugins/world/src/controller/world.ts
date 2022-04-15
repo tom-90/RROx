@@ -25,7 +25,7 @@ export class World {
     }
 
     async prepare() {
-        const data = this.controller.getAction( Actions.GET_DATA );
+        const data = this.controller.getAction( Actions.QUERY );
 
         const ref = await data.getReference( UGameEngine );
         if( !ref )
@@ -157,10 +157,10 @@ export class World {
         if( !this.gameState )
             return;
         
-        const getData = this.controller.getAction( Actions.GET_DATA );
+        const queryAction = this.controller.getAction( Actions.QUERY );
 
-        const data = await getData.query( this.worldQuery, this.gameState );
-        const spline = await getData.query( this.splineQuery, this.gameState );
+        const data = await queryAction.query( this.worldQuery, this.gameState );
+        const spline = await queryAction.query( this.splineQuery, this.gameState );
 
         if( !data || !spline )
             return;

@@ -3,7 +3,7 @@ import { RROxApp } from "../../app";
 import { IPropertyConfig } from ".";
 import { Struct } from "../struct";
 import { BasicProperty } from "./basic";
-import { GetDataAction, GetStructAction } from "../../actions";
+import { QueryAction, GetStructAction } from "../../actions";
 import { OffsetTraverserStep, QueryCommands, QueryError, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler, StructInstance } from "../../query";
 import { BufferIO } from "../../net/io";
 
@@ -68,13 +68,13 @@ export class StructProperty extends BasicProperty<PropertyType.StructProperty> i
 
         this.structQueries.set( classRef, query );
 
-        const getData = this.app.getAction( GetDataAction );
-        const queryStructName = getData.getStructName( classRef );
+        const queryAction = this.app.getAction( QueryAction );
+        const queryStructName = queryAction.getStructName( classRef );
 
         if( queryStructName !== this.structName )
             throw new QueryError( `Unable to use struct '${queryStructName}' in the query. Only the struct '${this.structName}' can be used.` );
 
-        const queryBuilders = await getData.createQueryBuilder( classRef, query );
+        const queryBuilders = await queryAction.createQueryBuilder( classRef, query );
 
         return query;
     }
@@ -92,13 +92,13 @@ export class StructProperty extends BasicProperty<PropertyType.StructProperty> i
         if( typeof value !== 'object' || !('constructor' in value!) )
             throw new Error( 'Invalid value passed to struct property.' );
 
-        const getData = this.app.getAction( GetDataAction );
-        const queryStructName = getData.getStructName( ( value as any).constructor );
+        const queryAction = this.app.getAction( QueryAction );
+        const queryStructName = queryAction.getStructName( ( value as any).constructor );
 
         if( queryStructName !== this.structName )
             throw new QueryError( `Unable to use struct '${queryStructName}' to save. Only the struct '${this.structName}' can be used.` );
 
-        const properties = await getData.getStructProperties( ( value as any ).constructor );
+        const properties = await queryAction.getStructProperties( ( value as any ).constructor );
 
         await QueryCommands.setOffsetAsync( req, this.offset, async ( buffer ) => {
             for( let [ key, { property } ] of Object.entries( properties ) )

@@ -1,3 +1,3 @@
 export * from './action';
-export * from './getData';
 export * from './getStruct';
+export * from './query';
