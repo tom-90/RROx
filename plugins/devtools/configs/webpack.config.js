@@ -1,4 +1,5 @@
-const { ModuleFederationPlugin } = require( 'webpack' ).container;
+const webpack = require( 'webpack' );
+const { ModuleFederationPlugin } = webpack.container;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const path = require( 'path' );
 
@@ -62,6 +63,11 @@ const base = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin(),
+        new webpack.DefinePlugin( {
+            PluginInfo: JSON.stringify({
+                name: plugin.name,
+            })
+        } )
     ],
     resolve: {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],

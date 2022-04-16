@@ -7,6 +7,7 @@ class GetInstancesRequest : public Request {
 public:
 	std::string name;
 	uint32_t count;
+	bool deep;
 
 	GetInstancesRequest(Buffer& data);
 

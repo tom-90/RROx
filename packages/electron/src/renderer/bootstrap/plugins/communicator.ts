@@ -23,7 +23,7 @@ export class IPCCommunicator implements RendererCommunicator {
     }
 
     private communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
-        return `c/${communicator.module}/${communicator.key}`;
+        return `c/${communicator.module.name}/${communicator.key}`;
     }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(

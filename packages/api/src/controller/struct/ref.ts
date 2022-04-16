@@ -20,8 +20,9 @@ export interface StructRef<S extends object> {
      *
      * @param base JavaScript class to use for the StructRef
      * @param count Maximum number of instances to get
+     * @param deep Whether or not to check super classes
      */
-    getInstances<T extends S>( base: StructConstructor<T>, count?: number ): Promise<T[] | null>;
+    getInstances<T extends S>( base: StructConstructor<T>, count?: number, deep?: boolean ): Promise<T[] | null>;
     
     /**
      * Retrieve the static instance of the class.
@@ -49,8 +50,9 @@ export interface LinkedStructRef<S extends object> extends StructRef<S> {
      * For effiency, it is possible to limit the number of instances to get.
      *
      * @param count Maximum number of instances to get
+     * @param deep Whether or not to check super classes
      */
-    getInstances( count?: number ): Promise<S[] | null>;
+    getInstances( count?: number, deep?: boolean ): Promise<S[] | null>;
     
     /**
      * Retrieve a list of all instantiations of the class.
@@ -58,18 +60,23 @@ export interface LinkedStructRef<S extends object> extends StructRef<S> {
      *
      * @param base JavaScript class to use for the StructRef
      * @param count Maximum number of instances to get
+     * @param deep Whether or not to check super classes
      */
-    getInstances( base: StructConstructor<S>, count?: number ): Promise<S[] | null>;
+    getInstances( base: StructConstructor<S>, count?: number, deep?: boolean ): Promise<S[] | null>;
+    
     
     /**
-     * Checks whether this StructRef is a valid reference to the specified base parameter.
+     * Retrieve the static instance of the class.
+     * The Unreal Engine calls this the Class Default Object (CDO).
      */
     getStatic(): Promise<S | null>;
     
+    
     /**
-     * Checks whether this StructRef is a valid reference to the specified base parameter.
+     * Retrieve the static instance of the class.
+     * The Unreal Engine calls this the Class Default Object (CDO).
      *
-     * @param base 
+     * @param base JavaScript class to use for the StructRef
      */
     getStatic( base: StructConstructor<S> ): Promise<S | null>;
 }

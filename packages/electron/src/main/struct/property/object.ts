@@ -5,6 +5,7 @@ import { Struct } from "../struct";
 import { BasicProperty } from "./basic";
 import { QueryAction, GetStructAction } from "../../actions";
 import { ObjectTraverserStep, QueryCommands, QueryError, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler, StructInstance } from "../../query";
+import { BufferIO } from "../../net/io";
 
 export class ObjectProperty extends BasicProperty<PropertyType.ObjectProperty> implements IObjectProperty {
     private readonly propertyClassName: string;
@@ -115,5 +116,34 @@ export class ObjectProperty extends BasicProperty<PropertyType.ObjectProperty> i
         await queryAction.createQueryBuilder( classRef, query );
 
         return query;
+    }
+
+    /**
+     * Process the value that will be saved to game memory
+     * 
+     * @param value Value provided by the user
+     */
+    public async saveValue( req: BufferIO, value: unknown ): Promise<void | ( ( res: BufferIO ) => void )> {
+        if( value == null ) {
+            return;
+        }
+
+        if( typeof value !== 'object' || !('constructor' in value!) )
+            throw new Error( 'Invalid value passed to object property.' );
+
+        const instance = StructInstance.get( value );
+        if( !instance )
+            throw new Error( 'Value passed to object property is not a valid UE4 Object.' );
+
+        const traverser = instance.getTraverser();
+
+        const resHandler = QueryCommands.writePointer(
+            req,
+            this.offset,
+            ( buffer ) => traverser.traverse( buffer ),
+            ( buffer ) => traverser.return( buffer )
+        );
+
+        return resHandler;
     }
 }

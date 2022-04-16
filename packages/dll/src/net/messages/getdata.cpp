@@ -7,20 +7,38 @@
 
 GetDataRequest::GetDataRequest(Buffer& data) : Request(data), data(data) {}
 
+int filter(unsigned int code, struct _EXCEPTION_POINTERS* ep)
+{
+	if (code == EXCEPTION_ACCESS_VIOLATION)
+	{
+		return EXCEPTION_EXECUTE_HANDLER;
+	}
+	else
+	{
+		return EXCEPTION_CONTINUE_SEARCH;
+	};
+}
+
+bool executeQuery(QueryExecutor& executor) {
+	__try
+	{
+		executor.processCommands();
+		return true;
+	}
+	__except (filter(GetExceptionCode(), GetExceptionInformation()))
+	{
+		return false;
+	}
+}
+
 void GetDataRequest::Process() {
 	Buffer resBuffer;
 	GetDataResponse res{ resBuffer };
 
 	QueryExecutor executor{ data, resBuffer };
 
-	auto t1 = std::chrono::high_resolution_clock::now();
-	executor.processCommands();
-	auto t2 = std::chrono::high_resolution_clock::now();
-
-	/* Getting number of milliseconds as an integer. */
-	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-
-	injector.log("Query took " + std::to_string(ms.count()) + " ms");
+	if( !executeQuery(executor) )
+		injector.log("Query caused Access Violation");
 
 	ProcessResponse(res);
 }

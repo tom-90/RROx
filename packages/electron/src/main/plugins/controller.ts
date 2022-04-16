@@ -1,4 +1,4 @@
-import { Actions, ActionType, Controller, ControllerCommunicator, IPluginController, SetupFunction } from "@rrox/api";
+import { Actions, ActionType, Controller, ControllerCommunicator, IPluginController, SettingsManager, SetupFunction } from "@rrox/api";
 import { QueryAction, GetStructAction } from "../actions";
 import { RROxApp } from "../app";
 import { EventEmitter } from "events";
@@ -7,12 +7,14 @@ import path from "path";
 import Log from "electron-log";
 import { ISetupFunction } from ".";
 import { Mutex } from 'async-mutex';
-import { PluginsCommunicator } from "./communicator";
+import { PluginCommunicator } from "./communicator";
+import { PluginSettingsManager } from "./settings";
 
 export class PluginController extends EventEmitter implements IPluginController {
 
     public communicator: ControllerCommunicator;
     public instance?: Controller;
+    public settings: SettingsManager;
 
     private setupLock = new Mutex();
     private setups: ISetupFunction[] = [];
@@ -23,7 +25,8 @@ export class PluginController extends EventEmitter implements IPluginController 
 
         this.log = Log.scope( plugin.name );
 
-        this.communicator = new PluginsCommunicator( this.app.communicator, plugin );
+        this.communicator = new PluginCommunicator( this.app.communicator, plugin );
+        this.settings = new PluginSettingsManager( this.app.settings, plugin );
 
         this.app.on( 'ready', () => {
             this.emit( 'connect' );

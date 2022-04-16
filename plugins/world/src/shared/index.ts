@@ -1,3 +1,3 @@
-export * from './communicator';
+export * from './communicators';
 export * from './log';
 export * from './world';

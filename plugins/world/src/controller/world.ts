@@ -1,12 +1,25 @@
-import { Actions, IPluginController, IQuery, query, ValueProvider } from "@rrox/api";
-import { ILocation, IRotation, IStorage, IWorld, WorldCommunicator } from "../shared";
+import { Actions, InOutParam, IPluginController, IQuery, query, ValueProvider } from "@rrox/api";
+import { FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, ProductType, WorldCommunicator } from "../shared";
+import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
+import { ASCharacter } from "./structs/arr/SCharacter";
+import { ASplineActor } from "./structs/arr/SplineActor";
 import { Astorage } from "./structs/arr/storage";
+import { ABP_Player_Conductor_C } from "./structs/BP_Player_Conductor/BP_Player_Conductor_C";
+import { FLinearColor } from "./structs/CoreUObject/LinearColor";
+import { FVector } from "./structs/CoreUObject/Vector";
 import { AActor } from "./structs/Engine/Actor";
+import { EDrawDebugTrace } from "./structs/Engine/EDrawDebugTrace";
+import { ETraceTypeQuery } from "./structs/Engine/ETraceTypeQuery";
 import { UGameEngine } from "./structs/Engine/GameEngine";
+import { FHitResult } from "./structs/Engine/HitResult";
+import { UKismetSystemLibrary } from "./structs/Engine/KismetSystemLibrary";
+import { APlayerState } from "./structs/Engine/PlayerState";
+import { Vector2D } from "./vector";
 
 export class World {
-    private gameState?: AarrGameStateBase;
+    public gameState?: AarrGameStateBase;
+
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
     private valueProvider: ValueProvider<IWorld>;
@@ -148,7 +161,9 @@ export class World {
             query( gameState.SplineArray.all(), ( spline ) => [
                 spline.SplineControlPoints.all(),
                 spline.SplineMeshBoolArray.all(),
-                spline.SplineType
+                spline.SplineType,
+                spline.RootComponent.RelativeLocation,
+                spline.RootComponent.RelativeRotation
             ] ),
         ] );
     }
@@ -165,6 +180,9 @@ export class World {
         if( !data || !spline )
             return;
 
+        this.gameState = data;
+        this.gameState.SplineArray = this.gameState.SplineArray;
+
         const getLocation = ( actor: AActor ): ILocation => ( {
             X: actor.RootComponent.RelativeLocation.X,
             Y: actor.RootComponent.RelativeLocation.Y,
@@ -180,8 +198,32 @@ export class World {
         const getStorage = ( storage?: Astorage ): IStorage | undefined => ( storage ? {
             currentAmount: storage.currentamountitems,
             maxAmount: storage.maxitems,
-            type: storage.storagetype,
+            type: storage.storagetype as ProductType,
         } : undefined );
+
+        const getSplineSegments = ( spline: ASplineActor ) => {
+            const segments: ISpline[ 'segments' ] = [];
+
+            for( let i = 0; i < spline.SplineControlPoints.length - 1; i++ ) {
+                const point = spline.SplineControlPoints[ i ];
+                const next = spline.SplineControlPoints[ i + 1 ];
+                segments.push( {
+                    start: {
+                        X: point.X,
+                        Y: point.Y,
+                        Z: point.Z,
+                    },
+                    end: {
+                        X: next.X,
+                        Y: next.Y,
+                        Z: next.Z
+                    },
+                    visible: spline.SplineMeshBoolArray[ i ],
+                } );
+            }
+
+            return segments;
+        }
 
         const world: IWorld = {
             players: data.PlayerArray.map( ( p ) => ( {
@@ -190,7 +232,7 @@ export class World {
                 rotation: getRotation( p.PawnPrivate ),
             } ) ),
             frameCars: data.FrameCarArray.map( ( f ) => ( {
-                type: f.FrameType,
+                type: f.FrameType as FrameCarType,
                 name: f.framename,
                 number: f.FrameNumber,
                 location: getLocation( f ),
@@ -207,7 +249,7 @@ export class World {
                 },
                 boiler: f.MyBoiler ? {
                     pressure: f.MyBoiler.currentboilerpressure,
-                    maxPressure: f.MyBoiler.maxfiretemperature,
+                    maxPressure: f.MyBoiler.maxboilerpressure,
                     waterTemperature: f.MyBoiler.currentwatertemperature,
                     waterAmount: f.MyBoiler.currentwateramount,
                     maxWaterAmount: f.MyBoiler.maxwateramount,
@@ -225,8 +267,8 @@ export class World {
                     maxWater: f.MyTender.maxamountwater,
                 } : undefined,
                 freight: f.MyFreight ? {
-                    type: f.MyFreight.currentfreighttype,
-                    amount: f.MyFreight.currentfreight,
+                    type: f.MyFreight.currentfreighttype as ProductType,
+                    currentAmount: f.MyFreight.currentfreight,
                     maxAmount: f.MyFreight.maxfreight,
                 } : undefined,
                 couplers: {
@@ -273,17 +315,80 @@ export class World {
             } ) ),
             splines: spline.SplineArray.map( ( s ) => ( {
                 type: s.SplineType,
-                points: s.SplineControlPoints.map( ( point ) => ( {
-                    X: point.X,
-                    Y: point.Y,
-                    Z: point.Z,
-                } ) ),
-                visibility: s.SplineMeshBoolArray
+                segments: getSplineSegments( s ),
+                location: getLocation( s ),
+                rotation: getRotation( s ),
             } ) ),
         };
 
         this.valueProvider.provide( world );
 
         return world;
+    }
+
+    public async getHeight( position: ILocation2D ) {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        if( !this.gameState )
+            return;
+
+        const ref = await data.getReference( UKismetSystemLibrary );
+        if( !ref )
+            return;
+            
+        let kismet = await ref.getStatic();
+        if( !kismet )
+            return;
+
+        const start = await data.create( FVector );
+        start.X = position.X;
+        start.Y = position.Y;
+        start.Z = 50000;
+
+        const end = await data.create( FVector );
+        end.X = position.X;
+        end.Y = position.Y;
+        end.Z = 0;
+
+        const result = new InOutParam( await data.create( FHitResult ) );
+
+        const hasHit = await kismet.LineTraceSingle(
+            this.gameState,
+            start,
+            end,
+            ETraceTypeQuery.TraceTypeQuery1,
+            false,
+            new InOutParam( [] ),
+            EDrawDebugTrace.None,
+            result,
+            false,
+            await data.create( FLinearColor ),
+            await data.create( FLinearColor ),
+            0
+        );
+
+        if( !hasHit || !result.out )
+            return;
+
+        let height = result.out.ImpactPoint.Z;
+
+        Geometry.getSplinesNear( new Vector2D( position ), this.valueProvider.getValue()?.splines || [] )
+            .forEach( ( data ) => data.point.coords[ 2 ] > height ? height = data.point.coords[ 2 ] : null );
+
+        return height;
+    }
+
+    public async getCharacter() {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        const ref = await data.getReference( ABP_Player_Conductor_C );
+        if( !ref )
+            return;
+
+        const characters = await ref.getInstances( 1 );
+        if( !characters || characters.length === 0 )
+            return;
+
+        return characters[ 0 ];
     }
 }

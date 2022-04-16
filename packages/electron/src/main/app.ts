@@ -1,9 +1,7 @@
 import { Action } from "./actions";
 import { NamedPipe, NamedPipeServer } from "./net";
 import { StructStore } from "./struct";
-import Store from 'electron-store';
-import * as config from '../config'
-import { IPCCommunicator, PluginManager } from "./plugins";
+import { IPCCommunicator, PluginManager, SettingsManager } from "./plugins";
 import { EventEmitter } from "events";
 import { BrowserWindow } from "electron";
 import { ControllerCommunicator } from "@rrox/api";
@@ -17,10 +15,10 @@ interface RROxAppEvents {
 
 export class RROxApp extends EventEmitter implements RROxAppEvents {
     public communicator: ControllerCommunicator = new IPCCommunicator( this );
+    public settings = new SettingsManager( this.communicator )
 
     public structs    = new StructStore();
     public pipeServer = new NamedPipeServer( this, 'RRO' );
-    public settings   = new Store<config.Schema>( config );
     public plugins    = new PluginManager( this );
 
     public windows: BrowserWindow[] = [];

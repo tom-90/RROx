@@ -1,8 +1,9 @@
+import { SwitchType } from "./enums";
 import { ILocation } from "./location";
 import { IRotation } from "./rotation";
 
 export interface ISwitch {
-    type: number;
+    type: SwitchType;
     state: number;
 
     location: ILocation;

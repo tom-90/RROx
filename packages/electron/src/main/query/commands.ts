@@ -15,6 +15,8 @@ export enum QueryCommandTypes {
     FINISH,
     WRITE_BYTES,
     WRITE_ARRAY,
+    STORE_POINTER,
+    WRITE_POINTER,
     EXECUTE_FUNCTION,
 }
 
@@ -95,6 +97,18 @@ export const QueryCommands = {
             await write( buffer, i );
             buffer.writeUInt16( QueryCommandTypes.FINISH );
         }
+    },
+    writePointer( buffer: BufferIO, offset: number, traverse: ( buffer: BufferIO ) => ( res: BufferIO ) => void, ret: ( buffer: BufferIO ) => void ) {
+        const resHandler = traverse( buffer );
+
+        buffer.writeUInt16( QueryCommandTypes.STORE_POINTER );
+
+        ret( buffer );
+
+        buffer.writeUInt16( QueryCommandTypes.WRITE_POINTER );
+        buffer.writeUInt32( offset );
+
+        return resHandler;
     },
     async executeFunction( buffer: BufferIO, name: string, size: number, write: ( buffer: BufferIO ) => void | Promise<void>, read: ( buffer: BufferIO ) => void | Promise<void> ) {
         buffer.writeUInt16( QueryCommandTypes.EXECUTE_FUNCTION );

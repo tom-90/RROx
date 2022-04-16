@@ -3,3 +3,8 @@ export interface ILocation {
     Y: number;
     Z: number;
 }
+
+export interface ILocation2D {
+    X: number;
+    Y: number;
+}

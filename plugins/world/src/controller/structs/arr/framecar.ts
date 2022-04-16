@@ -123,5 +123,12 @@ export class Aframecar extends ACharacter {
      */
     @Property.Object( "MyCouplerRear", () => Acoupler )
     public MyCouplerRear: Acoupler;
+    
+    /**
+     * @param Value Float number property
+     * @flags Final, Native, Public, BlueprintCallable
+     */
+    @Property.Function( "Function arr.framecar.SetWhistle", [ [] ] )
+    public SetWhistle: ( Value: float ) => Promise<void>;
 
 }

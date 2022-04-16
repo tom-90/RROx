@@ -10,7 +10,7 @@ export class QueryAction extends Action implements IQueryAction {
     async getStructProperties<T extends object>( base: StructConstructor<T> ) {
         const structName = this.getStructName( base );
 
-        const propertyKeys = Reflect.getMetadata( PROPERTY_LIST_METADATA, base.prototype ) as string[];
+        const propertyKeys = Reflect.getMetadata( PROPERTY_LIST_METADATA, base.prototype ) as string[] ?? [];
 
         if( !propertyKeys || !Array.isArray( propertyKeys ) || !propertyKeys.every( ( p ) => typeof p === 'string' ) )
             throw new QueryActionError( 'Class does not contain a valid property list.' );
@@ -131,18 +131,6 @@ export class QueryAction extends Action implements IQueryAction {
 
         if( !instance )
             throw new QueryActionError( 'Invalid base object' );
-
-        return ( query as Query<T> ).query( instance );
-    }
-
-    async queryGlobal<T extends object>( query: IQuery<T>, base: StructConstructor<T> ): Promise<T | null> {
-        if( !( query instanceof Query ) )
-            throw new QueryActionError( 'Invalid query object' );
-
-        const name = this.getStructName( base );
-        const instance = new StructInstance( this.app, base );
-
-        instance.getTraverser().setSteps( [ new GlobalTraverserStep( name ) ] );
 
         return ( query as Query<T> ).query( instance );
     }

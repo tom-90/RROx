@@ -369,6 +369,34 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		return true;
 	}
+	case QueryCommandTypes::STORE_POINTER: {
+		if (traversal.empty())
+			return false;
+
+		QueryStackItem& stackItem = traversal.top();
+
+		storedPointer = stackItem.object;
+
+		return true;
+	}
+	case QueryCommandTypes::WRITE_POINTER: {
+		if (traversal.empty())
+			return false;
+
+		QueryStackItem& stackItem = traversal.top();
+
+		uint32_t offset = request.Read<uint32_t>();
+
+		std::byte* ptr = (std::byte*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		if (IsBadReadPtr(ptr, sizeof(ptr)))
+			return false;
+
+		uint64_t pointer = (uint64_t)storedPointer;
+
+		memcpy(ptr, &pointer, sizeof(storedPointer));
+
+		return true;
+	}
 	case QueryCommandTypes::EXECUTE_FUNCTION: {
 		if (traversal.empty())
 			return false;
@@ -499,6 +527,13 @@ void QueryExecutor::processCommandNoop(QueryCommandTypes command) {
 		auto length = request.Read<uint32_t>();
 		for (uint32_t i = 0; i < length; i++)
 			processCommandsNoop();
+		break;
+	}
+	case QueryCommandTypes::STORE_POINTER: {
+		break;
+	}
+	case QueryCommandTypes::WRITE_POINTER: {
+		request.Read<uint32_t>();
 		break;
 	}
 	case QueryCommandTypes::EXECUTE_FUNCTION: {

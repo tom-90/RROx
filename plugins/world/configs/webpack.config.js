@@ -89,7 +89,9 @@ const controller = {
             name   : 'controller',
             library: { type: 'assign', name: `__webpack_remotes__[${JSON.stringify( plugin.name )}]` },
             exposes: {
-                '.': plugin.controllerEntry,
+                '.'           : plugin.controllerEntry,
+                './controller': plugin.controllerEntry,
+                './shared'    : plugin.sharedEntry,
             },
         } ),
     ]
@@ -109,7 +111,9 @@ const renderer = {
             name   : 'renderer',
             library: { type: 'assign', name: `__webpack_remotes__[${JSON.stringify( plugin.name )}]` },
             exposes: {
-                '.': plugin.rendererEntry,
+                '.'         : plugin.rendererEntry,
+                './renderer': plugin.rendererEntry,
+                './shared'  : plugin.sharedEntry,
             },
             remotes: {
                 '@rrox/base-ui': '__webpack_remotes__.load("@rrox/base-ui")'

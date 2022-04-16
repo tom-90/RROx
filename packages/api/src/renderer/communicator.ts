@@ -1,4 +1,4 @@
-import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../communicator";
+import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../shared";
 
 export interface RendererCommunicator {
     /**

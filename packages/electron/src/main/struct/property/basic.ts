@@ -285,7 +285,7 @@ export class BasicProperty<T extends PropertyType = PropertyType> implements IBa
      * 
      * @param value Value provided by the user
      */
-    public async saveValue( req: BufferIO, value: unknown ): Promise<void> {
+    public async saveValue( req: BufferIO, value: unknown ): Promise<void | ( ( res: BufferIO ) => void )> {
         QueryCommands.writeBytes( req, this.offset, this.size );
 
         this.writeBasicProperty( req, value );

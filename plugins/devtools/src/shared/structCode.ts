@@ -6,4 +6,4 @@ export const StructCodeCommunicator = Communicator<{
      * Function defining the way the remote procedure should be called.
      */
     rpc?: ( structName: string ) => [ code: string, links: { [ key: string ]: string } ];
-}>( '@rrox/devtools', 'StructCode' );
+}>( PluginInfo, 'StructCode' );

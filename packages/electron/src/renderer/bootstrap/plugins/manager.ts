@@ -6,6 +6,7 @@ import { RendererCommunicator, Logger } from "@rrox/api";
 import { IPCCommunicator } from "./communicator";
 import { PluginsCommunicator } from "../../../shared/communicators/plugins";
 import { ElectronLog, LogFunctions } from "electron-log";
+import { SettingsManager } from "./settings";
 
 export type WebpackRemotePackages = {
     [ module: string ]: {
@@ -25,6 +26,7 @@ declare const log: () => ElectronLog;
 export class PluginManager {
     public registrations = new RegistrationStore();
     public communicator: RendererCommunicator = new IPCCommunicator();
+    public settings: SettingsManager;
 
     private installed: { [ name: string ]: IPlugin } = {};
     private loaded   : { [ name: string ]: PluginRenderer } = {};
@@ -34,6 +36,7 @@ export class PluginManager {
     constructor() {
         new Logger( log() );
         this.log = Logger.get( PluginInfo );
+        this.settings = new SettingsManager( this.communicator, this.log );
 
         // Overwrite the load method that was previously defined as a no-op in the bootstrap
         window.__webpack_remotes__ = { load: ( pkgName ) => this.webpackRequire( pkgName ) } as WebpackRemotePackages;

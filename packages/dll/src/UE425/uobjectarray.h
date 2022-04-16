@@ -48,5 +48,5 @@ struct FUObjectArray
 	FUObjectItem* FindObject(const std::string& name);
 	FUObjectItem* FindInstance(const UObject* type);
 	FUObjectItem* FindStatic(const UObject* type);
-	std::vector<FUObjectItem*> FindInstances(const UObject* type, const uint32_t count = 0);
+	std::vector<FUObjectItem*> FindInstances(const UObject* type, const uint32_t count = 0, const bool deep = false);
 };

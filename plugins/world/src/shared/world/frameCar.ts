@@ -1,8 +1,10 @@
+import { FrameCarType } from "./enums";
 import { ILocation } from "./location";
 import { IRotation } from "./rotation";
+import { IStorage } from "./storage";
 
 export interface IFrameCar {
-    type: string;
+    type: FrameCarType;
     name: string;
     number: string;
     location: ILocation;
@@ -41,11 +43,7 @@ export interface IFrameCar {
         maxWater: number;
     }
     
-    freight?: {
-        type: string;
-        amount: number;
-        maxAmount: number;
-    }
+    freight?: IStorage;
 
     couplers: {
         front?: {

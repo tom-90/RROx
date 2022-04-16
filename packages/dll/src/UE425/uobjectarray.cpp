@@ -1,5 +1,6 @@
 #include "uobjectarray.h"
 #include <Windows.h>
+#include "../wrappers/uobject.h"
 
 std::unordered_map<std::string, FUObjectItem*> FUObjectArray::Cache = {};
 
@@ -55,20 +56,36 @@ bool IsObjectTemplate(UObject* object) {
 }
 
 FUObjectItem* FUObjectArray::FindInstance(const UObject* obj) {
-	auto instances = FindInstances(obj, 1);
+	auto instances = FindInstances(obj, 1, false);
 	if(instances.size() == 0)
 		return nullptr;
 	return instances[0];
 };
 
-std::vector<FUObjectItem*> FUObjectArray::FindInstances(const UObject* obj, const uint32_t count) {
+bool HasSuper(const UObject* obj, UClass* cls) {
+	if (!cls)
+		return false;
+
+	WUClass wrapped = cls;
+	WUStruct super = wrapped.GetSuper();
+
+	if (!super)
+		return false;
+	if (super == obj)
+		return true;
+	if (!super.IsA<WUClass>())
+		return false;
+	return HasSuper(obj, (UClass*)super.get());
+}
+
+std::vector<FUObjectItem*> FUObjectArray::FindInstances(const UObject* obj, const uint32_t count, const bool deep) {
 	std::vector<FUObjectItem*> instances;
 
 	for (int32_t i = 0; i < ObjObjects.NumElements; i++) {
 		FUObjectItem* item = ObjObjects.GetObjectPtr(i);
 
 		if (item && item->Object) {
-			if (item->Object->ClassPrivate == obj) {
+			if (item->Object->ClassPrivate == obj || (deep && HasSuper(obj, item->Object->ClassPrivate))) {
 				if (IsObjectTemplate(item->Object))
 					continue;
 

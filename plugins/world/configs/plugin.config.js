@@ -13,4 +13,6 @@ module.exports = {
      * Path to the entry file of the renderer (relative to package root)
      */
     rendererEntry: './src/renderer/index.tsx',
+
+    sharedEntry: './src/shared/index.ts',
 }

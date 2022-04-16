@@ -1,4 +1,4 @@
-import { StructInfo, StructConstructor, PROPERTY_LIST_METADATA, FUNCTION_LIST_METADATA, PROPERTY_NAME_METADATA, FUNCTION_NAME_METADATA, IProperty, FUNCTION_ARGS_METADATA } from "@rrox/api";
+import { StructInfo, StructConstructor, PROPERTY_LIST_METADATA, FUNCTION_LIST_METADATA, PROPERTY_NAME_METADATA, FUNCTION_NAME_METADATA, IProperty, FUNCTION_ARGS_METADATA, InOutParam } from "@rrox/api";
 import { Query } from ".";
 import { QueryAction, GetStructAction } from "../actions";
 import { RROxApp } from "../app";
@@ -298,13 +298,26 @@ export class StructInstance<T extends object> implements StructInfo<T> {
             async ( buffer ) => {
                 let index = 0;
                 for( let param of func.params ) {
+                    let resHandler: ( ( res: BufferIO ) => void ) | void = undefined;
+
                     if( !param.isFunctionReturnParameter() && param.isFunctionParameter() ) {
-                        await param.saveValue( buffer, args[ index ] );
+                        // We cannot check for InOutParam using instanceof due to different versions of @rrox/api
+                        // Therefore, we check using a special flag
+                        if( param.isFunctionOutParameter() && typeof args[ index ] === 'object' && args[ index ] !== null
+                                && 'constructor' in args[ index ] && args[ index ].constructor.IN_OUT_PARAM === true
+                                && 'in' in args[ index ] ) {
+                            resHandler = await param.saveValue( buffer, args[ index ].in );
+                        } else {
+                            resHandler = await param.saveValue( buffer, args[ index ] );
+                        }
                         index++;
                     } else if( param.isFunctionReturnParameter() ) {
                         // Make sure the buffer is initialized with sane default values
-                        await param.saveValue( buffer, null );
+                        resHandler = await param.saveValue( buffer, null );
                     }
+
+                    if( resHandler )
+                        resHandlers.push( resHandler );
                 }
             },
             async ( buffer ) => {
@@ -350,12 +363,23 @@ export class StructInstance<T extends object> implements StructInfo<T> {
             for( let handler of resHandlers )
                 handler( res.data, instance );
 
-            const returnParam = func.params.find( ( p ) => p.isFunctionReturnParameter() );
+            let returnValue = null;
 
-            if( !returnParam )
-                return null;
+            let index = 0;
+            for( let param of func.params ) {
+                if( !param.isFunctionReturnParameter() && param.isFunctionParameter() ) {
+                    if( param.isFunctionOutParameter() && typeof args[ index ] === 'object' && args[ index ] !== null
+                            && 'constructor' in args[ index ] && args[ index ].constructor.IN_OUT_PARAM === true
+                            && 'in' in args[ index ] ) {
+                        ( args[ index ] as InOutParam<any> ).out = instance.getValue( param.name );
+                    }
+                    index++;
+                } else if( param.isFunctionReturnParameter() ) {
+                    returnValue = instance.getValue( param.name );
+                }
+            }
 
-            return instance.getValue( returnParam.name );
+            return returnValue;
         }
     }
 

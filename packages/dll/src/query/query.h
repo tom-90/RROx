@@ -19,6 +19,8 @@ enum class QueryCommandTypes : uint16_t {
     FINISH,
     WRITE_BYTES,
     WRITE_ARRAY,
+    STORE_POINTER,
+    WRITE_POINTER,
     EXECUTE_FUNCTION,
 };
 
@@ -33,6 +35,7 @@ private:
 	Buffer& response;
     std::stack<QueryStackItem> traversal;
     std::vector<std::unique_ptr<std::byte[]>> pointers;
+    void* storedPointer = nullptr;
 
 	bool processCommand(QueryCommandTypes command);
     void processCommandNoop(QueryCommandTypes command);

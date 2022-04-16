@@ -9,7 +9,7 @@ export class StructReference<S extends object> implements StructRef<S> {
 
     constructor( protected app: RROxApp, protected struct?: Struct, protected structName?: string ) {}
 
-    async getInstances<T extends S>( base: StructConstructor<T>, count?: number ): Promise<T[] | null> {
+    async getInstances<T extends S>( base: StructConstructor<T>, count?: number, deep?: boolean ): Promise<T[] | null> {
         const name = this.app.getAction( QueryAction ).getStructName( base );
 
         if( !this.app.isConnected() )
@@ -19,7 +19,7 @@ export class StructReference<S extends object> implements StructRef<S> {
             throw new QueryActionError( 'Invalid struct passed to getStatic' );
 
         const pipe = this.app.getPipe()!;
-        const req  = new GetInstancesRequest( this.app, name, count );
+        const req  = new GetInstancesRequest( this.app, name, count, deep );
 
         pipe.request( req );
         const res = await pipe.waitForResponse( req, GetInstancesResponse );
@@ -98,17 +98,21 @@ export class LinkedStructReference<S extends object> extends StructReference<S> 
     async getInstances( base: StructConstructor<S>, count?: number ): Promise<S[] | null>;
     async getInstances( count?: number ): Promise<S[] | null>
 
-    getInstances( baseOrCount?: ( StructConstructor<S> ) | number, count?: number ): Promise<S[] | null> {
+    getInstances( baseOrCount?: ( StructConstructor<S> ) | number, countOrDeep?: number | boolean, deep?: boolean ): Promise<S[] | null> {
         let base: ( StructConstructor<S> ) | undefined = undefined;
-        if( baseOrCount != null && typeof baseOrCount === 'number' )
-            count = baseOrCount;
-        else
+        let count: number;
+        if( ( baseOrCount != null && typeof baseOrCount === 'number' ) || ( countOrDeep != null && typeof countOrDeep === 'boolean' ) ) {
+            count = baseOrCount as number;
+            deep = countOrDeep as boolean;
+        } else {
             base = baseOrCount;
+            count = countOrDeep as number;
+        }
 
         if( !base )
             base = this.link;
         
-        return super.getInstances( base, count );
+        return super.getInstances( base, count, deep );
     }
 
     getStatic(): Promise<S | null>;

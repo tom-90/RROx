@@ -84,7 +84,7 @@ const controller = {
             library: { type: 'assign', name: `__webpack_remotes__[${JSON.stringify( plugin.name )}]` },
             exposes: {
                 '.'           : plugin.controllerEntry,
-                './controller': plugin.rendererEntry,
+                './controller': plugin.controllerEntry,
             },
         } ),
     ]

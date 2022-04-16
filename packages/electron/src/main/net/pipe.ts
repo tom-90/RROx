@@ -142,8 +142,8 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
         const type: MessageType | undefined = data.readUInt16();
         data.setOffset( 0 );
 
-        if( type !== MessageType.LOG )
-            Log.debug( 'Received response of type', type );
+        //if( type !== MessageType.LOG )
+        //    Log.debug( 'Received response of type', type );
 
         switch( type ) {
             case MessageType.LOG:

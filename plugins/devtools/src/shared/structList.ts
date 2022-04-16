@@ -5,9 +5,9 @@ export const StructListCommunicator = Communicator<{
      * Function defining the way the remote procedure should be called.
      */
     rpc?: () => StructListDetails;
-}>( '@rrox/devtools', 'StructList' );
+}>( PluginInfo, 'StructList' );
 
-export type StructListType = 'Class' | 'Struct' | 'ScriptStruct' | 'Package' | 'Enum';
+export type StructListType = 'Class' | 'Struct' | 'ScriptStruct' | 'Package' | 'Enum' | 'BlueprintGeneratedClass';
 
 export interface StructListDetails {
     [ key: string ]: {

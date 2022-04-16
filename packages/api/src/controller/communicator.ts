@@ -1,4 +1,4 @@
-import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType, ValueCommunicator } from "../communicator";
+import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../shared";
 import { Diff } from "deep-diff";
 
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T;

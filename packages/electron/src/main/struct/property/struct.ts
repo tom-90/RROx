@@ -66,13 +66,13 @@ export class StructProperty extends BasicProperty<PropertyType.StructProperty> i
         if( !classRef )
             throw new QueryError( `Struct query property '${this.name}' has not initialized correctly.` );
 
-        this.structQueries.set( classRef, query );
-
         const queryAction = this.app.getAction( QueryAction );
         const queryStructName = queryAction.getStructName( classRef );
 
         if( queryStructName !== this.structName )
             throw new QueryError( `Unable to use struct '${queryStructName}' in the query. Only the struct '${this.structName}' can be used.` );
+
+        this.structQueries.set( classRef, query );
 
         const queryBuilders = await queryAction.createQueryBuilder( classRef, query );
 

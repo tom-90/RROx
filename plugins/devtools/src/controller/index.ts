@@ -17,7 +17,7 @@ export default class DevToolsPlugin extends Controller {
 
                 const type = struct.substring( 0, index ) as StructListType;
 
-                if( ![ 'Struct', 'ScriptStruct', 'Class', 'Package', 'Enum' ].includes( type ) )
+                if( ![ 'Struct', 'ScriptStruct', 'Class', 'Package', 'Enum', 'BlueprintGeneratedClass' ].includes( type ) )
                     continue;
 
                 const name = struct.substring( index + 1 );
@@ -63,10 +63,10 @@ export default class DevToolsPlugin extends Controller {
                 return [ '// Could not load ' + structName, {} ];
 
             const type = structName.substring( 0, index ) as StructListType;
-            if( ![ 'Struct', 'ScriptStruct', 'Class', 'Package', 'Enum' ].includes( type ) )
+            if( ![ 'Struct', 'ScriptStruct', 'Class', 'Package', 'Enum', 'BlueprintGeneratedClass' ].includes( type ) )
                 return [ '// Could not load ' + structName, {} ];
 
-            if( type === 'Class' || type === 'Struct' || type === 'ScriptStruct' ) {
+            if( type === 'Class' || type === 'Struct' || type === 'ScriptStruct' || type === 'BlueprintGeneratedClass' ) {
                 const struct = await controller.getAction( Actions.GET_STRUCT ).getStruct( structName );
                 if( struct ) {
                     const definitions: GeneratorDefinitionLinks = {};

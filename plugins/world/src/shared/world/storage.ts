@@ -1,5 +1,7 @@
+import { ProductType } from "./enums";
+
 export interface IStorage {
-    type: string;
+    type: ProductType;
     currentAmount: number;
     maxAmount: number;
 }

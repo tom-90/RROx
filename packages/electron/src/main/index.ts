@@ -49,11 +49,11 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
     let rrox = new RROxApp();
 
-    if( !rrox.settings.get( 'hardware-acceleration' ) ) {
+    /*if( !rrox.settings.get( 'hardware-acceleration' ) ) {
         app.disableHardwareAcceleration();
         Log.info( 'Hardware acceleration is disabled.' );
     } else
-        Log.info( 'Hardware acceleration is enabled.' );
+        Log.info( 'Hardware acceleration is enabled.' );*/
 
     app.on( 'ready', async () => {
         if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
@@ -63,6 +63,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         console.log( await rrox.plugins.getInstalledPlugins() );
         console.log( await rrox.plugins.loadPlugin( '@rrox/devtools' ) );
         console.log( await rrox.plugins.loadPlugin( '@rrox/world' ) );
+        console.log( await rrox.plugins.loadPlugin( '@rrox/map' ) );
 
         rrox.addWindow( createAppWindow() );
 
@@ -71,7 +72,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         rrox.pipeServer.start();
 
         if( injector.isProcessRunning( 'arr-Win64-Shipping.exe' ) ) {
-            const error = injector.inject( 'arr-Win64-Shipping.exe', require.resolve( '@rrox/dll/x64/Release/RROxDLL.dll' ) );
+            const error = injector.inject( 'arr-Win64-Shipping.exe', require.resolve( '@rrox/dll/x64/Debug/RROxDLL.dll' ) );
             if( !error ) {
                 Log.info( 'DLL injected.' );
             } else {

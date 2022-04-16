@@ -115,7 +115,7 @@ void Injector::processMessages() {
 		MessageType type = message.Read<MessageType>();
 		message.SetOffset(0); // Reset read position back to 0
 
-		log("Received message of type " + std::to_string(static_cast<uint16_t>(type)));
+		//log("Received message of type " + std::to_string(static_cast<uint16_t>(type)));
 
 		switch (type) {
 		case MessageType::GET_STRUCT: {

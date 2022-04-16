@@ -1,11 +1,13 @@
 import { Actions, ActionType } from "./actions";
 import { ControllerCommunicator } from "./communicator";
+import { SettingsManager } from "./settings";
 
 export type SetupFunction = () => void | CleanupFunction | Promise<void | CleanupFunction>;
 export type CleanupFunction = () => void | Promise<void>;
 
 export interface IPluginController {
     communicator: ControllerCommunicator;
+    settings: SettingsManager;
 
     /**
      * Retrieves an action to perform on the game.

@@ -10,7 +10,7 @@ export class IPCCommunicator implements ControllerCommunicator {
     constructor( private app: RROxApp ) {}
 
     private communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
-        return `c/${communicator.module}/${communicator.key}`;
+        return `c/${communicator.module.name}/${communicator.key}`;
     }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -53,7 +53,7 @@ export class IPCCommunicator implements ControllerCommunicator {
     }
 }
 
-export class PluginsCommunicator implements ControllerCommunicator {
+export class PluginCommunicator implements ControllerCommunicator {
     constructor( private rootCommunicator: ControllerCommunicator, private plugin: IPlugin ) {}
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -72,13 +72,13 @@ export class PluginsCommunicator implements ControllerCommunicator {
         communicator: C,
         handler: ( ...args: Parameters<CommunicatorRPCFunction<C>> ) => ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>>
     ): () => void {
-        if( communicator.module !== this.plugin.name )
+        if( communicator.module.name !== this.plugin.name )
             throw new Error( 'Cannot register a handler for a communicator that is not owned by the plugin.' );
         return this.rootCommunicator.handle( communicator, handler );
     }
     
     provideValue<T>( communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T ): ValueProvider<T> {
-        if( communicator.module !== this.plugin.name )
+        if( communicator.module.name !== this.plugin.name )
             throw new Error( 'Cannot register a value provider for a communicator that is not owned by the plugin.' );
     
         return new ValueProvider( this, communicator, initialValue );

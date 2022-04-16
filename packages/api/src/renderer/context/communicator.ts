@@ -1,6 +1,6 @@
 import { useEffect, useContext, useRef, useCallback, useState } from "react";
 import { Diff } from "deep-diff";
-import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../../communicator";
+import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../../shared";
 import { RendererCommunicator } from "../communicator";
 import { getContext } from "./internal";
 import { applyDiff } from "../utils";

@@ -1,4 +1,6 @@
 export class InOutParam<T> {
+    public static readonly IN_OUT_PARAM = true;
+
     /**
      * Data that has been set when calling the function
      */

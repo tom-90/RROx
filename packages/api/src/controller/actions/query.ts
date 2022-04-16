@@ -7,8 +7,6 @@ export interface IQueryAction {
 
     query<T extends object>( query: IQuery<T>, base: T ): Promise<T | null>;
 
-    queryGlobal<T extends object>( query: IQuery<T>, base: StructConstructor<T> ): Promise<T | null>;
-
     getReference<T extends object>( base: StructConstructor<T> ): Promise<LinkedStructRef<T> | null>;
 
     save<T extends object>( instance: T ): Promise<void>;

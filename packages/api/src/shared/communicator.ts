@@ -1,7 +1,7 @@
 import { Diff } from "deep-diff";
 
 export interface CommunicatorType<EventFunction extends ( ...params: any[] ) => void, RPCFunction extends ( ...params: any[] ) => any> {
-    module: string;
+    module: PluginInfo;
     key: string;
 
     // Non-existent property to store event and rpc functions
@@ -32,6 +32,6 @@ export type ValueCommunicator<T> = CommunicatorConfig<
 
 export function Communicator<
     Config extends CommunicatorConfig<( ...params: any[] ) => void, ( ...params: any[] ) => any>
->( module: string, key: string ): CommunicatorType<Exclude<Config['event'], undefined>, Exclude<Config['rpc'], undefined>> {
-    return { module, key } as CommunicatorType<Exclude<Config['event'], undefined>, Exclude<Config['rpc'], undefined>>;
+>( plugin: PluginInfo, key: string ): CommunicatorType<Exclude<Config['event'], undefined>, Exclude<Config['rpc'], undefined>> {
+    return { module: plugin, key } as CommunicatorType<Exclude<Config['event'], undefined>, Exclude<Config['rpc'], undefined>>;
 }

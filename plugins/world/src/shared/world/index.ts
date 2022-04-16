@@ -18,6 +18,7 @@ export interface IWorld {
     splines: ISpline[];
 }
 
+export * from './enums';
 export * from './frameCar';
 export * from './industry';
 export * from './location';

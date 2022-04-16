@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Layout } from "antd";
 import { ReactNode } from "react";
-import { TopNav } from "./TopNav";
 import { RendererMode, useMode } from '@rrox/api';
 import { SideNav } from './SideNav';
 
@@ -24,9 +23,6 @@ export function PageLayout( { children, style }: { children?: ReactNode, style?:
         >
             <SideNav />
         </Layout.Sider>
-        {mode === RendererMode.WINDOW && <Layout.Header style={{ padding: 0 }}>
-            <TopNav />
-        </Layout.Header>}
         <Layout.Content style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', ...style }}>
             {children}
         </Layout.Content>
