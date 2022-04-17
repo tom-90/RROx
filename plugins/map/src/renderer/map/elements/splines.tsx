@@ -7,7 +7,7 @@ import { useMemoCompare } from '../hooks';
 import { ISpline } from '@rrox/world/shared';
 
 export function Splines( { data, type }: { data: ISpline[], type: SplineType } ) {
-    const { utils, settings } = useContext( MapContext )!;
+    const { utils, preferences } = useContext( MapContext )!;
 
     const { coordinates } = useMemoCompare( () => {
         const coordinates: [ number, number ][][] = [];
@@ -48,7 +48,7 @@ export function Splines( { data, type }: { data: ISpline[], type: SplineType } )
 
     return <Line
         positions={coordinates}
-        color={settings[ `colors.spline.${type}` ]}
+        color={preferences[ `colors.spline.${type}` ]}
         weight={definition.width}
         lineCap={'butt'}
     />;

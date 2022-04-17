@@ -8,7 +8,7 @@ import { IPlayer } from '@rrox/world/shared';
 import { MapMode } from '../types';
 
 export const Player = React.memo( function Player( { data, index }: { data: IPlayer, index: number } ) {
-    const { utils, follow, mode, settings } = useContext( MapContext )!;
+    const { utils, follow, mode, settings, preferences } = useContext( MapContext )!;
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     const [ cheatsVisible, setCheatsVisible ] = useState( false );
 
@@ -27,7 +27,7 @@ export const Player = React.memo( function Player( { data, index }: { data: IPla
         anchor={anchor}
         rotation={Math.round( rotation.Yaw ) - 90}
         color={'black'}
-        fillColor={settings[ 'colors.player' ]}
+        fillColor={preferences[ 'colors.player' ]}
         fillOpacity={1}
         interactive
         weight={60}

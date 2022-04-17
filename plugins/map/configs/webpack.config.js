@@ -4,6 +4,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const path = require( 'path' );
 
 const plugin = require( './plugin.config' );
+const package = require( '../package.json' );
 
 const base = {
     module: {
@@ -66,6 +67,7 @@ const base = {
         new webpack.DefinePlugin( {
             PluginInfo: JSON.stringify({
                 name: plugin.name,
+                version: package.version,
             })
         } )
     ],

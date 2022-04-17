@@ -19,28 +19,28 @@ const Background6: { [ file: string ]: string } = {};
 context.keys().forEach(( filename )=> Background6[ filename ] = context( filename ) );
 
 export function Background() {
-    const { config, settings, mode } = useContext( MapContext )!;
+    const { config, preferences, mode } = useContext( MapContext )!;
 
-    if (settings[ 'map.background' ] === 7) {
+    if (preferences[ 'map.background' ] === 7) {
         document.body.setAttribute('data-map-theme', 'dark');
     }else{
         document.body.setAttribute('data-map-theme', 'light');
     }
 
-    if( settings[ 'map.background' ] === 6 || settings[ 'map.background' ] === 7 )
+    if( preferences[ 'map.background' ] === 6 || preferences[ 'map.background' ] === 7 )
         return <TileLayer
             getTileUrl={( { x, y, z } ) => Background6[ `./${z}/${x}/${y}.webp` ]}
             minNativeZoom={8}
             maxNativeZoom={12}
             maxZoom={undefined}
             minZoom={undefined}
-            opacity={mode === MapMode.MINIMAP && settings[ 'minimap.transparent' ] ? 0 : 1}
+            opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
             bounds={config.map.bounds}
         />;
 
     return <ImageOverlay
-        url={Backgrounds[ settings[ 'map.background' ] ]}
+        url={Backgrounds[ preferences[ 'map.background' ] ]}
         bounds={config.map.bounds}
-        opacity={mode === MapMode.MINIMAP && settings[ 'minimap.transparent' ] ? 0 : 1}
+        opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
     />;
 }

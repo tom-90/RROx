@@ -1,8 +1,6 @@
-import { IPluginController, Controller, Actions, IQuery } from '@rrox/api';
-import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, FrameCarControl, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats } from '../shared';
+import { IPluginController, Controller } from '@rrox/api';
+import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings } from '../shared';
 import { Cheats } from './cheats';
-import { ASwitch } from './structs/arr/Switch';
-import { FVector } from './structs/CoreUObject/Vector';
 import { World } from './world';
 
 export default class WorldPlugin extends Controller {
@@ -10,8 +8,10 @@ export default class WorldPlugin extends Controller {
     private cheats: Cheats;
 
     public async load( controller: IPluginController ): Promise<void> {
-        this.world = new World( controller );
-        this.cheats = new Cheats( controller );
+        const settings = controller.settings.init( WorldSettings );
+
+        this.world = new World( controller, settings );
+        this.cheats = new Cheats( controller, settings );
 
         controller.addSetup( async () => {
             await this.world.prepare();

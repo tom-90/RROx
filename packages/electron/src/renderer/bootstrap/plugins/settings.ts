@@ -1,11 +1,11 @@
-import { applyDiff, RendererCommunicator, SettingsContext, SettingsStore as ISettingsStore, SettingsType } from "@rrox/api";
+import { applyDiff, RendererCommunicator, SettingsContext, SettingsMode, SettingsStore, SettingsType } from "@rrox/api";
 import { LogFunctions } from "electron-log";
-import { EventEmitter2 } from "eventemitter2";
-import { SettingsCommunicator, SetSettingsCommunicator } from "../../../shared/communicators";
+import { SettingsCommunicator } from "../../../shared/communicators";
+import { ControllerSettingsStore, LocalStorageSettingsStore } from "../settings";
 
 export class SettingsManager implements SettingsContext {
     private settings: { [ plugin: string ]: any } = {};
-    private stores: { [ plugin: string ]: SettingsStore<any> } = {};
+    private stores: { [ plugin: string ]: { [ key in SettingsMode ]?: SettingsStore<any> } } = {};
 
     constructor( private communicator: RendererCommunicator, private log: LogFunctions ) {
         communicator.listen( SettingsCommunicator, ( diff ) => {
@@ -20,77 +20,37 @@ export class SettingsManager implements SettingsContext {
     }
 
     get<T>( settings: SettingsType<T> ): SettingsStore<T> {
-        if( this.stores[ settings.module.name ] )
-            return this.stores[ settings.module.name ] as SettingsStore<T>;
+        if( this.stores[ settings.module.name ]?.[ settings.mode ] )
+            return this.stores[ settings.module.name ][ settings.mode ] as ControllerSettingsStore<T>;
 
-        const store = new SettingsStore( this.communicator, settings.module, this.settings[ settings.module.name ] );
+        let store: SettingsStore<T>;
+        
+        switch( settings.mode ) {
+            case SettingsMode.CONTROLLER: {
+                store = new ControllerSettingsStore( this.communicator, settings.module, this.settings[ settings.module.name ] );
+                break;
+            }
+            case SettingsMode.RENDERER: {
+                store = new LocalStorageSettingsStore( settings, this.log );
+                break;
+            }
+            default: {
+                throw new Error( `Unknown settings mode '${settings.mode}' for '${settings.module.name}'.` );
+            }
+        }
 
-        this.stores[ settings.module.name ] = store;
+        this.stores[ settings.module.name ] = {
+            [ settings.mode ]: store,
+            ...( this.stores[ settings.module.name ] || {} )
+        };
 
-        return store as SettingsStore<T>;
+        return store;
     }
 
     private update() {
         for( let [ plugin, store ] of Object.entries( this.stores ) )
-            if( this.settings[ plugin ] !== store.get() )
-                store.updateSettingsObject( this.settings[ plugin ] );
-    }
-
-}
-
-export class SettingsStore<T> extends EventEmitter2 implements ISettingsStore<T> {
-
-    constructor( private communicator: RendererCommunicator, private plugin: PluginInfo, private settings: T ) {
-        super();
-    };
-
-    get<K extends keyof T>( key: K ): T[ K ];
-    get<K extends keyof T>( key: K, defaultValue?: Required<T[ K ]> ): Required<T[ K ]>;
-    get(): T;
-
-    get( key?: keyof T, defaultValue?: any ): any {
-        if( key === undefined )
-            return this.settings;
-        
-        const value = this.settings[ key ];
-
-        if( value === undefined )
-            return defaultValue;
-        return value;
-    }
-
-    set<K extends keyof T>( key: K, value: T[ K ] ): void;
-    set( values: Partial<T> ): void;
-
-    set( keyOrValues: keyof T | Partial<T>, value?: any ) {
-        if( typeof keyOrValues === 'string' || typeof keyOrValues === 'number' )
-            return this.set( {
-                [ keyOrValues ]: value
-            } as Partial<T> );
-
-        this.communicator.emit( SetSettingsCommunicator, this.plugin.name, keyOrValues as Partial<T> );
-    }
-
-    has( key: keyof T ): boolean {
-        return key in this.settings;
-    }
-
-    reset( ...keys: ( keyof T )[] ) {
-        const obj: Partial<T> = {};
-
-        for( let key of keys )
-            obj[ key ] = undefined;
-
-        return this.set( obj );
-    }
-
-    clear() {
-        return this.reset( ...( Object.keys( this.settings ) as ( keyof T )[] ) );
-    }
-
-    updateSettingsObject( settings: T ) {
-        this.settings = settings;
-        this.emit( 'update' );
+            if( store[ SettingsMode.CONTROLLER ] && this.settings[ plugin ] !== store[ SettingsMode.CONTROLLER ]!.get() )
+                ( store[ SettingsMode.CONTROLLER ] as ControllerSettingsStore<any> ).updateSettingsObject( this.settings[ plugin ] );
     }
 
 }

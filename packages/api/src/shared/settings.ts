@@ -1,15 +1,26 @@
-import { Schema, Options } from "electron-store";
+import { Schema } from "electron-store";
+import Conf from "conf";
 
 export type SettingsSchema<T> = Schema<T>;
 
+// For migrations, either the RROx settingsstore can be provided (for renderer settings)
+// or the electron-store store can be provided (for controller settings)
+export type MigrationsSettingsStore<T> = Conf<T> | SettingsStore<T>;
+
 export interface SettingsConfig<T> {
     schema: SettingsSchema<T>;
-    migrations?: Options<T>[ 'migrations' ],
+    migrations?: Record<string, ( store: MigrationsSettingsStore<T> ) => void>,
+}
+
+export enum SettingsMode {
+    CONTROLLER,
+    RENDERER
 }
 
 export interface SettingsType<T> {
     module: PluginInfo;
     config: SettingsConfig<T>;
+    mode: SettingsMode;
 
     // Non-existent property to store config object type
     readonly _type: T;
@@ -86,7 +97,9 @@ export interface SettingsStore<T> {
 }
 
 /**
- * Initialize a settings schema that can be used by the plugin
+ * Initialize a settings schema that can be used by the plugin.
+ * These settings are available in both the renderer and controller, and can be edited by both the renderer and controller.
+ * They cannot be edited by a remote renderer.
  * 
  * @param plugin Plugin to initialize settings for. You can use the global `PluginInfo` variable.
  * @param config Options for the config
@@ -95,5 +108,22 @@ export function Settings<T>( plugin: PluginInfo, config: SettingsConfig<T> ): Se
     return {
         module: plugin,
         config,
+        mode: SettingsMode.CONTROLLER,
+    } as SettingsType<T>;
+}
+
+/**
+ * Initialize a settings schema that can be used by the renderer.
+ * These settings are not available for the controller.
+ * Each renderer will have it's own settings object, meaning that a remote renderer will not share the settings with the electron renderer.
+ * 
+ * @param plugin Plugin to initialize settings for. You can use the global `PluginInfo` variable.
+ * @param config Options for the config
+ */
+export function RendererSettings<T>( plugin: PluginInfo, config: SettingsConfig<T> ): SettingsType<T> {
+    return {
+        module: plugin,
+        config,
+        mode: SettingsMode.RENDERER,
     } as SettingsType<T>;
 }

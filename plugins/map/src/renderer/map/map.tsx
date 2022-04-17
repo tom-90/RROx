@@ -11,7 +11,7 @@ export function Map( { data, setMap }: {
     data: IWorld,
     setMap: ( map: L.Map ) => void,
 }) {
-    const { config, mode, follow, utils, settings, currentPlayerName } = useContext( MapContext )!;
+    const { config, mode, follow, utils, preferences, currentPlayerName } = useContext( MapContext )!;
 
     return <MapContainer
         center={config.map.center}
@@ -70,7 +70,7 @@ export function Map( { data, setMap }: {
                     ]}
                     color={'black'}
                     weight={1000}
-                    opacity={mode === MapMode.MINIMAP && settings[ 'minimap.transparent' ] ? 0 : 1}
+                    opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
                 />
                 <Background />
             </Pane>

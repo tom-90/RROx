@@ -1,4 +1,4 @@
-import { Settings } from "@rrox/api";
+import { RendererSettings, Settings } from "@rrox/api";
 import { FrameCarType, FreightFrameCarType, SplineType } from "@rrox/world/shared";
 
 export type FrameCarColors = {
@@ -18,19 +18,12 @@ export enum MinimapCorner {
     BOTTOM_RIGHT = 4,
 }
 
-export interface MapSettingsType extends FrameCarColors, SplineColors {
+export interface IMapPreferences extends FrameCarColors, SplineColors {
     'map.background': number;
 
     'minimap.transparent': boolean;
     'minimap.enabled': boolean;
     'minimap.corner': MinimapCorner;
-
-    'features.teleport': boolean;
-    'features.controlEngines': boolean;
-    'features.controlSwitches': boolean;
-    'features.build': boolean;
-    'features.cheats': boolean;
-
 
     'colors.switch.active'  : string;
     'colors.switch.inactive': string;
@@ -41,7 +34,7 @@ export interface MapSettingsType extends FrameCarColors, SplineColors {
     'colors.player': string;
 }
 
-const schema = {
+const preferencesSchema = {
     'map.background': {
         type: 'number' as const,
         default: 6,
@@ -63,31 +56,6 @@ const schema = {
         enum: Object.values( MinimapCorner )
     },
     
-    'features.teleport': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.controlEngines': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.controlSwitches': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.build': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.cheats': {
-        type: 'boolean' as const,
-        default: true
-    },
-
     [ `colors.${FrameCarType.HANDCAR}`         as const ]: { type: 'string', default: '#800080' },
     [ `colors.${FrameCarType.PORTER}`          as const ]: { type: 'string', default: '#800080' },
     [ `colors.${FrameCarType.PORTER2}`         as const ]: { type: 'string', default: '#800080' },
@@ -133,6 +101,6 @@ const schema = {
     [ `colors.player` ]: { type: 'string', default: '#0000ff' },
 } as const;
 
-export const MapSettings = Settings<MapSettingsType>( PluginInfo, {
-    schema
+export const MapPreferences = RendererSettings<IMapPreferences>( PluginInfo, {
+    schema: preferencesSchema
 } );

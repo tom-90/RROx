@@ -1,9 +1,9 @@
 import { createContext } from "react";
 import L from 'leaflet';
-import { ILocation } from "@rrox/world/shared";
+import { ILocation, IWorldSettings } from "@rrox/world/shared";
 import { MapMode } from "./types";
 import { FollowingData } from "./hooks";
-import { MapSettingsType } from "../../shared";
+import { IMapPreferences } from "../../shared";
 
 export interface MapContextData {
     follow: {
@@ -13,7 +13,8 @@ export interface MapContextData {
 
     currentPlayerName: string;
 
-    settings: MapSettingsType,
+    settings: IWorldSettings,
+    preferences: IMapPreferences,
 
     mode: MapMode;
 

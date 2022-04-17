@@ -63,6 +63,11 @@ declare interface PluginInfo {
      * Name of the currently loaded plugin
      */
     name: string;
+
+    /**
+     * Version of the currently loaded plugin
+     */
+    version: string;
 }
 
 declare const PluginInfo: PluginInfo;

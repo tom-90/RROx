@@ -19,7 +19,7 @@ const getStrokeColor = ( brake: number ) => {
 };
 
 export const Frame = React.memo( function Frame( { data, index, frames }: { data: IFrameCar, index: number, frames: IFrameCar[] } ) {
-    const { utils, mode, follow, settings, currentPlayerName } = useContext( MapContext )!;
+    const { utils, mode, follow, settings, preferences, currentPlayerName } = useContext( MapContext )!;
 
     const { location, rotation, type, freight, number, name, controls } = data;
 
@@ -45,7 +45,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                 anchor={anchor}
                 rotation={Math.round( rotation.Yaw ) - 90}
                 color={getStrokeColor( controls.brake )}
-                fillColor={settings[ `colors.${type as EngineFrameCarType}` ]}
+                fillColor={preferences[ `colors.${type as EngineFrameCarType}` ]}
                 fillOpacity={1}
                 interactive
             >
@@ -115,8 +115,8 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
         rotation={Math.round( rotation.Yaw ) - 90}
         color={getStrokeColor( controls.brake )}
         fillColor={definition.freight
-                ? settings[ `colors.${type as FreightFrameCarType}.${freight && freight.currentAmount > 0 ? 'loaded' : 'unloaded'}` ]
-                : settings[ `colors.${type as EngineFrameCarType}` ]}
+                ? preferences[ `colors.${type as FreightFrameCarType}.${freight && freight.currentAmount > 0 ? 'loaded' : 'unloaded'}` ]
+                : preferences[ `colors.${type as EngineFrameCarType}` ]}
         fillOpacity={1}
         interactive
     >

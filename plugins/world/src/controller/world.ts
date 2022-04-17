@@ -1,5 +1,5 @@
-import { Actions, InOutParam, IPluginController, IQuery, query, ValueProvider } from "@rrox/api";
-import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator } from "../shared";
+import { Actions, InOutParam, IPluginController, IQuery, query, SettingsStore, ValueProvider } from "@rrox/api";
+import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings } from "../shared";
 import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
 import { Aframecar } from "./structs/arr/framecar";
@@ -26,7 +26,7 @@ export class World {
     private switchQuery: IQuery<ASwitch>;
     private valueProvider: ValueProvider<IWorld>;
 
-    constructor( private controller: IPluginController ) {
+    constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {
         this.valueProvider = controller.communicator.provideValue( WorldCommunicator, {
             frameCars: [],
             industries: [],
@@ -407,6 +407,9 @@ export class World {
     }
 
     public async setSwitch( switchInstance: ASwitch ) {
+        if( !this.settings.get( 'features.controlSwitches' ) )
+            return;
+
         const data = this.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter();
@@ -424,6 +427,9 @@ export class World {
     }
 
     public async teleport( player: APlayerState, location: ILocation | ILocation2D ) {
+        if( !this.settings.get( 'features.teleport' ) )
+            return;
+
         const data = this.controller.getAction( Actions.QUERY );
 
         if( !player.PawnPrivate )
@@ -452,6 +458,9 @@ export class World {
     }
 
     public async setControls( frameCar: Aframecar, type: FrameCarControl, value: number ) {
+        if( !this.settings.get( 'features.controlEngines' ) )
+            return;
+
         const character = await this.getCharacter();
         if( !character )
             return Log.warn( `Cannot change controls as no character could be found.` );

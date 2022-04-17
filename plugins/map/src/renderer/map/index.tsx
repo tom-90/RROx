@@ -10,11 +10,13 @@ import { Map } from './map';
 import { useWorld } from '@rrox/world/renderer';
 import { MapConfig } from './config';
 import { useSettings } from '@rrox/api';
-import { MapSettings } from '../../shared';
+import { MapPreferences } from '../../shared';
+import { WorldSettings } from '@rrox/world/shared';
 
 export function MapPage() {
     const data = useWorld();
-    const [ settings ] = useSettings( MapSettings );
+    const [ settings ] = useSettings( WorldSettings );
+    const [ preferences ] = useSettings( MapPreferences );
 
     const mode = MapMode.NORMAL;
     const [ map, setMap ] = useState<L.Map>();
@@ -30,6 +32,7 @@ export function MapPage() {
                     setFollowing
                 },
                 settings,
+                preferences,
                 mode,
                 config: {
                     game: MapConfig.game,
@@ -40,7 +43,7 @@ export function MapPage() {
             }}
         >
             <Modal>
-                <div className={[ 'map', `map-${mode}`, `corner-${settings[ 'minimap.corner' ]}` ].join( ' ' )}>
+                <div className={[ 'map', `map-${mode}`, `corner-${preferences[ 'minimap.corner' ]}` ].join( ' ' )}>
                     {data ? <Map
                         data={data}
                         setMap={setMap}

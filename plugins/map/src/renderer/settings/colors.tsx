@@ -1,0 +1,397 @@
+import React, { useEffect, useMemo } from "react";
+import { Form, Collapse, Button } from "antd";
+import { ReloadOutlined } from '@ant-design/icons';
+import Handcar from '@rrox/assets/images/cars/handcar.png';
+import Porter from '@rrox/assets/images/cars/porter_040.png';
+import Porter2 from '@rrox/assets/images/cars/porter_042.png';
+import Eureka from '@rrox/assets/images/cars/eureka.png';
+import Climax from '@rrox/assets/images/cars/climax.png';
+import Heisler from '@rrox/assets/images/cars/heisler.png';
+import Class70 from '@rrox/assets/images/cars/class70.png';
+import Cooke260 from '@rrox/assets/images/cars/cooke260.png';
+import FlatcarLogs from '@rrox/assets/images/cars/flatcar_logs.png';
+import FlatcarCordwood from '@rrox/assets/images/cars/flatcar_cordwood.png';
+import FlatcarStakes from '@rrox/assets/images/cars/flatcar_stakes.png';
+import Hopper from '@rrox/assets/images/cars/flatcar_hopper.png';
+import Tanker from '@rrox/assets/images/cars/flatcar_tanker.png';
+import Boxcar from '@rrox/assets/images/cars/boxcar.png';
+import Caboose from '@rrox/assets/images/cars/caboose.png';
+import { MapPreferences } from "../../shared";
+import { useSettings } from "@rrox/api";
+import { FrameCarType, SplineType } from "@rrox/world/shared";
+import './style.less';
+
+export function ColorSettings() {
+    const [ preferences, store ] = useSettings( MapPreferences );
+    const [ form ] = Form.useForm();
+
+    useEffect( () => {
+        form.setFieldsValue( preferences );
+    }, [ preferences ] );
+
+    const throttleOnValuesChange = useMemo( () => {
+        let values = {};
+        let timeout: NodeJS.Timeout | null = null;
+
+        return ( changedValues: any, callback: ( changedValues: any ) => void ) => {
+            values = { ...values, ...changedValues };
+
+            if( timeout != null )
+                clearTimeout( timeout );
+
+            timeout = setTimeout( () => {
+                callback( values );
+                clearTimeout( timeout! );
+                timeout = null;
+                values = {};
+            }, 500 );
+        };
+    }, [] );
+
+    return <Form
+        name="settings"
+        layout="vertical"
+        form={form}
+        labelCol={{ span: 8, offset: 3 }}
+        wrapperCol={{ span: 16, offset: 3 }}
+        onValuesChange={( changed ) => throttleOnValuesChange( changed, ( values ) => store.set( values ) )}
+        autoComplete="off"
+    >
+        <Collapse style={{ margin: '0 50px' }}>
+            <Collapse.Panel header='Locomotive Colors' key={'locomotive'}>
+                <table className='colorTable'>
+                    <thead>
+                        <tr>
+                            <th>Locomotive</th>
+                            <th>Locomotive Color</th>
+                            <th>Tender Color</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src={Handcar} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.HANDCAR}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.HANDCAR}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Porter} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.PORTER}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PORTER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Porter2} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.PORTER2}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PORTER2}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Eureka} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.EUREKA}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.EUREKA_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.EUREKA}`, `colors.${FrameCarType.EUREKA_TENDER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Climax} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.CLIMAX}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.CLIMAX}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Heisler} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.HEISLER}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.HEISLER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Class70} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.CLASS70}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.CLASS70_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.CLASS70}`, `colors.${FrameCarType.CLASS70_TENDER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Cooke260} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.COOKE260}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.COOKE260_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.COOKE260}`, `colors.${FrameCarType.COOKE260_TENDER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Collapse.Panel>
+            <Collapse.Panel header='Cart Colors' key={'cart'}>
+                <table className='colorTable'>
+                    <thead>
+                        <tr>
+                            <th>Cart</th>
+                            <th>Unloaded</th>
+                            <th>Loaded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src={FlatcarLogs} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_LOGS}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_LOGS}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_LOGS}.unloaded`, `colors.${FrameCarType.FLATCAR_LOGS}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={FlatcarCordwood} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded`, `colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={FlatcarStakes} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_STAKES}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_STAKES}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_STAKES}.unloaded`, `colors.${FrameCarType.FLATCAR_STAKES}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Hopper} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.HOPPER}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.HOPPER}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.HOPPER}.unloaded`, `colors.${FrameCarType.HOPPER}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Tanker} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.TANKER}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.TANKER}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.TANKER}.unloaded`, `colors.${FrameCarType.TANKER}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Boxcar} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.BOXCAR}.unloaded`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={`colors.${FrameCarType.BOXCAR}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.BOXCAR}.unloaded`, `colors.${FrameCarType.BOXCAR}.loaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td><img src={Caboose} /></td>
+                            <td><Form.Item name={`colors.${FrameCarType.CABOOSE}`}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.CABOOSE}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Collapse.Panel>
+            <Collapse.Panel header='Map Colors' key={'map'}>
+                <table className='colorTable'>
+                    <thead>
+                        <tr>
+                            <th style={{ width: '33%' }}>Map Element</th>
+                            <th style={{ width: '33%' }}>Color</th>
+                            <th style={{ width: '33%' }} />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Track</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.TRACK}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.TRACK}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Rail Deck</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.TRENDLE_TRACK}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.TRENDLE_TRACK}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Variable Grade</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.VARIABLE_BANK}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_BANK}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Constant Grade</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.CONSTANT_BANK}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_BANK}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Variable Wall</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.VARIABLE_WALL}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_WALL}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Constant Wall</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.CONSTANT_WALL}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_WALL}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Wooden Bridge</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.WOODEN_BRIDGE}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.WOODEN_BRIDGE}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Steel Bridge</td>
+                            <td><Form.Item name={`colors.spline.${SplineType.IRON_BRIDGE}`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.IRON_BRIDGE}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Active Switch Track</td>
+                            <td><Form.Item name={`colors.switch.active`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.switch.active` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Inactive Switch Track</td>
+                            <td><Form.Item name={`colors.switch.inactive`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.switch.inactive` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Crossover</td>
+                            <td><Form.Item name={`colors.switch.cross`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.switch.cross` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Turntable</td>
+                            <td><Form.Item name={`colors.turntable.circle`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.turntable.circle` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
+                            <td>Player</td>
+                            <td><Form.Item name={`colors.player`}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.player` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Collapse.Panel>
+        </Collapse>
+    </Form>;
+}

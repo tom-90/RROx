@@ -1,5 +1,5 @@
-import { Actions, IPluginController, IQuery } from "@rrox/api";
-import { ICheats } from "../shared";
+import { Actions, IPluginController, IQuery, SettingsStore } from "@rrox/api";
+import { ICheats, IWorldSettings } from "../shared";
 import { ASCharacter } from "./structs/arr/SCharacter";
 import { EMovementMode } from "./structs/Engine/EMovementMode";
 import { APawn } from "./structs/Engine/Pawn";
@@ -13,7 +13,7 @@ export class Cheats {
 
     private interval: NodeJS.Timeout;
 
-    constructor( private controller: IPluginController ) {}
+    constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {}
 
     public async prepare() {
         const data = this.controller.getAction( Actions.QUERY );
@@ -35,6 +35,10 @@ export class Cheats {
         const data = this.controller.getAction( Actions.QUERY );
 
         setInterval( async () => {
+            if( !this.settings.get( 'features.cheats' ) ) {
+                this.fastSprintPlayers.clear();
+            }
+
             for( let [ character, speed ] of this.fastSprintPlayers ) {
                 const latestData = await data.query( this.cheatsQuery, character );
                 if( !latestData || latestData.CharacterMovement.MaxWalkSpeed === 200 )
@@ -92,6 +96,9 @@ export class Cheats {
     }
 
     public async setCheats( player: APlayerState, cheats: ICheats ): Promise<void> {
+        if( !this.settings.get( 'features.cheats' ) )
+            return;
+
         const data = this.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );
@@ -115,6 +122,9 @@ export class Cheats {
     }
 
     public async setMoneyXP( player: APlayerState, money?: number, xp?: number ): Promise<void> {
+        if( !this.settings.get( 'features.cheats' ) )
+            return;
+
         const data = this.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );

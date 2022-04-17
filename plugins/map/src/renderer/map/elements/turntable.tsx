@@ -6,7 +6,7 @@ import { SplineType } from '@rrox/types';
 import { ITurntable } from '@rrox/world/shared';
 
 export const Turntable = React.memo( function Turntable( { data }: { data: ITurntable } ) {
-    const { utils, settings } = useContext( MapContext )!;
+    const { utils, preferences } = useContext( MapContext )!;
 
     const { location, rotation, deckRotation } = data;
 
@@ -22,7 +22,7 @@ export const Turntable = React.memo( function Turntable( { data }: { data: ITurn
         <Circle
             center={utils.scalePoint( cx, cy )}
             edge={utils.scalePoint( x2, y2 )}
-            fillColor={settings[ 'colors.turntable.circle' ]}
+            fillColor={preferences[ 'colors.turntable.circle' ]}
             fillOpacity={1}
             color={'black'}
             weight={50}
@@ -33,7 +33,7 @@ export const Turntable = React.memo( function Turntable( { data }: { data: ITurn
                 utils.scalePoint( ...utils.rotate( cx, cy, cx + TurntableDefinitions.radius, cy, rotation.Yaw - 90 + deckRotation.Yaw ) ),
                 utils.scalePoint( ...utils.rotate( cx, cy, cx - TurntableDefinitions.radius, cy, rotation.Yaw - 90 + deckRotation.Yaw ) ),
             ]}
-            color={settings[ `colors.spline.${SplineType.TRACK}` ]}
+            color={preferences[ `colors.spline.${SplineType.TRACK}` ]}
             weight={trackDefinitions.width}
             lineCap={'butt'}
         />
