@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { MapContext } from '../context';
 import { Line, Circle } from '../leaflet';
 import { TurntableDefinitions, SplineDefinitions } from '../definitions';
-import { SplineType } from '@rrox/types';
-import { ITurntable } from '@rrox/world/shared';
+import { ITurntable, SplineType } from '@rrox/world/shared';
 
 export const Turntable = React.memo( function Turntable( { data }: { data: ITurntable } ) {
     const { utils, preferences } = useContext( MapContext )!;

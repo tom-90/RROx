@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
 import { Line } from '../leaflet';
 import { SplineDefinitions } from '../definitions';
-import { SplineType } from '@rrox/types';
 import { MapContext } from '../context';
 import { useMemoCompare } from '../hooks';
-import { ISpline } from '@rrox/world/shared';
+import { ISpline, SplineType } from '@rrox/world/shared';
 
 export function Splines( { data, type }: { data: ISpline[], type: SplineType } ) {
     const { utils, preferences } = useContext( MapContext )!;
