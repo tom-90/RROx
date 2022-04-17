@@ -22,7 +22,9 @@ FUObjectItem* FUObjectArray::FindObject(const std::string& name) {
 	if (cached != Cache.end()) {
 		FUObjectItem* item = cached->second;
 
-		if (item && !IsBadReadPtr(item, sizeof(FUObjectItem*)) && item->Object && !IsBadReadPtr(item->Object, sizeof(UObject*)))
+		if (item && !IsBadReadPtr(item, sizeof(FUObjectItem*))
+			&& item->Object && !IsBadReadPtr(item->Object, sizeof(UObject*))
+			&& item->Object->GetFullName() == name)
 			return item;
 
 		Cache.erase(cached);

@@ -1,29 +1,29 @@
 import { IPluginController, Controller, Actions, IQuery } from '@rrox/api';
-import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, FrameCarControl } from '../shared';
+import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, FrameCarControl, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats } from '../shared';
+import { Cheats } from './cheats';
 import { ASwitch } from './structs/arr/Switch';
 import { FVector } from './structs/CoreUObject/Vector';
 import { World } from './world';
 
 export default class WorldPlugin extends Controller {
     private world: World;
+    private cheats: Cheats;
 
     public async load( controller: IPluginController ): Promise<void> {
         this.world = new World( controller );
-
-        const query = controller.getAction( Actions.QUERY );
-
-        let switchQuery: IQuery<ASwitch> | undefined = undefined;
+        this.cheats = new Cheats( controller );
 
         controller.addSetup( async () => {
             await this.world.prepare();
+            await this.cheats.prepare();
 
             const interval = setInterval( () => this.world.load(), 1000 );
 
-            
-            switchQuery = await query.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
+            this.cheats.start();
 
             return () => {
                 clearInterval( interval );
+                this.cheats.stop();
             }
         } );
 
@@ -33,46 +33,16 @@ export default class WorldPlugin extends Controller {
             if( !player || !player.PawnPrivate )
                 return Log.warn( `Cannot teleport player '${playerName}' as this player could not be found.` );
 
-            const vector = await query.create( FVector );
-
-            vector.X = location.X;
-            vector.Y = location.Y;
-
-            if( 'Z' in location )
-                vector.Z = location.Z;
-            else {
-                const height = await this.world.getHeight( location );
-
-                if( !height )
-                    return Log.warn( `Cannot teleport player '${playerName}' as the height of the location could not be determined.` );
-
-                vector.Z = height + 400;
-            }
-
-            const success = await player.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
-            
-            if( !success )
-                return Log.warn( `Cannot teleport player '${playerName}'.` );
+            await this.world.teleport( player, location );
         } );
 
         controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex ) => {
-            const swtch = this.world.gameState?.SwitchArray?.[ switchIndex ];
+            const switchInstance = this.world.gameState?.SwitchArray?.[ switchIndex ];
             
-            if( !swtch )
+            if( !switchInstance )
                 return Log.warn( `Cannot change switch as it could not be found.` );
 
-            const character = await this.world.getCharacter();
-            if( !character )
-                return Log.warn( `Cannot change switch as no character could be found.` );
-
-            const latestSwitch = await query.query( switchQuery!, swtch );
-            if( !latestSwitch )
-                return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
-
-            if( latestSwitch.switchstate == 0 )
-                character?.ServerSwitchUp( swtch );
-            else if( latestSwitch.switchstate == 1 )
-                character?.ServerSwitchDown( swtch );
+            await this.world.setSwitch( switchInstance );
         } );
 
         controller.communicator.handle( SetControlsCommunicator, async ( index, type, value ) => {
@@ -81,49 +51,40 @@ export default class WorldPlugin extends Controller {
             if( !frameCar )
                 return Log.warn( `Cannot change controls as the framecar could not be found.` );
 
-            const character = await this.world.getCharacter();
-            if( !character )
-                return Log.warn( `Cannot change controls as no character could be found.` );
+            await this.world.setControls( frameCar, type, value );
+        } );
 
-            switch( type ) {
-                case FrameCarControl.Brake: {
-                    if( frameCar.MyBrake == null )
-                        break;
-                    await character.ServerSetRaycastBake( frameCar.MyBrake, value );
-                    break;
-                }
-                case FrameCarControl.Regulator: {
-                    if( frameCar.MyRegulator == null )
-                        break;
-                    await character.ServerSetRaycastRegulator( frameCar.MyRegulator, value );
-                    break;
-                }
-                case FrameCarControl.Reverser: {
-                    if( frameCar.MyReverser == null )
-                        break;
-                    await character.ServerSetRaycastReverser( frameCar.MyReverser, value );
-                    break;
-                }
-                case FrameCarControl.Whistle: {
-                    if( frameCar.Mywhistle == null )
-                        break;
-                    await frameCar.SetWhistle( value );
-                    await character.ServerSetRaycastWhistle( frameCar.Mywhistle, value );
-                    break;
-                }
-                case FrameCarControl.Generator: {
-                    if( frameCar.Myhandvalvegenerator == null )
-                        break;
-                    await character.ServerSetRaycastHandvalve( frameCar.Myhandvalvegenerator, value );
-                    break;
-                }
-                case FrameCarControl.Compressor: {
-                    if( frameCar.Myhandvalvecompressor == null )
-                        break;
-                    await character.ServerSetRaycastHandvalve( frameCar.Myhandvalvecompressor, value );
-                    break;
-                }
+        controller.communicator.handle( GetPlayerCheats, ( playerName ) => {
+            const player = this.world.gameState?.PlayerArray?.find( ( player ) => player.PlayerNamePrivate === playerName );
+
+            if( !player || !player.PawnPrivate ) {
+                Log.warn( `Cannot get cheats for player '${playerName}' as this player could not be found.` );
+                return;
             }
+
+            return this.cheats.getCheats( player );
+        } );
+
+        controller.communicator.handle( SetPlayerCheats, ( playerName, cheats ) => {
+            const player = this.world.gameState?.PlayerArray?.find( ( player ) => player.PlayerNamePrivate === playerName );
+
+            if( !player || !player.PawnPrivate ) {
+                Log.warn( `Cannot get cheats for player '${playerName}' as this player could not be found.` );
+                return;
+            }
+
+            return this.cheats.setCheats( player, cheats );
+        } );
+
+        controller.communicator.handle( SetMoneyXPCheats, ( playerName, money, xp ) => {
+            const player = this.world.gameState?.PlayerArray?.find( ( player ) => player.PlayerNamePrivate === playerName );
+
+            if( !player || !player.PawnPrivate ) {
+                Log.warn( `Cannot get cheats for player '${playerName}' as this player could not be found.` );
+                return;
+            }
+
+            return this.cheats.setMoneyXP( player, money, xp );
         } );
     }
     

@@ -435,7 +435,25 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 			processCommandsNoop();
 		}
 
-		break;
+		return true;
+	}
+	case QueryCommandTypes::IS_CASTABLE: {
+		if (traversal.empty())
+			return false;
+
+		std::string name = request.Read();
+
+		QueryStackItem& stackItem = traversal.top();
+
+		UObject* addr = (UObject*)stackItem.object;
+
+		if (!isValidName(addr, name)) {
+			response.Write(false);
+			return true;
+		}
+
+		response.Write(true);
+		return true;
 	}
 	}
 
@@ -541,6 +559,10 @@ void QueryExecutor::processCommandNoop(QueryCommandTypes command) {
 		request.Read<uint32_t>();
 		processCommandsNoop();
 		processCommandsNoop();
+		break;
+	}
+	case QueryCommandTypes::IS_CASTABLE: {
+		std::string name = request.Read();
 		break;
 	}
 	}

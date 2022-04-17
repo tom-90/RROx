@@ -103,24 +103,6 @@ export class StructInstance<T extends object> implements StructInfo<T> {
         this.properties.forEach( ( property ) => {
             ( instance as any )[ property ] = this.data[ property ];
         } );
-        /*Object.defineProperties(
-            instance,
-            this.properties.reduce( ( obj, property ) => {
-                obj[ property ] = {
-                    get: () => {
-                        if( property in this.changes )
-                            return this.changes[ property ];
-                        return this.data[ property ];
-                    },
-                    set: ( value ) => {
-                        this.changes[ property ] = value;
-                    },
-                    enumerable: true
-                };
-
-                return obj;
-            }, {} as PropertyDescriptorMap )
-        );*/
     }
 
     /**
@@ -176,10 +158,20 @@ export class StructInstance<T extends object> implements StructInfo<T> {
     /**
      * Returns a fresh copy of this StructInstance
      */
-    public clone() {
-        const instance = new StructInstance( this.app, this.base );
+    public clone(): StructInstance<T>;
+    /**
+     * Returns a fresh copy of this StructInstance
+     */
+    public clone<C extends object>( base: StructConstructor<C> ): StructInstance<C>;
+
+    public clone<C extends object>( base: StructConstructor<C> = this.base as any ): StructInstance<C> {
+        const instance = new StructInstance( this.app, base );
 
         instance.traverser.copySteps( this );
+
+        const name = this.getName();
+        if( name )
+            instance.setName( name );
 
         return instance;
     }
@@ -381,6 +373,44 @@ export class StructInstance<T extends object> implements StructInfo<T> {
 
             return returnValue;
         }
+    }
+
+    /**
+     * Casts the struct instance to a new type if allowed
+     * 
+     * @param target Target to cast to
+     */
+    public async cast<T extends object>( target: StructConstructor<T> ): Promise<T | null> {
+        const name = this.app.getAction( QueryAction ).getStructName( target );
+    
+        const buffer = new BufferIO();
+
+        const traverseResHandler = this.traverser.traverse( buffer );
+
+        QueryCommands.isCastable( buffer, name );
+        
+        this.traverser.return( buffer );
+
+        QueryCommands.finish( buffer );
+
+        const request = new GetDataRequest( this.app, buffer );
+
+        if( !this.app.isConnected() )
+            return null;
+
+        const pipe = this.app.getPipe()!;
+
+        pipe.request( request );
+
+        const res = await pipe.waitForResponse( request, GetDataResponse );
+
+        if( !traverseResHandler( res.data ) )
+            return null;
+
+        if( !res.data.readBool() )
+            return null;
+
+        return this.clone( target ).create();
     }
 
     private getChanges() {

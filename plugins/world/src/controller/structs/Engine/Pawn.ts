@@ -1,4 +1,4 @@
-import { Property, Struct, StructInfo } from "@rrox/api";
+import { Struct, StructInfo } from "@rrox/api";
 import { AActor } from "./Actor";
 
 @Struct( "Class Engine.Pawn" )

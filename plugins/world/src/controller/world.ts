@@ -1,10 +1,11 @@
 import { Actions, InOutParam, IPluginController, IQuery, query, ValueProvider } from "@rrox/api";
-import { FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, ProductType, WorldCommunicator } from "../shared";
+import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator } from "../shared";
 import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
-import { ASCharacter } from "./structs/arr/SCharacter";
+import { Aframecar } from "./structs/arr/framecar";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { Astorage } from "./structs/arr/storage";
+import { ASwitch } from "./structs/arr/Switch";
 import { ABP_Player_Conductor_C } from "./structs/BP_Player_Conductor/BP_Player_Conductor_C";
 import { FLinearColor } from "./structs/CoreUObject/LinearColor";
 import { FVector } from "./structs/CoreUObject/Vector";
@@ -18,10 +19,11 @@ import { APlayerState } from "./structs/Engine/PlayerState";
 import { Vector2D } from "./vector";
 
 export class World {
-    public gameState?: AarrGameStateBase;
+    public gameState?: AarrGameStateBase | null;
 
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
+    private switchQuery: IQuery<ASwitch>;
     private valueProvider: ValueProvider<IWorld>;
 
     constructor( private controller: IPluginController ) {
@@ -40,20 +42,7 @@ export class World {
     async prepare() {
         const data = this.controller.getAction( Actions.QUERY );
 
-        const ref = await data.getReference( UGameEngine );
-        if( !ref )
-            return;
-            
-        let instances = await ref.getInstances( 1 );
-        if( !instances || instances.length !== 1 )
-            return;
-
-        const [ engine ] = instances;
-        
-        this.gameState = ( await data.query(
-            await data.prepareQuery( UGameEngine, ( qb ) => [ qb.GameViewport.World.ARRGameState ] ),
-            engine
-        ) )?.GameViewport.World.ARRGameState;
+        await this.getGameState();
 
         this.worldQuery = await data.prepareQuery( AarrGameStateBase, ( gameState ) => [
             // Query players
@@ -166,22 +155,47 @@ export class World {
                 spline.RootComponent.RelativeRotation
             ] ),
         ] );
+
+        this.switchQuery = await data.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
+    }
+
+    private async getGameState() {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        const ref = await data.getReference( UGameEngine );
+        if( !ref )
+            return;
+            
+        let instances = await ref.getInstances( 1 );
+        if( !instances || instances.length !== 1 )
+            return;
+
+        const [ engine ] = instances;
+
+        this.gameState = ( await data.query(
+            await data.prepareQuery( UGameEngine, ( qb ) => [ qb.GameViewport.World.ARRGameState ] ),
+            engine
+        ) )?.GameViewport?.World?.ARRGameState;
     }
 
     async load() {
-        if( !this.gameState )
-            return;
+        if( !this.gameState ) {
+            await this.getGameState();
+            if( !this.gameState )
+                return;
+        }
         
         const queryAction = this.controller.getAction( Actions.QUERY );
 
         const data = await queryAction.query( this.worldQuery, this.gameState );
         const spline = await queryAction.query( this.splineQuery, this.gameState );
 
-        if( !data || !spline )
-            return;
-
         this.gameState = data;
-        this.gameState.SplineArray = this.gameState.SplineArray;
+
+        if( this.gameState && spline ) {
+            this.gameState.SplineArray = this.gameState.SplineArray;
+        }
+
 
         const getLocation = ( actor: AActor ): ILocation => ( {
             X: actor.RootComponent.RelativeLocation.X,
@@ -226,12 +240,12 @@ export class World {
         }
 
         const world: IWorld = {
-            players: data.PlayerArray.map( ( p ) => ( {
+            players: data?.PlayerArray.map( ( p ) => ( {
                 name    : p.PlayerNamePrivate,
                 location: getLocation( p.PawnPrivate ),
                 rotation: getRotation( p.PawnPrivate ),
-            } ) ),
-            frameCars: data.FrameCarArray.map( ( f ) => ( {
+            } ) ) || [],
+            frameCars: data?.FrameCarArray.map( ( f ) => ( {
                 type: f.FrameType as FrameCarType,
                 name: f.framename,
                 number: f.FrameNumber,
@@ -279,15 +293,15 @@ export class World {
                         isCoupled: f.MyCouplerRear.bIsCoupled,
                     } : undefined,
                 },
-            } ) ),
-            switches: data.SwitchArray.map( ( sw ) => ( {
+            } ) ) || [],
+            switches: data?.SwitchArray.map( ( sw ) => ( {
                 type: sw.switchtype,
                 state: sw.switchstate,
             
                 location: getLocation( sw ),
                 rotation: getRotation( sw ),
-            } ) ),
-            turntables: data.TurntableArray.map( ( tt ) => ( {
+            } ) ) || [],
+            turntables: data?.TurntableArray.map( ( tt ) => ( {
                 deckRotation: {
                     Pitch: tt.deckmesh.RelativeRotation.Pitch,
                     Yaw: tt.deckmesh.RelativeRotation.Pitch,
@@ -295,30 +309,30 @@ export class World {
                 },
                 location: getLocation( tt ),
                 rotation: getRotation( tt ),
-            } ) ),
-            watertowers: data.WatertowerArray.map( ( wt ) => ( {
+            } ) ) || [],
+            watertowers: data?.WatertowerArray.map( ( wt ) => ( {
                 waterStorage: getStorage( wt.Mystorage )!,
                 location: getLocation( wt ),
                 rotation: getRotation( wt ),
-            } ) ),
-            sandhouses: data.SandhouseArray.map( ( sh ) => ( {
+            } ) ) || [],
+            sandhouses: data?.SandhouseArray.map( ( sh ) => ( {
                 sandStorage: getStorage( sh.Mystorage )!,
                 location: getLocation( sh ),
                 rotation: getRotation( sh ),
-            } ) ),
-            industries: data.IndustryArray.map( ( ind ) => ( {
+            } ) ) || [],
+            industries: data?.IndustryArray.map( ( ind ) => ( {
                 type: ind.industrytype,
                 educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
                 products: [ ind.mystorageproducts1, ind.mystorageproducts2, ind.mystorageproducts3, ind.mystorageproducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
                 location: getLocation( ind ),
                 rotation: getRotation( ind ),
-            } ) ),
-            splines: spline.SplineArray.map( ( s ) => ( {
+            } ) ) || [],
+            splines: spline?.SplineArray.map( ( s ) => ( {
                 type: s.SplineType,
                 segments: getSplineSegments( s ),
                 location: getLocation( s ),
                 rotation: getRotation( s ),
-            } ) ),
+            } ) ) || [],
         };
 
         this.valueProvider.provide( world );
@@ -390,5 +404,96 @@ export class World {
             return;
 
         return characters[ 0 ];
+    }
+
+    public async setSwitch( switchInstance: ASwitch ) {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        const character = await this.getCharacter();
+        if( !character )
+            return Log.warn( `Cannot change switch as no character could be found.` );
+
+        const latestSwitch = await data.query( this.switchQuery, switchInstance );
+        if( !latestSwitch )
+            return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
+
+        if( latestSwitch.switchstate == 0 )
+            character?.ServerSwitchUp( switchInstance );
+        else if( latestSwitch.switchstate == 1 )
+            character?.ServerSwitchDown( switchInstance );
+    }
+
+    public async teleport( player: APlayerState, location: ILocation | ILocation2D ) {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        if( !player.PawnPrivate )
+            return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as this player could not be found.` );
+
+        const vector = await data.create( FVector );
+
+        vector.X = location.X;
+        vector.Y = location.Y;
+
+        if( 'Z' in location )
+            vector.Z = location.Z;
+        else {
+            const height = await this.getHeight( location );
+
+            if( !height )
+                return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as the height of the location could not be determined.` );
+
+            vector.Z = height + 400;
+        }
+
+        const success = await player.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
+        
+        if( !success )
+            return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}'.` );
+    }
+
+    public async setControls( frameCar: Aframecar, type: FrameCarControl, value: number ) {
+        const character = await this.getCharacter();
+        if( !character )
+            return Log.warn( `Cannot change controls as no character could be found.` );
+
+        switch( type ) {
+            case FrameCarControl.Brake: {
+                if( frameCar.MyBrake == null )
+                    break;
+                await character.ServerSetRaycastBake( frameCar.MyBrake, value );
+                break;
+            }
+            case FrameCarControl.Regulator: {
+                if( frameCar.MyRegulator == null )
+                    break;
+                await character.ServerSetRaycastRegulator( frameCar.MyRegulator, value );
+                break;
+            }
+            case FrameCarControl.Reverser: {
+                if( frameCar.MyReverser == null )
+                    break;
+                await character.ServerSetRaycastReverser( frameCar.MyReverser, value );
+                break;
+            }
+            case FrameCarControl.Whistle: {
+                if( frameCar.Mywhistle == null )
+                    break;
+                await frameCar.SetWhistle( value );
+                await character.ServerSetRaycastWhistle( frameCar.Mywhistle, value );
+                break;
+            }
+            case FrameCarControl.Generator: {
+                if( frameCar.Myhandvalvegenerator == null )
+                    break;
+                await character.ServerSetRaycastHandvalve( frameCar.Myhandvalvegenerator, value );
+                break;
+            }
+            case FrameCarControl.Compressor: {
+                if( frameCar.Myhandvalvecompressor == null )
+                    break;
+                await character.ServerSetRaycastHandvalve( frameCar.Myhandvalvecompressor, value );
+                break;
+            }
+        }
     }
 }

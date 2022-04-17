@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { Divider, Form, InputNumber, Slider, Switch, Button } from 'antd';
 import { MapContext } from '../context';
-import { IPlayer } from '@rrox/world/shared';
+import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats } from '@rrox/world/shared';
+import { useRPC } from '@rrox/api';
 
 export function Cheats( {
     className,
@@ -15,8 +16,17 @@ export function Cheats( {
     isVisible: boolean,
     onClose: () => void
 } ) {
-    const { actions } = useContext( MapContext )!;
     const [ form ] = Form.useForm();
+
+    const [ cheats, setCheatsData ] = useState<ICheats | undefined>( undefined );
+
+    const getCheats = useRPC( GetPlayerCheats );
+    const setCheats = useRPC( SetPlayerCheats );
+    const setMoneyXP = useRPC( SetMoneyXPCheats );
+
+    useEffect( () => {
+        getCheats( data.name ).then( ( cheats ) => setCheatsData( cheats ) );
+    }, [ data.name, getCheats ] );
 
     return <DraggableModal
         className={className}
@@ -43,10 +53,10 @@ export function Cheats( {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 15 }}
             initialValues={{
-                flying: data.FlySpeed != null,
-                sprint: data.WalkSpeed != null,
-                flySpeed: data.FlySpeed || 5000,
-                walkSpeed: data.WalkSpeed || 5000,
+                flying: cheats?.flySpeed != null,
+                sprint: cheats?.walkSpeed != null,
+                flySpeed: cheats?.flySpeed || 5000,
+                walkSpeed: cheats?.walkSpeed || 5000,
             }}
             onValuesChange={( changes ) => {
                 if( changes.flying == null && changes.sprint == null && changes.flySpeed == undefined && changes.walkSpeed == undefined )
@@ -54,7 +64,10 @@ export function Cheats( {
 
                 const { flying, sprint, flySpeed, walkSpeed } = form.getFieldsValue();
 
-                actions.setCheats( data.name, sprint ? walkSpeed : undefined, flying ? flySpeed : undefined );
+                setCheats( data.name, {
+                    walkSpeed: sprint ? walkSpeed : undefined,
+                    flySpeed: flying ? flySpeed : undefined
+                } );
             }}
         >
             <Divider orientation="left">Money &amp; XP</Divider>
@@ -74,7 +87,7 @@ export function Cheats( {
 
                     if( xp == null && money == null )
                         return;
-                    actions.setMoneyAndXP( data.name, money, xp );
+                    setMoneyXP( data.name, money, xp );
                 }}>
                     Submit
                 </Button>

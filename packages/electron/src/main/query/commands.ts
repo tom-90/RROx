@@ -18,6 +18,7 @@ export enum QueryCommandTypes {
     STORE_POINTER,
     WRITE_POINTER,
     EXECUTE_FUNCTION,
+    IS_CASTABLE
 }
 
 export const QueryCommands = {
@@ -122,5 +123,9 @@ export const QueryCommands = {
         await read( buffer );
 
         buffer.writeUInt16( QueryCommandTypes.FINISH );
+    },
+    isCastable( buffer: BufferIO, name: string ) {
+        buffer.writeUInt16( QueryCommandTypes.IS_CASTABLE );
+        buffer.writeString( name );
     },
 };

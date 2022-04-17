@@ -15,6 +15,19 @@ export class ASCharacter extends ACharacter {
         struct.apply( this );
     }
     
+    
+    /**
+     * A `float` number property (contains decimal digits).
+     */
+    @Property.Float( "playermoney" )
+    public playermoney: float;
+    
+    /**
+     * A `float` number property (contains decimal digits).
+     */
+    @Property.Float( "playerXPValue" )
+    public playerXPValue: float;
+    
     /**
      * @param MySwitch Object property
      * @flags Net, Native, Event, Protected, NetServer
@@ -69,4 +82,17 @@ export class ASCharacter extends ACharacter {
     @Property.Function( "Function arr.SCharacter.ServerSetRaycastHandvalve", [ [ () => Ahandvalve ], [] ] )
     public ServerSetRaycastHandvalve: ( handvalve: Ahandvalve, Value: float ) => Promise<void>;
     
+    /**
+     * @param xpadd 32-bit int number property
+     * @flags Final, Native, Public, BlueprintCallable
+     */
+    @Property.Function( "Function arr.SCharacter.ChangePlayerXP", [ [] ] )
+    public ChangePlayerXP: ( xpadd: int32 ) => Promise<void>;
+    
+    /**
+     * @param deltamoney Float number property
+     * @flags Final, Native, Public, BlueprintCallable
+     */
+    @Property.Function( "Function arr.SCharacter.ChangePlayerMoney", [ [] ] )
+    public ChangePlayerMoney: ( deltamoney: float ) => Promise<void>;
 }

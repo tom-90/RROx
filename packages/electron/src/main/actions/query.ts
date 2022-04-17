@@ -1,6 +1,6 @@
 import { IQueryAction, IQuery, QueryBuilderFunction, STRUCT_NAME_METADATA, PROPERTY_LIST_METADATA, QueryBuilder, PROPERTY_NAME_METADATA, PROPERTY_TYPE_METADATA, PropertyType, StructConstructor, PROPERTY_ARGS_METADATA } from "@rrox/api";
 import 'reflect-metadata';
-import { Query, StructInstance, GlobalTraverserStep, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler } from "../query";
+import { Query, StructInstance, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler } from "../query";
 import { LinkedStructReference, Property } from "../struct";
 import { Action } from "./action";
 import { GetStructAction } from "./getStruct";
@@ -152,9 +152,6 @@ export class QueryAction extends Action implements IQueryAction {
         if( !struct || struct.isClass )
             throw new QueryActionError( `Cannot create struct of type ${base?.name}. Only simple structs, starting with the letter F (e.g. FVector) can be created by RROx.` );
 
-        // TODO: Validate whether struct or gameobject
-        // Gameobjects cannot be created, but structs like FVector can
-
         return new StructInstance( this.app, base ).create();
     }
 
@@ -165,6 +162,37 @@ export class QueryAction extends Action implements IQueryAction {
             throw new QueryActionError( 'Invalid instance' );
 
         return struct.save();
+    }
+
+    cast<T extends object>( instance: object, target: StructConstructor<T> ): Promise<T | null> {
+        const struct = StructInstance.get( instance );
+
+        if( !struct )
+            throw new QueryActionError( 'Invalid instance' );
+
+        return struct.cast( target );
+    }
+
+    getName<T extends object>( instance: T ): string | null {
+        const struct = StructInstance.get( instance );
+
+        if( !struct )
+            throw new QueryActionError( 'Invalid instance' );
+
+        return struct.getName();
+    }
+
+    equals<T extends object>( a: T, b: T ): boolean {
+        const aStruct = StructInstance.get( a );
+        const bStruct = StructInstance.get( b );
+
+        if( !aStruct || !bStruct )
+            throw new QueryActionError( 'Invalid instance' );
+
+        const aName = aStruct.getName();
+        const bName = bStruct.getName();
+
+        return aName !== null && bName !== null && aName === bName;
     }
 }
 

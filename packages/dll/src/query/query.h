@@ -22,6 +22,7 @@ enum class QueryCommandTypes : uint16_t {
     STORE_POINTER,
     WRITE_POINTER,
     EXECUTE_FUNCTION,
+    IS_CASTABLE
 };
 
 struct QueryStackItem {
