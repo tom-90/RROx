@@ -1,5 +1,6 @@
 import { Request } from "express"
 import { stringify } from "querystring"
+import { logger } from "../../logger"
 import { AuthProvider } from "../plugin/AuthProvider"
 import { ParsedPluginConfig } from "../plugin/Config"
 import { DiscordClient } from "./Client"
@@ -21,7 +22,7 @@ export class DiscordAuthProvider implements AuthProvider {
     const queryParams = stringify({
       client_id: this.config.clientId,
       redirect_uri: callbackUrl,
-      scope: "identify",
+      scope: "identify guilds.members.read",
       response_type: "code"
     })
     return this.webBaseUrl + `/oauth2/authorize?` + queryParams
@@ -37,12 +38,16 @@ export class DiscordAuthProvider implements AuthProvider {
 
   async getUsername(token: string) {
     const user = await this.client.requestUser(token)
-    return user.username
+    return user.username + '#' + user.discriminator
   }
 
   async getGroups(token: string) {
-    return [
-      await this.getUsername(token)
-    ];
+    const roles = [
+      await this.getUsername(token),
+      ...( await this.client.requestRoles(token, this.config.guildId))
+    ]
+
+    logger.log( roles )
+    return roles
   }
 }

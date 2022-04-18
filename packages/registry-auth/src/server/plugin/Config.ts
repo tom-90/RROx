@@ -30,10 +30,11 @@ export type VerdaccioConfig = Omit<
 
 export interface PluginConfig {
   "client-id": string
-  "client-secret": string
+  "client-secret": String
   org: string | false
   "enterprise-origin"?: string | false
   "repository-access"?: boolean
+  "guild-id": string
 }
 
 export interface Config extends VerdaccioConfig {
@@ -144,6 +145,12 @@ export class ParsedPluginConfig {
       assert.optional.boolean,
     ) ?? true
 
+  public readonly guildId = getConfigValue<string>(
+    this.config,
+    "guild-id",
+    assert.string.nonEmpty,
+  )
+  
   constructor(public readonly config: Config) {
     validateVersion()
 
