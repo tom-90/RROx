@@ -32,6 +32,7 @@ export class PluginManager {
     private loaded   : { [ name: string ]: PluginRenderer } = {};
     private loading  : { [ name: string ]: Promise<boolean> | undefined } = {};
     private log: LogFunctions;
+    private enabled = false;
 
     constructor() {
         new Logger( log() );
@@ -40,7 +41,13 @@ export class PluginManager {
 
         // Overwrite the load method that was previously defined as a no-op in the bootstrap
         window.__webpack_remotes__ = { load: ( pkgName ) => this.webpackRequire( pkgName ) } as WebpackRemotePackages;
+    }
 
+    public enable() {
+        if( this.enabled )
+            return;
+        this.enabled = true;
+        
         this.communicator.listen( PluginsCommunicator, ( installed, loaded ) => {
             this.processPluginEvent( installed, loaded );
         } );

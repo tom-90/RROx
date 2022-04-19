@@ -5,7 +5,7 @@ import { Router, RegistrationContext, ModeContext, CommunicatorContext, ContextP
 import { RouterRegistration } from '@rrox/api';
 import packageInfo from '../../package.json';
 import { Router as MainRouter } from './components';
-import { AppstoreAddOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { AttachedContextProvider } from './base/context/attached';
 
 export const init = ( manager: import( './bootstrap/plugins' ).PluginManager ) => {
@@ -23,6 +23,10 @@ export const init = ( manager: import( './bootstrap/plugins' ).PluginManager ) =
         icon  : <SettingOutlined />,
         linkTo: 'settings'
     } ).setPriority( 40 );
+    manager.registrations.register( MenuButtonRegistration, metadata, 'Home', {
+        icon  : <HomeOutlined />,
+        linkTo: 'home'
+    } ).setPriority( 500 );
 
     manager.registrations.register( ContextRegistration, metadata, <CommunicatorContext.Provider value={manager.communicator} /> );
     manager.registrations.register( ContextRegistration, metadata, <AttachedContextProvider /> );
@@ -40,4 +44,6 @@ export const init = ( manager: import( './bootstrap/plugins' ).PluginManager ) =
         </RegistrationContext.Provider>,
         document.getElementById( 'app' )
     );
+
+    manager.enable();
 };

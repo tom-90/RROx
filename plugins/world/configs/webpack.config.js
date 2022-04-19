@@ -119,7 +119,7 @@ const renderer = {
             },
             shared: [
                 {
-                    'react'           : { singleton: true },
+                    'react'           : { singleton: true, requiredVersion: '17.0.2' },
                     'react-dom'       : { singleton: true },
                     'react-router'    : { singleton: true },
                     'react-router-dom': { singleton: true },
