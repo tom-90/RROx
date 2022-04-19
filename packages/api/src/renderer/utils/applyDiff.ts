@@ -1,4 +1,4 @@
-import { Diff } from "deep-diff";
+import { Diff, DiffEdit } from "deep-diff";
 
 function arrayRemove( arr: any[], from: number, to?: number ) {
     var rest = arr.slice( ( to || from ) + 1 || arr.length );
@@ -53,8 +53,12 @@ export function applyDiff<T>( source: T, diffs: Diff<T>[] ): T {
     if( diffs.length > 0 && target != null ) {
         if( Array.isArray( target ) )
             target = [ ...target ];
-        else
+        else if( typeof target === 'object' )
             target = { ...target };
+        else if( diffs.length === 1 && !diffs[ 0 ].path && [ 'N', 'E' ].includes( diffs[ 0 ].kind ) ) {
+            target = ( diffs[ 0 ] as DiffEdit<T, T> ).rhs;
+            return target;
+        }
     }
 
     for( let diff of diffs ) {

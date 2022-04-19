@@ -18,4 +18,8 @@ export class StructStore {
         return this.storage[ name ] != null;
     }
 
+    clear() {
+        this.storage = {};
+    }
+
 }

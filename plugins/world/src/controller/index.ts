@@ -24,6 +24,7 @@ export default class WorldPlugin extends Controller {
             return () => {
                 clearInterval( interval );
                 this.cheats.stop();
+                this.world.stop();
             }
         } );
 

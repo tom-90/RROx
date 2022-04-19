@@ -4,7 +4,6 @@ import Log from 'electron-log';
 import path from 'path';
 import { RROxApp } from './app';
 import { createAppWindow } from './windows';
-import * as injector from 'dll-inject';
 import { Logger } from '@rrox/api';
 
 const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
@@ -63,19 +62,6 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         await rrox.plugins.loadInstalledPlugins();
 
         rrox.addWindow( createAppWindow() );
-
-        rrox.pipeServer.start();
-
-        if( injector.isProcessRunning( 'arr-Win64-Shipping.exe' ) ) {
-            const error = injector.inject( 'arr-Win64-Shipping.exe', require.resolve( '@rrox/dll/x64/Debug/RROxDLL.dll' ) );
-            if( !error ) {
-                Log.info( 'DLL injected.' );
-            } else {
-                Log.error( 'DLL injection failed. Error code:', error );
-            }
-        } else {
-            Log.error( 'DLL injection failed. Game not running.' );
-        }
     } );
 
     app.on( 'second-instance', ( e, argv ) => {

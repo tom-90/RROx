@@ -3,6 +3,7 @@ import { RROxApp } from "../../app";
 import { IPropertyConfig } from ".";
 import { BasicProperty } from "./basic";
 import { QueryCommands, QueryProperty } from "../../query";
+import { BufferIO } from "../../net/io";
 
 export class StrProperty extends BasicProperty<PropertyType.StrProperty> implements IStrProperty {
     constructor( app: RROxApp, config: IPropertyConfig<PropertyType.StrProperty> ) {
@@ -33,5 +34,21 @@ export class StrProperty extends BasicProperty<PropertyType.StrProperty> impleme
                 struct.setValue( state.key, str );
             }
         } );
+    }
+
+    /**
+     * Process the value that will be saved to game memory
+     * 
+     * @param value Value provided by the user
+     */
+    public async saveValue( req: BufferIO, value: unknown ): Promise<void> {
+        if( value == null ) {
+            return;
+        }
+
+        if( typeof value !== 'string' )
+            throw new Error( 'Invalid value passed to string property.' );
+
+        QueryCommands.writeFString( req, this.offset, value );
     }
 }

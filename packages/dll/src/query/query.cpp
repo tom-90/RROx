@@ -350,22 +350,48 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		TArray<std::byte>* ptr = (TArray<std::byte>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
+		
+		pointers.push_back(std::unique_ptr<std::byte[]>(new std::byte[itemSize * length]));
 
-		std::unique_ptr<std::byte[]> arr(new std::byte[itemSize * length]);
-		pointers.push_back(std::move(arr));
-
-		ptr->Data = arr.get();
+		ptr->Data = pointers.back().get();
 		ptr->Count = length;
 		ptr->ArraySize = length;
 
 		for (int i = 0; i < length; i++) {
-			traversal.push({ arr.get(), i * itemSize});
+			traversal.push({ ptr->Data, i * itemSize});
 
 			if (!processCommands())
 				return false;
 
 			traversal.pop();
 		}
+
+		return true;
+	}
+	case QueryCommandTypes::WRITE_FSTRING: {
+		if (traversal.empty())
+			return false;
+
+		QueryStackItem& stackItem = traversal.top();
+
+		uint32_t offset = request.Read<uint32_t>();
+		std::string string = request.Read();
+
+		FString* ptr = (FString*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		if (IsBadReadPtr(ptr, sizeof(ptr)))
+			return false;
+
+		std::wstring wstring(string.begin(), string.end());
+		const wchar_t* chars = wstring.c_str();
+		auto size = wcslen(chars) + 1; // Number of characters + 1 for null pointer
+
+		pointers.push_back(std::unique_ptr<std::byte[]>(new std::byte[sizeof(wchar_t) * size]));
+		wchar_t* heapChars = (wchar_t*)pointers.back().get();
+		memcpy(heapChars, chars, sizeof(wchar_t) * size);
+
+		ptr->Data = heapChars;
+		ptr->Count = size;
+		ptr->ArraySize = size;
 
 		return true;
 	}

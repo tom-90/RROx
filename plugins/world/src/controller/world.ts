@@ -21,22 +21,24 @@ import { Vector2D } from "./vector";
 export class World {
     public gameState?: AarrGameStateBase | null;
 
+    private readonly empty = {
+        frameCars: [],
+        industries: [],
+        players: [],
+        sandhouses: [],
+        splines: [],
+        switches: [],
+        turntables: [],
+        watertowers: [],
+    };
+
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
     private switchQuery: IQuery<ASwitch>;
     private valueProvider: ValueProvider<IWorld>;
 
     constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {
-        this.valueProvider = controller.communicator.provideValue( WorldCommunicator, {
-            frameCars: [],
-            industries: [],
-            players: [],
-            sandhouses: [],
-            splines: [],
-            switches: [],
-            turntables: [],
-            watertowers: [],
-        } );
+        this.valueProvider = controller.communicator.provideValue( WorldCommunicator, this.empty );
     }
 
     async prepare() {
@@ -181,8 +183,12 @@ export class World {
     async load() {
         if( !this.gameState ) {
             await this.getGameState();
-            if( !this.gameState )
+            if( !this.gameState ) {
+                if( this.valueProvider.getValue() !== this.empty )
+                    this.valueProvider.provide( this.empty );
+
                 return;
+            }
         }
         
         const queryAction = this.controller.getAction( Actions.QUERY );
@@ -338,6 +344,10 @@ export class World {
         this.valueProvider.provide( world );
 
         return world;
+    }
+
+    public stop() {
+        this.valueProvider.provide( this.empty );
     }
 
     public async getHeight( position: ILocation2D ) {

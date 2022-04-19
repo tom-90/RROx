@@ -70,6 +70,8 @@ export class SettingsStore<T> extends EventEmitter implements ISettingsStore<T> 
             migrations                   : config.config.migrations,
             schema                       : config.config.schema,
         } );
+
+        this.store.onDidAnyChange( () => this.emit( 'update' ) );
     }
 
     get<K extends keyof T>( key: K ): T[ K ];

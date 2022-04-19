@@ -21,6 +21,7 @@ enum class QueryCommandTypes : uint16_t {
     WRITE_ARRAY,
     STORE_POINTER,
     WRITE_POINTER,
+    WRITE_FSTRING,
     EXECUTE_FUNCTION,
     IS_CASTABLE
 };

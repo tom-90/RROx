@@ -19,6 +19,7 @@ export class PluginController extends EventEmitter implements IPluginController 
     private setupLock = new Mutex();
     private setups: ISetupFunction[] = [];
     private log: Log.LogFunctions;
+    private initialized = false;
 
     constructor( private app: RROxApp, public plugin: IPlugin ) {
         super();
@@ -107,6 +108,10 @@ export class PluginController extends EventEmitter implements IPluginController 
         return this.instance != null;
     }
 
+    isInitialized() {
+        return this.initialized;
+    }
+
     private async executeSetups() {
         let release = await this.setupLock.acquire();
 
@@ -125,10 +130,16 @@ export class PluginController extends EventEmitter implements IPluginController 
                 setup.executed = true;
             }
 
+            this.initialized = true;
+            this.emit( 'initialized', this.initialized );
+
             release();
         } catch( e ) {
             this.log.error( 'Failed to execute setup functions', e );
             this.log.error( 'Unloading...' );
+
+            this.initialized = false;
+            this.emit( 'initialized', this.initialized );
 
             release();
 
@@ -138,6 +149,9 @@ export class PluginController extends EventEmitter implements IPluginController 
 
     private async cleanupSetups() {
         let release = await this.setupLock.acquire();
+
+        this.initialized = false;
+        this.emit( 'initialized', this.initialized );
 
         try {
             for( let setup of this.setups.reverse() ) {

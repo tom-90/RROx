@@ -17,6 +17,7 @@ export enum QueryCommandTypes {
     WRITE_ARRAY,
     STORE_POINTER,
     WRITE_POINTER,
+    WRITE_FSTRING,
     EXECUTE_FUNCTION,
     IS_CASTABLE
 }
@@ -110,6 +111,11 @@ export const QueryCommands = {
         buffer.writeUInt32( offset );
 
         return resHandler;
+    },
+    writeFString( buffer: BufferIO, offset: number, string: string ) {
+        buffer.writeUInt16( QueryCommandTypes.WRITE_FSTRING );
+        buffer.writeUInt32( offset );
+        buffer.writeString( string );
     },
     async executeFunction( buffer: BufferIO, name: string, size: number, write: ( buffer: BufferIO ) => void | Promise<void>, read: ( buffer: BufferIO ) => void | Promise<void> ) {
         buffer.writeUInt16( QueryCommandTypes.EXECUTE_FUNCTION );

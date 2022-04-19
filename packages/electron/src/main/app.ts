@@ -1,11 +1,11 @@
 import { Action } from "./actions";
 import { NamedPipe, NamedPipeServer } from "./net";
 import { StructStore } from "./struct";
+import { Attacher } from "./attacher";
 import { IPCCommunicator, PluginManager, SettingsManager } from "./plugins";
 import { EventEmitter } from "events";
 import { BrowserWindow } from "electron";
 import { ControllerCommunicator } from "@rrox/api";
-import { AttachedCommunicator } from "../shared/communicators";
 
 interface RROxAppEvents {
     on( event: 'connect'   , listener: ( pipe: NamedPipe ) => void ): this;
@@ -20,9 +20,9 @@ export class RROxApp extends EventEmitter implements RROxAppEvents {
     public structs    = new StructStore();
     public pipeServer = new NamedPipeServer( this, 'RRO' );
     public plugins    = new PluginManager( this );
+    public attacher   = new Attacher( this );
 
     public windows: BrowserWindow[] = [];
-
 
     private pipe?: NamedPipe;
     private actions = new Map<{ new( app: RROxApp ): Action }, Action>();
@@ -32,10 +32,6 @@ export class RROxApp extends EventEmitter implements RROxAppEvents {
 
         this.on( 'connect', ( pipe ) => this.pipe = pipe );
         this.on( 'disconnect', () => this.pipe = undefined );
-
-        this.communicator.handle( AttachedCommunicator, () => {
-            return this.isConnected();
-        } );
     }
 
     public getPipe() {

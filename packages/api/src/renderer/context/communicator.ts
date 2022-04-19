@@ -119,6 +119,7 @@ export function useValue<T>(
     }, [] );
 
     useListener( communicator, ( diff ) => {
+        console.log( diff );
         setValue( applyDiff( value, diff ) );
     } );
 
