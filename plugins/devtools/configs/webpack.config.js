@@ -113,9 +113,6 @@ const renderer = {
             exposes: {
                 '.': plugin.rendererEntry,
             },
-            remotes: {
-                '@rrox/base-ui': '__webpack_remotes__.load("@rrox/base-ui")'
-            },
             shared: [
                 {
                     'react'           : { singleton: true },

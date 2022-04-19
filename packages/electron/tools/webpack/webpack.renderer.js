@@ -17,9 +17,6 @@ module.exports = {
                 exposes: {
                     '.': './src/renderer/index.tsx'
                 },
-                remotes: {
-                    '@rrox/base-ui': '__webpack_remotes__.load("@rrox/base-ui")'
-                },
                 shared: [
                     {
                         'react'           : { singleton: true },

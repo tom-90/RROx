@@ -66,10 +66,10 @@ export function FrameControlsPopup( {
             if ( !React.isValidElement( content ) )
                 return;
             return React.cloneElement( content, {
-                onClick: ( e: React.SyntheticEvent ) => {
+                onClick: ( e: React.MouseEvent ) => {
                     e.stopPropagation();
                 }
-            } );
+            } as any );
         }}
     >
         <FrameControls

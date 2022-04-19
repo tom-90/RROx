@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageLayout } from "@rrox/base-ui/renderer";
+import { PageLayout } from "@rrox/base-ui";
 import L from 'leaflet';
 import { MapContext } from './context';
 import './styles.less';

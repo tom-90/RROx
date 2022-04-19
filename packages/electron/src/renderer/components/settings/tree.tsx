@@ -1,6 +1,7 @@
 import React, { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Tree, Input, TreeDataNode } from "antd";
 import { SettingsRegistration, useRegistration } from "@rrox/api";
+import { useCallbackDelayed } from "../../hooks";
 
 type TreeObject = { [ key: string ]: {
     elements: React.ReactElement[];
@@ -19,20 +20,6 @@ const walkTree = ( nodes: DataNode[], callback: ( node: DataNode ) => void ) => 
     };
 
     nodes.forEach( ( n ) => walk( n ) );
-};
-
-const useCallbackDelayed = <P extends any[]>(
-    callback: ( ...params: P ) => void, delay: number, dependencies: React.DependencyList
-): ( ...params: P ) => void => {
-    const ref = useRef<NodeJS.Timeout>();
-    useEffect( () => {
-        return () => clearTimeout( ref.current! );
-    }, [] );
-
-    return useCallback( ( ...params: P ) => {
-        clearTimeout( ref.current! );
-        ref.current = setTimeout( () => callback( ...params ), delay);
-    }, dependencies );
 };
 
 export function SettingsTree(

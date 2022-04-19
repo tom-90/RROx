@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import { CoupledFrameItem } from '@rrox/utils';
 import { FrameDefinitions } from '../../definitions';
 
@@ -30,4 +30,4 @@ export function CouplingsBar( {
             />
         } )}
     </div>;
-}
+}*/

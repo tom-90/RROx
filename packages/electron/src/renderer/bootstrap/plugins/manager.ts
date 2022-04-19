@@ -97,9 +97,9 @@ export class PluginManager {
 
         this.loading[ plugin.name ] = ( async () => {
             try {
-                for( let [ dependency, version ] of Object.entries( plugin.dependencies ) )
-                    if( !( await this.loadPlugin( dependency, version ) ) )
-                        throw `Cannot load "${dependency}@${plugin.dependencies[ dependency ]}". It is not installed.`;
+                for( let dependency of plugin.dependencies )
+                    if( !( await this.loadPlugin( dependency ) ) )
+                        throw `Cannot load "${dependency}". It is not installed.`;
     
                 this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, plugin, this.log );
                 await this.loaded[ plugin.name ].load();

@@ -68,7 +68,9 @@ export class RROxApp extends EventEmitter implements RROxAppEvents {
      * @param args 
      */
     public broadcast( channel: string, ...args: any[] ) {
-        Object.values( this.windows ).forEach( ( w ) => w.webContents.send( channel, ...args ) );
+        if( !this.windows )
+            return;
+        this.windows.forEach( ( w ) => w.webContents.send( channel, ...args ) );
     }
 
     /**

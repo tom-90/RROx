@@ -117,7 +117,6 @@ const renderer = {
                 '.': plugin.rendererEntry,
             },
             remotes: {
-                '@rrox/base-ui': '__webpack_remotes__.load("@rrox/base-ui")',
                 '@rrox/world': '__webpack_remotes__.load("@rrox/world")'
             },
             shared: [

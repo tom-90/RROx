@@ -1,4 +1,4 @@
-import { app, session, BrowserWindow } from 'electron';
+import { app, shell, BrowserWindow } from 'electron';
 import { convertEntryPath } from '../utils/urlPath';
 import path from 'path';
 import appIcon from '@rrox/assets/images/appIcon.ico';
@@ -46,6 +46,11 @@ export function createAppWindow(): BrowserWindow {
     appWindow.on( 'close', () => {
         app.quit();
     } );
+
+    appWindow.webContents.on('will-navigate', function (e, url) {
+        e.preventDefault();
+        shell.openExternal( url );
+    });
 
     return appWindow;
 }

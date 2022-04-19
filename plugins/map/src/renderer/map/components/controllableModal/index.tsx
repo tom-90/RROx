@@ -1,5 +1,5 @@
 import React, { useContext, useImperativeHandle } from "react";
-import { DraggableModal, DraggableModalProps, DraggableModalContext } from "ant-design-draggable-modal";
+import { DraggableModal, DraggableModalProps, DraggableModalContext, DraggableModalContextValue } from "ant-design-draggable-modal";
 import { useUID } from 'react-uid';
 import { ModalID, ModalsState, ModalState } from "ant-design-draggable-modal/dist/draggableModalReducer";
 
@@ -68,7 +68,7 @@ export type ControlltableModalProps = DraggableModalProps & {
 export const ControllableModal = React.forwardRef<ControllableModalRef, ControlltableModalProps>( function( props: ControlltableModalProps, ref ) {
     const id = useUID();
 
-    const modalProvider = useContext( DraggableModalContext );
+    const modalProvider = useContext( DraggableModalContext as React.Context<DraggableModalContextValue> );
     if ( !modalProvider )
         throw new Error( 'No Provider' );
 

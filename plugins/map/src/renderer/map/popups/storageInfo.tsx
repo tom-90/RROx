@@ -31,10 +31,10 @@ export function StorageInfo( {
             if( !React.isValidElement( content ) )
                 return;
             return React.cloneElement( content, {
-                onClick: ( e: React.SyntheticEvent ) => {
+                onClick: ( e: React.MouseEvent ) => {
                     e.stopPropagation();
                 }
-            } );
+            } as any );
         }}
     >
         {Object.keys( storages ).map( ( storage ) => <table key={storage} style={{

@@ -117,9 +117,6 @@ const renderer = {
                 './renderer': plugin.rendererEntry,
                 './shared'  : plugin.sharedEntry,
             },
-            remotes: {
-                '@rrox/base-ui': '__webpack_remotes__.load("@rrox/base-ui")'
-            },
             shared: [
                 {
                     'react'           : { singleton: true },

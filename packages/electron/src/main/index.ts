@@ -60,14 +60,9 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
             await session.defaultSession.loadExtension( path.resolve( process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.3_0' ) );
         }
 
-        console.log( await rrox.plugins.getInstalledPlugins() );
-        console.log( await rrox.plugins.loadPlugin( '@rrox/devtools' ) );
-        console.log( await rrox.plugins.loadPlugin( '@rrox/world' ) );
-        console.log( await rrox.plugins.loadPlugin( '@rrox/map' ) );
+        await rrox.plugins.loadInstalledPlugins();
 
         rrox.addWindow( createAppWindow() );
-
-        await rrox.plugins.loadPlugin( '@rrox/base-ui' );
 
         rrox.pipeServer.start();
 

@@ -1,11 +1,11 @@
-import path from "path";
-import fs from "fs";
 import Log from "electron-log";
+import { app as electronApp, dialog } from "electron";
 import semver from "semver";
 import { IPlugin } from "./type";
 import { PluginController } from "./controller";
 import { RROxApp } from "../app";
-import { PluginsCommunicator } from "../../shared/communicators";
+import { PluginsCommunicator, InstallPluginCommunicator, UninstallPluginCommunicator, RestartCommunicator, UpdatePluginCommunicator, DevPluginCommunicator } from "../../shared/communicators";
+import { PluginInstaller } from "./installer";
 
 type WebpackRemotePackages = {
     [ module: string ]: {
@@ -23,10 +23,9 @@ export class PluginManager {
     private installed: { [ name: string ]: IPlugin } = {};
     private loaded   : { [ name: string ]: PluginController } = {};
 
-    private app: RROxApp;
+    private installer = new PluginInstaller( this.app );
 
-    constructor( app: RROxApp ) {
-        this.app = app;
+    constructor( private app: RROxApp ) {
 
         global.__webpack_remotes__ = {
             load: ( async ( pkgName: string ) => {
@@ -38,10 +37,21 @@ export class PluginManager {
                     init: ( ...params: [ shareScope: any ] ) => __webpack_remotes__[ pkgName ].init( ...params )
                 }
             } ) as any
-        }
+        };
 
         app.communicator.handle( PluginsCommunicator, (): [ { [ name: string ]: IPlugin }, string[] ]  => {
             return [ this.installed, Object.keys( this.loaded ) ];
+        } );
+
+        app.communicator.handle(   InstallPluginCommunicator, ( name: string, confirm = false ) => this.  installPlugin( name, confirm ) );
+        app.communicator.handle( UninstallPluginCommunicator, ( name: string, confirm = false ) => this.uninstallPlugin( name, confirm ) );
+        app.communicator.handle(    UpdatePluginCommunicator, ( name: string, confirm = false ) => this.   updatePlugin( name, confirm ) );
+
+        app.communicator.handle( DevPluginCommunicator, () => this.addDevPlugin() );
+
+        app.communicator.handle( RestartCommunicator, () => {
+            electronApp.relaunch();
+            electronApp.exit();
         } );
     }
 
@@ -49,78 +59,24 @@ export class PluginManager {
         this.app.communicator.emit( PluginsCommunicator, this.installed, Object.keys( this.loaded ) );
     }
 
-    public getPluginDirectory() {
-        // TODO: Change to appdata dir
-        return path.resolve( __dirname, '../../../../plugins' );
-    }
-
     public async getInstalledPlugins() {
-        const rootDir = this.getPluginDirectory();
-
-        const pluginPackages = ( await fs.promises.readdir( rootDir, { withFileTypes: true } ) )
-            .filter( ( item ) => item.isDirectory() )
-            .map( ( item ) => path.join( rootDir, item.name, 'package.json' ) );
-
-        const validPluginPackages = ( await Promise.all( pluginPackages.map(
-            ( p ) => fs.promises.access( p, fs.constants.F_OK )
-                .then( () => p )
-                .catch( () => {
-                    Log.warn( `Failed to load plugin "${path.dirname( p )}": package.json not found.` );
-                    return null;
-                } )
-        ) ) ).filter( ( p ) => p != null ) as string[];
-
-        const plugins: { [ name: string ]: IPlugin } = {};
-
-        for( const packagePath of validPluginPackages ) {
-            try {
-                const pkg = __non_webpack_require__( packagePath );
-
-                // Check for valid configuration
-                if( typeof pkg !== 'object' || pkg == null )
-                    throw 'Invalid type';
-                if( typeof pkg.name !== 'string' )
-                    throw 'Invalid name';
-                if( plugins[ pkg.name ] != null )
-                    throw 'Duplicate name';
-                if( typeof pkg.version !== 'string' || !semver.valid( pkg.version ) )
-                    throw 'Invalid version';
-                if( typeof pkg.rrox !== 'object' || pkg.rrox == null )
-                    throw 'No RROx configuration';
-                if( typeof pkg.rrox.controller !== 'string' )
-                    throw 'No RROx controller entry file';
-                if( pkg.rrox.renderer != null && typeof pkg.rrox.renderer !== 'string' )
-                    throw 'No valid RROx renderer entry file';
-
-                if( pkg.dependencies != null ) {
-                    if( typeof pkg.dependencies !== 'object' )
-                        throw 'No valid dependencies object';
-                    if( !Object.entries( pkg.dependencies ).every(
-                        ( [ key, version ] ) => typeof key === 'string' &&  typeof version === 'string' && semver.validRange( version ) != null ) )
-                        throw 'No valid dependencies object';
-                }
-                
-                plugins[ pkg.name ] = {
-                    name           : pkg.name,
-                    version        : pkg.version,
-                    controllerEntry: pkg.rrox.controller,
-                    rendererEntry  : pkg.rrox.renderer,
-                    dependencies   : pkg.dependencies ?? {},
-                    rootDir        : path.dirname( packagePath ), 
-                };
-            } catch( e ) {
-                Log.warn( `Failed to load plugin "${path.dirname( packagePath )}": ${e}` );
-            }
-        }
-
-        this.installed = plugins;
+        this.installed = await this.installer.getInstalledPlugins();
         this.emitUpdate();
 
-        return plugins;
+        await this.fetchUpdates();
+
+        return this.installed;
     }
 
     public getLoadedPlugins() {
         return this.loaded;
+    }
+
+    public async loadInstalledPlugins() {
+        await this.getInstalledPlugins();
+
+        for( let installed in this.installed )
+            await this.loadPlugin( installed );
     }
 
     public async loadPlugin( pluginOrName: IPlugin | string, version?: string ): Promise<boolean> {
@@ -143,9 +99,9 @@ export class PluginManager {
             this.loaded[ plugin.name ] = new PluginController( this.app, plugin );
             this.emitUpdate();
 
-            for( let [ dependency, version ] of Object.entries( plugin.dependencies ) )
-                if( !( await this.loadPlugin( dependency, version ) ) )
-                    throw `Cannot load "${dependency}@${plugin.dependencies[ dependency ]}". It is not installed.`;
+            for( let dependency of plugin.dependencies )
+                if( !( await this.loadPlugin( dependency ) ) )
+                    throw `Cannot load "${dependency}". It is not installed.`;
 
             await this.loaded[ plugin.name ].load();
 
@@ -160,4 +116,63 @@ export class PluginManager {
         }
     }
 
+    private async fetchUpdates() {
+        for( let pkg of Object.values( this.installed ) ) {
+            if( pkg.dev )
+                continue;
+
+            try {
+                const info = await this.installer.getLatestVersion( pkg.name );
+
+                pkg.hasUpdate = semver.gt( info.version, pkg.version );
+            } catch( e ) {
+                Log.warn( `Failed to fetch '${pkg.name}' plugin from registry.`, e );
+            }
+        }
+
+        this.emitUpdate();
+    }
+
+    private async installPlugin( name: string, confirm: boolean ) {
+        const res = await this.installer.install( name, confirm );
+
+        if( res )
+            return res;
+
+        await this.getInstalledPlugins();
+        await this.loadInstalledPlugins();
+    }
+
+    private async uninstallPlugin( name: string, confirm: boolean ) {
+        const res = await this.installer.uninstall( name, confirm );
+
+        if( res )
+            return res;
+
+        await this.getInstalledPlugins();
+    }
+
+    private async updatePlugin( name: string, confirm: boolean ) {
+        const res = await this.installer.update( name, confirm );
+
+        if( res )
+            return res;
+
+        await this.getInstalledPlugins();
+    }
+
+    private async addDevPlugin() {
+        const returnValue = await dialog.showOpenDialog( this.app.windows[ 0 ], {
+            properties: [ 'openDirectory' ]
+        } );
+
+        if( returnValue.canceled || returnValue.filePaths.length !== 1 )
+            return;
+
+        const pluginPath = returnValue.filePaths[ 0 ];
+
+        await this.installer.addDevPlugin( pluginPath );
+        await this.getInstalledPlugins();
+        await this.loadInstalledPlugins();
+    }
 }

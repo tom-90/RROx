@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
-import { PageLayout } from "@rrox/base-ui/renderer";
+import { PageLayout } from "@rrox/base-ui";
 import { useRPC } from "@rrox/api";
 import { StructListCommunicator, StructListDetails } from "../shared";
 import { StructTree } from "./components/structTree";

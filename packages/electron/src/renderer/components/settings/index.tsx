@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageLayout, PageContent } from "@rrox/base-ui/renderer";
+import { PageLayout, PageContent } from "@rrox/base-ui";
 import { SettingsTree } from "./tree";
 import { Layout, Col, Row, Empty } from "antd";
 
