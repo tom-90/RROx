@@ -1,9 +1,9 @@
 import { FileTextOutlined, GithubOutlined, UserOutlined } from "@ant-design/icons";
 import { useRPC } from "@rrox/api";
+import { IPlugin } from "@rrox/renderer/bootstrap";
 import { Button, message, Modal, PageHeader, Space, Spin } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { InstallPluginCommunicator, Log, RestartCommunicator, UninstallPluginCommunicator, UpdatePluginCommunicator } from "../../../shared";
-import { IPlugin } from "../../bootstrap/plugins";
 import { getPackage, getReadme } from "./verdaccio";
 
 function openLoadingModal( text: string ) {

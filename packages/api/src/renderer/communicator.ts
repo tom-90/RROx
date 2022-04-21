@@ -29,4 +29,22 @@ export interface RendererCommunicator {
      * @param args Arguments to pass to the rpc
      */
     rpc<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>>;
+
+    /**
+     * Checks whether or not the communicator is available.
+     * The communicator will always be available for electron.
+     * For the web version, the communicator will only be available when the user has connected to a session.
+     */
+    isAvailable(): boolean;
+
+    /**
+     * Registers a callback to trigger when the communicator becomes available.
+     * The callback will run immediately if the communicator is already available.
+     * The callback will only run once.
+     * 
+     * @param callback 
+     * @returns Function that can be called to unregister the callback.
+     */
+    whenAvailable( callback: () => void ): () => void;
+    
 }

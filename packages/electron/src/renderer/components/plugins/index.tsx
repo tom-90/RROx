@@ -2,19 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageLayout, PageContent } from "@rrox/base-ui";
 import { Avatar, Badge, Button, Col, Dropdown, Input, List, Menu, message, Row, Space, Spin, Tabs } from "antd";
-import { useCallbackDelayed } from "../../hooks";
 import { DevPluginCommunicator, Log, PluginsCommunicator } from "../../../shared";
 import { AppstoreOutlined, EllipsisOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons";
 import { Plugin } from "./plugin";
-import { useListener, useRPC } from "@rrox/api";
-import { IPlugin } from "../../bootstrap/plugins";
+import { useRPC, useValue } from "@rrox/api";
 import { searchRegistry } from "./verdaccio";
+import { useCallbackDelayed } from "@rrox/renderer";
 
 export function PluginsPage() {
     const { plugin } = useParams();
-    const getInstalledPlugins = useRPC( PluginsCommunicator );
+    const [ installed ] = useValue( PluginsCommunicator ) || [];
     const addDevPlugin = useRPC( DevPluginCommunicator );
-    const [ installed, setInstalledPlugins ] = useState<IPlugin[] | null>();
     const [ plugins, setPlugins ] = useState<any[]>( [] );
     const [ selected, setSelected ] = useState<string | null>( plugin ? plugin : null );
 
@@ -39,19 +37,10 @@ export function PluginsPage() {
         } );
     }, 200, [] );
 
-    useListener( PluginsCommunicator, ( installed ) => setInstalledPlugins( Object.values( installed ) ) );
-
     useEffect( () => {
         // To at least get an initial list of plugins,
         // we search for the @ symbol which all plugins have
         onChange( '@' );
-
-        getInstalledPlugins().then( async ( [ installed ] ) => {
-            setInstalledPlugins( Object.values( installed ) );
-        } ).catch( ( e ) => {
-            Log.error( 'Failed to get installed plugins', e );
-            message.error( 'Failed to get installed plugins.' );
-        } );
     }, [] );
 
     return <PageLayout>
@@ -78,7 +67,7 @@ export function PluginsPage() {
                             <Spin spinning={installed == null}>
                                 <List
                                     itemLayout="vertical"
-                                    dataSource={installed || []}
+                                    dataSource={installed ? Object.values( installed ) : []}
                                     renderItem={item => (
                                         <List.Item
                                             key={item.name}
@@ -133,7 +122,7 @@ export function PluginsPage() {
                                             description={<>
                                                 <Space style={{ marginRight: 5 }} key='author'><UserOutlined />{item.author.name}</Space>
                                                 <Space style={{ marginRight: 5 }} key='version'><FileTextOutlined />{'v' + item.version}</Space>
-                                                {installed?.some( ( p ) => p.name === item.name ) && <Badge
+                                                {Object.values( installed )?.some( ( p ) => p.name === item.name ) && <Badge
                                                     count='Installed'
                                                     style={{ marginTop: -5, backgroundColor: '#fa8c16' }}
                                                 />}
@@ -156,7 +145,7 @@ export function PluginsPage() {
                         {selected ? <Plugin
                             key={selected}
                             name={selected}
-                            installed={installed?.find( ( i ) => i.name === selected )}
+                            installed={Object.values( installed )?.find( ( i ) => i.name === selected )}
                         /> : null}
                     </div>
                 </Col>

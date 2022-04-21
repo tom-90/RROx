@@ -4,6 +4,7 @@ import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType 
 import { RendererCommunicator } from "../communicator";
 import { getContext } from "./internal";
 import { applyDiff } from "../utils";
+import { EventEmitter2 } from "eventemitter2";
 
 export type CommunicatorContext = RendererCommunicator | null;
 
@@ -101,14 +102,52 @@ export function useRPC<C extends CommunicatorType<any, ( ...p: any[] ) => any>>(
     }, [ context, communicator ] );
 }
 
+export function useCommunicatorAvailable(): boolean {
+    const context = useContext( getContext( "communicator" ) );
+
+    const [ available, setAvailable ] = useState( false );
+
+    useEffect( () => {
+        if( !context )
+            return setAvailable( false );
+
+        const isAvailable = context.isAvailable();
+
+        if( isAvailable )
+            setAvailable( true );
+        else {
+            setAvailable( false );
+
+            const destroy = context.whenAvailable( () => setAvailable( true ) );
+
+            return destroy;
+        }
+    }, [ context, available ] );
+    
+    return available;
+}
+
+/**
+ * Retrieves a value from a value communicator.
+ * A value communicator is a way to share a value efficiently over the network.
+ * It only sends changes to the object, which allows sharing of large objects efficiently.
+ *
+ * @param communicator 
+ * @param initialValue 
+ * @returns 
+ */
 export function useValue<T>(
     communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T
 ): T {
     const [ value, setValue ] = useState<T>( initialValue! );
+    const isAvailable = useCommunicatorAvailable();
 
     const retrieve = useRPC( communicator );
 
     useEffect( () => {
+        if( !isAvailable )
+            return;
+
         retrieve()
             .then( ( value ) => {
                 setValue( value as T );
@@ -116,7 +155,7 @@ export function useValue<T>(
             .catch( ( e ) => {
                 console.error( 'Failed to retrieve value', e );
             } );
-    }, [] );
+    }, [ isAvailable ] );
 
     useListener( communicator, ( diff ) => {
         console.log( diff );
@@ -126,9 +165,66 @@ export function useValue<T>(
     return value;
 }
 
+export class ValueConsumer<T> extends EventEmitter2 {
+
+    private value?: T;
+
+    constructor(
+        private communicator: RendererCommunicator,
+        valueCommunicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>,
+        initialValue?: T
+    ) {
+        super();
+
+        this.value = initialValue;
+
+        this.communicator.listen( valueCommunicator, ( diff ) => {
+            this.value = applyDiff( this.value, diff );
+            this.emit( 'update', this.value );
+        } );
+
+        this.communicator.whenAvailable( () => {
+            this.communicator.rpc( valueCommunicator ) 
+                .then( ( value ) => {
+                    this.value = value as T;
+                    this.emit( 'update', this.value );
+                } )
+                .catch( ( e ) => {
+                    console.error( 'Failed to retrieve value', e );
+                } );
+        } );
+    }
+
+    getValue() {
+        return this.value;
+    }
+
+    on( event: 'update', listener: ( value: T ) => void ) {
+        return super.on( event, listener );
+    }
+
+    once( event: 'update', listener: ( value: T ) => void ) {
+        return super.once( event, listener );
+    }
+
+    off( event: 'update', listener: ( value: T ) => void ) {
+        return super.off( event, listener );
+    }
+
+    addListener( event: 'update', listener: ( value: T ) => void ) {
+        return super.off( event, listener );
+    }
+
+    removeListener( event: 'update', listener: ( value: T ) => void ) {
+        return super.off( event, listener );
+    }
+
+}
 
 export class CancelledPromiseError extends Error {
     constructor() {
         super( 'Promise has been cancelled.' );
+
+        this.name = 'CancelledPromiseError';
     }
 }

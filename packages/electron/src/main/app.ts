@@ -2,10 +2,11 @@ import { Action } from "./actions";
 import { NamedPipe, NamedPipeServer } from "./net";
 import { StructStore } from "./struct";
 import { Attacher } from "./attacher";
-import { IPCCommunicator, PluginManager, SettingsManager } from "./plugins";
+import { PluginManager, SettingsManager } from "./plugins";
 import { EventEmitter } from "events";
 import { BrowserWindow } from "electron";
 import { ControllerCommunicator } from "@rrox/api";
+import { ShareCommunicator, ShareController } from "./utils";
 
 interface RROxAppEvents {
     on( event: 'connect'   , listener: ( pipe: NamedPipe ) => void ): this;
@@ -14,13 +15,14 @@ interface RROxAppEvents {
 }
 
 export class RROxApp extends EventEmitter implements RROxAppEvents {
-    public communicator: ControllerCommunicator = new IPCCommunicator( this );
-    public settings = new SettingsManager( this.communicator )
+    public communicator: ControllerCommunicator = new ShareCommunicator( this );
+    public settings = new SettingsManager( this.communicator );
 
     public structs    = new StructStore();
     public pipeServer = new NamedPipeServer( this, 'RRO' );
     public plugins    = new PluginManager( this );
     public attacher   = new Attacher( this );
+    public shared     = new ShareController( this );
 
     public windows: BrowserWindow[] = [];
 
@@ -67,19 +69,7 @@ export class RROxApp extends EventEmitter implements RROxAppEvents {
         if( !this.windows )
             return;
         this.windows.forEach( ( w ) => w.webContents.send( channel, ...args ) );
-    }
 
-    /**
-     * Broadcast message to all browser windows and websocket
-     *
-     * @param channel 
-     * @param args 
-     */
-    public publicBroadcast( channel: string, ...args: any[] ) {
-        this.broadcast( channel, ...args );
-
-        // TODO: Socket implementation
-        //if( this.socket.mode === SocketMode.HOST )
-        //    this.socket.broadcast( channel, ...args );
+        this.shared.broadcast( channel, ...args );
     }
 }

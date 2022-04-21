@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { NotFoundPage } from "@rrox/base-ui";
 import { PluginsPage } from "./plugins";
-import { SettingsPage } from "./settings";
 import { HomePage } from "./home";
+import { SettingsPage } from "@rrox/renderer";
 
 export function Router() {
     return <Routes>

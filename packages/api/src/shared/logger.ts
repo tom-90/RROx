@@ -1,17 +1,21 @@
-import { ElectronLog } from 'electron-log';
+import { LogFunctions } from 'electron-log';
+
+export interface ILogger extends LogFunctions {
+    scope( label: string ): LogFunctions;
+}
 
 export class Logger {
     private static readonly LOGGER_KEY = 'electronLogger';
 
     private static getGlobalLogger() {
         if( typeof window !== 'undefined' && this.LOGGER_KEY in window )
-            return ( window as any )[ this.LOGGER_KEY as any ] as ElectronLog;
+            return ( window as any )[ this.LOGGER_KEY as any ] as ILogger;
         if( typeof global !== 'undefined' && this.LOGGER_KEY in global )
-            return ( global as any )[ this.LOGGER_KEY as any ] as ElectronLog;
+            return ( global as any )[ this.LOGGER_KEY as any ] as ILogger;
         return null;
     }
 
-    constructor( instance: ElectronLog ) {
+    constructor( instance: ILogger ) {
         if( typeof window !== 'undefined' )
             ( window as any )[ Logger.LOGGER_KEY ] = instance;
         else if( typeof global !== 'undefined' )

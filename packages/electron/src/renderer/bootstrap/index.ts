@@ -1,19 +1,25 @@
-import { ElectronLog } from "electron-log";
-import { loadScript } from "./utils";
+import { ElectronLog } from 'electron-log';
 
 declare global {
     const __webpack_init_sharing__: ( key: string ) => Promise<void>;
     const __webpack_share_scopes__: { [ key: string ]: any };
 }
 
-const RENDERER_PATH = 'app_window/index.js';
+declare const log: () => ElectronLog;
+
+const RENDERER_PATH = process.env.NODE_ENV === 'development' ? 'app_window/index.js' : '../app_window/index.js';
 const RENDERER_NAME = '@rrox/electron';
 
 export async function init() {
     try {
         await __webpack_init_sharing__( 'default' );
 
-        const manager = ( await import( './pluginManager' ) ).default;
+        const { loadScript, PluginManager } = ( await import( '@rrox/renderer/bootstrap' ) );
+        const { SharedCommunicator } = ( await import( './communicators' ) );
+        const { Logger } = ( await import( '@rrox/api' ) );
+
+        new Logger( log() );
+        const manager = new PluginManager( new SharedCommunicator() );
 
         await loadScript( RENDERER_PATH );
 

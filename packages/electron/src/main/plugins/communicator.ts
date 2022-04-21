@@ -7,9 +7,12 @@ import { IPlugin } from "./type";
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T;
 
 export class IPCCommunicator implements ControllerCommunicator {
-    constructor( private app: RROxApp ) {}
+    private listeners: { [ channel: string ]: ( ( ...args: any[] ) => void )[] } = {};
+    private handlers : { [ channel: string ]: ( ...args: any[] ) => any|Promise<any> } = {};
 
-    private communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
+    constructor( protected app: RROxApp ) {}
+
+    protected communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
         return `c/${communicator.module.name}/${communicator.key}`;
     }
 
@@ -20,17 +23,25 @@ export class IPCCommunicator implements ControllerCommunicator {
             return listener( ...args as Parameters<CommunicatorRPCFunction<C>> );
         };
 
-        ipcMain.on( this.communicatorToChannel( communicator ), fn );
+        const channel = this.communicatorToChannel( communicator );
+
+        ipcMain.on( channel, fn );
+
+        if( !this.listeners[ channel ] )
+            this.listeners[ channel ] = [];
+
+        this.listeners[ channel ].push( listener );
 
         return () => {
-            ipcMain.removeListener( this.communicatorToChannel( communicator ), fn );
+            this.listeners[ channel ] = this.listeners[ channel ].filter( ( l ) => l !== listener );
+            ipcMain.removeListener( channel, fn );
         };
     }
 
     emit<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
-        communicator: C, ...args: CommunicatorEventParameters<C>
+        communicator: C | string, ...args: CommunicatorEventParameters<C>
     ): void {
-        this.app.broadcast( this.communicatorToChannel( communicator ), ...args );
+        this.app.broadcast( typeof communicator === 'string' ? communicator : this.communicatorToChannel( communicator ), ...args );
     }
 
     handle<C extends CommunicatorType<any, ( ...p: any[] ) => any>>(
@@ -41,15 +52,39 @@ export class IPCCommunicator implements ControllerCommunicator {
             return handler( ...args as Parameters<CommunicatorRPCFunction<C>> );
         };
 
-        ipcMain.handle( this.communicatorToChannel( communicator ), fn );
+        const channel = this.communicatorToChannel( communicator );
+
+        ipcMain.handle( channel, fn );
+
+        this.handlers[ channel ] = handler;
 
         return () => {
             ipcMain.removeHandler( this.communicatorToChannel( communicator ) );
+            if( this.handlers[ channel ] === handler )
+                delete this.handlers[ channel ];
         };
     }
     
     provideValue<T>( communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T ): ValueProvider<T> {
         return new ValueProvider( this, communicator, initialValue );
+    }
+
+    callListeners<C extends CommunicatorType<( ...p: any[] ) => void, any>>( communicator: C | string, ...args: CommunicatorEventParameters<C> ): void {
+        let channel = typeof communicator === 'string' ? communicator : this.communicatorToChannel( communicator );
+
+        if( !this.listeners[ channel ] )
+            return;
+
+        this.listeners[ channel ].forEach( ( l ) => l( ...args ) );
+    }
+
+    callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C | string, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>> {
+        let channel = typeof communicator === 'string' ? communicator : this.communicatorToChannel( communicator );
+
+        if( !this.handlers[ channel ] )
+            throw new Error( `Handler not available for channel '${channel}'.` );
+
+        return this.handlers[ channel ]( ...args );
     }
 }
 
@@ -81,7 +116,15 @@ export class PluginCommunicator implements ControllerCommunicator {
         if( communicator.module.name !== this.plugin.name )
             throw new Error( 'Cannot register a value provider for a communicator that is not owned by the plugin.' );
     
-        return new ValueProvider( this, communicator, initialValue );
+        return this.rootCommunicator.provideValue( communicator, initialValue ) as ValueProvider<T>;
+    }
+
+    callListeners<C extends CommunicatorType<( ...p: any[] ) => void, any>>( communicator: C, ...args: CommunicatorEventParameters<C> ): void {
+        return this.rootCommunicator.callListeners( communicator, ...args );
+    }
+
+    callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>> {
+        return this.rootCommunicator.callHandler( communicator, ...args );
     }
 }
 
@@ -112,10 +155,17 @@ export class ValueProvider<T> implements IValueProvider<T> {
 
                 return [ lhs, rhs ];
             }
-        } )!;
-
-        this.communicator.emit( this.config, difference );
+        } );
 
         this.value = value;
+
+        if( !difference )
+            return;
+
+        this.communicator.emit( this.config, difference );
+    }
+
+    getCommunicator() {
+        return this.config;
     }
 }

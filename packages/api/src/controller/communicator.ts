@@ -43,6 +43,23 @@ export interface ControllerCommunicator {
      * @param initialValue Optional initial value
      */
     provideValue<T>( communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T ): ValueProvider<T>;
+
+    /**
+     * Calls the registered listeners
+     *
+     * @param communicator Communicator for which the listeners should be called
+     * @param args Arguments to pass to the listeners
+     */
+    callListeners<C extends CommunicatorType<( ...p: any[] ) => void, any>>( communicator: C, ...args: CommunicatorEventParameters<C> ): void;
+    
+    /**
+     * Calls the registered listeners
+     *
+     * @param communicator Communicator for which the listeners should be called
+     * @param args Arguments to pass to the listeners
+     * @return Return value of handler
+     */
+    callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>>;
 }
 
 export interface ValueProvider<T> {

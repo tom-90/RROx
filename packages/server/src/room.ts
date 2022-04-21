@@ -1,9 +1,13 @@
 import { Server as SocketServer, Socket } from 'socket.io';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { applyDiff } from './utils';
 
 export class Room {
+    public static readonly SIGNING_KEY = process.env.JWT_KEY || 'tmp';
 
     private clients: Socket[] = [];
+    private valueProviders: { [ channel: string ]: any } = {};
 
     constructor(
         private manager: RoomManager,
@@ -12,26 +16,46 @@ export class Room {
         public readonly key: string
     ) {
         host.on( 'broadcast', ( type: string, data: any[] ) => {
+            if( Object.keys( this.valueProviders ).includes( type ) )
+                this.valueProviders[ type ] = applyDiff( this.valueProviders[ type ], data[ 0 ] );
+
             this.io.to( this.key ).emit( 'broadcast', type, data );
         } );
 
         host.on( 'disconnect', () => {
             this.destroy();
         } );
-    }
 
+        host.on( 'value-providers', ( valueProviders: { channel: string, value: any }[] ) => {
+            if( !Array.isArray( valueProviders ) )
+                return;
+
+            for( let vp of valueProviders ) {
+                if( typeof vp !== 'object' || vp == null || typeof vp.channel !== 'string' )
+                    continue;
+
+                this.valueProviders[ vp.channel ] = vp.value;
+            }
+
+            console.log( 'value-providers', this.valueProviders );
+        } );
+    }
+    
     /**
      * Configure a client socket
      *
      * @param socket 
      */
-    public addClient( socket: Socket ) {
+    public addClient( socket: Socket, type: 'public' | 'private' ) {
         // Configure client to listen for all host broadcasts
         socket.join( this.key );
 
         // Listen for rpcs sent by the client and forward them to the host room
-        socket.on( 'rpc', ( type: string, args: any[], ack?: ( res: any ) => void ) => {
-            this.host.emit( 'rpc', type, args, ack );
+        socket.on( 'rpc', ( channel: string, args: any[], ack?: ( res: any ) => void ) => {
+            if( type === 'private' )
+                this.host.emit( 'rpc', channel, args, ack );
+            else if( ack && Object.keys( this.valueProviders ).includes( channel ) )
+                ack( this.valueProviders[ channel ] );
         } );
 
         this.clients.push( socket );
@@ -49,10 +73,23 @@ export class Room {
 
         this.manager.rooms.delete( this.key );
     }
+
+    public getPublicKey() {
+        return jwt.sign( {
+            key: this.key,
+            type: 'public',
+        }, Room.SIGNING_KEY );
+    }
+
+    public getPrivateKey() {
+        return jwt.sign( {
+            key: this.key,
+            type: 'private',
+        }, Room.SIGNING_KEY );
+    }
 }
 
 export class RoomManager {
-
     public readonly rooms: Map<string,Room> = new Map();
 
     constructor( private io: SocketServer ) {}
@@ -67,18 +104,24 @@ export class RoomManager {
         return room;
     }
 
-    public join( socket: Socket, key: string ) {
-        if ( !key.match( /^[0-9A-F]{20}$/ ) )
+    public join( socket: Socket, key: string ): false | 'public' | 'private' {
+        try {
+            const data = jwt.verify( key, Room.SIGNING_KEY );
+
+            if( typeof data !== 'object' || data.key == null || data.type == null )
+                return false;
+
+            if( !this.rooms.has( data.key ) )
+                return false;
+    
+            const room = this.rooms.get( data.key )!;
+
+            room.addClient( socket, data.type );
+
+            return data.type;
+        } catch( e ) {
             return false;
-
-        if( !this.rooms.has( key ) )
-            return false;
-
-        let room = this.rooms.get( key )!;
-
-        room.addClient( socket );
-        
-        return room;
+        }
     }
 
 }

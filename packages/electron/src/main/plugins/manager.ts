@@ -6,6 +6,7 @@ import { PluginController } from "./controller";
 import { RROxApp } from "../app";
 import { PluginsCommunicator, InstallPluginCommunicator, UninstallPluginCommunicator, RestartCommunicator, UpdatePluginCommunicator, DevPluginCommunicator } from "../../shared/communicators";
 import { PluginInstaller } from "./installer";
+import { ValueProvider } from "@rrox/api";
 
 type WebpackRemotePackages = {
     [ module: string ]: {
@@ -23,6 +24,7 @@ export class PluginManager {
     private installed: { [ name: string ]: IPlugin } = {};
     private loaded   : { [ name: string ]: PluginController } = {};
 
+    private valueProvider: ValueProvider<[ installed: { [ name: string ]: IPlugin }, loaded: string[] ]>;
     private installer = new PluginInstaller( this.app );
 
     constructor( private app: RROxApp ) {
@@ -39,9 +41,7 @@ export class PluginManager {
             } ) as any
         };
 
-        app.communicator.handle( PluginsCommunicator, (): [ { [ name: string ]: IPlugin }, string[] ]  => {
-            return [ this.installed, Object.keys( this.loaded ) ];
-        } );
+        this.valueProvider = app.communicator.provideValue( PluginsCommunicator, [ this.installed, Object.keys( this.loaded ) ] );
 
         app.communicator.handle(   InstallPluginCommunicator, ( name: string, confirm = false ) => this.  installPlugin( name, confirm ) );
         app.communicator.handle( UninstallPluginCommunicator, ( name: string, confirm = false ) => this.uninstallPlugin( name, confirm ) );
@@ -56,7 +56,7 @@ export class PluginManager {
     }
 
     private emitUpdate() {
-        this.app.communicator.emit( PluginsCommunicator, this.installed, Object.keys( this.loaded ) );
+        this.valueProvider.provide( [ this.installed, Object.keys( this.loaded ) ] );
     }
 
     public async getInstalledPlugins() {
