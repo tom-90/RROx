@@ -5,26 +5,42 @@ import io, { Socket } from "socket.io-client";
 export class SocketCommunicator implements RendererCommunicator {
     private socket?: Socket;
     private broadcaster = new EventEmitter2();
+    private initialized = false;
+    private disconnecting = false;
+    private mode?: 'public' | 'private';
 
     public connect( key: string ) {
-        this.socket = io( 'localhost:3001', {
-            transports: [ 'websocket' ]
-        } );
+        return new Promise<void>( ( resolve, reject ) => {
+            this.socket = io( 'localhost:3001', {
+                transports: [ 'websocket' ]
+            } );
+    
+            this.socket.on( 'broadcast', ( channel: string, args: any[] ) => {
+                this.broadcaster.emit( channel, ...args );
+            } );
+    
+            this.socket.emit( 'join', key, ( mode: false | 'public' | 'private' ) => {
+                if( !mode )
+                    return reject( new Error( 'Failed to join' ) );
+    
+                this.mode = mode;
+                this.initialized = true;
+                this.broadcaster.emit( 'available' );
 
-        this.socket.on( 'broadcast', ( channel: string, args: any[] ) => {
-            this.broadcaster.emit( channel, ...args );
-        } );
-
-        this.socket.emit( 'join', key, ( success: Boolean ) => {
-            if( !success )
-                throw new Error( 'Failed to join' );
-
-            this.broadcaster.emit( 'available' );
+                resolve();
+            } );
+    
+            this.socket.on( 'disconnect', () => {
+                if( this.disconnecting )
+                    window.location.href = '/@rrox/web/home';
+                else if( this.initialized )
+                    window.location.href = '/@rrox/web/home?disconnected';
+            } );
         } );
     }
 
     private communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
-        return `c/${communicator.module.name}/${communicator.key}`;
+        return `c/${communicator.module.name}/${communicator.key}?shared=${communicator.shared}`;
     }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -73,6 +89,21 @@ export class SocketCommunicator implements RendererCommunicator {
         this.broadcaster.once( 'available', callback );
 
         return () => this.broadcaster.removeListener( 'available', callback );
+    }
+
+    disconnect() {
+        if( this.socket ) {
+            this.disconnecting = true;
+            this.socket.disconnect();
+        }
+    }
+
+    canUse<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C ): boolean {
+        if( !communicator.shared )
+            return false;
+        if( this.mode === 'public' )
+            return false;
+        return true;
     }
 }
 

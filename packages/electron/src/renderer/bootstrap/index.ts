@@ -16,10 +16,15 @@ export async function init() {
 
         const { loadScript, PluginManager } = ( await import( '@rrox/renderer/bootstrap' ) );
         const { SharedCommunicator } = ( await import( './communicators' ) );
-        const { Logger } = ( await import( '@rrox/api' ) );
+        const { Logger, RendererMode } = ( await import( '@rrox/api' ) );
 
+        const rendererMode = new URL( window.location.href ).searchParams.get( 'mode' ) === 'overlay' ? RendererMode.OVERLAY : RendererMode.WINDOW;
+        if ( rendererMode === RendererMode.OVERLAY )
+            document.title = 'RROxOverlay';
+        
         new Logger( log() );
-        const manager = new PluginManager( new SharedCommunicator() );
+        const manager = new PluginManager( new SharedCommunicator(), rendererMode );
+        
 
         await loadScript( RENDERER_PATH );
 

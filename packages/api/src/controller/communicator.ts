@@ -75,4 +75,9 @@ export interface ValueProvider<T> {
      * @param value Value to provide
      */
     provide( value: T ): void;
+
+    /**
+     * Destorys the value provider
+     */
+    destroy(): void;
 }

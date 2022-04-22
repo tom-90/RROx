@@ -13,7 +13,7 @@ export class IPCCommunicator implements ControllerCommunicator {
     constructor( protected app: RROxApp ) {}
 
     protected communicatorToChannel( communicator: CommunicatorType<( ...p: any[] ) => void,( ...p: any[] ) => any> ) {
-        return `c/${communicator.module.name}/${communicator.key}`;
+        return `c/${communicator.module.name}/${communicator.key}?shared=${communicator.shared}`;
     }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -130,6 +130,7 @@ export class PluginCommunicator implements ControllerCommunicator {
 
 export class ValueProvider<T> implements IValueProvider<T> {
     private value?: T;
+    private unregisterHandler: () => void;
 
     constructor(
         private communicator: ControllerCommunicator,
@@ -138,7 +139,7 @@ export class ValueProvider<T> implements IValueProvider<T> {
     ) {
         this.value = initialValue;
 
-        communicator.handle( config, () => this.getValue()! as Awaited<T> );
+        this.unregisterHandler = communicator.handle( config, () => this.getValue()! as Awaited<T> );
     }
 
     getValue(): T | undefined {
@@ -167,5 +168,9 @@ export class ValueProvider<T> implements IValueProvider<T> {
 
     getCommunicator() {
         return this.config;
+    }
+
+    destroy() {
+        this.unregisterHandler();
     }
 }

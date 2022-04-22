@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { Layout } from "antd";
 import { ReactNode } from "react";
-import { RendererMode, useMode } from '@rrox/api';
+import { RendererMode, useRendererMode } from '@rrox/api';
 import { SideNav } from './SideNav';
 
 export function PageLayout( { children, style }: { children?: ReactNode, style?: any } ) {
-    const mode = useMode();
+    const mode = useRendererMode();
     const [ collapsed, setCollapsedState ] = useState( window.sessionStorage.getItem( 'sidebar.collapsed' ) === 'true' );
 
     const setCollapsed = useCallback( ( value: boolean ) => {

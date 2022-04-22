@@ -17,8 +17,6 @@ export function createAppWindow(): BrowserWindow {
 
     // Create new window instance
     let appWindow = new BrowserWindow( {
-        width: 800,
-        height: 800,
         backgroundColor: '#1f252c',
         show: false,
         autoHideMenuBar: true,
@@ -38,6 +36,8 @@ export function createAppWindow(): BrowserWindow {
 
     // Load the index.html of the app window.
     appWindow.loadURL( convertEntryPath( APP_WINDOW_BOOTSTRAP_WEBPACK_ENTRY ).toString() );
+
+    appWindow.maximize();
 
     // Show window when its ready to
     appWindow.on( 'ready-to-show', () => appWindow.show() );

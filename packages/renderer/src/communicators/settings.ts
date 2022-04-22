@@ -1,6 +1,6 @@
-import { Communicator, ValueCommunicator } from "@rrox/api";
+import { Communicator, SharedCommunicator, ValueCommunicator } from "@rrox/api";
 
-export const SettingsCommunicator = Communicator<ValueCommunicator<{
+export const SettingsCommunicator = SharedCommunicator<ValueCommunicator<{
     [ plugin: string ]: any
 }>>( PluginInfo, 'settings' );
 

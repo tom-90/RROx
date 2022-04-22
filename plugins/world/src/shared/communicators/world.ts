@@ -1,4 +1,4 @@
-import { Communicator, ValueCommunicator } from "@rrox/api";
+import { SharedCommunicator, ValueCommunicator } from "@rrox/api";
 import { IWorld } from "../world";
 
-export const WorldCommunicator = Communicator<ValueCommunicator<IWorld>>( PluginInfo, 'World' );
+export const WorldCommunicator = SharedCommunicator<ValueCommunicator<IWorld>>( PluginInfo, 'world' );

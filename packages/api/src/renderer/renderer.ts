@@ -1,8 +1,11 @@
 import { RendererCommunicator } from "./communicator";
 import { IRegistrationController, Registration, RegistrationParameters, RegistrationType } from "./registrations";
+import { RendererMode } from "./types";
 
 export interface IPluginRenderer {
     communicator: RendererCommunicator;
+
+    rendererMode: RendererMode;
 
     /**
      * Register the plugin to an existing registration type.

@@ -1,7 +1,7 @@
-import { Communicator, ValueCommunicator } from "@rrox/api";
+import { Communicator, SharedCommunicator, ValueCommunicator } from "@rrox/api";
 import { IPlugin } from "../bootstrap";
 
-export const PluginsCommunicator = Communicator<ValueCommunicator<[ installed: { [ name: string ]: IPlugin }, loaded: string[] ]>>( PluginInfo, 'plugins' );
+export const PluginsCommunicator = SharedCommunicator<ValueCommunicator<[ installed: { [ name: string ]: IPlugin }, loaded: string[] ]>>( PluginInfo, 'plugins' );
 
 export const InstallPluginCommunicator = Communicator<{
     rpc: ( plugin: string, confirm?: boolean ) => Promise<string | void>;

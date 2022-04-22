@@ -123,6 +123,7 @@ const renderer = {
                     'react-dom'       : { singleton: true },
                     'react-router'    : { singleton: true },
                     'react-router-dom': { singleton: true },
+                    '@rrox/base-ui'   : { singleton: true },
                 }
             ]
         } ),

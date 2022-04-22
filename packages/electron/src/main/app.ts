@@ -6,7 +6,7 @@ import { PluginManager, SettingsManager } from "./plugins";
 import { EventEmitter } from "events";
 import { BrowserWindow } from "electron";
 import { ControllerCommunicator } from "@rrox/api";
-import { ShareCommunicator, ShareController } from "./utils";
+import { KeybindsController, ShareCommunicator, ShareController } from "./utils";
 
 interface RROxAppEvents {
     on( event: 'connect'   , listener: ( pipe: NamedPipe ) => void ): this;
@@ -23,6 +23,7 @@ export class RROxApp extends EventEmitter implements RROxAppEvents {
     public plugins    = new PluginManager( this );
     public attacher   = new Attacher( this );
     public shared     = new ShareController( this );
+    public keybinds   = new KeybindsController( this );
 
     public windows: BrowserWindow[] = [];
 

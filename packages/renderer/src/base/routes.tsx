@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterRegistration, useRegistration } from "@rrox/api";
 import { Route, Routes as RouterRoutes, Navigate } from "react-router-dom";
-import { NotFoundPage } from "@rrox/base-ui";
+import { ErrorBoundary, NotFoundPage } from "@rrox/base-ui";
 
 export function Routes( { homeRoute, children }: { homeRoute: string, children?: React.ReactNode } ) {
     const registrations = useRegistration( RouterRegistration );
@@ -11,7 +11,12 @@ export function Routes( { homeRoute, children }: { homeRoute: string, children?:
         {registrations.map( ( r, i ) => <Route
             key={i}
             path={r.metadata.plugin + '/*'}
-            element={r.parameters[ 0 ]}
+            element={<ErrorBoundary
+                message={[ '@rrox/electron', '@rrox/web' ].includes( r.metadata.plugin )
+                    ? undefined : `The ${r.metadata.plugin} plugin experienced an unexpected error.`}
+            >
+                {r.parameters[ 0 ]}
+            </ErrorBoundary>}
         />)}
         <Route path="/" element={<Navigate to={homeRoute} />} />
         {children}

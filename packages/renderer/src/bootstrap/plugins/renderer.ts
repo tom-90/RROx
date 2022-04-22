@@ -1,4 +1,4 @@
-import { Registration, RegistrationType, IPluginRenderer, Renderer, RegistrationParameters, RendererCommunicator } from "@rrox/api";
+import { Registration, RegistrationType, IPluginRenderer, Renderer, RegistrationParameters, RendererCommunicator, RendererMode } from "@rrox/api";
 import path from "path-browserify";
 import { LogFunctions } from "electron-log";
 import { loadScript } from "../utils";
@@ -6,12 +6,16 @@ import { RegistrationController, RegistrationStore } from "../registrations";
 import { IPlugin } from "./type";
 import { PluginManagerMode } from "./manager";
 
+declare const __webpack_remotes__: any;
+declare const __webpack_share_scopes__: any;
+
 export class PluginRenderer implements IPluginRenderer {
     public instance?: Renderer;
 
     constructor( 
         private store: RegistrationStore,
         public communicator: RendererCommunicator,
+        public rendererMode: RendererMode,
         private plugin: IPlugin,
         private log: LogFunctions
     ) {};

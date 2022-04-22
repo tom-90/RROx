@@ -13,6 +13,7 @@ export interface ShareKeys {
 
 export const ShareModeCommunicator = Communicator<ValueCommunicator<ShareMode>>( PluginInfo, 'share-mode' );
 export const ShareKeysCommunicator = Communicator<ValueCommunicator<ShareKeys>>( PluginInfo, 'share-keys' );
+export const ShareAccessCommunicator = Communicator<ValueCommunicator<'public' | 'private'>>( PluginInfo, 'share-access' );
 
 export const ShareMessagesCommunicator = Communicator<{
     event: ( channel: string, ...params: any[] ) => void,

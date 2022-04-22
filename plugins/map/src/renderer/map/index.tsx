@@ -20,8 +20,7 @@ export function MapPage() {
 
     const mode = MapMode.NORMAL;
     const [ map, setMap ] = useState<L.Map>();
-    // @ts-expect-error
-    const [ following, setFollowing ] = useFollowing( map, mode, mode !== MapMode.MAP );
+    const [ following, setFollowing ] = useFollowing( map, mode, true );
     useLocate( map );
 
     return <PageLayout>
@@ -53,3 +52,5 @@ export function MapPage() {
         </MapContext.Provider>
     </PageLayout>;
 }
+
+export * from './overlay';

@@ -1,4 +1,4 @@
-import { Communicator, ValueCommunicator } from "@rrox/api";
+import { Communicator, SharedCommunicator, ValueCommunicator } from "@rrox/api";
 
 export enum AttachStatus {
     DETACHED,
@@ -8,7 +8,7 @@ export enum AttachStatus {
     ATTACHED,
 }
 
-export const AttachedCommunicator = Communicator<ValueCommunicator<AttachStatus>>( PluginInfo, 'attach-status' );
+export const AttachedCommunicator = SharedCommunicator<ValueCommunicator<AttachStatus>>( PluginInfo, 'attach-status' );
 
 export const AttachCommunicator = Communicator<{
     rpc: () => Promise<void>,

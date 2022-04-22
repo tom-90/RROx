@@ -1,11 +1,11 @@
-import { ContextRegistration, MenuButtonRegistration, RendererMode } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes } from '@rrox/renderer';
+import { ContextRegistration, MenuButtonRegistration, RendererMode, SettingsRegistration } from '@rrox/api';
+import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext } from '@rrox/renderer';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, UpdateNotify } from './base';
+import { KeybindsController, ModeContext, Router, UpdateNotify } from './base';
 import { RouterRegistration } from '@rrox/api';
 import packageInfo from '../../package.json';
-import { Router as MainRouter } from './components';
+import { OverlaySettings, Router as MainRouter } from './components';
 import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { ShareMode, ShareModeCommunicator } from '../shared';
 
@@ -15,11 +15,11 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
         version: packageInfo.version,
     };
 
-    const mode = await manager.communicator.rpc( ShareModeCommunicator );
+    const shareMode = await manager.communicator.rpc( ShareModeCommunicator );
 
     manager.registrations.register( RouterRegistration, metadata, <MainRouter /> );
 
-    if( mode !== ShareMode.CLIENT )
+    if( shareMode !== ShareMode.CLIENT )
         manager.registrations.register( MenuButtonRegistration, metadata, 'Plugins', {
             icon  : <AppstoreAddOutlined />,
             linkTo: 'plugins'
@@ -34,17 +34,23 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
         linkTo: 'home'
     } ).setPriority( 500 );
 
+    manager.registrations.register( SettingsRegistration, metadata, {
+        category: [ 'Overlay' ],
+        element : <OverlaySettings />
+    } );
+    
     manager.registrations.register( ContextRegistration, metadata, <CommunicatorContext.Provider value={manager.communicator} /> );
     manager.registrations.register( ContextRegistration, metadata, <AttachedContextProvider /> );
-    manager.registrations.register( ContextRegistration, metadata, <ModeContext.Provider value={RendererMode.WINDOW} /> );
+    manager.registrations.register( ContextRegistration, metadata, <ModeContext rendererMode={manager.rendererMode} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
+    manager.registrations.register( ContextRegistration, metadata, <KeybindsContext.Provider value={new KeybindsController( manager.communicator )} /> );
     manager.registrations.register( ContextRegistration, metadata, <UpdateNotify /> );
 
     ReactDOM.render(
         <RegistrationContext.Provider value={manager.registrations}>
             <Router>
                 <ContextProvider>
-                    <Routes homeRoute='@rrox/electron/home' />
+                    <Routes homeRoute={manager.rendererMode === RendererMode.OVERLAY ? '@rrox/electron/overlay' : '@rrox/electron/home'} />
                 </ContextProvider> 
             </Router>
         </RegistrationContext.Provider>,
@@ -53,8 +59,8 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
 
     const { PluginManagerMode } = ( await import( '@rrox/renderer/bootstrap' ) );
 
-    if( mode === ShareMode.CLIENT )
-        await manager.setMode( PluginManagerMode.Remote );
+    if( shareMode === ShareMode.CLIENT )
+        await manager.setManagerMode( PluginManagerMode.Remote );
 
     manager.enable();
 };

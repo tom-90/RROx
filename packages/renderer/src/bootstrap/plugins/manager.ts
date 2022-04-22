@@ -2,7 +2,7 @@ import semver from "semver";
 import { IPlugin } from "./type";
 import { PluginRenderer } from "./renderer";
 import { RegistrationStore } from "../registrations";
-import { RendererCommunicator, Logger, ValueConsumer } from "@rrox/api";
+import { RendererCommunicator, Logger, ValueConsumer, RendererMode } from "@rrox/api";
 import { ElectronLog, LogFunctions } from "electron-log";
 import { SettingsManager } from "./settings";
 import { PluginsCommunicator } from "../../communicators";
@@ -35,9 +35,9 @@ export class PluginManager {
     private loading  : { [ name: string ]: Promise<boolean> | undefined } = {};
     private log: LogFunctions;
     private enabled = false;
-    private mode: PluginManagerMode = PluginManagerMode.Local;
+    private managerMode: PluginManagerMode = PluginManagerMode.Local;
 
-    constructor( public communicator: RendererCommunicator ) {
+    constructor( public communicator: RendererCommunicator, public rendererMode: RendererMode ) {
         this.log = Logger.get( PluginInfo );
         this.settings = new SettingsManager( this.communicator, this.log );
 
@@ -102,8 +102,8 @@ export class PluginManager {
                     if( !( await this.loadPlugin( dependency ) ) )
                         throw `Cannot load "${dependency}". It is not installed.`;
     
-                this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, plugin, this.log );
-                await this.loaded[ plugin.name ].load( this.mode );
+                this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, this.rendererMode, plugin, this.log );
+                await this.loaded[ plugin.name ].load( this.managerMode );
     
                 return true;
             } catch( e ) {
@@ -130,12 +130,12 @@ export class PluginManager {
         }
     }
 
-    public async setMode( mode: PluginManagerMode ) {
-        if( this.mode === mode )
+    public async setManagerMode( mode: PluginManagerMode ) {
+        if( this.managerMode === mode )
             return;
 
         await this.unloadPlugins();
 
-        this.mode = mode;
+        this.managerMode = mode;
     }
 }

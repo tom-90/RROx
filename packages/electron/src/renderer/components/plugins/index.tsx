@@ -67,7 +67,7 @@ export function PluginsPage() {
                             <Spin spinning={installed == null}>
                                 <List
                                     itemLayout="vertical"
-                                    dataSource={installed ? Object.values( installed ) : []}
+                                    dataSource={Object.values( installed || {} )}
                                     renderItem={item => (
                                         <List.Item
                                             key={item.name}
@@ -122,7 +122,7 @@ export function PluginsPage() {
                                             description={<>
                                                 <Space style={{ marginRight: 5 }} key='author'><UserOutlined />{item.author.name}</Space>
                                                 <Space style={{ marginRight: 5 }} key='version'><FileTextOutlined />{'v' + item.version}</Space>
-                                                {Object.values( installed )?.some( ( p ) => p.name === item.name ) && <Badge
+                                                {Object.values( installed || {} )?.some( ( p ) => p.name === item.name ) && <Badge
                                                     count='Installed'
                                                     style={{ marginTop: -5, backgroundColor: '#fa8c16' }}
                                                 />}
@@ -145,7 +145,7 @@ export function PluginsPage() {
                         {selected ? <Plugin
                             key={selected}
                             name={selected}
-                            installed={Object.values( installed )?.find( ( i ) => i.name === selected )}
+                            installed={Object.values( installed || {} )?.find( ( i ) => i.name === selected )}
                         /> : null}
                     </div>
                 </Col>

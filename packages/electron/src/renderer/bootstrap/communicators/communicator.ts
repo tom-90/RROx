@@ -23,7 +23,7 @@ export class IPCCommunicator implements RendererCommunicator {
     }
 
     protected communicatorToChannel( communicator: CommunicatorType<any, any> ) {
-        return `c/${communicator.module.name}/${communicator.key}`;
+        return `c/${communicator.module.name}/${communicator.key}?shared=${communicator.shared}`;
     }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -54,5 +54,10 @@ export class IPCCommunicator implements RendererCommunicator {
         callback();
 
         return () => null;
+    }
+
+    canUse<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C ): boolean {
+        // Regular IPC communication is always possible
+        return true;
     }
 }

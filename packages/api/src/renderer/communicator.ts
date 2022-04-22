@@ -47,4 +47,14 @@ export interface RendererCommunicator {
      */
     whenAvailable( callback: () => void ): () => void;
     
+    /**
+     * Checks whether or not a communicator is usable (can be used for RPCs or emitting events).
+     * A communicator is **not** usable if:
+     *  - Connecting using a private link, when the communicator is a regular `Communicator` instead of a `SharedCommunicator`
+     *  - Connecting using a public link
+     * 
+     * @param communicator 
+     */
+    canUse<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C ): boolean;
+
 }

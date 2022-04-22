@@ -1,14 +1,29 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContent, PageLayout } from "@rrox/base-ui";
 import AppIcon from "@rrox/assets/images/appIcon.ico";
 import { Button, Typography, Form, Input, Tooltip, message, Modal, Avatar } from "antd";
 import { LoginOutlined, GlobalOutlined, DesktopOutlined } from "@ant-design/icons";
 import './style.less';
+import { SocketCommunicatorContext } from "../context";
 
 export function HomePage() {
     const [ keyInput, setKeyInput ] = useState('');
     const navigate = useNavigate();
+    const [ isConnected, setConnected ] = useState( false );
+    const communicator = useContext( SocketCommunicatorContext );
+
+    useEffect( () => {
+        if( !communicator )
+            return;
+
+        const destroy = communicator.whenAvailable( () => {
+            setConnected( true );
+        } );
+
+        return () => destroy();
+    }, [ communicator ] );
+
 
     const onEnterKey = useCallback( () => {
         let key = keyInput.replace( 'https://rrox.tom90.nl/key/', '' );
@@ -75,25 +90,32 @@ export function HomePage() {
             <p>
                 This is the web version of RROx, where you can enter a URL to connect to a shared session. More information about RROx can be found <a target="_blank" href="https://tom-90.github.io/RROx/">here</a>.
             </p>
-            <Form.Item>
-                <Input.Group compact>
-                    <Input
-                        value={keyInput}
-                        placeholder={"Please enter the shared URL"}
-                        onChange={( e ) => setKeyInput( e.target.value )}
-                        onPressEnter={onEnterKey}
-                        required
-                        style={{ width: 'calc(100% - 50px)' }}
-                    />
-                    <Tooltip title="Open Map">
-                        <Button
-                            icon={<LoginOutlined />}
-                            onClick={onEnterKey}
-                            type="primary"
-                        />
-                    </Tooltip>
-                </Input.Group>
-            </Form.Item>
+            {isConnected
+                    ? <div
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                        <Button onClick={() => communicator?.disconnect()}>Disconnect</Button>
+                    </div>
+                    : <Form.Item>
+                        <Input.Group compact>
+                            <Input
+                                value={keyInput}
+                                placeholder={"Please enter the shared URL"}
+                                onChange={( e ) => setKeyInput( e.target.value )}
+                                onPressEnter={onEnterKey}
+                                required
+                                style={{ width: 'calc(100% - 50px)' }}
+                            />
+                            <Tooltip title="Open Map">
+                                <Button
+                                    icon={<LoginOutlined />}
+                                    onClick={onEnterKey}
+                                    type="primary"
+                                />
+                            </Tooltip>
+                        </Input.Group>
+                    </Form.Item>
+            }
         </PageContent>
     </PageLayout>;
 }

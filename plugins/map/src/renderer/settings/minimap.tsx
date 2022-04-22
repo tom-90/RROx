@@ -45,13 +45,5 @@ export function MinimapSettings() {
                 <Select.Option value={4}>Bottom Right</Select.Option>
             </Select>
         </Form.Item>
-        <Form.Item
-            label="Hardware Acceleration"
-            name="hardware-acceleration"
-            valuePropName="checked"
-            help={<p style={{ padding: '10px 0' }}>Disable hardware acceleration if the game window shows a black screen. RROx needs to be restarted for changes to take effect.</p>}
-        >
-            <Switch/>
-        </Form.Item>
     </Form>;
 }

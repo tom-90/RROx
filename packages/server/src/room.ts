@@ -36,8 +36,6 @@ export class Room {
 
                 this.valueProviders[ vp.channel ] = vp.value;
             }
-
-            console.log( 'value-providers', this.valueProviders );
         } );
     }
     

@@ -53,6 +53,8 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
             this.validate( data );
 
             this.settings = data;
+
+            this.emit( 'update' );
         } );
     }
 

@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import Log from 'electron-log';
 import { RROxApp } from '../../app';
 import { ValueProvider } from '@rrox/api';
-import { ShareConnectHostCommunicator, ShareMessagesCommunicator, ShareMode, ShareKeys, ShareModeCommunicator, ShareConnectClientCommunicator, ShareKeysCommunicator } from '../../../shared/communicators';
+import { ShareConnectHostCommunicator, ShareMessagesCommunicator, ShareMode, ShareKeys, ShareModeCommunicator, ShareConnectClientCommunicator, ShareKeysCommunicator, ShareAccessCommunicator } from '../../../shared/communicators';
 import { ShareCommunicator } from './communicator';
 
 export class ShareController {
@@ -11,6 +11,7 @@ export class ShareController {
 
     private modeProvider: ValueProvider<ShareMode>;
     private keysProvider: ValueProvider<ShareKeys>;
+    private accessProvider: ValueProvider<'public' | 'private'>;
     private socket?: Socket;
     private communicator: ShareCommunicator;
     private initialized: boolean = false;
@@ -21,8 +22,9 @@ export class ShareController {
 
         this.communicator = app.communicator;
 
-        this.modeProvider = app.communicator.provideValue( ShareModeCommunicator, ShareMode.NONE );
-        this.keysProvider = app.communicator.provideValue( ShareKeysCommunicator, {} );
+        this.modeProvider   = app.communicator.provideValue( ShareModeCommunicator, ShareMode.NONE );
+        this.keysProvider   = app.communicator.provideValue( ShareKeysCommunicator, {} );
+        this.accessProvider = app.communicator.provideValue( ShareAccessCommunicator, 'private' );
 
         app.communicator.listen( ShareMessagesCommunicator, ( channel: string, ...params: any[] ) => {
             if( this.getMode() !== ShareMode.CLIENT || !this.socket )
@@ -90,15 +92,22 @@ export class ShareController {
 
         if( mode === ShareMode.HOST ) {
             this.socket.on( 'rpc', ( type: string, args: any[], ack?: ( res: any ) => void ) => {
-                if ( !ack )
-                    this.communicator.callListeners( type, ...args )
-                else {
-                    const res = this.communicator.callHandler( type, ...args );
+                if( !this.isShared( type ) )
+                    return;
 
-                    if( res instanceof Promise )
-                        res.then( ack ).catch( ( e ) => Log.error( `Error while executing Handler from websocket '${type}':`, e ) );
-                    else
-                        ack( res );
+                try {
+                    if ( !ack )
+                        this.communicator.callListeners( type, ...args )
+                    else {
+                        const res = this.communicator.callHandler( type, ...args );
+    
+                        if( res instanceof Promise )
+                            res.then( ack ).catch( ( e ) => Log.error( `Error while executing Handler from websocket '${type}':`, e ) );
+                        else
+                            ack( res );
+                    }
+                } catch( e ) {
+                    Log.error( e );
                 }
             } );
         } else if( mode === ShareMode.CLIENT ) {
@@ -138,8 +147,8 @@ export class ShareController {
         this.connect( ShareMode.CLIENT );
 
         return new Promise<void>( ( resolve, reject ) => {
-            this.socket!.emit( 'join', key, ( success: boolean ) => {
-                if( !success ) {
+            this.socket!.emit( 'join', key, ( mode: boolean | 'public' | 'private' ) => {
+                if( !mode ) {
                     this.disconnect();
                     return reject( 'Key is invalid' );
                 }
@@ -187,5 +196,15 @@ export class ShareController {
             channel: this.communicator.communicatorToChannel( v.getCommunicator() ),
             value  : v.getValue(),
         } ) ) );
+    }
+
+    private isShared( communicator: string ) { 
+        try {
+            const parsed = new URL( communicator, 'https://rrox.tom90.nl' );
+
+            return parsed.searchParams.has( 'shared' ) && parsed.searchParams.get( 'shared' ) === 'true';
+        } catch( e ) {
+            return false;
+        }
     }
 }

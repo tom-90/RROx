@@ -3,8 +3,9 @@ import Updater from 'update-electron-app';
 import Log from 'electron-log';
 import path from 'path';
 import { RROxApp } from './app';
-import { createAppWindow } from './windows';
+import { createAppWindow, createOverlayWindow } from './windows';
 import { Logger } from '@rrox/api';
+import { BaseSettings } from '../shared/settings';
 
 const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
 
@@ -47,12 +48,13 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
     let openURL = process.argv.find( ( arg ) => arg.startsWith( 'rrox://' ) );
 
     let rrox = new RROxApp();
+    const settings = rrox.settings.init( BaseSettings );
 
-    /*if( !rrox.settings.get( 'hardware-acceleration' ) ) {
+    if( !settings.get( 'hardware-acceleration' ) ) {
         app.disableHardwareAcceleration();
         Log.info( 'Hardware acceleration is disabled.' );
     } else
-        Log.info( 'Hardware acceleration is enabled.' );*/
+        Log.info( 'Hardware acceleration is enabled.' );
 
     app.on( 'ready', async () => {
         if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
@@ -62,6 +64,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         await rrox.plugins.loadInstalledPlugins();
 
         rrox.addWindow( createAppWindow() );
+        rrox.addWindow( createOverlayWindow( rrox ) );
     } );
 
     app.on( 'second-instance', ( e, argv ) => {

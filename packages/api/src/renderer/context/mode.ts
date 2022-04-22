@@ -1,9 +1,16 @@
 import { useContext } from "react";
-import { RendererMode } from "..";
+import { RendererMode, OverlayMode } from "..";
 import { getContext } from "./internal";
 
-export type ModeContext = RendererMode;
+export type ModeContext = {
+    renderer: RendererMode,
+    overlay: OverlayMode,
+};
 
-export function useMode(): ModeContext {
-    return useContext( getContext( "mode" ) );
+export function useRendererMode(): RendererMode {
+    return useContext( getContext( "mode" ) ).renderer;
+}
+
+export function useOverlayMode(): OverlayMode {
+    return useContext( getContext( "mode" ) ).overlay;
 }

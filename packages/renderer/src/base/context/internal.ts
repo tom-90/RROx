@@ -4,6 +4,7 @@ import { ModeContext } from "./mode";
 import { SettingsContext } from "./settings";
 import { AttachedContext } from "./attached";
 import { CommunicatorContext } from "./communicator";
+import { KeybindsContext } from "./keybinds";
 
 declare global {
     interface Window {
@@ -14,6 +15,7 @@ declare global {
 window._RROX_Context = {
     attached    : AttachedContext,
     communicator: CommunicatorContext,
+    keybinds    : KeybindsContext,
     registration: RegistrationContext,
     settings    : SettingsContext,
     mode        : ModeContext,

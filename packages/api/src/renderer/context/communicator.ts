@@ -61,6 +61,34 @@ export function useEmitter<C extends CommunicatorType<( ...p: any[] ) => void, a
 }
 
 /**
+ * Retrieve a function that can be used to check whether or not a communicator can be used for sending RPCs and emit events
+ */
+export function useHasCommunicatorAccess(): ( ( communicator: CommunicatorType<any, any> ) => boolean );
+
+/**
+ * Check whether or not a communicator can be used for sending RPCs and emit events
+ * 
+ * @param communicator 
+ */
+export function useHasCommunicatorAccess( communicator: CommunicatorType<any, any> ): boolean
+
+export function useHasCommunicatorAccess(
+    communicator?: CommunicatorType<any, any>
+): boolean | ( ( communicator: CommunicatorType<any, any> ) => boolean ) {
+    const context = useContext( getContext( "communicator" ) );
+
+    if( communicator ) {
+        if( !context )
+            return true;
+        return context.canUse( communicator );
+    }
+    
+    if( !context )
+        return () => true;
+    return ( communicator ) => context.canUse( communicator );
+}
+
+/**
  * Retrieves an rpc (remote procedure call) function that can be used to call remote functions on the communicator.
  * It returns a function that can be called to invoke the remote function in the communicator.
  * This function will return a promise that will resolve the returned value by the communicator.
@@ -158,7 +186,6 @@ export function useValue<T>(
     }, [ isAvailable ] );
 
     useListener( communicator, ( diff ) => {
-        console.log( diff );
         setValue( applyDiff( value, diff ) );
     } );
 
@@ -168,6 +195,7 @@ export function useValue<T>(
 export class ValueConsumer<T> extends EventEmitter2 {
 
     private value?: T;
+    private unregisterListener: () => void;
 
     constructor(
         private communicator: RendererCommunicator,
@@ -178,7 +206,7 @@ export class ValueConsumer<T> extends EventEmitter2 {
 
         this.value = initialValue;
 
-        this.communicator.listen( valueCommunicator, ( diff ) => {
+        this.unregisterListener = this.communicator.listen( valueCommunicator, ( diff ) => {
             this.value = applyDiff( this.value, diff );
             this.emit( 'update', this.value );
         } );
@@ -217,6 +245,10 @@ export class ValueConsumer<T> extends EventEmitter2 {
 
     removeListener( event: 'update', listener: ( value: T ) => void ) {
         return super.off( event, listener );
+    }
+
+    destroy() {
+        this.unregisterListener();
     }
 
 }

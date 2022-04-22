@@ -76,5 +76,6 @@ export function Registration<ParameterFunction extends ( ...params: any[] ) => v
 
 export * from './context';
 export * from './menu';
+export * from './overlay';
 export * from './route';
 export * from './settings';
