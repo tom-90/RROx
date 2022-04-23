@@ -79,7 +79,7 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
                 return;
             }
 
-            if( !available || !error )
+            if( !available && !error )
                 communicator.connect( key )
                     .catch( ( e ) => {
                         console.error( e );

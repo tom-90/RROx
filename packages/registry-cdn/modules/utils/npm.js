@@ -1,13 +1,19 @@
 import url from 'url';
+import fs from 'fs-extra';
+import path from 'path';
+import tar from 'tar';
 import https from 'https';
 import http from 'http';
 import gunzip from 'gunzip-maybe';
 import LRUCache from 'lru-cache';
 
+import getContentType from './getContentType.js';
 import bufferStream from './bufferStream.js';
 
 const npmRegistryURL =
   process.env.NPM_REGISTRY_URL || 'https://registry.rrox.tom90.nl';
+const cachePath =
+  process.env.NPM_CACHE_DIR ? path.resolve( process.env.NPM_CACHE_DIR ) : path.resolve( __dirname, './cache' );
 
 const httpAgent = new http.Agent({
   keepAlive: true
@@ -171,10 +177,34 @@ export async function getPackageConfig(packageName, version, log) {
   return value;
 }
 
+const extractLocks = {};
+const packageFiles = {};
+
 /**
  * Returns a stream of the tarball'd contents of the given package.
  */
 export async function getPackage(packageName, version, log) {
+  const cacheDir = path.resolve( cachePath, `${packageName}`, version );
+
+  if(packageFiles[cacheDir])
+    return { directory: cacheDir, files: packageFiles[cacheDir] };
+
+  if(extractLocks[cacheDir]) {
+    await extractLocks[cacheDir];
+
+    return { directory: cacheDir, files: packageFiles[cacheDir] };
+  }
+
+  extractLocks[cacheDir] = getPackageFiles(packageName, version, log, cacheDir);
+
+  await extractLocks[cacheDir];
+  
+  delete extractLocks[cacheDir];
+
+  return { directory: cacheDir, files: packageFiles[cacheDir] };
+}
+
+async function getPackageFiles(packageName, version, log, cacheDir) {
   const tarballName = isScopedPackageName(packageName)
     ? packageName.split('/')[1]
     : packageName;
@@ -194,9 +224,32 @@ export async function getPackage(packageName, version, log) {
   const res = await get(options);
 
   if (res.statusCode === 200) {
-    const stream = res.pipe(gunzip());
-    // stream.pause();
-    return stream;
+    await fs.emptyDir(cacheDir);
+
+    const files = [];
+
+    await new Promise((resolve, reject) => {
+      res.pipe(gunzip()).pipe(tar.extract({
+        cwd: cacheDir,
+      })
+        .on('entry', (header) => {
+          if(header.type === 'File' || header.type === 'file') {
+            const entry = {
+              path       : header.path,
+              contentType: getContentType(header.path),
+              size       : header.size,
+            };
+
+            files.push(entry);
+          }
+        })
+        .on('finish', resolve)
+        .on('error', reject));
+    });
+
+    packageFiles[cacheDir] = files;
+
+    return cacheDir
   }
 
   if (res.statusCode === 404) {
@@ -214,4 +267,60 @@ export async function getPackage(packageName, version, log) {
   log.error(content);
 
   return null;
+}
+
+function *walkSync(dir) {
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  for (const file of files) {
+    if (file.isDirectory()) {
+      yield* walkSync(path.join(dir, file.name));
+    } else {
+      const p = path.join(dir, file.name);
+      const stat = fs.statSync(p);
+      yield {
+        path       : p,
+        contentType: getContentType(p),
+        size       : stat.size,
+      };
+    }
+  }
+}
+
+function readPackageCache(pkgDir) {
+  const versions = fs.readdirSync(pkgDir, { withFileTypes: true });
+  for (const version of versions) {
+    if (!version.isDirectory())
+      continue;
+    const versionDir = path.join(pkgDir, version.name);
+
+    const files = [];
+    for (const entry of walkSync(versionDir)) {
+      files.push({
+        path       : path.normalize(path.relative(versionDir, entry.path)).split(path.sep).join('/'),
+        contentType: entry.contentType,
+        size       : entry.size,
+      });
+    }
+    packageFiles[versionDir] = files;
+  }
+}
+
+export function initCache() {
+  fs.ensureDirSync(cachePath);
+  const root = fs.readdirSync(cachePath, { withFileTypes: true });
+  for (const file of root) {
+    if (!file.isDirectory())
+      continue;
+    
+    if(isScopedPackageName(file.name)) {
+      const packages = fs.readdirSync(path.join(cachePath, file.name), { withFileTypes: true });
+      for(const pkg of packages) {
+        if (!pkg.isDirectory())
+          continue;
+        readPackageCache(path.join(cachePath, file.name, pkg.name));
+      }
+    } else {
+      readPackageCache(path.join(cachePath, file.name));
+    }
+  }
 }

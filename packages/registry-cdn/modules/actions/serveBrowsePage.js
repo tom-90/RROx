@@ -9,18 +9,6 @@ import { createElement, createHTML } from '../utils/markup.js';
 import { getVersionsAndTags } from '../utils/npm.js';
 
 const doctype = '<!DOCTYPE html>';
-const globalURLs =
-  process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging'
-    ? {
-        '@emotion/core': '/@emotion/core@10.0.6/dist/core.umd.min.js',
-        react: '/react@16.8.6/umd/react.production.min.js',
-        'react-dom': '/react-dom@16.8.6/umd/react-dom.production.min.js'
-      }
-    : {
-        '@emotion/core': '/@emotion/core@10.0.6/dist/core.umd.min.js',
-        react: '/react@16.8.6/umd/react.development.js',
-        'react-dom': '/react-dom@16.8.6/umd/react-dom.development.js'
-      };
 
 function byVersion(a, b) {
   return semver.lt(a, b) ? -1 : semver.gt(a, b) ? 1 : 0;
@@ -44,7 +32,6 @@ async function serveBrowsePage(req, res) {
     target: req.browseTarget
   };
   const content = createHTML(renderToString(createElement(BrowseApp, data)));
-  const elements = getScripts('browse', 'iife', globalURLs);
 
   const html =
     doctype +
@@ -53,8 +40,7 @@ async function serveBrowsePage(req, res) {
         title: `RROX - ${req.packageName}`,
         description: `The CDN for ${req.packageName}`,
         data,
-        content,
-        elements
+        content
       })
     );
 

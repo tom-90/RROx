@@ -1,4 +1,5 @@
-import tar from 'tar-stream';
+import path from 'path';
+import fs from 'fs';
 
 import asyncHandler from '../utils/asyncHandler.js';
 import bufferStream from '../utils/bufferStream.js';
@@ -11,45 +12,33 @@ import getLanguageName from '../utils/getLanguageName.js';
 
 import serveBrowsePage from './serveBrowsePage.js';
 
-async function findEntry(stream, filename) {
-  // filename = /some/file/name.js
-  return new Promise((accept, reject) => {
-    let foundEntry = null;
+async function findEntry({directory, files}, filename) {
+  let foundEntry = null;
 
-    stream
-      .pipe(tar.extract())
-      .on('error', reject)
-      .on('entry', async (header, stream, next) => {
-        const entry = {
-          // Most packages have header names that look like `package/index.js`
-          // so we shorten that to just `/index.js` here. A few packages use a
-          // prefix other than `package/`. e.g. the firebase package uses the
-          // `firebase_npm/` prefix. So we just strip the first dir name.
-          path: header.name.replace(/^[^/]+\/?/, '/'),
-          type: header.type
-        };
+  for(let rawEntry of files) {
+    // Most packages have header names that look like `package/index.js`
+    // so we shorten that to just `index.js` here. A few packages use a
+    // prefix other than `package/`. e.g. the firebase package uses the
+    // `firebase_npm/` prefix. So we just strip the first dir name.
+    const entry = {
+      ...rawEntry,
+      path: rawEntry.path.replace(/^[^/]+/g, ''),
+      rawPath: rawEntry.path,
+      type: 'file'
+    };
 
-        // Ignore non-files and files that don't match the name.
-        if (entry.type !== 'file' || entry.path !== filename) {
-          stream.resume();
-          stream.on('end', next);
-          return;
-        }
+    if (entry.path !== filename)
+      continue;
 
-        try {
-          entry.content = await bufferStream(stream);
+    foundEntry = {
+      ...entry,
+      content: await bufferStream(fs.createReadStream(path.resolve(directory, entry.rawPath)))
+    };
 
-          foundEntry = entry;
+    break;
+  }
 
-          next();
-        } catch (error) {
-          next(error);
-        }
-      })
-      .on('finish', () => {
-        accept(foundEntry);
-      });
-  });
+  return foundEntry;
 }
 
 async function serveFileBrowser(req, res) {

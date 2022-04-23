@@ -7,7 +7,7 @@ const schema = {
 } as const;
 
 export interface IBaseRendererSettings {
-    'player-name': string;
+    'player-name'?: string;
 }
 
 export const BaseRendererSettings = RendererSettings<IBaseRendererSettings>( PluginInfo, {

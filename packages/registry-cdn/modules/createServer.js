@@ -19,8 +19,11 @@ import validateFilename from './middleware/validateFilename.js';
 import validatePackagePathname from './middleware/validatePackagePathname.js';
 import validatePackageName from './middleware/validatePackageName.js';
 import validatePackageVersion from './middleware/validatePackageVersion.js';
+import { initCache } from './utils/npm';
 
 function createApp(callback) {
+  initCache();
+
   const app = express();
   callback(app);
   return app;
@@ -75,9 +78,9 @@ export default function createServer() {
     const metadataApp = createApp(app => {
       app.enable('strict routing');
 
-      app.get(
-        '*/',
-        allowQuery('meta'),
+      //app.get(
+      //  '*/',
+      /*  allowQuery('meta'),
         validatePackagePathname,
         validatePackageName,
         validatePackageVersion,
@@ -93,7 +96,7 @@ export default function createServer() {
         validatePackageVersion,
         validateFilename,
         serveFileMetadata
-      );
+      );*/
     });
 
     app.use((req, res, next) => {

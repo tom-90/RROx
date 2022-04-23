@@ -1,11 +1,9 @@
 import path from 'path';
-import tar from 'tar-stream';
+import fs from 'fs';
 
+import bufferStream from '../utils/bufferStream';
 import asyncHandler from '../utils/asyncHandler.js';
-import bufferStream from '../utils/bufferStream.js';
 import createPackageURL from '../utils/createPackageURL.js';
-import getContentType from '../utils/getContentType.js';
-import getIntegrity from '../utils/getIntegrity.js';
 import { getPackage } from '../utils/npm.js';
 
 function fileRedirect(req, res, entry) {
@@ -51,104 +49,83 @@ function indexRedirect(req, res, entry) {
  * Follows node's resolution algorithm.
  * https://nodejs.org/api/modules.html#modules_all_together
  */
-function searchEntries(stream, filename) {
-  // filename = /some/file/name.js or /some/dir/name
-  return new Promise((accept, reject) => {
-    const jsEntryFilename = `${filename}.js`;
-    const jsonEntryFilename = `${filename}.json`;
+async function searchEntries({directory, files}, filename) {
+  const jsEntryFilename = `${filename}.js`;
+  const jsonEntryFilename = `${filename}.json`;
 
-    const matchingEntries = {};
-    let foundEntry;
+  const matchingEntries = {};
+  let foundEntry;
 
-    if (filename === '/') {
-      foundEntry = matchingEntries['/'] = { name: '/', type: 'directory' };
+  if (filename === '/') {
+    foundEntry = matchingEntries['/'] = { name: '/', type: 'directory' };
+  }
+
+  for(let rawEntry of files) {
+    // Most packages have header names that look like `package/index.js`
+    // so we shorten that to just `index.js` here. A few packages use a
+    // prefix other than `package/`. e.g. the firebase package uses the
+    // `firebase_npm/` prefix. So we just strip the first dir name.
+    const entry = {
+      ...rawEntry,
+      path: rawEntry.path.replace(/^[^/]+/g, ''),
+      rawPath: rawEntry.path,
+      type: 'file'
+    };
+
+    if(!entry.path.startsWith(filename))
+      continue;
+    
+    matchingEntries[entry.path] = entry;
+
+    // Dynamically create "directory" entries for all directories
+    // that are in this file's path. Some tarballs omit these entries
+    // for some reason, so this is the "brute force" method.
+    let dir = path.dirname(entry.path);
+    while (dir !== '/') {
+      if (!matchingEntries[dir]) {
+        matchingEntries[dir] = { name: dir, type: 'directory' };
+      }
+      dir = path.dirname(dir);
     }
 
-    stream
-      .pipe(tar.extract())
-      .on('error', reject)
-      .on('entry', async (header, stream, next) => {
-        const entry = {
-          // Most packages have header names that look like `package/index.js`
-          // so we shorten that to just `index.js` here. A few packages use a
-          // prefix other than `package/`. e.g. the firebase package uses the
-          // `firebase_npm/` prefix. So we just strip the first dir name.
-          path: header.name.replace(/^[^/]+/g, ''),
-          type: header.type
-        };
-
-        // Skip non-files and files that don't match the entryName.
-        if (entry.type !== 'file' || !entry.path.startsWith(filename)) {
-          stream.resume();
-          stream.on('end', next);
-          return;
-        }
-
-        matchingEntries[entry.path] = entry;
-
-        // Dynamically create "directory" entries for all directories
-        // that are in this file's path. Some tarballs omit these entries
-        // for some reason, so this is the "brute force" method.
-        let dir = path.dirname(entry.path);
-        while (dir !== '/') {
-          if (!matchingEntries[dir]) {
-            matchingEntries[dir] = { name: dir, type: 'directory' };
-          }
-          dir = path.dirname(dir);
-        }
-
+    if (
+      entry.path === filename ||
+      // Allow accessing e.g. `/index.js` or `/index.json`
+      // using `/index` for compatibility with npm
+      entry.path === jsEntryFilename ||
+      entry.path === jsonEntryFilename
+    ) {
+      if (foundEntry) {
         if (
-          entry.path === filename ||
-          // Allow accessing e.g. `/index.js` or `/index.json`
-          // using `/index` for compatibility with npm
-          entry.path === jsEntryFilename ||
-          entry.path === jsonEntryFilename
+          foundEntry.path !== filename &&
+          (entry.path === filename ||
+            (entry.path === jsEntryFilename &&
+              foundEntry.path === jsonEntryFilename))
         ) {
-          if (foundEntry) {
-            if (
-              foundEntry.path !== filename &&
-              (entry.path === filename ||
-                (entry.path === jsEntryFilename &&
-                  foundEntry.path === jsonEntryFilename))
-            ) {
-              // This entry is higher priority than the one
-              // we already found. Replace it.
-              delete foundEntry.content;
-              foundEntry = entry;
-            }
-          } else {
-            foundEntry = entry;
-          }
+          // This entry is higher priority than the one
+          // we already found. Replace it.
+          delete foundEntry.content;
+          foundEntry = entry;
         }
+      } else {
+        foundEntry = entry;
+      }
+    }
+  }
 
-        try {
-          const content = await bufferStream(stream);
+  if(foundEntry && foundEntry.rawPath) {
+    foundEntry = {
+      ...foundEntry,
+      content: await bufferStream(fs.createReadStream(path.resolve(directory, foundEntry.rawPath)))
+    }
+  }
 
-          entry.contentType = getContentType(entry.path);
-          entry.integrity = getIntegrity(content);
-          entry.lastModified = header.mtime.toUTCString();
-          entry.size = content.length;
-
-          // Set the content only for the foundEntry and
-          // discard the buffer for all others.
-          if (entry === foundEntry) {
-            entry.content = content;
-          }
-
-          next();
-        } catch (error) {
-          next(error);
-        }
-      })
-      .on('finish', () => {
-        accept({
-          // If we didn't find a matching file entry,
-          // try a directory entry with the same name.
-          foundEntry: foundEntry || matchingEntries[filename] || null,
-          matchingEntries: matchingEntries
-        });
-      });
-  });
+  return {
+    // If we didn't find a matching file entry,
+    // try a directory entry with the same name.
+    foundEntry: foundEntry || matchingEntries[filename] || null,
+    matchingEntries: matchingEntries
+  };
 }
 
 /**

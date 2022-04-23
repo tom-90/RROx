@@ -10,3 +10,5 @@ npm-debug.log*
 /server.js
 /service-account-staging.json
 /service-account.json
+
+/cache
