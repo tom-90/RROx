@@ -1,7 +1,7 @@
 {
     "name": "@rrox/devtools",
     "version": "1.6.2",
-    "description": "RailroadsOnline Extended Developer Tools",
+    "description": "Developer Tools Plugin",
     "author": "_tom()",
     "rrox": {
         "controller": "dist/controller/controller.js",

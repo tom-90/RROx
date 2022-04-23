@@ -9,3 +9,9 @@ export enum OverlayMode {
     SHOWN = 1,
     FOCUSSED = 2,
 }
+
+export enum ShareMode {
+    NONE  ,
+    HOST  ,
+    CLIENT,
+}

@@ -1,10 +1,4 @@
-import { Communicator, ValueCommunicator } from "@rrox/api";
-
-export enum ShareMode {
-    NONE  ,
-    HOST  ,
-    CLIENT,
-}
+import { Communicator, ValueCommunicator, ShareMode } from "@rrox/api";
 
 export interface ShareKeys {
     public?: string;

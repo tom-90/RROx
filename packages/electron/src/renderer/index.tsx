@@ -3,11 +3,11 @@ import { CommunicatorContext, AttachedContextProvider, SettingsContext, Registra
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { KeybindsController, ModeContext, Router, UpdateNotify } from './base';
-import { RouterRegistration } from '@rrox/api';
+import { RouterRegistration, ShareMode } from '@rrox/api';
 import packageInfo from '../../package.json';
 import { OverlaySettings, Router as MainRouter } from './components';
 import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
-import { ShareMode, ShareModeCommunicator } from '../shared';
+import { ShareModeCommunicator } from '../shared';
 
 export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).PluginManager ) => {
     const metadata = {
@@ -16,6 +16,8 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     };
 
     const shareMode = await manager.communicator.rpc( ShareModeCommunicator );
+
+    manager.setShareMode( shareMode );
 
     manager.registrations.register( RouterRegistration, metadata, <MainRouter /> );
 

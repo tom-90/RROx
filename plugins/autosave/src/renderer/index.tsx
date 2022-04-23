@@ -1,13 +1,14 @@
-import { IPluginRenderer, Renderer, SettingsRegistration } from "@rrox/api";
+import { IPluginRenderer, Renderer, SettingsRegistration, ShareMode } from "@rrox/api";
 import React from "react";
 import { AutosavesSettings } from "./settings";
 
-export default class WorldRenderer extends Renderer {
+export default class AutosaveRenderer extends Renderer {
     public load( renderer: IPluginRenderer ): void | Promise<void> {
-        renderer.register( SettingsRegistration, {
-            category: [ 'Autosaves' ],
-            element : <AutosavesSettings />
-        } );
+        if( renderer.shareMode !== ShareMode.CLIENT )
+            renderer.register( SettingsRegistration, {
+                category: [ 'Autosaves' ],
+                element : <AutosavesSettings />
+            } );
     }
     public unload( renderer: IPluginRenderer ): void | Promise<void> {
 

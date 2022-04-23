@@ -45,13 +45,6 @@ export function FeaturesSettings() {
             <Switch />
         </Form.Item>
         <Form.Item
-            label="Build Mode"
-            name="features.build"
-            valuePropName="checked"
-        >
-            <Switch />
-        </Form.Item>
-        <Form.Item
             label="Cheats"
             name="features.cheats"
             valuePropName="checked"

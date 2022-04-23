@@ -3,8 +3,8 @@ import { PageContent, PageLayout } from "@rrox/base-ui";
 import AppIcon from "@rrox/assets/images/appIcon.ico";
 import { Button, Divider, Spin, Steps, Typography, Form, Tooltip, Input, Switch, Tabs, message, Modal } from "antd";
 import { AppstoreOutlined, CheckCircleOutlined, FileSearchOutlined, LoginOutlined, LoadingOutlined, CopyOutlined } from "@ant-design/icons";
-import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareMode, ShareModeCommunicator } from "../../shared";
-import { useRPC, useValue } from "@rrox/api";
+import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareModeCommunicator } from "../../shared";
+import { useRPC, useValue, ShareMode } from "@rrox/api";
 
 function Step( { step, currentStatus, icon, last, ...restProps }: {
     step: AttachStatus,

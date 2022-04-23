@@ -2,7 +2,7 @@ import semver from "semver";
 import { IPlugin } from "./type";
 import { PluginRenderer } from "./renderer";
 import { RegistrationStore } from "../registrations";
-import { RendererCommunicator, Logger, ValueConsumer, RendererMode } from "@rrox/api";
+import { RendererCommunicator, Logger, ValueConsumer, RendererMode, ShareMode } from "@rrox/api";
 import { ElectronLog, LogFunctions } from "electron-log";
 import { SettingsManager } from "./settings";
 import { PluginsCommunicator } from "../../communicators";
@@ -36,6 +36,7 @@ export class PluginManager {
     private log: LogFunctions;
     private enabled = false;
     private managerMode: PluginManagerMode = PluginManagerMode.Local;
+    private shareMode = ShareMode.NONE;
 
     constructor( public communicator: RendererCommunicator, public rendererMode: RendererMode ) {
         this.log = Logger.get( PluginInfo );
@@ -102,7 +103,7 @@ export class PluginManager {
                     if( !( await this.loadPlugin( dependency ) ) )
                         throw `Cannot load "${dependency}". It is not installed.`;
     
-                this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, this.rendererMode, plugin, this.log );
+                this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, this.rendererMode, this.shareMode, plugin, this.log );
                 await this.loaded[ plugin.name ].load( this.managerMode );
     
                 return true;
@@ -137,5 +138,16 @@ export class PluginManager {
         await this.unloadPlugins();
 
         this.managerMode = mode;
+    }
+
+    public setShareMode( mode: ShareMode ) {
+        this.shareMode = mode;
+
+        for( let entry of Object.values( this.loaded ) )
+            entry.shareMode = mode;
+    }
+
+    public getShareMode() {
+        return this.shareMode;
     }
 }

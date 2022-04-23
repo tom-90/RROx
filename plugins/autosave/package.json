@@ -1,7 +1,7 @@
 {
     "name": "@rrox/autosave",
     "version": "1.6.2",
-    "description": "Autosaver",
+    "description": "Autosave Plugin",
     "author": "_tom()",
     "rrox": {
         "controller": "dist/controller/controller.js",

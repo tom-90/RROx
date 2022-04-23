@@ -1,4 +1,4 @@
-import { Registration, RegistrationType, IPluginRenderer, Renderer, RegistrationParameters, RendererCommunicator, RendererMode } from "@rrox/api";
+import { Registration, RegistrationType, IPluginRenderer, Renderer, RegistrationParameters, RendererCommunicator, RendererMode, ShareMode } from "@rrox/api";
 import path from "path-browserify";
 import { LogFunctions } from "electron-log";
 import { loadScript } from "../utils";
@@ -16,6 +16,7 @@ export class PluginRenderer implements IPluginRenderer {
         private store: RegistrationStore,
         public communicator: RendererCommunicator,
         public rendererMode: RendererMode,
+        public shareMode: ShareMode,
         private plugin: IPlugin,
         private log: LogFunctions
     ) {};

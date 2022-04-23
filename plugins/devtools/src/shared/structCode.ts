@@ -1,9 +1,5 @@
-import { Communicator } from "@rrox/api";
-import { StructListType } from "./structList";
+import { SharedCommunicator } from "@rrox/api";
 
-export const StructCodeCommunicator = Communicator<{
-    /**
-     * Function defining the way the remote procedure should be called.
-     */
+export const StructCodeCommunicator = SharedCommunicator<{
     rpc?: ( structName: string ) => [ code: string, links: { [ key: string ]: string } ];
 }>( PluginInfo, 'StructCode' );

@@ -1,14 +1,14 @@
-import { Communicator } from "@rrox/api";
+import { SharedCommunicator } from "@rrox/api";
 
-export const GetPlayerCheats = Communicator<{
+export const GetPlayerCheats = SharedCommunicator<{
     rpc: ( playerName: string ) => ICheats | undefined,
 }>( PluginInfo, 'GetPlayerCheats' );
 
-export const SetPlayerCheats = Communicator<{
+export const SetPlayerCheats = SharedCommunicator<{
     rpc: ( playerName: string, cheats: ICheats ) => void,
 }>( PluginInfo, 'SetPlayerCheats' );
 
-export const SetMoneyXPCheats = Communicator<{
+export const SetMoneyXPCheats = SharedCommunicator<{
     rpc: ( playerName: string, money?: number, xp?: number ) => void,
 }>( PluginInfo, 'SetMoneyXPCheats' );
 

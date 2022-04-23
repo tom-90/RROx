@@ -1,8 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 import Log from 'electron-log';
 import { RROxApp } from '../../app';
-import { ValueProvider } from '@rrox/api';
-import { ShareConnectHostCommunicator, ShareMessagesCommunicator, ShareMode, ShareKeys, ShareModeCommunicator, ShareConnectClientCommunicator, ShareKeysCommunicator, ShareAccessCommunicator } from '../../../shared/communicators';
+import { ValueProvider, ShareMode } from '@rrox/api';
+import { ShareConnectHostCommunicator, ShareMessagesCommunicator, ShareKeys, ShareModeCommunicator, ShareConnectClientCommunicator, ShareKeysCommunicator, ShareAccessCommunicator } from '../../../shared/communicators';
 import { ShareCommunicator } from './communicator';
 
 export class ShareController {

@@ -1,7 +1,7 @@
 {
     "name": "@rrox/map",
     "version": "1.6.2",
-    "description": "RailroadsOnline Extended Map Plugin",
+    "description": "Map Plugin",
     "author": "_tom()",
     "rrox": {
         "controller": "dist/controller/controller.js",

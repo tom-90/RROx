@@ -1,31 +1,20 @@
-# How to download
+The **RROx World Loader plugin** loads all world data from game memory. This data can then be used by other plugins like the **RROx map plugin** to show to the user.
 
-All versions of RROx can be found on the [Releases](https://github.com/tom-90/RROx/releases) page. Download the file with the name `RailroadsOnline.Extended.Setup.exe` and run it to install RROx.
+# Settings
 
-# Support & Info
+The plugin provides a number of settings that allow you to customize how RROx interacts with the game world.
 
-For questions about or issues with RROx, please use [the Discord server](https://discord.gg/vPxGPCDFBp).
+## Refresh intervals
 
-# Antivirus warning
+It is possible to customize the intervals at which the world is loaded. A faster refresh time means the data will update faster, but this will be less performant.
 
-RROx needs to inject code into the game to function. However, this is not something regular programs do, and as such, it might get detected by your antivirus.
+It is possible to set a custom refresh interval for the spline data, as this is a big factor for the performance of the world loader.
 
-If necessary, you can add an exception to your antivirus for the following folder: `%localappdata%\RailroadsOnlineExtended`
+## Features
 
-All of the code is open-source, such that it can be verified by others to make sure it does not contain any malicious code. The executable that will most likely be detected by the antivirus is the injector. This injector is built using Cheat Engine, which is also open-source and can be found here: https://github.com/cheat-engine/cheat-engine
+The world loader provides a number of features that can be turned on or off depending on your preference:
 
-# How to use
-
-Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows the basic usage of RROx. In addition, the Info tab gives more a more detailed explanation of how to use it.
-
-# Running RROx locally
-
-If you want to build a version yourself, you can follow the below instructions to get each part to work.
-
-## Run Electron App
-
-From within the root folder, run `yarn install` to install all dependencies.
-Make sure you have NodeJS (tested with v16.13) and yarn installed.
-(Yarn is required because the repository uses yarn workspaces)
-
-Then to start the electron app run `yarn start` from the `packages/electron` directory.
+- **Control Engines**: Enable/disable the ability to remotely control the engines.
+- **Control Switches**: Enable/disable the ability to remotely control switches.
+- **Teleport**: Enable/disable the ability for a player teleport anywhere on the map.
+- **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.

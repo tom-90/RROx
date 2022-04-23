@@ -1,7 +1,7 @@
 {
     "name": "@rrox/world",
     "version": "1.6.2",
-    "description": "RailroadsOnline Extended World Loader",
+    "description": "World Loader Plugin",
     "author": "_tom()",
     "rrox": {
         "controller": "dist/controller/controller.js",

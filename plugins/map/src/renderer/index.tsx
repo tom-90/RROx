@@ -1,4 +1,4 @@
-import { ContextRegistration, IPluginRenderer, MenuButtonRegistration, OverlayRegistration, Renderer, RouterRegistration, SettingsRegistration } from "@rrox/api";
+import { ContextRegistration, IPluginRenderer, MenuButtonRegistration, OverlayRegistration, Renderer, RendererMode, RouterRegistration, SettingsRegistration } from "@rrox/api";
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import React from "react";
 import { GlobalOutlined } from "@ant-design/icons";
@@ -25,10 +25,11 @@ export default class MapRenderer extends Renderer {
             element : <ColorSettings />
         } );
 
-        renderer.register( SettingsRegistration, {
-            category: [ 'Map', 'Minimap' ],
-            element : <MinimapSettings />
-        } );
+        if( renderer.rendererMode !== RendererMode.WEB )
+            renderer.register( SettingsRegistration, {
+                category: [ 'Map', 'Minimap' ],
+                element : <MinimapSettings />
+            } );
 
         renderer.register( ContextRegistration, <DraggableModalProvider children={null} /> );
 

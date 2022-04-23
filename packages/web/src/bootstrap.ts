@@ -13,10 +13,12 @@ export async function init() {
         const { loadScript, PluginManager } = ( await import( '@rrox/renderer/bootstrap' ) );
         const { SocketCommunicator } = ( await import( './communicator' ) );
         const { WebLogger } = ( await import( './logger' ) );
-        const { Logger, RendererMode } = ( await import( '@rrox/api' ) );
+        const { Logger, RendererMode, ShareMode } = ( await import( '@rrox/api' ) );
 
         new Logger( new WebLogger() );
         const manager = new PluginManager( new SocketCommunicator(), RendererMode.WEB );
+
+        manager.setShareMode( ShareMode.CLIENT );
 
         await loadScript( RENDERER_PATH );
 

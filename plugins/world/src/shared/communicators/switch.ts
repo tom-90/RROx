@@ -1,5 +1,5 @@
-import { Communicator } from "@rrox/api";
+import { SharedCommunicator } from "@rrox/api";
 
-export const ChangeSwitchCommunicator = Communicator<{
+export const ChangeSwitchCommunicator = SharedCommunicator<{
     rpc: ( index: number ) => void,
 }>( PluginInfo, 'ChangeSwitch' );

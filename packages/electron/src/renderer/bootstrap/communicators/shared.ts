@@ -1,5 +1,5 @@
-import { RendererCommunicator, CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType, ValueConsumer } from "@rrox/api";
-import { ShareMessagesCommunicator, ShareMode, ShareModeCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareAccessCommunicator } from "../../../shared/communicators";
+import { RendererCommunicator, CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType, ValueConsumer, ShareMode } from "@rrox/api";
+import { ShareMessagesCommunicator, ShareModeCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareAccessCommunicator, KeybindsCommunicator, OverlayModeCommunicator } from "../../../shared/communicators";
 import { IPCCommunicator } from "./communicator";
 
 interface IPC {
@@ -22,6 +22,8 @@ export class SharedCommunicator extends IPCCommunicator implements RendererCommu
         this.communicatorToChannel( ShareConnectHostCommunicator ),
         this.communicatorToChannel( ShareKeysCommunicator ),
         this.communicatorToChannel( ShareAccessCommunicator ),
+        this.communicatorToChannel( KeybindsCommunicator ),
+        this.communicatorToChannel( OverlayModeCommunicator ),
     ];
 
     private shareMode = new ValueConsumer( this, ShareModeCommunicator, ShareMode.NONE );

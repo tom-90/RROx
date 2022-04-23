@@ -1,6 +1,6 @@
-import { Communicator } from "@rrox/api";
+import { SharedCommunicator } from "@rrox/api";
 
-export const StructListCommunicator = Communicator<{
+export const StructListCommunicator = SharedCommunicator<{
     /**
      * Function defining the way the remote procedure should be called.
      */
