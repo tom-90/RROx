@@ -1,0 +1,13 @@
+.env
+.parcel-cache/
+.vscode/
+*.log
+*.stackdump
+coverage/
+dist/
+htpasswd
+node_modules/
+package/
+plugins/
+storage/
+verdaccio.yaml

@@ -1,17 +1,24 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "allowJs": true,
-    "target": "ES6",
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "outDir": "dist",
-    "moduleResolution": "node",
-    "resolveJsonModule": true
-  },
-  "include": ["src/**/*"]
+    "compilerOptions": {
+        "jsx": "react",
+        "allowJs": true,
+        "target": "ES6",
+        "module": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "outDir": "dist",
+        "moduleResolution": "node",
+    },
+    "include": [
+        "src/**/*"
+    ]
 }

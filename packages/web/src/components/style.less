@@ -1,45 +1,14 @@
-@font-face {
-	font-family: "graduate";
-
-	src: url("@rrox/assets/fonts/Graduate-Regular.woff2");
-}
-
-.appTitle, .appTitleShort {
-	font-family: "graduate", "serif";
-	font-size: 20px!important;
-
-	margin: 0!important;
-}
-
-.appTitle {
-	display: inline-block;
-}
-
-.appTitleShort {
-	display: none;
-}
-
-@media only screen and (max-width: 800px) {
-	.appTitle {
-		display: none;
+.key-enter-dialog {
+	table {
+		width: 100%;
+		td {
+			text-align: center;
+		}
+		.ant-avatar {
+			cursor: pointer
+		}
+		tr:nth-child(2) td {
+			padding-top: 10px;
+		}
 	}
-
-	.appTitleShort {
-		display: inline-block;
-	}
-}
-
-@media only screen and (max-width: 600px) {
-	.appTitle {
-		display: none;
-	}
-
-	.appTitleShort {
-		display: none;
-	}
-}
-
-.disconnectButton, .disconnectButton:focus:not(:hover) {
-	color: red!important;
-	border-color: red!important;
 }

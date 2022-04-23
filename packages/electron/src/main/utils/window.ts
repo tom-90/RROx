@@ -92,3 +92,8 @@ export function focusOverlay() {
     user32.SetForegroundWindow( window );
     user32.SetFocus( window );
 }
+
+export function isGameFocussed() {
+    const activeWindow = getActiveWindow();
+    return activeWindow && ( activeWindow.title === 'arr  ' || activeWindow.title === 'RROxOverlay' );
+}

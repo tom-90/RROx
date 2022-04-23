@@ -1,0 +1,55 @@
+{
+    "name": "@rrox/map",
+    "version": "1.6.2",
+    "description": "Map Plugin",
+    "author": "_tom()",
+    "rrox": {
+        "controller": "dist/controller/controller.js",
+        "renderer": "dist/renderer/renderer.js",
+        "pluginDependencies": [
+            "@rrox/world"
+        ]
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "registry": "http://localhost:4873/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tom-90/RROx.git"
+    },
+    "devDependencies": {
+        "@monaco-editor/react": "^4.3.1",
+        "@rrox/api": "^1.6.2",
+        "@rrox/assets": "1.6.2",
+        "@types/leaflet": "^1.7.9",
+        "@types/leaflet-curve": "^0.1.2",
+        "@types/leaflet-draw": "^1.0.5",
+        "@types/leaflet-imageoverlay-rotated": "^0.1.4",
+        "@types/react": "^18.0.5",
+        "@types/react-inspector": "^4.0.2",
+        "console-feed": "^3.3.0",
+        "monaco-editor": "^0.33.0",
+        "react": "^17.0.2",
+        "react-inspector": "^5.1.1",
+        "typescript": "^4.4.4",
+        "webpack": "^5.69.1",
+        "ant-design-draggable-modal": "^1.0.0",
+        "leaflet": "^1.7.1",
+        "leaflet-curve": "^1.0.0",
+        "leaflet-draw": "^1.0.4",
+        "leaflet-imageoverlay-rotated": "^0.2.1",
+        "leaflet-snap": "^0.0.4",
+        "react-leaflet": "^3.2.5",
+        "webpack-cli": "^4.9.2"
+    },
+    "scripts": {
+        "prepack": "webpack -c ./configs/webpack.config.js --mode=production",
+        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
+    },
+    "dependencies": {
+        "@rrox/world": "1.6.2"
+    }
+}

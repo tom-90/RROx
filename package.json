@@ -4,7 +4,8 @@
     "description": "RROX Workspace",
     "private": true,
     "workspaces": [
-        "packages/*"
+        "packages/*",
+        "plugins/*"
     ],
     "iohook": {
       "targets": [
@@ -12,8 +13,9 @@
       ]
     },
     "scripts": {
-        "postinstall": "patch-package && yarn run postinstall:iohook",
-        "postinstall:iohook": "node packages/electron/tools/iohook/postinstall.js"
+        "postinstall": "patch-package && yarn run postinstall:iohook && yarn run postinstall:dll-inject",
+        "postinstall:iohook": "node packages/electron/tools/iohook/postinstall.js",
+        "postinstall:dll-inject": "cd node_modules/dll-inject && yarn compile --target=15.3.0 --arch=x64 --dist-url=https://electronjs.org/headers"
     },
      "devDependencies": {
         "patch-package": "^6.4.7",

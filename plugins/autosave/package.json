@@ -1,0 +1,32 @@
+{
+    "name": "@rrox/autosave",
+    "version": "1.6.2",
+    "description": "Autosave Plugin",
+    "author": "_tom()",
+    "rrox": {
+        "controller": "dist/controller/controller.js",
+        "renderer": "dist/renderer/renderer.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tom-90/RROx.git"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "registry": "http://localhost:4873/"
+    },
+    "devDependencies": {
+        "@rrox/api": "^1.6.2",
+        "react": "^17.0.2",
+        "typescript": "^4.4.4",
+        "webpack": "^5.69.1",
+        "webpack-cli": "^4.9.2"
+    },
+    "scripts": {
+        "prepack": "webpack -c ./configs/webpack.config.js --mode=production",
+        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
+    },
+    "dependencies": {}
+}

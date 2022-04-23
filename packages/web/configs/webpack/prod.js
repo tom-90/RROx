@@ -6,9 +6,9 @@ const commonConfig = require( "./common" );
 
 module.exports = merge( commonConfig, {
     mode: "production",
-    entry: "./src/index.tsx",
+    entry: "./src/bootstrap.ts",
     output: {
-        filename: "js/bundle.[contenthash].min.js",
+        filename: "js/[name].[contenthash].min.js",
         path: resolve( __dirname, "../../dist" ),
         publicPath: "/",
     },

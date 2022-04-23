@@ -29,8 +29,8 @@ app.use( logger );
 instrument( io, { 
     auth: {
         type    : 'basic',
-        username: process.env.SOCKETIO_ADMIN_USERNAME!,
-        password: process.env.SOCKETIO_ADMIN_PASSWORD!,
+        username: process.env.SOCKETIO_ADMIN_USERNAME || 'admin',
+        password: process.env.SOCKETIO_ADMIN_PASSWORD || '$2a$12$qP4IjY2iFzSsC5sMfIcVduc8rhlwZxzw8.xm9/kGlEq4Z1M50E39C',
     },
 } );
 
@@ -42,7 +42,6 @@ app.get( "/admin", ( req, res ) => {
         if ( err ) res.sendStatus( 500 );
     } );
 } );
-
 
 app.use( "/api", apiRouter );
 
@@ -56,7 +55,7 @@ const rooms = new RoomManager( io );
 
 io.on( 'connection', ( socket ) => {
 
-    const onJoin = ( key: string, ack?: ( success: boolean ) => void ) => {
+    const onJoin = ( key: string, ack?: ( type: 'public' | 'private' | false ) => void ) => {
         if( !key )
             return ack && ack( false );
 
@@ -68,10 +67,10 @@ io.on( 'connection', ( socket ) => {
         removeListeners();
 
         if ( ack )
-            ack( true );
+            ack( res );
     };
 
-    const onCreate = ( ack?: ( key: string ) => void ) => {
+    const onCreate = ( ack?: ( keys: { public: string, private: string } ) => void ) => {
         if( !ack )
             return;
 
@@ -79,7 +78,10 @@ io.on( 'connection', ( socket ) => {
 
         removeListeners();
 
-        ack( room.key );
+        ack( {
+            public : room.getPublicKey(),
+            private: room.getPrivateKey(),
+        } );
     };
 
     const removeListeners = () => {

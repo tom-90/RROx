@@ -1,7 +1,10 @@
 // shared config (dev and prod)
 const { resolve } = require( "path" );
-const HtmlWebpackPlugin = require( "html-webpack-plugin" );
+const webpack = require( "webpack" );
+const { ModuleFederationPlugin } = require( 'webpack' ).container;
+const HtmlRendererPlugin = require( "./html" );
 const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
+const package = require("../../package.json");
 
 module.exports = {
     resolve: {
@@ -70,10 +73,32 @@ module.exports = {
         ],
     },
     plugins: [
+        new webpack.DefinePlugin( {
+            PluginInfo: JSON.stringify({
+                name: "@rrox/electron",
+                version: package.version,
+            })
+        } ),
         new ForkTsCheckerWebpackPlugin(),
-        new HtmlWebpackPlugin( {
+        new HtmlRendererPlugin( {
             template: "src/index.html.ejs",
             favicon: require.resolve( "@rrox/assets/images/appIcon.ico" ),
+        } ),
+        new ModuleFederationPlugin( {
+            name   : 'renderer',
+            library: { type: 'assign', name: `__webpack_remotes__["@rrox/electron"]` },
+            exposes: {
+                '.': './src/index.tsx'
+            },
+            shared: [
+                {
+                    'react'           : { singleton: true },
+                    'react-dom'       : { singleton: true },
+                    'react-router'    : { singleton: true },
+                    'react-router-dom': { singleton: true },
+                    '@rrox/base-ui'   : { singleton: true },
+                }
+            ]
         } )
     ],
 };
