@@ -14,10 +14,8 @@
     "fix": "yarn format && yarn typecheck",
     "format": "prettier --write \"**/*.{ts,js,css,scss,html,json}\"",
     "format:check": "prettier --check \"**/*.{ts,js,css,scss,html,json}\"",
-    "prepack": "yarn clean && yarn build",
     "start": "verdaccio -c verdaccio.yaml",
-    "test": "vitest --watch false",
-    "update": "yarn prepack && bash -c \"mkdir -p plugins/verdaccio-rrox-registry-auth && cp -R dist plugins/verdaccio-rrox-registry-auth && cp package.json plugins/verdaccio-rrox-registry-auth\"",
+    "update": "yarn clean && yarn build && bash -c \"mkdir -p plugins/verdaccio-rrox-registry-auth && cp -R dist plugins/verdaccio-rrox-registry-auth && cp package.json plugins/verdaccio-rrox-registry-auth\"",
     "watch": "nodemon --watch src --ext ts,css --exec \"yarn update\""
   },
   "dependencies": {

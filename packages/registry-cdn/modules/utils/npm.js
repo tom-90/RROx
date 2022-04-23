@@ -11,7 +11,7 @@ import getContentType from './getContentType.js';
 import bufferStream from './bufferStream.js';
 
 const npmRegistryURL =
-  process.env.NPM_REGISTRY_URL || 'https://registry.rrox.tom90.nl';
+  process.env.NPM_REGISTRY_URL || 'https://rrox-registry.tom90.nl';
 const cachePath =
   process.env.NPM_CACHE_DIR ? path.resolve( process.env.NPM_CACHE_DIR ) : path.resolve( __dirname, './cache' );
 

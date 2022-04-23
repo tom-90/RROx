@@ -112,6 +112,6 @@ export class PluginRenderer implements IPluginRenderer {
         if( mode === PluginManagerMode.Local )
             return path.join( this.plugin.rootDir, this.plugin.rendererEntry! );
         else
-            return new URL( path.resolve( `/${this.plugin.name}@${this.plugin.version}`, this.plugin.rendererEntry! ), 'http://localhost:8081' ).toString();
+            return new URL( path.resolve( `/${this.plugin.name}@${this.plugin.version}`, this.plugin.rendererEntry! ), 'https://rrox-cdn.tom90.nl' ).toString();
     }
 }

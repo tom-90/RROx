@@ -14,7 +14,7 @@
         "dist"
     ],
     "publishConfig": {
-        "registry": "http://localhost:4873/"
+        "registry": "https://rrox-registry.tom90.nl"
     },
     "repository": {
         "type": "git",

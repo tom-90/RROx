@@ -84,7 +84,7 @@ export default function App() {
 
             <p>
               CDN for the{' '}
-              <Link href="https://registry.rrox.tom90.nl/">RROx plugin registry</Link>, based on <Link href="https://unpkg.com/">unpkg</Link>.
+              <Link href="https://rrox-registry.tom90.nl/">RROx plugin registry</Link>, based on <Link href="https://unpkg.com/">unpkg</Link>.
             </p>
           </header>
         </div>

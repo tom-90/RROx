@@ -19,7 +19,7 @@ export class PluginInstaller {
     }
 
     public getRegistryURL() {
-        return 'http://localhost:4873';
+        return 'https://rrox-registry.tom90.nl';
     }
 
     public async addDevPlugin( pluginDir: string ) {

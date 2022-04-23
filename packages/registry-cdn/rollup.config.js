@@ -3,7 +3,6 @@ const execSync = require('child_process').execSync;
 
 const babel = require('rollup-plugin-babel');
 const commonjs = require('rollup-plugin-commonjs');
-const compiler = require('@ampproject/rollup-plugin-closure-compiler');
 const json = require('rollup-plugin-json');
 const replace = require('rollup-plugin-replace');
 const resolve = require('rollup-plugin-node-resolve');
@@ -60,8 +59,7 @@ const client = ['browse', 'main'].map(entryName => {
       url({
         limit: 5 * 1024,
         publicPath: '/_client/'
-      }),
-      compiler()
+      })
     ]
   };
 });
