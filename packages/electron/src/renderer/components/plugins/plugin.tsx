@@ -187,6 +187,6 @@ export function Plugin( { name, installed }: { name: string, installed?: IPlugin
                 <Space style={{ marginRight: 5 }} key='repo'><GithubOutlined /><a href={data.latest.repository.url}>Source Code</a></Space>
             </>}
         </PageHeader>
-        <div style={{ padding: '0 24px' }} dangerouslySetInnerHTML={{ __html: readme }}/>
+        <div className='markdown-body' style={{ padding: '0 24px' }} dangerouslySetInnerHTML={{ __html: readme }}/>
     </>;
 }

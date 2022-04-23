@@ -8,6 +8,7 @@ import packageInfo from '../../package.json';
 import { OverlaySettings, Router as MainRouter } from './components';
 import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { ShareModeCommunicator } from '../shared';
+import './app.less';
 
 export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).PluginManager ) => {
     const metadata = {
