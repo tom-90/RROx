@@ -4,8 +4,11 @@ import { ControllableModal, ControllableModalRef } from './components';
 import { MapContext } from './context';
 import { MapMode } from './types';
 import { MinimapCorner } from '../../shared';
+import { Theme, useTheme } from '@rrox/api';
 
 export function Modal( { children }: { children?: React.ReactNode }): JSX.Element {
+    const theme = useTheme();
+
     const { mode, preferences } = useContext( MapContext )!;
     const ref = useRef<ControllableModalRef>();
 
@@ -88,7 +91,7 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
         >
             <ExpandAltOutlined 
                 style={{
-                    backgroundColor: 'white',
+                    backgroundColor: theme === Theme.DARK ? '#2e2e2e' : 'white',
                     padding: 10,
                     fontSize: 32,
                     borderRadius: 5,

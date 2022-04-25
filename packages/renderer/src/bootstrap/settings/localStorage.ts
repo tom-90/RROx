@@ -37,7 +37,6 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
             ...this.getLocalStorage(),
         } as T;
 
-        this.validate( data );
         this.set( data );
         this.migrate();
 
@@ -161,10 +160,14 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
                 [ keyOrValues ]: value
             } as Partial<T> );
 
-        this.settings = {
+        const settings = {
             ...this.settings,
             ...keyOrValues as Partial<T>,
         };
+        
+        this.validate( settings );
+
+        this.settings = settings;
 
         for( let key in this.settings )
             if( this.settings[ key ] === undefined && key in this.defaultValues )

@@ -22,8 +22,8 @@ function Step( { step, currentStatus, icon, last, ...restProps }: {
 }
 
 export function HomePage() {
-    const attach = useRPC( AttachCommunicator );
-    const detach = useRPC( DetachCommunicator );
+    const attachRpc = useRPC( AttachCommunicator );
+    const detachRpc = useRPC( DetachCommunicator );
     const status = useValue( AttachedCommunicator );
     const attachStatus = useValue( AttachedCommunicator );
     const shareMode = useValue( ShareModeCommunicator );
@@ -33,6 +33,13 @@ export function HomePage() {
 
     const [ keyInput, setKeyInput ] = useState( '' );
     const [ loadingShared, setLoadingShared ] = useState( false );
+
+    const attach = useCallback( () => {
+        attachRpc().then( ( res ) => res ? message.error( res ) : null );
+    }, [ attachRpc ] );
+    const detach = useCallback( () => {
+        detachRpc().then( ( res ) => res ? message.error( res ) : null );
+    }, [ detachRpc ] );
 
     useEffect( () => {
         if( loadingShared )
@@ -61,7 +68,7 @@ export function HomePage() {
         <PageContent style={{ maxWidth: 900 }}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                 <img width={100} src={AppIcon} />
-                <Typography.Title style={{ fontWeight: 'bold', color: '#303030', textAlign: 'center' }}>RailroadsOnline Extended</Typography.Title>
+                <Typography.Title style={{ fontWeight: 'bold', textAlign: 'center' }}>RailroadsOnline Extended</Typography.Title>
             </div>
     	    <p>
                 RailroadsOnline Extended provides an in-game minimap, with the ability to remotely control switches and locomotives.

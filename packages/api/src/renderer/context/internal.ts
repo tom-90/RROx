@@ -5,6 +5,7 @@ import { AttachedContext } from "./attached";
 import { SettingsContext } from "./settings";
 import { CommunicatorContext } from "./communicator";
 import { KeybindsContext } from "./keybinds";
+import { ThemeContext } from "./theme";
 
 declare const _RROX_Context: RROXContexts;
 
@@ -15,6 +16,7 @@ export interface RROXContexts {
     mode: Context<ModeContext>;
     registration: Context<RegistrationContext>;
     settings: Context<SettingsContext>;
+    theme: Context<ThemeContext>;
 }
 
 export function getContext<K extends keyof typeof _RROX_Context>( key: K ): typeof _RROX_Context[ K ] {

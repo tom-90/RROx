@@ -1,5 +1,5 @@
-import { ContextRegistration, MenuButtonRegistration, RendererMode, useCommunicatorAvailable, OverlayMode, useSettings } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings } from '@rrox/renderer';
+import { ContextRegistration, MenuButtonRegistration, RendererMode, useCommunicatorAvailable, OverlayMode, useSettings, SettingsRegistration } from '@rrox/api';
+import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings, ThemeProvider, RendererSettings } from '@rrox/renderer';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Spin, message, Modal, Input } from 'antd';
@@ -32,10 +32,16 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     manager.registrations.register( ContextRegistration, metadata, <AttachedContextProvider /> );
     manager.registrations.register( ContextRegistration, metadata, <ModeContext.Provider value={{ overlay: OverlayMode.HIDDEN, renderer: RendererMode.WEB }} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
+    manager.registrations.register( ContextRegistration, metadata, <ThemeProvider /> );
 
     const communicator = manager.communicator as import( './communicator' ).SocketCommunicator;
 
     manager.registrations.register( ContextRegistration, metadata, <SocketCommunicatorContext.Provider value={communicator} />)
+
+    manager.registrations.register( SettingsRegistration, metadata, {
+        category: [ 'General' ],
+        element : <RendererSettings />
+    } );
 
     const OnKeyEnter = function() {
         const { key } = useParams();

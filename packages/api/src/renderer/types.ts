@@ -15,3 +15,8 @@ export enum ShareMode {
     HOST  ,
     CLIENT,
 }
+
+export enum Theme {
+    LIGHT = 'light',
+    DARK = 'dark'
+}

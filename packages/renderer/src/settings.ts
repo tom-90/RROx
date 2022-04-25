@@ -1,14 +1,21 @@
-import { RendererSettings } from "@rrox/api";
+import { RendererSettings, SettingsSchema, Theme } from "@rrox/api";
 
-const schema = {
-    'player-name': {
-        type: 'string' as const,
-    },
-} as const;
 
 export interface IBaseRendererSettings {
     'player-name'?: string;
+    'theme': Theme
 }
+
+const schema: SettingsSchema<IBaseRendererSettings> = {
+    'player-name': {
+        type: ['string', 'null'],
+    },
+    'theme': {
+        type   : 'string',
+        enum   : Object.values( Theme ),
+        default: 'light',
+    }
+};
 
 export const BaseRendererSettings = RendererSettings<IBaseRendererSettings>( PluginInfo, {
     schema

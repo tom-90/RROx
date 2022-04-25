@@ -104,6 +104,8 @@ export function useRPC<C extends CommunicatorType<any, ( ...p: any[] ) => any>>(
     const cancel = useRef( false );
 
     useEffect( () => {
+        cancel.current = false;
+
         return () => {
             cancel.current = true;
         }
@@ -127,7 +129,7 @@ export function useRPC<C extends CommunicatorType<any, ( ...p: any[] ) => any>>(
                         reject( e );
                 } );
         } );
-    }, [ context, communicator ] );
+    }, [ context, communicator, cancel ] );
 }
 
 export function useCommunicatorAvailable(): boolean {

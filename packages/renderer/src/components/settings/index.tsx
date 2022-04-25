@@ -30,3 +30,5 @@ export function SettingsPage() {
         </PageContent>
     </PageLayout>;
 }
+
+export * from './rendererSettings';

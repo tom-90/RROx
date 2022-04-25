@@ -81,7 +81,7 @@ export function HomePage() {
         <PageContent style={{ maxWidth: 800 }}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                 <img width={100} src={AppIcon} />
-                <Typography.Title style={{ fontWeight: 'bold', color: '#303030', textAlign: 'center' }}>RailroadsOnline Extended</Typography.Title>
+                <Typography.Title style={{ fontWeight: 'bold', textAlign: 'center' }}>RailroadsOnline Extended</Typography.Title>
             </div>
     	    <p>
                 RailroadsOnline Extended provides an in-game minimap, with the ability to remotely control switches and locomotives.

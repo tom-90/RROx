@@ -1,8 +1,11 @@
 import { ValueProvider } from "@rrox/api";
+import path from 'path';
+import fs from 'fs';
 import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator } from "../shared/communicators";
 import { RROxApp } from "./app";
 import * as injector from 'dll-inject';
 import Log from 'electron-log';
+import DLL from '@rrox/dll/x64/Release/RROxDLL.dll';
 
 export class Attacher {
     private valueProvider: ValueProvider<AttachStatus>;
@@ -20,15 +23,23 @@ export class Attacher {
         this.app.communicator.handle( DetachCommunicator, () => this.detach() );
     }
 
-    public attach() {
+    public async attach(): Promise<string | void> {
         if( this.valueProvider.getValue() !== AttachStatus.DETACHED )
             return;
+
+        const dllPath = path.resolve( __dirname, DLL );
+
+        try {
+            await fs.promises.access( dllPath, fs.constants.F_OK )
+        } catch( e ) {
+            return `Could not access the DLL file. It might have been removed or blocked by your antivirus.`;
+        }
 
         if( injector.isProcessRunning( 'arr-Win64-Shipping.exe' ) ) {
             this.valueProvider.provide( AttachStatus.INJECTING );
             
             this.app.pipeServer.start();
-            const error = injector.inject( 'arr-Win64-Shipping.exe', require.resolve( '@rrox/dll/x64/Debug/RROxDLL.dll' ) );
+            const error = injector.inject( 'arr-Win64-Shipping.exe', dllPath );
 
             if( !error ) {
                 this.valueProvider.provide( AttachStatus.INITIALIZING );
@@ -36,10 +47,12 @@ export class Attacher {
             } else {
                 this.valueProvider.provide( AttachStatus.DETACHED );
                 Log.error( 'DLL injection failed. Error code:', error );
+                return `DLL injection failed with error code: ${error}`;
             }
 
         } else {
             Log.error( 'DLL injection failed. Game not running.' );
+            return 'Failed to inject the DLL. The game is not running.';
         }
     }
 

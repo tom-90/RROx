@@ -42,8 +42,25 @@ module.exports = {
                 use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
             },
             {
+                // Lazy Less loader
+                test: /\.lazy.less$/,
+                use: [
+                    { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
+                    { loader: 'css-loader' },
+                    { 
+                        loader: 'less-loader',
+                        options: { 
+                            lessOptions: {
+                                javascriptEnabled: true
+                            }
+                        }
+                    },
+                ],
+            },
+            {
                 // Less loader
                 test: /\.less$/,
+                exclude: /\.lazy.less$/,
                 use: [
                     { loader: 'style-loader' },
                     { loader: 'css-loader' },

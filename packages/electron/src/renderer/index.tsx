@@ -1,5 +1,5 @@
 import { ContextRegistration, MenuButtonRegistration, RendererMode, SettingsRegistration } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext } from '@rrox/renderer';
+import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext, ThemeProvider, RendererSettings } from '@rrox/renderer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { KeybindsController, ModeContext, Router, UpdateNotify } from './base';
@@ -8,7 +8,6 @@ import packageInfo from '../../package.json';
 import { OverlaySettings, Router as MainRouter } from './components';
 import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { ShareModeCommunicator } from '../shared';
-import './app.less';
 
 export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).PluginManager ) => {
     const metadata = {
@@ -38,6 +37,11 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     } ).setPriority( 500 );
 
     manager.registrations.register( SettingsRegistration, metadata, {
+        category: [ 'General' ],
+        element : <RendererSettings />
+    } );
+
+    manager.registrations.register( SettingsRegistration, metadata, {
         category: [ 'Overlay' ],
         element : <OverlaySettings />
     } );
@@ -46,6 +50,7 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     manager.registrations.register( ContextRegistration, metadata, <AttachedContextProvider /> );
     manager.registrations.register( ContextRegistration, metadata, <ModeContext rendererMode={manager.rendererMode} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
+    manager.registrations.register( ContextRegistration, metadata, <ThemeProvider /> );
     manager.registrations.register( ContextRegistration, metadata, <KeybindsContext.Provider value={new KeybindsController( manager.communicator )} /> );
     manager.registrations.register( ContextRegistration, metadata, <UpdateNotify /> );
 

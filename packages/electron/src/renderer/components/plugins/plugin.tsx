@@ -1,10 +1,12 @@
 import { FileTextOutlined, GithubOutlined, UserOutlined } from "@ant-design/icons";
-import { useRPC } from "@rrox/api";
+import { Theme, useLazyStyles, useRPC } from "@rrox/api";
 import { IPlugin } from "@rrox/renderer/bootstrap";
 import { Button, message, Modal, PageHeader, Space, Spin } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { InstallPluginCommunicator, Log, RestartCommunicator, UninstallPluginCommunicator, UpdatePluginCommunicator } from "../../../shared";
 import { getPackage, getReadme } from "./verdaccio";
+import PluginsDark from './plugins.dark.lazy.less';
+import PluginsLight from './plugins.light.lazy.less';
 
 function openLoadingModal( text: string ) {
     return Modal.info( {
@@ -19,6 +21,11 @@ function openLoadingModal( text: string ) {
 }
 
 export function Plugin( { name, installed }: { name: string, installed?: IPlugin } ) {
+    useLazyStyles( {
+        [ Theme.DARK  ]: PluginsDark,
+        [ Theme.LIGHT ]: PluginsLight,
+    } );
+
     const [ readme, setReadme ] = useState( '' );
     const [ data, setData ] = useState<any>( null );
 

@@ -11,9 +11,9 @@ export enum AttachStatus {
 export const AttachedCommunicator = SharedCommunicator<ValueCommunicator<AttachStatus>>( PluginInfo, 'attach-status' );
 
 export const AttachCommunicator = Communicator<{
-    rpc: () => Promise<void>,
+    rpc: () => Promise<string | void>,
 }>( PluginInfo, 'attach' );
 
 export const DetachCommunicator = Communicator<{
-    rpc: () => Promise<void>,
+    rpc: () => Promise<string | void>,
 }>( PluginInfo, 'detach' );

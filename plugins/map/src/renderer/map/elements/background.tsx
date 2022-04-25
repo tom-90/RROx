@@ -36,6 +36,7 @@ export function Background() {
             minZoom={undefined}
             opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
             bounds={config.map.bounds}
+            className={preferences[ 'map.background' ] === 7 ? 'background-dark' : undefined}
         />;
 
     return <ImageOverlay
