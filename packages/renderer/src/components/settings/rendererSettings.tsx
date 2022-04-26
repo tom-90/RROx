@@ -17,7 +17,7 @@ export function RendererSettings() {
         layout="vertical"
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item

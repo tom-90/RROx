@@ -1,38 +1,46 @@
-import { Settings } from "@rrox/api";
+import { Settings, SettingsSchema } from "@rrox/api";
 
 export interface IWorldSettings {
-    'features.teleport': boolean;
-    'features.controlEngines': boolean;
-    'features.controlSwitches': boolean;
-    'features.build': boolean;
-    'features.cheats': boolean;
+    features: { 
+        teleport: boolean;
+        controlEngines: boolean;
+        controlSwitches: boolean;
+        build: boolean;
+        cheats: boolean;
+    }
 }
 
-const schema = {
-    'features.teleport': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.controlEngines': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.controlSwitches': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.build': {
-        type: 'boolean' as const,
-        default: true
-    },
-
-    'features.cheats': {
-        type: 'boolean' as const,
-        default: true
-    },
+const schema: SettingsSchema<IWorldSettings> = {
+    features: {
+        type: 'object',
+        properties: {
+            teleport: {
+                type: 'boolean',
+                default: true
+            },
+        
+            controlEngines: {
+                type: 'boolean',
+                default: true
+            },
+        
+            controlSwitches: {
+                type: 'boolean',
+                default: true
+            },
+        
+            build: {
+                type: 'boolean',
+                default: true
+            },
+        
+            cheats: {
+                type: 'boolean',
+                default: true
+            },
+        },
+        default: {}
+    }
 };
 
 export const WorldSettings = Settings<IWorldSettings>( PluginInfo, {

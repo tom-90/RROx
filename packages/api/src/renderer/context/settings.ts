@@ -3,10 +3,10 @@ import { SettingsStore, SettingsType } from "../../shared";
 import { getContext } from "./internal";
 
 export interface SettingsContext {
-    get<T>( settings: SettingsType<T> ): SettingsStore<T>;
+    get<T extends object>( settings: SettingsType<T> ): SettingsStore<T>;
 }
 
-export function useSettings<T>( settings: SettingsType<T> ): [
+export function useSettings<T extends object>( settings: SettingsType<T> ): [
     settings: T,
     store: SettingsStore<T>
 ] {
@@ -16,10 +16,10 @@ export function useSettings<T>( settings: SettingsType<T> ): [
         return context.get( settings );
     }, [ settings, context ] );
 
-    const [ data, setData ] = useState( () => store.get() );
+    const [ data, setData ] = useState( () => store.getAll() );
 
     useEffect( () => {
-        const listener = () => setData( store.get() );
+        const listener = () => setData( store.getAll() );
 
         store.addListener( 'update', listener );
 

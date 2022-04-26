@@ -27,7 +27,7 @@ export const Player = React.memo( function Player( { data, index }: { data: IPla
         anchor={anchor}
         rotation={Math.round( rotation.Yaw ) - 90}
         color={'black'}
-        fillColor={preferences[ 'colors.player' ]}
+        fillColor={preferences.colors.player}
         fillOpacity={1}
         interactive
         weight={60}
@@ -51,7 +51,7 @@ export const Player = React.memo( function Player( { data, index }: { data: IPla
                     } );
                 setTooltipVisible( false );
             }}>{follow.following?.array === 'players' || follow.following?.index === index ? 'Unfollow' : 'Follow'}</Button>
-            {settings[ 'features.cheats' ] && <Button
+            {settings.features.cheats && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => {
                     setTooltipVisible( false );

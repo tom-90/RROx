@@ -24,7 +24,7 @@ export function MapOverlay() {
     const [ following, setFollowing ] = useFollowing( map, mode, mode !== MapMode.MAP );
     useLocate( map );
 
-    if( !preferences['minimap.enabled'] )
+    if( !preferences.minimap.enabled )
         return null;
 
     return <MapContext.Provider
@@ -45,7 +45,7 @@ export function MapOverlay() {
         }}
     >
         <Modal>
-            <div className={[ 'map', `map-${mode}`, `corner-${preferences[ 'minimap.corner' ]}` ].join( ' ' )}>
+            <div className={[ 'map', `map-${mode}`, `corner-${preferences.minimap.corner}` ].join( ' ' )}>
                 {data ? <Map
                     data={data}
                     setMap={setMap}

@@ -47,7 +47,7 @@ export function Splines( { data, type }: { data: ISpline[], type: SplineType } )
 
     return <Line
         positions={coordinates}
-        color={preferences[ `colors.spline.${type}` ]}
+        color={preferences.colors.spline[ type ]}
         weight={definition.width}
         lineCap={'butt'}
     />;

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { ImageOverlay } from 'react-leaflet';
 import { TileLayer } from '../leaflet';
 import { MapContext } from '../context';
@@ -21,27 +21,22 @@ context.keys().forEach(( filename )=> Background6[ filename ] = context( filenam
 export function Background() {
     const { config, preferences, mode } = useContext( MapContext )!;
 
-    if (preferences[ 'map.background' ] === 7) {
-        document.body.setAttribute('data-map-theme', 'dark');
-    }else{
-        document.body.setAttribute('data-map-theme', 'light');
-    }
-
-    if( preferences[ 'map.background' ] === 6 || preferences[ 'map.background' ] === 7 )
+    if( preferences.map.background === 6 || preferences.map.background === 7 )
         return <TileLayer
             getTileUrl={( { x, y, z } ) => Background6[ `./${z}/${x}/${y}.webp` ]}
             minNativeZoom={8}
             maxNativeZoom={12}
             maxZoom={undefined}
             minZoom={undefined}
-            opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
+            opacity={mode === MapMode.MINIMAP && preferences.minimap.transparent ? 0 : 1}
             bounds={config.map.bounds}
-            className={preferences[ 'map.background' ] === 7 ? 'background-dark' : undefined}
+            key={preferences.map.background}
+            className={preferences.map.background === 7 ? 'background-dark' : undefined}
         />;
 
     return <ImageOverlay
-        url={Backgrounds[ preferences[ 'map.background' ] ]}
+        url={Backgrounds[ preferences.map.background ]}
         bounds={config.map.bounds}
-        opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
+        opacity={mode === MapMode.MINIMAP && preferences.minimap.transparent ? 0 : 1}
     />;
 }

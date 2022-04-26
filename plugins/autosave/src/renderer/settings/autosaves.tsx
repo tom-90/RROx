@@ -22,19 +22,19 @@ export function AutosavesSettings() {
         form={form}
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item
             label="Enable"
-            name="autosave.enabled"
+            name={[ 'autosave', 'enabled' ]}
             valuePropName="checked"
         >
             <Switch />
         </Form.Item>
         <Form.Item
             label="Slots"
-            name="autosave.slots"
+            name={[ 'autosave', 'slots' ]}
         >
             <Select
                 style={{ maxWidth: 300 }}
@@ -64,7 +64,7 @@ export function AutosavesSettings() {
         />
         <Form.Item
             label="Interval"
-            name="autosave.interval"
+            name={[ 'autosave', 'interval' ]}
             normalize={( sliderVal ) => {
                 return ( AutosaveSliderSeconds as any )[ sliderVal ];
             }}
@@ -89,7 +89,7 @@ export function AutosavesSettings() {
         <Form.Item>
             <Button
                 type="default"
-                disabled={!settings[ 'autosave.enabled' ]}
+                disabled={!settings.autosave.enabled}
                 onClick={() => autosaveNow()}
             >
                 Autosave now

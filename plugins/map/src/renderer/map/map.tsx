@@ -70,7 +70,7 @@ export function Map( { data, setMap }: {
                     ]}
                     color={'black'}
                     weight={1000}
-                    opacity={mode === MapMode.MINIMAP && preferences[ 'minimap.transparent' ] ? 0 : 1}
+                    opacity={mode === MapMode.MINIMAP && preferences.minimap.transparent ? 0 : 1}
                 />
                 <Background />
             </Pane>

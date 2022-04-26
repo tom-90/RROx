@@ -21,7 +21,7 @@ export function ContextMenu() {
         }
     } );
 
-    if( !visible || !settings[ 'features.teleport' ] )
+    if( !visible || !settings.features.teleport )
         return null;
 
     return <MapTooltip

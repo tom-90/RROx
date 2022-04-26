@@ -6,5 +6,5 @@ export interface SettingsManager {
      *
      * @param settings Settings schema to initialize
      */
-    init<T>( settings: SettingsType<T> ): SettingsStore<T>;
+    init<T extends object>( settings: SettingsType<T> ): SettingsStore<T>;
 }

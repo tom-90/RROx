@@ -1,15 +1,14 @@
-import { RendererSettings, Settings } from "@rrox/api";
+import { RendererSettings, SettingsSchema } from "@rrox/api";
 import { FrameCarType, FreightFrameCarType, SplineType } from "@rrox/world/shared";
 
-export type FrameCarColors = {
-    [ K in FrameCarType as K extends FreightFrameCarType ? `colors.${K}.unloaded` : never ]: string;
-} & {
-    [ K in FrameCarType as K extends FreightFrameCarType ? `colors.${K}.loaded` : never ]: string;
-} & {
-    [ K in FrameCarType as K extends FreightFrameCarType ? never : `colors.${K}` ]: string;
-};
+export type SplineColors = { [ K in SplineType ]: string; };
 
-export type SplineColors = { [ K in SplineType as K extends number ? `colors.spline.${K}` : never ]: string; };
+export type FrameCarColors = {
+    [ K in FrameCarType ]: K extends FreightFrameCarType ? {
+        unloaded: string;
+        loaded: string
+    } : string;
+}
 
 export enum MinimapCorner {
     TOP_LEFT = 1,
@@ -18,87 +17,164 @@ export enum MinimapCorner {
     BOTTOM_RIGHT = 4,
 }
 
-export interface IMapPreferences extends FrameCarColors, SplineColors {
-    'map.background': number;
-
-    'minimap.transparent': boolean;
-    'minimap.enabled': boolean;
-    'minimap.corner': MinimapCorner;
-
-    'colors.switch.active'  : string;
-    'colors.switch.inactive': string;
-    'colors.switch.cross'   : string;
-    
-    'colors.turntable.circle': string;
-    
-    'colors.player': string;
+export interface IMapPreferences {
+    map: {
+        background: number,
+    },
+    minimap: {
+        transparent: boolean,
+        enabled: boolean,
+        corner: MinimapCorner,
+    },
+    colors: {
+        switch: {
+            active: string,
+            inactive: string,
+            cross: string,
+        },
+        turntable: {
+            circle: string,
+        },
+        player: string,
+        spline: SplineColors,
+    } & FrameCarColors,
 }
 
-const preferencesSchema = {
-    'map.background': {
-        type: 'number' as const,
-        default: 6,
-        maximum: 7,
-        minimum: 1,
+const preferencesSchema: SettingsSchema<IMapPreferences> = {
+    map: {
+        type: 'object',
+        properties: {
+            background: {
+                type: 'number',
+                default: 6,
+                maximum: 7,
+                minimum: 1,
+            },
+        },
+        default: {}
+    },
+    minimap: {
+        type: 'object',
+        properties: {
+            enabled: {
+                type: 'boolean',
+                default: true
+            },
+            transparent: {
+                type: 'boolean',
+                default: true
+            },
+            corner: {
+                type: 'number',
+                default: MinimapCorner.TOP_RIGHT,
+                enum: Object.values( MinimapCorner )
+            },
+        },
+        default: {}
     },
 
-    'minimap.enabled': {
-        type: 'boolean' as const,
-        default: true
-    },
-    'minimap.transparent': {
-        type: 'boolean' as const,
-        default: true
-    },
-    'minimap.corner': {
-        type: 'number' as const,
-        default: MinimapCorner.TOP_RIGHT,
-        enum: Object.values( MinimapCorner )
-    },
-    
-    [ `colors.${FrameCarType.HANDCAR}`         as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.PORTER}`          as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.PORTER2}`         as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.EUREKA}`          as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.EUREKA_TENDER}`   as const ]: { type: 'string', default: '#000000' },
-    [ `colors.${FrameCarType.CLIMAX}`          as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.HEISLER}`         as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.CLASS70}`         as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.CLASS70_TENDER}`  as const ]: { type: 'string', default: '#000000' },
-    [ `colors.${FrameCarType.COOKE260}`        as const ]: { type: 'string', default: '#800080' },
-    [ `colors.${FrameCarType.COOKE260_TENDER}` as const ]: { type: 'string', default: '#000000' },
+    colors: {
+        type: 'object',
+        properties: {
+            [ FrameCarType.HANDCAR         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.PORTER          ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.PORTER2         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.EUREKA          ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.EUREKA_TENDER   ]: { type: 'string', default: '#000000' },
+            [ FrameCarType.CLIMAX          ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.HEISLER         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.CLASS70         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.CLASS70_TENDER  ]: { type: 'string', default: '#000000' },
+            [ FrameCarType.COOKE260        ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.COOKE260_TENDER ]: { type: 'string', default: '#000000' },
+            [ FrameCarType.CABOOSE         ]: { type: 'string', default: '#ff5e5e' },
 
-    [ `colors.${FrameCarType.FLATCAR_LOGS}.unloaded`     as const ]: { type: 'string', default: '#cd5c5c' },
-    [ `colors.${FrameCarType.FLATCAR_LOGS}.loaded`       as const ]: { type: 'string', default: '#cd5c5c' },
-    [ `colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded` as const ]: { type: 'string', default: '#ffa500' },
-    [ `colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded`   as const ]: { type: 'string', default: '#ffa500' },
-    [ `colors.${FrameCarType.FLATCAR_STAKES}.unloaded`   as const ]: { type: 'string', default: '#adff2f' },
-    [ `colors.${FrameCarType.FLATCAR_STAKES}.loaded`     as const ]: { type: 'string', default: '#adff2f' },
-    [ `colors.${FrameCarType.HOPPER}.unloaded`           as const ]: { type: 'string', default: '#bc8f8f' },
-    [ `colors.${FrameCarType.HOPPER}.loaded`             as const ]: { type: 'string', default: '#bc8f8f' },
-    [ `colors.${FrameCarType.TANKER}.unloaded`           as const ]: { type: 'string', default: '#d3d3d3' },
-    [ `colors.${FrameCarType.TANKER}.loaded`             as const ]: { type: 'string', default: '#d3d3d3' },
-    [ `colors.${FrameCarType.BOXCAR}.unloaded`           as const ]: { type: 'string', default: '#808080' },
-    [ `colors.${FrameCarType.BOXCAR}.loaded`             as const ]: { type: 'string', default: '#808080' },
+            [ FrameCarType.FLATCAR_LOGS ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#cd5c5c' },
+                    loaded: { type: 'string', default: '#cd5c5c' },
+                },
+                default: {}
+            },
+            [ FrameCarType.FLATCAR_CORDWOOD ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#ffa500' },
+                    loaded: { type: 'string', default: '#ffa500' },
+                },
+                default: {}
+            },
+            [ FrameCarType.FLATCAR_STAKES ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#adff2f' },
+                    loaded: { type: 'string', default: '#adff2f' },
+                },
+                default: {}
+            },
+            [ FrameCarType.HOPPER ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#bc8f8f' },
+                    loaded: { type: 'string', default: '#bc8f8f' },
+                },
+                default: {}
+            },
+            [ FrameCarType.TANKER ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#d3d3d3' },
+                    loaded: { type: 'string', default: '#d3d3d3' },
+                },
+                default: {}
+            },
+            [ FrameCarType.BOXCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#808080' },
+                    loaded: { type: 'string', default: '#808080' },
+                },
+                default: {}
+            },
 
-    [ `colors.${FrameCarType.CABOOSE}` as const ]: { type: 'string', default: '#ff5e5e' },
-    
-    [ `colors.spline.${SplineType.TRACK}`         as const ]: { type: 'string', default: '#000000' },
-    [ `colors.spline.${SplineType.TRENDLE_TRACK}` as const ]: { type: 'string', default: '#000000' },
-    [ `colors.spline.${SplineType.VARIABLE_BANK}` as const ]: { type: 'string', default: '#bdb76b' },
-    [ `colors.spline.${SplineType.CONSTANT_BANK}` as const ]: { type: 'string', default: '#bdb76b' },
-    [ `colors.spline.${SplineType.VARIABLE_WALL}` as const ]: { type: 'string', default: '#a9a9a9' },
-    [ `colors.spline.${SplineType.CONSTANT_WALL}` as const ]: { type: 'string', default: '#a9a9a9' },
-    [ `colors.spline.${SplineType.WOODEN_BRIDGE}` as const ]: { type: 'string', default: '#ffa500' },
-    [ `colors.spline.${SplineType.IRON_BRIDGE}`   as const ]: { type: 'string', default: '#add8e6' },
+            spline: {
+                type: 'object',
+                properties: {
+                    [ SplineType.TRACK         ]: { type: 'string', default: '#000000' },
+                    [ SplineType.TRENDLE_TRACK ]: { type: 'string', default: '#000000' },
+                    [ SplineType.VARIABLE_BANK ]: { type: 'string', default: '#bdb76b' },
+                    [ SplineType.CONSTANT_BANK ]: { type: 'string', default: '#bdb76b' },
+                    [ SplineType.VARIABLE_WALL ]: { type: 'string', default: '#a9a9a9' },
+                    [ SplineType.CONSTANT_WALL ]: { type: 'string', default: '#a9a9a9' },
+                    [ SplineType.WOODEN_BRIDGE ]: { type: 'string', default: '#ffa500' },
+                    [ SplineType.IRON_BRIDGE   ]: { type: 'string', default: '#add8e6' },
+                },
+                default: {}
+            },
 
-    [ `colors.switch.active`   ]: { type: 'string', default: '#000000' },
-    [ `colors.switch.inactive` ]: { type: 'string', default: '#ff0000' },
-    [ `colors.switch.cross`    ]: { type: 'string', default: '#000000' },
-    
-    [ `colors.turntable.circle` ]: { type: 'string', default: '#ffffe0' },
-    
-    [ `colors.player` ]: { type: 'string', default: '#0000ff' },
+            switch: {
+                type: 'object',
+                properties: {
+                    active  : { type: 'string', default: '#000000' },
+                    inactive: { type: 'string', default: '#ff0000' },
+                    cross   : { type: 'string', default: '#000000' },
+                },
+                default: {}
+            },
+
+            turntable: {
+                type: 'object',
+                properties: {
+                    circle  : { type: 'string', default: '#ffffe0' },
+                },
+                default: {}
+            },
+
+            player: { type: 'string', default: '#0000ff' }
+        },
+        default: {}
+    }
 } as const;
 
 export const MapPreferences = RendererSettings<IMapPreferences>( PluginInfo, {

@@ -17,28 +17,28 @@ export function MinimapSettings() {
         layout="vertical"
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item
             label="Show Minimap"
-            name="minimap.enabled"
+            name={[ 'minimap', 'enabled' ]}
             valuePropName="checked"
         >
             <Switch />
         </Form.Item>
         <Form.Item
             label="Enable Transparent Mode"
-            name="minimap.transparent"
+            name={[ 'minimap', 'transparent' ]}
             valuePropName="checked"
         >
-            <Switch disabled={!preferences[ 'minimap.enabled' ]}/>
+            <Switch disabled={!preferences.minimap.enabled}/>
         </Form.Item>
         <Form.Item
             label="Minimap Location"
-            name="minimap.corner"
+            name={[ 'minimap', 'corner' ]}
         >
-            <Select style={{ maxWidth: 300 }} disabled={!preferences[ 'minimap.enabled' ]}>
+            <Select style={{ maxWidth: 300 }} disabled={!preferences.minimap.enabled}>
                 <Select.Option value={1}>Top Left</Select.Option>
                 <Select.Option value={2}>Top Right</Select.Option>
                 <Select.Option value={3}>Bottom Left</Select.Option>

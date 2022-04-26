@@ -59,7 +59,7 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: ISand
                 setTooltipVisible( false );
                 setInfoVisible( true );
             }}>Show Info</Button>
-            {settings[ 'features.teleport' ] && <Button
+            {settings.features.teleport && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => teleport( currentPlayerName, {
                     X: location.X,

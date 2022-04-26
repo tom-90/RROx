@@ -23,12 +23,12 @@ export function MapSettings() {
         layout="vertical"
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item
             label="Map Background"
-            name={'map.background'}
+            name={[ 'map', 'background' ]}
         >
             <Radio.Group>
                 <Radio.Button value={6} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background6Preview} /></Radio.Button>

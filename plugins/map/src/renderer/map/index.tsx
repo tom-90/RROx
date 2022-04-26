@@ -42,7 +42,7 @@ export function MapPage() {
             }}
         >
             <Modal>
-                <div className={[ 'map', `map-${mode}`, `corner-${preferences[ 'minimap.corner' ]}` ].join( ' ' )}>
+                <div className={[ 'map', `map-${mode}`, `corner-${preferences.minimap.corner}` ].join( ' ' )}>
                     {data ? <Map
                         data={data}
                         setMap={setMap}

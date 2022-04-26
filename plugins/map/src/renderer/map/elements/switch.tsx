@@ -35,7 +35,7 @@ export const Switch = React.memo( function Switch( { data, index }: { data: ISwi
                 [ utils.scalePoint( px, py ), utils.scalePoint( end1x, end1y ) ],
                 [ utils.scalePoint( end2x, end2y ), utils.scalePoint( end3x, end3y ) ],
             ]}
-            color={preferences[ 'colors.switch.cross' ]}
+            color={preferences.colors.switch.cross}
             weight={definition.width}
             lineCap={'butt'}
         />;
@@ -56,7 +56,7 @@ export const Switch = React.memo( function Switch( { data, index }: { data: ISwi
         state = !state;
 
     const clickableLine = <Line
-        color={preferences[ 'colors.switch.active' ]}
+        color={preferences.colors.switch.active}
         weight={definition.width}
         positions={[ utils.scalePoint( end1x, end1y ), utils.scalePoint( px, py ), utils.scalePoint( end2x, end2y ) ]}
         lineCap={'butt'}
@@ -64,7 +64,7 @@ export const Switch = React.memo( function Switch( { data, index }: { data: ISwi
         interactive={true}
         eventHandlers={{
             click: () => {
-                if ( !settings[ 'features.controlSwitches' ] ) {
+                if ( !settings.features.controlSwitches ) {
                     message.error( 'Flipping switches is disabled.' );
                     return;
                 }
@@ -81,13 +81,13 @@ export const Switch = React.memo( function Switch( { data, index }: { data: ISwi
         return <>
             {clickableLine}
             <Line
-                color={preferences[ 'colors.switch.inactive' ]}
+                color={preferences.colors.switch.inactive}
                 weight={definition.width}
                 positions={[ utils.scalePoint( px, py ), utils.scalePoint( end1x, end1y ) ]}
                 lineCap={'butt'}
             />
             <Line
-                color={preferences[ 'colors.switch.active' ]}
+                color={preferences.colors.switch.active}
                 weight={definition.width}
                 positions={[ utils.scalePoint( px, py ), utils.scalePoint( end2x, end2y ) ]}
                 lineCap={'butt'}
@@ -97,13 +97,13 @@ export const Switch = React.memo( function Switch( { data, index }: { data: ISwi
         return <>
             {clickableLine}
             <Line
-                color={preferences[ 'colors.switch.inactive' ]}
+                color={preferences.colors.switch.inactive}
                 weight={definition.width}
                 positions={[ utils.scalePoint( px, py ), utils.scalePoint( end2x, end2y ) ]}
                 lineCap={'butt'}
             />
             <Line
-                color={preferences[ 'colors.switch.active' ]}
+                color={preferences.colors.switch.active}
                 weight={definition.width}
                 positions={[ utils.scalePoint( px, py ), utils.scalePoint( end1x, end1y ) ]}
                 lineCap={'butt'}

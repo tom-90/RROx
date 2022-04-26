@@ -1,9 +1,10 @@
-import { ControllerCommunicator, SettingsManager as ISettingsManager, SettingsStore as ISettingsStore, SettingsType, ValueProvider } from "@rrox/api";
+import { ControllerCommunicator, SettingsKey, SettingsManager as ISettingsManager, SettingsPath, SettingsStore as ISettingsStore, SettingsType, ValueProvider } from "@rrox/api";
 import EventEmitter from "events";
 import Store from "electron-store";
 import { SetSettingsCommunicator, SettingsCommunicator } from "../../shared/communicators";
 import { IPlugin } from "./type";
 import Log from "electron-log";
+import deepmerge from "deepmerge";
 
 export class SettingsManager implements ISettingsManager {
     private settingsProvider: ValueProvider<{ [ plugin: string ]: any }>;
@@ -16,11 +17,11 @@ export class SettingsManager implements ISettingsManager {
             if( !this.stores[ plugin ] )
                 return Log.warn( `Cannot update settings for plugin '${plugin}' as no settings have been initialized (yet) in the controller.` );
 
-            this.stores[ plugin ].set( updates );
+            this.stores[ plugin ].setAll( updates );
         } );
     }
 
-    init<T>( type: SettingsType<T> ): SettingsStore<T> {
+    init<T extends object>( type: SettingsType<T> ): ISettingsStore<T> {
         const store = new SettingsStore<T>(
             type,
             () => this.update( type.module.name )
@@ -38,7 +39,7 @@ export class SettingsManager implements ISettingsManager {
 
         this.settingsProvider.provide( {
             ...this.settingsProvider.getValue()!,
-            [ plugin ]: store.get()
+            [ plugin ]: store.getAll()
         } );
     }
 
@@ -48,7 +49,7 @@ export class PluginSettingsManager implements ISettingsManager {
     
     constructor( private root: ISettingsManager, private plugin: IPlugin ) {}
 
-    init<T>( settings: SettingsType<T> ): ISettingsStore<T> {
+    init<T extends object>( settings: SettingsType<T> ): ISettingsStore<T> {
         if( settings.module.name !== this.plugin.name )
             throw new Error( 'Cannot initialize settings for a settings schema that is not owned by the plugin.' );
         return this.root.init( settings );
@@ -56,55 +57,57 @@ export class PluginSettingsManager implements ISettingsManager {
 
 }
 
-export class SettingsStore<T> extends EventEmitter implements ISettingsStore<T> {
+export class SettingsStore<T extends object> extends EventEmitter implements ISettingsStore<T> {
     private store: Store<T>;
 
     constructor( config: SettingsType<T>, private onUpdate: () => void ) {
         super();
 
         this.store = new Store<T>( {
-            accessPropertiesByDotNotation: false,
-            clearInvalidConfig           : true,
-            cwd                          : 'configs',
-            name                         : config.module.name.replace( /[/\\?%*:|"<>]/g, '_' ),
-            migrations                   : config.config.migrations,
-            schema                       : config.config.schema,
+            clearInvalidConfig: true,
+            cwd               : 'configs',
+            name              : config.module.name.replace( /[/\\?%*:|"<>]/g, '_' ),
+            migrations        : config.config.migrations,
+            schema            : config.config.schema,
         } );
 
         this.store.onDidAnyChange( () => this.emit( 'update' ) );
     }
 
-    get<K extends keyof T>( key: K ): T[ K ];
-    get<K extends keyof T>( key: K, defaultValue?: Required<T[ K ]> ): Required<T[ K ]>;
-    get(): T;
-
-    get( key?: keyof T, defaultValue?: any ): any {
-        if( key === undefined )
-            return { ...this.store.store };
+    get( pathOrKey: SettingsKey<T, string> | SettingsPath, defaultValue?: any ): any {
+        const key = Array.isArray( pathOrKey ) ? pathOrKey.join( '.' ) : pathOrKey as string;
         
-        return this.store.get( key, defaultValue );
+        return this.store.get( key as keyof T, defaultValue );
     }
 
-    set<K extends keyof T>( key: K, value: T[ K ] ): void;
-    set( values: Partial<T> ): void;
+    getAll(): T {
+       return this.store.store;
+    }
 
-    set( keyOrValues: keyof T | Partial<T>, value?: any ) {
-        if( typeof keyOrValues === 'string' || typeof keyOrValues === 'number' )
-            return this.set( {
-                [ keyOrValues ]: value
-            } as Partial<T> );
+    set( pathOrKey: SettingsKey<T, string> | SettingsPath, value: any ): void {
+        const key = Array.isArray( pathOrKey ) ? pathOrKey.join( '.' ) : pathOrKey as string;
 
-        this.store.set( keyOrValues as Partial<T> );
+        this.store.set( key, value );
 
         this.onUpdate();
     }
 
-    has( key: keyof T ): boolean {
-        return this.store.has( key );
+    setAll( data: Partial<T> ) {
+        this.store.set( deepmerge( this.getAll(), data as Partial<T> ) );
+
+        this.onUpdate();
     }
 
-    reset( ...keys: ( keyof T )[] ) {
-        this.store.reset( ...keys );
+    has( pathOrKey: SettingsKey<T, string> | SettingsPath ): boolean {
+        const key = Array.isArray( pathOrKey ) ? pathOrKey.join( '.' ) : pathOrKey as string;
+
+        return this.store.has( key as keyof T);
+    }
+
+    reset( ...pathsOrKeys: ( string | SettingsPath )[] ) {
+        const keys = pathsOrKeys.map( ( pathOrKey ) => Array.isArray( pathOrKey ) ? pathOrKey.join( '.' ) : pathOrKey as string );
+
+        this.store.reset( ...keys as ( keyof T )[] );
 
         this.onUpdate();
     }

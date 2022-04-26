@@ -1,12 +1,14 @@
 import { useSettings } from "@rrox/api";
 import React, { useEffect } from "react";
-import { Form, Switch, Select } from "antd";
+import { Form, Switch } from "antd";
 import { BaseSettings } from "../../shared";
 import { KeybindInput } from "@rrox/base-ui";
 
 export function OverlaySettings() {
     const [ settings, store ] = useSettings( BaseSettings );
     const [ form ] = Form.useForm();
+
+    store.get( 'hardware-acceleration' );
 
     useEffect( () => {
         form.setFieldsValue( settings );
@@ -18,22 +20,22 @@ export function OverlaySettings() {
         layout="vertical"
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item
             label="Enable Overlay"
-            name="overlay.enabled"
+            name={[ 'overlay', 'enabled' ]}
             valuePropName="checked"
         >
             <Switch/>
         </Form.Item>
         <Form.Item
             label="Set Overlay Keybind"
-            name="overlay.keybind"
+            name={[ 'overlay', 'keybind' ]}
         >
             <KeybindInput
-                disabled={!settings[ 'overlay.enabled' ]}
+                disabled={!settings.overlay.enabled}
             />
         </Form.Item>
         <Form.Item

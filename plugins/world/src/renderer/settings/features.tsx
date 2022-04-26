@@ -17,7 +17,7 @@ export function FeaturesSettings() {
         form={form}
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => store.set( changed )}
+        onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
         <Form.Item
@@ -25,28 +25,28 @@ export function FeaturesSettings() {
         />
         <Form.Item
             label="Control Engines"
-            name="features.controlEngines"
+            name={[ 'features', 'controlEngines' ]}
             valuePropName="checked"
         >
             <Switch />
         </Form.Item>
         <Form.Item
             label="Control Switches"
-            name="features.controlSwitches"
+            name={[ 'features', 'controlSwitches' ]}
             valuePropName="checked"
         >
             <Switch />
         </Form.Item>
         <Form.Item
             label="Teleport"
-            name="features.teleport"
+            name={[ 'features', 'teleport' ]}
             valuePropName="checked"
         >
             <Switch />
         </Form.Item>
         <Form.Item
             label="Cheats"
-            name="features.cheats"
+            name={[ 'features', 'cheats' ]}
             valuePropName="checked"
         >
             <Switch />

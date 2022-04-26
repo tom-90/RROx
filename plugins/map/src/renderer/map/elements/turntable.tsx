@@ -21,7 +21,7 @@ export const Turntable = React.memo( function Turntable( { data }: { data: ITurn
         <Circle
             center={utils.scalePoint( cx, cy )}
             edge={utils.scalePoint( x2, y2 )}
-            fillColor={preferences[ 'colors.turntable.circle' ]}
+            fillColor={preferences.colors.turntable.circle}
             fillOpacity={1}
             color={'black'}
             weight={50}
@@ -32,7 +32,7 @@ export const Turntable = React.memo( function Turntable( { data }: { data: ITurn
                 utils.scalePoint( ...utils.rotate( cx, cy, cx + TurntableDefinitions.radius, cy, rotation.Yaw - 90 + deckRotation.Yaw ) ),
                 utils.scalePoint( ...utils.rotate( cx, cy, cx - TurntableDefinitions.radius, cy, rotation.Yaw - 90 + deckRotation.Yaw ) ),
             ]}
-            color={preferences[ `colors.spline.${SplineType.TRACK}` ]}
+            color={preferences.colors.spline[ SplineType.TRACK ]}
             weight={trackDefinitions.width}
             lineCap={'butt'}
         />

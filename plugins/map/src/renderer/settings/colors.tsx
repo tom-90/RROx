@@ -54,7 +54,7 @@ export function ColorSettings() {
         form={form}
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed ) => throttleOnValuesChange( changed, ( values ) => store.set( values ) )}
+        onValuesChange={( changed ) => throttleOnValuesChange( changed, ( values ) => store.setAll( values ) )}
         autoComplete="off"
     >
         <Collapse style={{ margin: '0 50px' }}>
@@ -69,8 +69,8 @@ export function ColorSettings() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><img src={Handcar} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.HANDCAR}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Handcar} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HANDCAR ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -80,8 +80,8 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Porter} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.PORTER}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Porter} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PORTER ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -91,8 +91,8 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Porter2} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.PORTER2}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Porter2} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PORTER2 ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -102,9 +102,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Eureka} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.EUREKA}`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.EUREKA_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Eureka} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.EUREKA ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.EUREKA_TENDER ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.EUREKA}`, `colors.${FrameCarType.EUREKA_TENDER}` )}
@@ -113,8 +113,8 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Climax} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.CLIMAX}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Climax} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.CLIMAX ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -124,8 +124,8 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Heisler} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.HEISLER}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Heisler} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HEISLER ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -135,9 +135,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Class70} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.CLASS70}`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.CLASS70_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Class70} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.CLASS70 ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.CLASS70_TENDER ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.CLASS70}`, `colors.${FrameCarType.CLASS70_TENDER}` )}
@@ -146,9 +146,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Cooke260} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.COOKE260}`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.COOKE260_TENDER}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Cooke260} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.COOKE260 ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.COOKE260_TENDER ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.COOKE260}`, `colors.${FrameCarType.COOKE260_TENDER}` )}
@@ -170,9 +170,9 @@ export function ColorSettings() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><img src={FlatcarLogs} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_LOGS}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_LOGS}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={FlatcarLogs} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_LOGS, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_LOGS, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_LOGS}.unloaded`, `colors.${FrameCarType.FLATCAR_LOGS}.loaded` )}
@@ -181,9 +181,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={FlatcarCordwood} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={FlatcarCordwood} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_CORDWOOD, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_CORDWOOD, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded`, `colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded` )}
@@ -192,9 +192,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={FlatcarStakes} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_STAKES}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.FLATCAR_STAKES}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={FlatcarStakes} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_STAKES, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_STAKES, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_STAKES}.unloaded`, `colors.${FrameCarType.FLATCAR_STAKES}.loaded` )}
@@ -203,9 +203,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Hopper} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.HOPPER}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.HOPPER}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Hopper} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPER, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPER, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.HOPPER}.unloaded`, `colors.${FrameCarType.HOPPER}.loaded` )}
@@ -214,9 +214,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Tanker} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.TANKER}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.TANKER}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Tanker} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.TANKER, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.TANKER, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.TANKER}.unloaded`, `colors.${FrameCarType.TANKER}.loaded` )}
@@ -225,9 +225,9 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Boxcar} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.BOXCAR}.unloaded`}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={`colors.${FrameCarType.BOXCAR}.loaded`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Boxcar} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.BOXCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.BOXCAR, 'loaded'   ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.BOXCAR}.unloaded`, `colors.${FrameCarType.BOXCAR}.loaded` )}
@@ -236,8 +236,8 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
-                            <td><img src={Caboose} /></td>
-                            <td><Form.Item name={`colors.${FrameCarType.CABOOSE}`}><input type='color' /></Form.Item></td>
+                            <td><img className='dark-mode-invert' src={Caboose} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.CABOOSE ]}><input type='color' /></Form.Item></td>
                             <td />
                             <td><Button
                                 type="text"
@@ -261,7 +261,7 @@ export function ColorSettings() {
                     <tbody>
                         <tr>
                             <td>Track</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.TRACK}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRACK ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.TRACK}` )}
@@ -271,7 +271,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Rail Deck</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.TRENDLE_TRACK}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRENDLE_TRACK ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.TRENDLE_TRACK}` )}
@@ -281,7 +281,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Variable Grade</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.VARIABLE_BANK}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_BANK ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_BANK}` )}
@@ -291,7 +291,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Constant Grade</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.CONSTANT_BANK}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_BANK ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_BANK}` )}
@@ -301,7 +301,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Variable Wall</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.VARIABLE_WALL}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_WALL ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_WALL}` )}
@@ -311,7 +311,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Constant Wall</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.CONSTANT_WALL}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_WALL ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_WALL}` )}
@@ -321,7 +321,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Wooden Bridge</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.WOODEN_BRIDGE}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.WOODEN_BRIDGE ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.WOODEN_BRIDGE}` )}
@@ -331,7 +331,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Steel Bridge</td>
-                            <td><Form.Item name={`colors.spline.${SplineType.IRON_BRIDGE}`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.IRON_BRIDGE ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.IRON_BRIDGE}` )}
@@ -341,7 +341,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Active Switch Track</td>
-                            <td><Form.Item name={`colors.switch.active`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'switch', 'active' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.switch.active` )}
@@ -351,7 +351,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Inactive Switch Track</td>
-                            <td><Form.Item name={`colors.switch.inactive`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'switch', 'inactive' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.switch.inactive` )}
@@ -361,7 +361,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Crossover</td>
-                            <td><Form.Item name={`colors.switch.cross`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'switch', 'cross' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.switch.cross` )}
@@ -371,7 +371,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Turntable</td>
-                            <td><Form.Item name={`colors.turntable.circle`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'turntable', 'circle' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.turntable.circle` )}
@@ -381,7 +381,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Player</td>
-                            <td><Form.Item name={`colors.player`}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'player' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.player` )}

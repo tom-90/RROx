@@ -1,35 +1,51 @@
-import { Settings } from "@rrox/api";
+import { Settings, SettingsSchema } from "@rrox/api";
 import { KeyCodes } from "./keycodes";
 
 export interface IBaseSettings {
-    'plugins.devFolders': string[];
-    'overlay.enabled': boolean;
-    'overlay.keybind': number[];
+    plugins: {
+        devFolders: string[]
+    },
+    overlay: {
+        enabled: boolean;
+        keybind: KeyCodes[];
+    },
     'hardware-acceleration': boolean;
 }
 
-const schema = {
-    'plugins.devFolders': {
-        type: 'array',
-        items: {
-            type: 'string'
+const schema: SettingsSchema<IBaseSettings> = {
+    plugins: {
+        type: 'object',
+        properties: {
+            devFolders: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                },
+                default: [],
+            }
         },
-        default: [],
+        default: {}
     },
-    'overlay.enabled': {
-        type: 'boolean',
-        default: true,
-    },
-    'overlay.keybind': {
-        type: 'array' as const,
-        items: { type: 'number' as const },
-        default: [ KeyCodes.VK_F1 ] as const,
+    overlay: {
+        type: 'object',
+        properties: {
+            enabled: {
+                type: 'boolean',
+                default: true,
+            },
+            keybind: {
+                type: 'array',
+                items: { type: 'number' },
+                default: [ KeyCodes.VK_F1 ],
+            },
+        },
+        default: {}
     },
     'hardware-acceleration': {
         type: 'boolean',
         default: true,
     },
-} as const;
+};
 
 export const BaseSettings = Settings<IBaseSettings>( PluginInfo, {
     schema

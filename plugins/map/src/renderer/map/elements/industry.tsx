@@ -29,7 +29,7 @@ export const Industry = React.memo( function Industry( { data }: { data: IIndust
             setTooltipVisible( false );
             setInfoVisible( true );
         }}>Show Info</Button>}
-        {settings[ 'features.teleport' ] && <Button
+        {settings.features.teleport && <Button
             style={{ marginTop: 5 }}
             onClick={() => teleport( currentPlayerName, {
                 X: location.X,

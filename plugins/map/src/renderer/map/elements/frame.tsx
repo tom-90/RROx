@@ -45,7 +45,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                 anchor={anchor}
                 rotation={Math.round( rotation.Yaw ) - 90}
                 color={getStrokeColor( controls.brake )}
-                fillColor={preferences[ `colors.${type as EngineFrameCarType}` ]}
+                fillColor={preferences.colors[ type as EngineFrameCarType ]}
                 fillOpacity={1}
                 interactive
             >
@@ -78,7 +78,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     >
                         {follow.following?.array === 'frameCars' && follow.following.index === index ? 'Unfollow' : 'Follow'}
                     </Button>
-                    {settings[ 'features.teleport' ] && <Button
+                    {settings.features.teleport && <Button
                         style={{ marginTop: 5 }}
                         onClick={() => teleport( currentPlayerName, {
                             X: location.X,
@@ -94,7 +94,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     index={index}
                     isVisible={controlsVisible}
                     className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
-                    controlEnabled={settings[ 'features.controlEngines' ]}
+                    controlEnabled={settings.features.controlEngines}
                     onClose={() => {
                         setControlsVisible( false );
                         setTooltipVisible( false );
@@ -115,8 +115,8 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
         rotation={Math.round( rotation.Yaw ) - 90}
         color={getStrokeColor( controls.brake )}
         fillColor={definition.freight
-                ? preferences[ `colors.${type as FreightFrameCarType}.${freight && freight.currentAmount > 0 ? 'loaded' : 'unloaded'}` ]
-                : preferences[ `colors.${type as EngineFrameCarType}` ]}
+                ? preferences.colors[ type as FreightFrameCarType ][ freight && freight.currentAmount > 0 ? 'loaded' : 'unloaded' ]
+                : preferences.colors[ type as EngineFrameCarType ]}
         fillOpacity={1}
         interactive
     >
@@ -137,7 +137,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     setStorageVisible( true );
                 }}
             >Show Freight</Button>}
-            {settings[ 'features.teleport' ] && type === FrameCarType.CABOOSE && <Button
+            {settings.features.teleport && type === FrameCarType.CABOOSE && <Button
                 style={{ marginTop: 5 }}
                 onClick={() => teleport( currentPlayerName, data.location )}
             >Teleport Here</Button>}
@@ -149,7 +149,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
             index={index}
             isVisible={controlsVisible}
             className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
-            controlEnabled={settings[ 'features.controlEngines' ]}
+            controlEnabled={settings.features.controlEngines}
             onClose={() => {
                 setControlsVisible( false );
                 setTooltipVisible( false );

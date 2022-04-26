@@ -1,12 +1,13 @@
-import { SettingsStore, SettingsType } from "@rrox/api";
+import { SettingsKey, SettingsPath, SettingsStore, SettingsType } from "@rrox/api";
 import { EventEmitter2 } from "eventemitter2";
 import Ajv, { ValidateFunction } from "ajv";
 import addFormats from "ajv-formats";
 import { JSONSchema } from 'json-schema-typed';
 import semver from "semver";
 import { LogFunctions } from "electron-log";
+import deepmerge from "deepmerge";
 
-export class LocalStorageSettingsStore<T> extends EventEmitter2 implements SettingsStore<T> {
+export class LocalStorageSettingsStore<T extends object> extends EventEmitter2 implements SettingsStore<T> {
     private defaultValues: { [ key in keyof T ]?: any } = {};
     private validator: ValidateFunction;
     private settings: T;
@@ -37,7 +38,7 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
             ...this.getLocalStorage(),
         } as T;
 
-        this.set( data );
+        this.setAll( data );
         this.migrate();
 
         window.addEventListener( 'storage', ( ev ) => {
@@ -96,21 +97,21 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
         if( !this.options.config.migrations )
             return;
 
-        const previousVersion: string = this.get( LocalStorageSettingsStore.MIGRATION_KEY as keyof T, '0.0.0' as any ) as any;
+        const previousVersion: string = this.get( [ LocalStorageSettingsStore.MIGRATION_KEY ], '0.0.0' as any ) as any;
         const targetVersion = this.options.module.version;
 
         const newerVersions = Object.keys( this.options.config.migrations )
             .filter( ( candidateVersion ) => this.shouldPerformMigration( candidateVersion, previousVersion, targetVersion ) );
 
-        let backup = this.get();
+        let backup = this.getAll();
         for( const version of newerVersions ) {
             try {
                 this.options.config.migrations[ version ]( this );
 
-                this.set( LocalStorageSettingsStore.MIGRATION_KEY as keyof T, version as any );
-                backup = this.get();
+                this.set( [ LocalStorageSettingsStore.MIGRATION_KEY ], version as any );
+                backup = this.getAll();
             } catch( e ) {
-                this.set( backup );
+                this.setAll( backup );
 
                 throw new Error(
 					`Something went wrong during the migration! Changes applied to the store until this failed migration will be restored. ${e as string}`
@@ -118,7 +119,7 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
             }
         }
 
-        this.set( LocalStorageSettingsStore.MIGRATION_KEY as keyof T, targetVersion as any );
+        this.set( [ LocalStorageSettingsStore.MIGRATION_KEY ], targetVersion as any );
     }
 
     private shouldPerformMigration( migrationVersion: string, previousConfigVersion: string, targetConfigVersion: string ) {
@@ -136,34 +137,66 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
         return true;
     }
 
-    get<K extends keyof T>( key: K ): T[ K ];
-    get<K extends keyof T>( key: K, defaultValue?: Required<T[ K ]> ): Required<T[ K ]>;
-    get(): T;
+    get( pathOrKey: SettingsKey<T, string> | SettingsPath, defaultValue?: any ): any {
+        const path: SettingsPath = Array.isArray( pathOrKey ) ? pathOrKey : ( pathOrKey as SettingsKey<T, string> ).split( '.' );
 
-    get( key?: keyof T, defaultValue?: any ): any {
-        if( key === undefined )
-            return this.settings;
-        
-        const value = this.settings[ key ];
+        const value = path.reduce( ( obj, key ) => {
+            if( Array.isArray( obj ) ) {
+                if( typeof key === 'number' )
+                    return obj[ key ];
+                const num = Number( key );
+                if( Number.isNaN( num ) || !Number.isInteger( num ) )
+                    return undefined;
+                else
+                    return obj[ num ];
+            } else if( typeof key === 'string' && typeof obj === 'object' && obj !== null )
+                return obj[ key as keyof typeof obj ];
+            return undefined;
+        }, this.settings );
 
         if( value === undefined )
             return defaultValue;
         return value;
     }
 
-    set<K extends keyof T>( key: K, value: T[ K ] ): void;
-    set( values: Partial<T> ): void;
+    getAll(): T {
+       return this.settings;
+    }
 
-    set( keyOrValues: keyof T | Partial<T>, value?: any ) {
-        if( typeof keyOrValues === 'string' || typeof keyOrValues === 'number' )
-            return this.set( {
-                [ keyOrValues ]: value
-            } as Partial<T> );
+    set( pathOrKey: SettingsKey<T, string> | SettingsPath, value: any ): void {
+        const path: SettingsPath = Array.isArray( pathOrKey ) ? pathOrKey : ( pathOrKey as SettingsKey<T, string> ).split( '.' );
 
-        const settings = {
-            ...this.settings,
-            ...keyOrValues as Partial<T>,
+        if( path.length === 0 )
+            return this.setAll( value );
+
+        const getNextSub = ( nextIndex: number ) => {
+            if( nextIndex >= path.length )
+                return value;
+
+            const num = Number( path[ nextIndex ] );
+            if( Number.isNaN( num ) || !Number.isInteger( num ) )
+                return {};
+            else
+                return [];
         };
+
+        const settings = getNextSub( 0 );
+
+        path.reduce( ( obj, key, i ) => {
+            if( i === path.length - 1 )
+                return;
+
+            if( Array.isArray( obj ) )
+                return obj[ Number( key ) ] = getNextSub( i + 1 );
+            else
+                return obj[ key ] = getNextSub( i + 1 );
+        }, settings );
+
+        return this.setAll( settings );
+    }
+
+    setAll( values: Partial<T> ) {
+        const settings = deepmerge( this.settings, values );
         
         this.validate( settings );
 
@@ -177,21 +210,49 @@ export class LocalStorageSettingsStore<T> extends EventEmitter2 implements Setti
         this.emit( 'update' );
     }
 
-    has( key: keyof T ): boolean {
-        return key in this.settings;
+    has( pathOrKey: SettingsKey<T, string> | SettingsPath ): boolean {
+        return this.get( pathOrKey ) !== undefined;
     }
 
-    reset( ...keys: ( keyof T )[] ) {
-        const obj: Partial<T> = {};
+    reset( ...pathsOrKeys: ( string | SettingsPath )[] ): void {
+        const paths = pathsOrKeys.map( ( pathOrKey ) => Array.isArray( pathOrKey ) ? pathOrKey : ( pathOrKey as string ).split( '.' ) );
 
-        for( let key of keys )
-            obj[ key ] = undefined;
+        if( paths.length === 0 )
+            return;
+        if( paths[ 0 ].length === 0 )
+            return this.clear();
 
-        return this.set( obj );
+        const getNextSub = ( path: ( string | number )[], nextIndex: number ) => {
+            if( nextIndex >= path.length - 1 )
+                return undefined;
+
+            const num = Number( path[ nextIndex ] );
+            if( Number.isNaN( num ) || !Number.isInteger( num ) )
+                return {};
+            else
+                return [];
+        };
+
+        const settings = getNextSub( paths[ 0 ], 0 )! as Partial<T>;
+
+        paths.forEach( ( path ) => {
+            path.reduce( ( obj, key, i ) => {
+                if( i === path.length - 1 )
+                    return;
+    
+                if( Array.isArray( obj ) ) {
+                    const num = Number( key );
+                    return obj[ num ] = obj[ num ] === undefined ? getNextSub( path, i + 1 ) : obj[ num ];
+                } else
+                    return obj[ key as keyof typeof obj ] = ( obj[ key as keyof typeof obj ] === undefined ? getNextSub( path, i + 1 ) : obj[ key as keyof typeof obj ] ) as any;
+            }, settings );
+        } );
+
+        return this.setAll( settings );
     }
 
     clear() {
-        return this.reset( ...( Object.keys( this.settings ) as ( keyof T )[] ) );
+        this.reset( ...( Object.keys( this.settings ) as string[] ) );
     }
 
 }

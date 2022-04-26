@@ -23,7 +23,7 @@ export function useFollowing( map: L.Map | undefined, mapMode: MapMode, enabled:
     const [ following, setFollowing ] = useState<FollowingData | undefined>( undefined );
 
     useEffect( () => {
-        if( !map || !data )
+        if( !map || !map.getPane( 'mapPane' ) || !data )
             return;
 
         const isFollowing = enabled && following?.array != null && following?.index != null && following.apply != null;
@@ -48,7 +48,7 @@ export function useFollowing( map: L.Map | undefined, mapMode: MapMode, enabled:
     const prevMode = usePrevious( mapMode );
 
     useEffect( () => {
-        if( !map || !data )
+        if( !map || !map.getPane( 'mapPane' ) || !data )
             return;
 
         const applyFollow = () => {
@@ -60,6 +60,9 @@ export function useFollowing( map: L.Map | undefined, mapMode: MapMode, enabled:
         };
 
         const observer = new ResizeObserver( () => {
+            if( !map || !map.getPane( 'mapPane' ) || !data )
+                return;
+
             map.invalidateSize();
 
             applyFollow();

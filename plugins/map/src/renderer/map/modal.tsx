@@ -49,13 +49,13 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
 
             let x: number = 0, y: number = 0;
 
-            if( preferences[ 'minimap.corner' ] === MinimapCorner.TOP_LEFT )
+            if( preferences.minimap.corner === MinimapCorner.TOP_LEFT )
                 x = 0, y = 0;
-            else if( preferences[ 'minimap.corner' ] === MinimapCorner.TOP_RIGHT )
+            else if( preferences.minimap.corner === MinimapCorner.TOP_RIGHT )
                 x = window.innerWidth - width, y = 0;
-            else if( preferences[ 'minimap.corner' ] === MinimapCorner.BOTTOM_LEFT )
+            else if( preferences.minimap.corner === MinimapCorner.BOTTOM_LEFT )
                 x = 0, y = window.innerHeight - height;
-            else if( preferences[ 'minimap.corner' ] === MinimapCorner.BOTTOM_RIGHT )
+            else if( preferences.minimap.corner === MinimapCorner.BOTTOM_RIGHT )
                 x = window.innerWidth - width, y = window.innerHeight - height;
 
             ref.current!.resize( x, y, width, height );
@@ -65,7 +65,7 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
             ref.current!.move( savedPosition.x, savedPosition.y );
             setSavedPosition( null );
         }
-    }, [ mode, preferences[ 'minimap.corner' ], isVisible ] );
+    }, [ mode, preferences.minimap.corner, isVisible ] );
 
     if( mode === MapMode.NORMAL )
         return children as JSX.Element;

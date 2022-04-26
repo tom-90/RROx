@@ -21,7 +21,7 @@ export class SettingsManager implements SettingsContext {
         } );
     }
 
-    get<T>( settings: SettingsType<T> ): SettingsStore<T> {
+    get<T extends object>( settings: SettingsType<T> ): SettingsStore<T> {
         if( this.stores[ settings.module.name ]?.[ settings.mode ] )
             return this.stores[ settings.module.name ][ settings.mode ] as ControllerSettingsStore<T>;
 
@@ -51,7 +51,7 @@ export class SettingsManager implements SettingsContext {
 
     private update() {
         for( let [ plugin, store ] of Object.entries( this.stores ) )
-            if( store[ SettingsMode.CONTROLLER ] && this.settings[ plugin ] !== store[ SettingsMode.CONTROLLER ]!.get() )
+            if( store[ SettingsMode.CONTROLLER ] && this.settings[ plugin ] !== store[ SettingsMode.CONTROLLER ]!.getAll() )
                 ( store[ SettingsMode.CONTROLLER ] as ControllerSettingsStore<any> ).updateSettingsObject( this.settings[ plugin ] );
     }
 
