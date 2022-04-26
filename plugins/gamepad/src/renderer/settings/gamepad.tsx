@@ -62,12 +62,12 @@ export function GamepadSettingsPage() {
         form={form}
         labelCol={{ span: 8, offset: 3 }}
         wrapperCol={{ span: 16, offset: 3 }}
-        onValuesChange={( changed, values ) => store.set(values)}
+        onValuesChange={( changes ) => store.setAll(changes)}
         autoComplete="off"
     >
         <Form.Item
             label="Enable"
-            name="gamepad.enabled"
+            name={[ "gamepad", "enabled" ]}
             valuePropName="checked"
         >
             <Switch />
@@ -93,7 +93,7 @@ export function GamepadSettingsPage() {
                         >
                             <Form.Item
                                 label="Engine"
-                                name={["gamepad.bindings", controller!.id, "engine"]}
+                                name={[ "gamepad", "bindings", controller!.id, "engine" ]}
                                 labelCol={{offset: 0}}
                                 wrapperCol={{offset: 0}}
                                 style={{marginInline: "40px", marginBottom: "10px"}}
@@ -116,7 +116,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "left.x", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "x", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -133,7 +133,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "left.x", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "x", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -154,7 +154,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "left.y", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "y", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -171,7 +171,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "left.y", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "y", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -193,7 +193,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "right.x", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "x", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -210,7 +210,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "right.x", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "x", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -231,7 +231,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "right.y", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "y", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -248,7 +248,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "right.y", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "y", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -271,7 +271,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "left.trigger", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "trigger", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -288,7 +288,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "left.trigger", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "trigger", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -309,7 +309,7 @@ export function GamepadSettingsPage() {
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad.bindings", controller!.id, "right.trigger", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "trigger", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -326,7 +326,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad.bindings", controller!.id, "right.trigger", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "right", "trigger", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -350,7 +350,7 @@ export function GamepadSettingsPage() {
                                 >
                                     <Form.Item
                                         label="Binding"
-                                        name={["gamepad.bindings", controller!.id, `button.${button}`, "binding"]}
+                                        name={["gamepad", "bindings", controller!.id, "button", button, "binding"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -367,7 +367,7 @@ export function GamepadSettingsPage() {
 
                                     <Form.Item
                                         label="Mode"
-                                        name={["gamepad.bindings", controller!.id, `button.${button}`, "mode"]}
+                                        name={["gamepad", "bindings", controller!.id, "button", button, "mode"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -381,7 +381,7 @@ export function GamepadSettingsPage() {
 
                                     <Form.Item
                                         label="Key up"
-                                        name={["gamepad.bindings", controller!.id, `button.${button}`, "value.up"]}
+                                        name={["gamepad", "bindings", controller!.id, "button", button, "value", "up"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -403,7 +403,7 @@ export function GamepadSettingsPage() {
                                     </Form.Item>
                                     <Form.Item
                                         label="Key down"
-                                        name={["gamepad.bindings", controller!.id, `button.${button}`, "value.down"]}
+                                        name={["gamepad", "bindings", controller!.id, "button", button, "value", "down"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >

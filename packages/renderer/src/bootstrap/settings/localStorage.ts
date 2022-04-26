@@ -196,7 +196,20 @@ export class LocalStorageSettingsStore<T extends object> extends EventEmitter2 i
     }
 
     setAll( values: Partial<T> ) {
-        const settings = deepmerge( this.settings, values );
+        const settings = deepmerge( this.settings, values, {
+            arrayMerge: ( target, source, options ) => {
+                const dest = [ ...target ];
+                source.forEach( ( item, i ) => {
+                    if( item === undefined )
+                        return;
+                    if( options!.isMergeableObject!( item ) && dest[ i ] !== undefined )
+                        dest[ i ] = deepmerge( target[ i ], item, options )
+                    else
+                        dest[ i ] = item;
+                } );
+                return dest;
+            }
+        } );
         
         this.validate( settings );
 

@@ -93,7 +93,20 @@ export class SettingsStore<T extends object> extends EventEmitter implements ISe
     }
 
     setAll( data: Partial<T> ) {
-        this.store.set( deepmerge( this.getAll(), data as Partial<T> ) );
+        this.store.set( deepmerge( this.getAll(), data as Partial<T>, {
+            arrayMerge: ( target, source, options ) => {
+                const dest = [ ...target ];
+                source.forEach( ( item, i ) => {
+                    if( item === undefined )
+                        return;
+                    if( options!.isMergeableObject!( item ) && dest[ i ] !== undefined )
+                        dest[ i ] = deepmerge( target[ i ], item, options )
+                    else
+                        dest[ i ] = item;
+                } );
+                return dest;
+            }
+        } ) );
 
         this.onUpdate();
     }
