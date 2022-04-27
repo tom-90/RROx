@@ -344,13 +344,13 @@ export function GamepadSettingsPage() {
                             <Divider orientation="left">Buttons</Divider>
                             {buttons.map(({button, description}) => (
                                 <Card
-                                    title={`Botton ${button} (${description})`}
+                                    title={`Button ${button} (${description})`}
                                     style={{marginInline: "40px", marginBottom: "10px"}}
                                     key={`button.${button}`}
                                 >
                                     <Form.Item
                                         label="Binding"
-                                        name={["gamepad", "bindings", controller!.id, "button", button, "binding"]}
+                                        name={["gamepad", "bindings", controller!.id, "buttons", button, "binding"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -367,7 +367,7 @@ export function GamepadSettingsPage() {
 
                                     <Form.Item
                                         label="Mode"
-                                        name={["gamepad", "bindings", controller!.id, "button", button, "mode"]}
+                                        name={["gamepad", "bindings", controller!.id, "buttons", button, "mode"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -381,7 +381,7 @@ export function GamepadSettingsPage() {
 
                                     <Form.Item
                                         label="Key up"
-                                        name={["gamepad", "bindings", controller!.id, "button", button, "value", "up"]}
+                                        name={["gamepad", "bindings", controller!.id, "buttons", button, "value", "up"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
@@ -403,7 +403,7 @@ export function GamepadSettingsPage() {
                                     </Form.Item>
                                     <Form.Item
                                         label="Key down"
-                                        name={["gamepad", "bindings", controller!.id, "button", button, "value", "down"]}
+                                        name={["gamepad", "bindings", controller!.id, "buttons", button, "value", "down"]}
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >

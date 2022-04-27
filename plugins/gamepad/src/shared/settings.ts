@@ -65,7 +65,8 @@ const sideSchema: SettingsSchema<Side> = {
                 type: "string",
                 default: "controller_value"
             },
-        }
+        },
+        default: {}
     },
 }
 
