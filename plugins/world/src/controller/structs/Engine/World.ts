@@ -1,5 +1,6 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AarrGameStateBase } from "../arr/arrGameStateBase";
+import { UNetDriver } from "./NetDriver";
 
 @Struct( "Class Engine.World" )
 export class UWorld {
@@ -13,5 +14,11 @@ export class UWorld {
      */
     @Property.Object( "GameState", () => AarrGameStateBase )
     public ARRGameState: AarrGameStateBase;
+    
+    /**
+     * An object property containing information of a subobject.
+     */
+    @Property.Object( "NetDriver", () => UNetDriver )
+    public NetDriver: UNetDriver;
 
 }

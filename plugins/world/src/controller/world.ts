@@ -1,11 +1,15 @@
-import { Actions, InOutParam, IPluginController, IQuery, query, SettingsStore, ValueProvider } from "@rrox/api";
+import { Actions, InOutParam, IPluginController, IQuery, query, QueryBuilder, SettingsStore, ValueProvider } from "@rrox/api";
 import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings } from "../shared";
 import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
 import { Aframecar } from "./structs/arr/framecar";
+import { Aindustry } from "./structs/arr/industry";
+import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { Astorage } from "./structs/arr/storage";
 import { ASwitch } from "./structs/arr/Switch";
+import { Aturntable } from "./structs/arr/turntable";
+import { Awatertower } from "./structs/arr/watertower";
 import { ABP_Player_Conductor_C } from "./structs/BP_Player_Conductor/BP_Player_Conductor_C";
 import { FLinearColor } from "./structs/CoreUObject/LinearColor";
 import { FVector } from "./structs/CoreUObject/Vector";
@@ -15,11 +19,25 @@ import { ETraceTypeQuery } from "./structs/Engine/ETraceTypeQuery";
 import { UGameEngine } from "./structs/Engine/GameEngine";
 import { FHitResult } from "./structs/Engine/HitResult";
 import { UKismetSystemLibrary } from "./structs/Engine/KismetSystemLibrary";
+import { UNetConnection } from "./structs/Engine/NetConnection";
 import { APlayerState } from "./structs/Engine/PlayerState";
+import { UWorld } from "./structs/Engine/World";
 import { Vector2D } from "./vector";
 
+export interface IWorldObjects {
+    players: APlayerState[];
+    frameCars: Aframecar[];
+    switches: ASwitch[];
+    turntables: Aturntable[];
+    watertowers: Awatertower[];
+    sandhouses: Asandhouse[];
+    industries: Aindustry[];
+    splines: ASplineActor[];
+}
+
 export class World {
-    public gameState?: AarrGameStateBase | null;
+    private world?: UWorld | null;
+    private kismetSystemLibrary?: UKismetSystemLibrary | null;
 
     private readonly empty = {
         frameCars: [],
@@ -31,11 +49,15 @@ export class World {
         turntables: [],
         watertowers: [],
     };
+    
+    public data: IWorldObjects = this.empty;
 
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
     private switchQuery: IQuery<ASwitch>;
     private valueProvider: ValueProvider<IWorld>;
+    private clientQuery: IQuery<UNetConnection>;
+    private clientSplineQuery: IQuery<UNetConnection>;
 
     constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {
         this.valueProvider = controller.communicator.provideValue( WorldCommunicator, this.empty );
@@ -44,124 +66,183 @@ export class World {
     async prepare() {
         const data = this.controller.getAction( Actions.QUERY );
 
-        await this.getGameState();
+        await this.getKismetSystemLibrary();
+        await this.getWorld();
+
+        const playerQuery = ( player: QueryBuilder<APlayerState> ) => [
+            player.PlayerNamePrivate,
+            player.PawnPrivate.RootComponent.RelativeLocation,
+            player.PawnPrivate.RootComponent.RelativeRotation
+        ];
+
+        const frameCarQuery = ( car: QueryBuilder<Aframecar> ) => [
+            car.FrameType,
+            car.framename,
+            car.FrameNumber,
+            car.currentspeedms,
+            car.maxspeedms,
+            car.RootComponent.RelativeLocation,
+            car.RootComponent.RelativeRotation,
+            car.MyRegulator.openPercentage,
+            car.MyReverser.forwardvalue,
+            car.MyBrake.brakevalue,
+            car.Mywhistle.whistleopenfactor,
+            car.Myhandvalvegenerator.openPercentage,
+            car.Myhandvalvecompressor.openPercentage,
+            car.MyBoiler.currentboilerpressure,
+            car.MyBoiler.maxboilerpressure,
+            car.MyBoiler.currentwatertemperature,
+            car.MyBoiler.currentwateramount,
+            car.MyBoiler.maxwateramount,
+            car.MyBoiler.currentfiretemperature,
+            car.MyBoiler.currentfuel,
+            car.MyBoiler.maxfuel,
+            car.Mycompressor.currentairpressure,
+            car.MyTender.currentamountFuel,
+            car.MyTender.maxamountfuel,
+            car.MyTender.currentamountWater,
+            car.MyTender.maxamountwater,
+            car.MyFreight.currentfreight,
+            car.MyFreight.maxfreight,
+            car.MyFreight.currentfreighttype,
+            car.MyCouplerFront.OtherCoupler,
+            car.MyCouplerFront.bIsCoupled,
+            car.MyCouplerRear.OtherCoupler,
+            car.MyCouplerRear.bIsCoupled,
+        ];
+
+        const switchQuery = ( sw: QueryBuilder<ASwitch> ) => [
+            sw.switchtype,
+            sw.switchstate,
+            sw.RootComponent.RelativeLocation,
+            sw.RootComponent.RelativeRotation
+        ];
+
+        const turntableQuery = ( tt: QueryBuilder<Aturntable> ) => [
+            tt.deckmesh.RelativeRotation,
+            tt.RootComponent.RelativeLocation,
+            tt.RootComponent.RelativeRotation
+        ];
+
+        const watertowerQuery = ( wt: QueryBuilder<Awatertower> ) => [
+            wt.Mystorage.currentamountitems,
+            wt.Mystorage.maxitems,
+            wt.Mystorage.storagetype,
+            wt.RootComponent.RelativeLocation,
+            wt.RootComponent.RelativeRotation
+        ];
+
+        const sandhouseQuery = ( sh: QueryBuilder<Asandhouse> ) => [
+            sh.Mystorage.currentamountitems,
+            sh.Mystorage.maxitems,
+            sh.Mystorage.storagetype,
+            sh.RootComponent.RelativeLocation,
+            sh.RootComponent.RelativeRotation
+        ];
+
+        const industryQuery = ( ind: QueryBuilder<Aindustry> ) => [
+            ind.industrytype,
+            ind.RootComponent.RelativeLocation,
+            ind.RootComponent.RelativeRotation,
+
+            ...[
+                ind.mystorageeducts1,
+                ind.mystorageeducts2,
+                ind.mystorageeducts3,
+                ind.mystorageeducts4,
+                ind.mystorageproducts1,
+                ind.mystorageproducts2,
+                ind.mystorageproducts3,
+                ind.mystorageproducts4,
+            ].map( ( storage ) => [
+                storage.currentamountitems,
+                storage.maxitems,
+                storage.storagetype
+            ] ).flat(),
+        ];
+
+        const splineQuery = ( spline: QueryBuilder<ASplineActor> ) =>  [
+            spline.SplineControlPoints.all(),
+            spline.SplineMeshBoolArray.all(),
+            spline.SplineType,
+            spline.RootComponent.RelativeLocation,
+            spline.RootComponent.RelativeRotation
+        ];
 
         this.worldQuery = await data.prepareQuery( AarrGameStateBase, ( gameState ) => [
             // Query players
-            query( gameState.PlayerArray.all(), ( player ) => [
-                player.PlayerNamePrivate,
-                player.PawnPrivate.RootComponent.RelativeLocation,
-                player.PawnPrivate.RootComponent.RelativeRotation
-            ] ),
+            playerQuery( gameState.PlayerArray.all() ),
 
             // Query frames
-            query( gameState.FrameCarArray.all(), ( car ) => [
-                car.FrameType,
-                car.framename,
-                car.FrameNumber,
-                car.currentspeedms,
-                car.maxspeedms,
-                car.RootComponent.RelativeLocation,
-                car.RootComponent.RelativeRotation,
-                car.MyRegulator.openPercentage,
-                car.MyReverser.forwardvalue,
-                car.MyBrake.brakevalue,
-                car.Mywhistle.whistleopenfactor,
-                car.Myhandvalvegenerator.openPercentage,
-                car.Myhandvalvecompressor.openPercentage,
-                car.MyBoiler.currentboilerpressure,
-                car.MyBoiler.maxboilerpressure,
-                car.MyBoiler.currentwatertemperature,
-                car.MyBoiler.currentwateramount,
-                car.MyBoiler.maxwateramount,
-                car.MyBoiler.currentfiretemperature,
-                car.MyBoiler.currentfuel,
-                car.MyBoiler.maxfuel,
-                car.Mycompressor.currentairpressure,
-                car.MyTender.currentamountFuel,
-                car.MyTender.maxamountfuel,
-                car.MyTender.currentamountWater,
-                car.MyTender.maxamountwater,
-                car.MyFreight.currentfreight,
-                car.MyFreight.maxfreight,
-                car.MyFreight.currentfreighttype,
-                car.MyCouplerFront.OtherCoupler,
-                car.MyCouplerFront.bIsCoupled,
-                car.MyCouplerRear.OtherCoupler,
-                car.MyCouplerRear.bIsCoupled,
-            ] ),
+            frameCarQuery( gameState.FrameCarArray.all() ),
 
             // Query switches
-            query( gameState.SwitchArray.all(), ( sw ) => [
-                sw.switchtype,
-                sw.switchstate,
-                sw.RootComponent.RelativeLocation,
-                sw.RootComponent.RelativeRotation
-            ] ),
+            switchQuery( gameState.SwitchArray.all() ),
 
             // Query turntables
-            query( gameState.TurntableArray.all(), ( tt ) => [
-                tt.deckmesh.RelativeRotation,
-                tt.RootComponent.RelativeLocation,
-                tt.RootComponent.RelativeRotation
-            ] ),
+            turntableQuery( gameState.TurntableArray.all() ),
 
             // Query watertowers
-            query( gameState.WatertowerArray.all(), ( wt ) => [
-                wt.Mystorage.currentamountitems,
-                wt.Mystorage.maxitems,
-                wt.Mystorage.storagetype,
-                wt.RootComponent.RelativeLocation,
-                wt.RootComponent.RelativeRotation
-            ] ),
+            watertowerQuery( gameState.WatertowerArray.all() ),
 
             // Query sandhouses
-            query( gameState.SandhouseArray.all(), ( sh ) => [
-                sh.Mystorage.currentamountitems,
-                sh.Mystorage.maxitems,
-                sh.Mystorage.storagetype,
-                sh.RootComponent.RelativeLocation,
-                sh.RootComponent.RelativeRotation
-            ] ),
+            sandhouseQuery( gameState.SandhouseArray.all() ),
 
             // Query industries
-            query( gameState.IndustryArray.all(), ( ind ) => [
-                ind.industrytype,
-                ind.RootComponent.RelativeLocation,
-                ind.RootComponent.RelativeRotation,
-
-                ...[
-                    ind.mystorageeducts1,
-                    ind.mystorageeducts2,
-                    ind.mystorageeducts3,
-                    ind.mystorageeducts4,
-                    ind.mystorageproducts1,
-                    ind.mystorageproducts2,
-                    ind.mystorageproducts3,
-                    ind.mystorageproducts4,
-                ].map( ( storage ) => [
-                    storage.currentamountitems,
-                    storage.maxitems,
-                    storage.storagetype
-                ] ).flat(),
-            ] ),
+            industryQuery( gameState.IndustryArray.all() ),
         ] );
 
         this.splineQuery = await data.prepareQuery( AarrGameStateBase, ( gameState ) => [
             // Query splines
-            query( gameState.SplineArray.all(), ( spline ) => [
-                spline.SplineControlPoints.all(),
-                spline.SplineMeshBoolArray.all(),
-                spline.SplineType,
-                spline.RootComponent.RelativeLocation,
-                spline.RootComponent.RelativeRotation
-            ] ),
+            splineQuery( gameState.SplineArray.all() ),
         ] );
 
         this.switchQuery = await data.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
+
+        this.clientQuery = await data.prepareQuery( UNetConnection, ( conn ) => [
+            query( conn.OpenActorChannels.all(), ( channel ) => [
+                // Query players
+                playerQuery( channel.Player ),
+    
+                // Query frames
+                frameCarQuery( channel.FrameCar ),
+    
+                // Query switches
+                switchQuery( channel.Switch ),
+    
+                // Query turntables
+                turntableQuery( channel.Turntable ),
+    
+                // Query watertowers
+                watertowerQuery( channel.WaterTower ),
+    
+                // Query sandhouses
+                sandhouseQuery( channel.Sandhouse ),
+    
+                // Query industries
+                industryQuery( channel.Industry ),
+            ] ),
+        ] );
+
+        this.clientSplineQuery = await data.prepareQuery( UNetConnection, ( conn ) => [
+            query( conn.OpenActorChannels.all(), ( channel ) => [
+                // Query players
+                splineQuery( channel.Spline ),
+            ] ),
+        ] );
     }
 
-    private async getGameState() {
+    private async getKismetSystemLibrary() {
+        const data = this.controller.getAction( Actions.QUERY );
+
+        const kismetRef = await data.getReference( UKismetSystemLibrary );
+        if( kismetRef )
+            this.kismetSystemLibrary = await kismetRef.getStatic();
+        else
+            this.kismetSystemLibrary = null;
+    }
+
+    private async getWorld() {
         const data = this.controller.getAction( Actions.QUERY );
 
         const ref = await data.getReference( UGameEngine );
@@ -174,16 +255,40 @@ export class World {
 
         const [ engine ] = instances;
 
-        this.gameState = ( await data.query(
-            await data.prepareQuery( UGameEngine, ( qb ) => [ qb.GameViewport.World.ARRGameState ] ),
+        this.world = ( await data.query(
+            await data.prepareQuery( UGameEngine, ( qb ) => [
+                qb.GameViewport.World.ARRGameState,
+                qb.GameViewport.World.NetDriver.ServerConnection,
+            ] ),
             engine
-        ) )?.GameViewport?.World?.ARRGameState;
+        ) )?.GameViewport?.World;
     }
 
     async load() {
-        if( !this.gameState ) {
-            await this.getGameState();
-            if( !this.gameState ) {
+        if( !this.kismetSystemLibrary )
+            await this.getKismetSystemLibrary();
+        if( !this.world )
+            await this.getWorld();
+        
+        if( !this.kismetSystemLibrary || !this.world ) {
+            if( this.valueProvider.getValue() !== this.empty )
+                this.valueProvider.provide( this.empty );
+
+            return;
+        }
+
+        const isServer = await this.kismetSystemLibrary.IsServer( this.world );
+
+        if( isServer )
+            return await this.loadServer();
+        else
+            return await this.loadClient();
+    }
+
+    private async loadServer() {
+        if( !this.world?.ARRGameState ) {
+            await this.getWorld();
+            if( !this.world?.ARRGameState ) {
                 if( this.valueProvider.getValue() !== this.empty )
                     this.valueProvider.provide( this.empty );
 
@@ -191,18 +296,91 @@ export class World {
             }
         }
         
+        let gameState: AarrGameStateBase | null = this.world.ARRGameState;
+
         const queryAction = this.controller.getAction( Actions.QUERY );
 
-        const data = await queryAction.query( this.worldQuery, this.gameState );
-        const spline = await queryAction.query( this.splineQuery, this.gameState );
+        const data = await queryAction.query( this.worldQuery, gameState );
+        const spline = await queryAction.query( this.splineQuery, gameState );
 
-        this.gameState = data;
+        gameState = data;
 
-        if( this.gameState && spline ) {
-            this.gameState.SplineArray = this.gameState.SplineArray;
+        if( gameState && spline ) {
+            gameState.SplineArray = gameState.SplineArray;
         }
 
+        if( !gameState )
+            return this.parseWorld( this.empty );
 
+        this.parseWorld( {
+            players    : gameState.PlayerArray,
+            frameCars  : gameState.FrameCarArray,
+            industries : gameState.IndustryArray,
+            sandhouses : gameState.SandhouseArray,
+            switches   : gameState.SwitchArray,
+            turntables : gameState.TurntableArray,
+            watertowers: gameState.WatertowerArray,
+            splines    : gameState.SplineArray || this.data.splines,
+        } );
+    }
+
+    private async loadClient() {
+        if( !this.world?.NetDriver?.ServerConnection ) {
+            await this.getWorld();
+            if( !this.world?.NetDriver?.ServerConnection ) {
+                if( this.valueProvider.getValue() !== this.empty )
+                    this.valueProvider.provide( this.empty );
+
+                return;
+            }
+        }
+
+        const queryAction = this.controller.getAction( Actions.QUERY );
+
+        const conn = await queryAction.query( this.clientQuery, this.world.NetDriver.ServerConnection );
+        const connSplines = await queryAction.query( this.clientSplineQuery, this.world.NetDriver.ServerConnection );
+
+        const data: IWorldObjects = {
+            frameCars: [],
+            industries: [],
+            players: [],
+            sandhouses: [],
+            splines: [],
+            switches: [],
+            turntables: [],
+            watertowers: [],
+        };
+
+        for( let channel of conn?.OpenActorChannels || [] ) {
+            if( !channel )
+                continue;
+            if( channel.Player )
+                data.players.push( channel.Player );
+            if( channel.FrameCar )
+                data.frameCars.push( channel.FrameCar );
+            if( channel.Industry )
+                data.industries.push( channel.Industry );
+            if( channel.Sandhouse )
+                data.sandhouses.push( channel.Sandhouse );
+            if( channel.Switch )
+                data.switches.push( channel.Switch );
+            if( channel.Turntable )
+                data.turntables.push( channel.Turntable );
+            if( channel.WaterTower )
+                data.watertowers.push( channel.WaterTower );
+        }
+
+        for( let channel of connSplines?.OpenActorChannels || [] ) {
+            if( !channel )
+                continue;
+            if( channel.Spline )
+                data.splines.push( channel.Spline );
+        }
+
+        return this.parseWorld( data );
+    }
+
+    private parseWorld( data: IWorldObjects ) {
         const getLocation = ( actor: AActor ): ILocation => ( {
             X: actor.RootComponent.RelativeLocation.X,
             Y: actor.RootComponent.RelativeLocation.Y,
@@ -246,12 +424,12 @@ export class World {
         }
 
         const world: IWorld = {
-            players: data?.PlayerArray.map( ( p ) => ( {
+            players: data.players.map( ( p ) => ( {
                 name    : p.PlayerNamePrivate,
                 location: getLocation( p.PawnPrivate ),
                 rotation: getRotation( p.PawnPrivate ),
             } ) ) || [],
-            frameCars: data?.FrameCarArray.map( ( f ) => ( {
+            frameCars: data.frameCars.map( ( f ) => ( {
                 type: f.FrameType as FrameCarType,
                 name: f.framename,
                 number: f.FrameNumber,
@@ -300,14 +478,14 @@ export class World {
                     } : undefined,
                 },
             } ) ) || [],
-            switches: data?.SwitchArray.map( ( sw ) => ( {
+            switches: data.switches.map( ( sw ) => ( {
                 type: sw.switchtype,
                 state: sw.switchstate,
             
                 location: getLocation( sw ),
                 rotation: getRotation( sw ),
             } ) ) || [],
-            turntables: data?.TurntableArray.map( ( tt ) => ( {
+            turntables: data.turntables.map( ( tt ) => ( {
                 deckRotation: {
                     Pitch: tt.deckmesh.RelativeRotation.Pitch,
                     Yaw: tt.deckmesh.RelativeRotation.Pitch,
@@ -316,30 +494,32 @@ export class World {
                 location: getLocation( tt ),
                 rotation: getRotation( tt ),
             } ) ) || [],
-            watertowers: data?.WatertowerArray.map( ( wt ) => ( {
+            watertowers: data.watertowers.map( ( wt ) => ( {
                 waterStorage: getStorage( wt.Mystorage )!,
                 location: getLocation( wt ),
                 rotation: getRotation( wt ),
             } ) ) || [],
-            sandhouses: data?.SandhouseArray.map( ( sh ) => ( {
+            sandhouses: data.sandhouses.map( ( sh ) => ( {
                 sandStorage: getStorage( sh.Mystorage )!,
                 location: getLocation( sh ),
                 rotation: getRotation( sh ),
             } ) ) || [],
-            industries: data?.IndustryArray.map( ( ind ) => ( {
+            industries: data.industries.map( ( ind ) => ( {
                 type: ind.industrytype,
                 educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
                 products: [ ind.mystorageproducts1, ind.mystorageproducts2, ind.mystorageproducts3, ind.mystorageproducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
                 location: getLocation( ind ),
                 rotation: getRotation( ind ),
             } ) ) || [],
-            splines: spline?.SplineArray.map( ( s ) => ( {
+            splines: data.splines.map( ( s ) => ( {
                 type: s.SplineType,
                 segments: getSplineSegments( s ),
                 location: getLocation( s ),
                 rotation: getRotation( s ),
             } ) ) || [],
         };
+
+        this.data = data;
 
         this.valueProvider.provide( world );
 
@@ -353,15 +533,14 @@ export class World {
     public async getHeight( position: ILocation2D ) {
         const data = this.controller.getAction( Actions.QUERY );
 
-        if( !this.gameState )
+        if( !this.world?.ARRGameState )
+            await this.getWorld();
+        if( !this.world?.ARRGameState )
             return;
 
-        const ref = await data.getReference( UKismetSystemLibrary );
-        if( !ref )
-            return;
-            
-        let kismet = await ref.getStatic();
-        if( !kismet )
+        if( !this.kismetSystemLibrary )
+            await this.getKismetSystemLibrary();
+        if( !this.kismetSystemLibrary )
             return;
 
         const start = await data.create( FVector );
@@ -376,8 +555,8 @@ export class World {
 
         const result = new InOutParam( await data.create( FHitResult ) );
 
-        const hasHit = await kismet.LineTraceSingle(
-            this.gameState,
+        const hasHit = await this.kismetSystemLibrary.LineTraceSingle(
+            this.world.ARRGameState,
             start,
             end,
             ETraceTypeQuery.TraceTypeQuery1,
@@ -417,6 +596,7 @@ export class World {
     }
 
     public async setSwitch( switchInstance: ASwitch ) {
+        debugger;
         if( !this.settings.get( 'features.controlSwitches' ) )
             return;
 
