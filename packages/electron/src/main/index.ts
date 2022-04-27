@@ -57,9 +57,11 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
         Log.info( 'Hardware acceleration is enabled.' );
 
     app.on( 'ready', async () => {
-        // if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
-        //     await session.defaultSession.loadExtension( path.resolve( process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.3_0' ) );
-        // }
+        try {
+            if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
+                await session.defaultSession.loadExtension( path.resolve( process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.3_0' ) );
+            }
+        } catch( e ) {}
 
         await rrox.plugins.loadInstalledPlugins();
 

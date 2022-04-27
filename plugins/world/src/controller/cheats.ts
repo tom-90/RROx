@@ -1,4 +1,5 @@
 import { Actions, IPluginController, IQuery, SettingsStore } from "@rrox/api";
+import WorldPlugin from ".";
 import { ICheats, IWorldSettings } from "../shared";
 import { ASCharacter } from "./structs/arr/SCharacter";
 import { EMovementMode } from "./structs/Engine/EMovementMode";
@@ -13,10 +14,10 @@ export class Cheats {
 
     private interval: NodeJS.Timeout;
 
-    constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {}
+    constructor( private plugin: WorldPlugin, private settings: SettingsStore<IWorldSettings> ) {}
 
     public async prepare() {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         this.pawnQuery = await data.prepareQuery( APlayerState, ( player ) => [
             player.PawnPrivate
@@ -32,7 +33,7 @@ export class Cheats {
     public start() {
         this.stop();
 
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         setInterval( async () => {
             if( !this.settings.get( 'features.cheats' ) ) {
@@ -53,10 +54,11 @@ export class Cheats {
 
     public stop() {
         clearInterval( this.interval );
+        this.fastSprintPlayers.clear();
     }
 
     private async getCharacter( player: APlayerState ): Promise<ASCharacter> {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         let pawn: APawn;
         if( player.PawnPrivate )
@@ -83,7 +85,7 @@ export class Cheats {
     }
 
     public async getCheats( player: APlayerState ): Promise<ICheats> {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );
 
@@ -99,7 +101,7 @@ export class Cheats {
         if( !this.settings.get( 'features.cheats' ) )
             return;
 
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );
     
@@ -125,7 +127,7 @@ export class Cheats {
         if( !this.settings.get( 'features.cheats' ) )
             return;
 
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );
 

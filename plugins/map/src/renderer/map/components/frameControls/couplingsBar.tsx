@@ -1,5 +1,5 @@
-/*import React from 'react';
-import { CoupledFrameItem } from '@rrox/utils';
+import { CoupledFrameItem } from '@rrox/world/shared';
+import React from 'react';
 import { FrameDefinitions } from '../../definitions';
 
 export function CouplingsBar( {
@@ -12,22 +12,22 @@ export function CouplingsBar( {
     setSelectedIndex: ( ID: number ) => void,
 } ) {
     return <div style={{ display: 'flex', overflowX: 'auto', maxWidth: '100%', minHeight: 50 }} className="couplingBar">
-        {coupledFrames.map( ( { frame, flipped, isCoupled }, i ) => {
-            const definition = FrameDefinitions[ frame.Type ];
+        {coupledFrames.map( ( { frame, flipped, isCoupled, index }, i ) => {
+            const definition = FrameDefinitions[ frame.type ];
 
             return <img
                 width={50}
                 style={{
                     transform: flipped ? 'scaleX(-1)' : undefined,
                     cursor: 'pointer',
-                    backgroundColor: frame.ID === selectedIndex ? '#999' :
+                    backgroundColor: index === selectedIndex ? '#999' :
                         ( !isCoupled ? '#ff8383' : undefined )
                 }}
                 src={definition.imageIcon}
-                onClick={() => setSelectedIndex( frame.ID )}
+                onClick={() => setSelectedIndex( index )}
                 key={i}
                 alt="Coupling Bar Icon"
             />
         } )}
     </div>;
-}*/
+}

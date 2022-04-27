@@ -1,7 +1,9 @@
 import { Actions, InOutParam, IPluginController, IQuery, query, QueryBuilder, SettingsStore, ValueProvider } from "@rrox/api";
+import WorldPlugin from ".";
 import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings } from "../shared";
 import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
+import { Acoupler } from "./structs/arr/coupler";
 import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";
 import { Asandhouse } from "./structs/arr/sandhouse";
@@ -51,20 +53,20 @@ export class World {
     };
     
     public data: IWorldObjects = this.empty;
+    public valueProvider: ValueProvider<IWorld>;
 
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
     private switchQuery: IQuery<ASwitch>;
-    private valueProvider: ValueProvider<IWorld>;
     private clientQuery: IQuery<UNetConnection>;
     private clientSplineQuery: IQuery<UNetConnection>;
 
-    constructor( private controller: IPluginController, private settings: SettingsStore<IWorldSettings> ) {
-        this.valueProvider = controller.communicator.provideValue( WorldCommunicator, this.empty );
+    constructor( private plugin: WorldPlugin, private settings: SettingsStore<IWorldSettings> ) {
+        this.valueProvider = plugin.controller.communicator.provideValue( WorldCommunicator, this.empty );
     }
 
     async prepare() {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         await this.getKismetSystemLibrary();
         await this.getWorld();
@@ -233,7 +235,7 @@ export class World {
     }
 
     private async getKismetSystemLibrary() {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const kismetRef = await data.getReference( UKismetSystemLibrary );
         if( kismetRef )
@@ -243,7 +245,7 @@ export class World {
     }
 
     private async getWorld() {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const ref = await data.getReference( UGameEngine );
         if( !ref )
@@ -298,7 +300,7 @@ export class World {
         
         let gameState: AarrGameStateBase | null = this.world.ARRGameState;
 
-        const queryAction = this.controller.getAction( Actions.QUERY );
+        const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         const data = await queryAction.query( this.worldQuery, gameState );
         const spline = await queryAction.query( this.splineQuery, gameState );
@@ -306,7 +308,7 @@ export class World {
         gameState = data;
 
         if( gameState && spline ) {
-            gameState.SplineArray = gameState.SplineArray;
+            gameState.SplineArray = spline.SplineArray;
         }
 
         if( !gameState )
@@ -335,7 +337,7 @@ export class World {
             }
         }
 
-        const queryAction = this.controller.getAction( Actions.QUERY );
+        const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         const conn = await queryAction.query( this.clientQuery, this.world.NetDriver.ServerConnection );
         const connSplines = await queryAction.query( this.clientSplineQuery, this.world.NetDriver.ServerConnection );
@@ -381,142 +383,15 @@ export class World {
     }
 
     private parseWorld( data: IWorldObjects ) {
-        const getLocation = ( actor: AActor ): ILocation => ( {
-            X: actor.RootComponent.RelativeLocation.X,
-            Y: actor.RootComponent.RelativeLocation.Y,
-            Z: actor.RootComponent.RelativeLocation.Z,
-        } );
-
-        const getRotation = ( actor: AActor ): IRotation => ( {
-            Pitch: actor.RootComponent.RelativeRotation.Pitch,
-            Yaw: actor.RootComponent.RelativeRotation.Yaw,
-            Roll: actor.RootComponent.RelativeRotation.Roll,
-        } );
-
-        const getStorage = ( storage?: Astorage ): IStorage | undefined => ( storage ? {
-            currentAmount: storage.currentamountitems,
-            maxAmount: storage.maxitems,
-            type: storage.storagetype as ProductType,
-        } : undefined );
-
-        const getSplineSegments = ( spline: ASplineActor ) => {
-            const segments: ISpline[ 'segments' ] = [];
-
-            for( let i = 0; i < spline.SplineControlPoints.length - 1; i++ ) {
-                const point = spline.SplineControlPoints[ i ];
-                const next = spline.SplineControlPoints[ i + 1 ];
-                segments.push( {
-                    start: {
-                        X: point.X,
-                        Y: point.Y,
-                        Z: point.Z,
-                    },
-                    end: {
-                        X: next.X,
-                        Y: next.Y,
-                        Z: next.Z
-                    },
-                    visible: spline.SplineMeshBoolArray[ i ],
-                } );
-            }
-
-            return segments;
-        }
-
         const world: IWorld = {
-            players: data.players.map( ( p ) => ( {
-                name    : p.PlayerNamePrivate,
-                location: getLocation( p.PawnPrivate ),
-                rotation: getRotation( p.PawnPrivate ),
-            } ) ) || [],
-            frameCars: data.frameCars.map( ( f ) => ( {
-                type: f.FrameType as FrameCarType,
-                name: f.framename,
-                number: f.FrameNumber,
-                location: getLocation( f ),
-                rotation: getRotation( f ),
-                speedMs: f.currentspeedms,
-                maxSpeedMs: f.maxspeedms,
-                controls: {
-                    regulator: f.MyRegulator?.openPercentage,
-                    reverser: f.MyReverser?.forwardvalue,
-                    brake: f.MyBrake?.brakevalue,
-                    whistle: f.Mywhistle?.whistleopenfactor,
-                    generator: f.Myhandvalvegenerator?.openPercentage,
-                    compressor: f.Myhandvalvecompressor?.openPercentage,
-                },
-                boiler: f.MyBoiler ? {
-                    pressure: f.MyBoiler.currentboilerpressure,
-                    maxPressure: f.MyBoiler.maxboilerpressure,
-                    waterTemperature: f.MyBoiler.currentwatertemperature,
-                    waterAmount: f.MyBoiler.currentwateramount,
-                    maxWaterAmount: f.MyBoiler.maxwateramount,
-                    fireTemperature: f.MyBoiler.currentfiretemperature,
-                    fuel: f.MyBoiler.currentfuel,
-                    maxFuel: f.MyBoiler.maxfuel,
-                } : undefined,
-                compressor: f.Mycompressor ? {
-                    airPressure: f.Mycompressor.currentairpressure
-                } : undefined,
-                tender: f.MyTender ? {
-                    fuel: f.MyTender.currentamountFuel,
-                    maxFuel: f.MyTender.maxamountfuel,
-                    water: f.MyTender.currentamountWater,
-                    maxWater: f.MyTender.maxamountwater,
-                } : undefined,
-                freight: f.MyFreight ? {
-                    type: f.MyFreight.currentfreighttype as ProductType,
-                    currentAmount: f.MyFreight.currentfreight,
-                    maxAmount: f.MyFreight.maxfreight,
-                } : undefined,
-                couplers: {
-                    front: f.MyCouplerFront ? {
-                        isCoupled: f.MyCouplerFront.bIsCoupled
-                    } : undefined,
-                    rear: f.MyCouplerRear ? {
-                        isCoupled: f.MyCouplerRear.bIsCoupled,
-                    } : undefined,
-                },
-            } ) ) || [],
-            switches: data.switches.map( ( sw ) => ( {
-                type: sw.switchtype,
-                state: sw.switchstate,
-            
-                location: getLocation( sw ),
-                rotation: getRotation( sw ),
-            } ) ) || [],
-            turntables: data.turntables.map( ( tt ) => ( {
-                deckRotation: {
-                    Pitch: tt.deckmesh.RelativeRotation.Pitch,
-                    Yaw: tt.deckmesh.RelativeRotation.Pitch,
-                    Roll: tt.deckmesh.RelativeRotation.Pitch,
-                },
-                location: getLocation( tt ),
-                rotation: getRotation( tt ),
-            } ) ) || [],
-            watertowers: data.watertowers.map( ( wt ) => ( {
-                waterStorage: getStorage( wt.Mystorage )!,
-                location: getLocation( wt ),
-                rotation: getRotation( wt ),
-            } ) ) || [],
-            sandhouses: data.sandhouses.map( ( sh ) => ( {
-                sandStorage: getStorage( sh.Mystorage )!,
-                location: getLocation( sh ),
-                rotation: getRotation( sh ),
-            } ) ) || [],
-            industries: data.industries.map( ( ind ) => ( {
-                type: ind.industrytype,
-                educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
-                products: [ ind.mystorageproducts1, ind.mystorageproducts2, ind.mystorageproducts3, ind.mystorageproducts4 ].map( getStorage ).filter( ( st ): st is IStorage => st !== undefined ),
-                location: getLocation( ind ),
-                rotation: getRotation( ind ),
-            } ) ) || [],
-            splines: data.splines.map( ( s ) => ( {
-                type: s.SplineType,
-                segments: getSplineSegments( s ),
-                location: getLocation( s ),
-                rotation: getRotation( s ),
-            } ) ) || [],
+            players: data.players.map( ( d ) => this.plugin.parser.parsePlayer( d ) ),
+            frameCars: data.frameCars.map( ( d ) => this.plugin.parser.parseFrameCar( d, data.frameCars ) ),
+            switches: data.switches.map( ( d ) => this.plugin.parser.parseSwitch( d ) ),
+            turntables: data.turntables.map( ( d ) => this.plugin.parser.parseTurntable( d ) ),
+            watertowers: data.watertowers.map( ( d ) => this.plugin.parser.parseWatertower( d ) ),
+            sandhouses: data.sandhouses.map( ( d ) => this.plugin.parser.parseSandhouse( d ) ),
+            industries: data.industries.map( ( d ) => this.plugin.parser.parseIndustry( d ) ),
+            splines: data.splines.map( ( d ) => this.plugin.parser.parseSpline( d ) ),
         };
 
         this.data = data;
@@ -531,7 +406,7 @@ export class World {
     }
 
     public async getHeight( position: ILocation2D ) {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         if( !this.world?.ARRGameState )
             await this.getWorld();
@@ -582,7 +457,7 @@ export class World {
     }
 
     public async getCharacter() {
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const ref = await data.getReference( ABP_Player_Conductor_C );
         if( !ref )
@@ -600,7 +475,7 @@ export class World {
         if( !this.settings.get( 'features.controlSwitches' ) )
             return;
 
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter();
         if( !character )
@@ -620,7 +495,7 @@ export class World {
         if( !this.settings.get( 'features.teleport' ) )
             return;
 
-        const data = this.controller.getAction( Actions.QUERY );
+        const data = this.plugin.controller.getAction( Actions.QUERY );
 
         if( !player.PawnPrivate )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as this player could not be found.` );

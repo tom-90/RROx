@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Slider } from "antd";
+import { Slider, Popover, Switch } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import { FrameDefinitions } from '../../definitions';
-import { FrameCarControl, IFrameCar } from '@rrox/world/shared';
+import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine } from '@rrox/world/shared';
+import { CouplingsBar } from './couplingsBar';
+import { useRPC } from '@rrox/api';
 
 function throttle<P extends any[]>( fn: ( ...args: P ) => void, wait: number ): ( ...args: P ) => void {
     let latestArgs: P | null;
@@ -38,6 +41,7 @@ export function FrameControls( {
     setEngineControls: ( index: number, type: FrameCarControl, value: number ) => void,
 } ) {
     const [ selectedFrame, setSelectedFrame ] = useState( index );
+    const setControlsSynced = useRPC( SetControlsSyncCommunicator );
 
     const selectedData = frames[ selectedFrame ];
 
@@ -45,6 +49,13 @@ export function FrameControls( {
 
     const definition = FrameDefinitions[ type ];
     const isEngine = definition.engine;
+
+    const [ pendingSyncControls, setPendingSyncControls ] = useState<boolean | null>( null );
+
+    useEffect( () => {
+        if( pendingSyncControls !== null && pendingSyncControls === data.syncedControls )
+        setPendingSyncControls( null );
+    }, [ pendingSyncControls, data.syncedControls ] );
 
     const [ controls, setControls ] = useState<{
         regulator?: number,
@@ -72,138 +83,166 @@ export function FrameControls( {
 
         setControls( controlsData );
     }, [ controlsData ] );
+    
+    const coupledFrames = getCoupledFrames( selectedData, selectedFrame, frames );
+    const controlledBy = isEngine ? coupledFrames.find(
+        ( coupled ) => coupled.isCoupled && coupled.frame.syncedControls && checkIsEngine( coupled.frame ) && coupled.frame !== selectedData
+    )?.frame : undefined;
 
     return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
         <div style={{ width: '100%' }}>
-            <table style={{ width: '100%' }} className='frameControls'>
-                <thead>
-                    {isEngine
-                        ? <tr>
-                            <th style={{ width: '16%' }}>Regulator</th>
-                            <th style={{ width: '16%' }}>Reverser</th>
-                            <th style={{ width: '16%' }}>Brake</th>
-                            {!compact && <th style={{ width: '16%' }}>Whistle</th>}
-                            {!compact && <th style={{ width: '16%' }}>Generator</th>}
-                            {!compact && <th style={{ width: '16%' }}>Compressor</th>}
+            {controlledBy
+                ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: 250 }}>
+                    Controlled by&nbsp;<strong>{`${controlledBy.name.replace("<br>", "").toUpperCase()}${controlledBy.name && controlledBy.number ? ' - ' : ''}${controlledBy.number.toUpperCase() || ''}`}</strong>
+                </div>
+                : <table style={{ width: '100%' }} className='frameControls'>
+                    <thead>
+                        {isEngine
+                            ? <tr>
+                                <th style={{ width: '16%' }}>Regulator</th>
+                                <th style={{ width: '16%' }}>Reverser</th>
+                                <th style={{ width: '16%' }}>Brake</th>
+                                {!compact && <th style={{ width: '16%' }}>Whistle</th>}
+                                {!compact && <th style={{ width: '16%' }}>Generator</th>}
+                                {!compact && <th style={{ width: '16%' }}>Compressor</th>}
+                            </tr>
+                            : <tr><th style={{ width: '100%' }}>Brake</th></tr>
+                        }
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {isEngine && <td><Slider
+                                vertical
+                                min={0}
+                                max={100}
+                                value={controls.regulator! * 100}
+                                step={1}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => setControls( { ...controls, regulator: value / 100 } )}
+                                onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Regulator, value / 100 )}
+                            /></td>}
+                            {isEngine && <td><Slider
+                                vertical
+                                min={-100}
+                                max={100}
+                                value={controls.reverser! * 100}
+                                step={1}
+                                included={false}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    [ -100 ]: '-100%',
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => setControls( { ...controls, reverser: value / 100 } )}
+                                onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Reverser, value / 100 )}
+                            /></td>}
+                            <td><Slider
+                                vertical
+                                min={0}
+                                max={100}
+                                value={controls.brake * 100}
+                                step={1}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => setControls( { ...controls, brake: value / 100 } )}
+                                onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Brake, value / 100 )}
+                            /></td>
+                            {isEngine && !compact && <td><Slider
+                                vertical
+                                min={0}
+                                max={100}
+                                value={controls.whistle! * 100}
+                                step={1}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => {
+                                    setWhistle( value );
+                                    setControls( { ...controls, whistle: value / 100 } )
+                                }}
+                                onAfterChange={() => {
+                                    setWhistle( 0 );
+                                    setControls( { ...controls, whistle: 0 } )
+                                }}
+                            /></td>}
+                            {isEngine && !compact && <td><Slider
+                                vertical
+                                min={0}
+                                max={100}
+                                value={(controls.generator || 0) * 100}
+                                step={1}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => setControls( { ...controls, generator: value / 100 } )}
+                                onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Generator, value / 100 )}
+                            /></td>}
+                            {isEngine && !compact && <td><Slider
+                                vertical
+                                min={0}
+                                max={100}
+                                value={(controls.compressor || 0) * 100}
+                                step={1}
+                                tipFormatter={( value ) => value + '%'}
+                                tooltipPlacement={'left'}
+                                disabled={!controlEnabled}
+                                marks={{
+                                    0: '0%',
+                                    100: '100%'
+                                }}
+                                style={{ height: 200, margin: '20px auto' }}
+                                onChange={( value: number ) => setControls( { ...controls, compressor: value / 100 } )}
+                                onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Compressor, value / 100 )}
+                            /></td>}
                         </tr>
-                        : <tr><th style={{ width: '100%' }}>Brake</th></tr>
-                    }
-                </thead>
-                <tbody>
-                    <tr>
-                        {isEngine && <td><Slider
-                            vertical
-                            min={0}
-                            max={100}
-                            value={controls.regulator! * 100}
-                            step={1}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => setControls( { ...controls, regulator: value / 100 } )}
-                            onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Regulator, value / 100 )}
-                        /></td>}
-                        {isEngine && <td><Slider
-                            vertical
-                            min={-100}
-                            max={100}
-                            value={controls.reverser! * 100}
-                            step={1}
-                            included={false}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                [ -100 ]: '-100%',
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => setControls( { ...controls, reverser: value / 100 } )}
-                            onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Reverser, value / 100 )}
-                        /></td>}
-                        <td><Slider
-                            vertical
-                            min={0}
-                            max={100}
-                            value={controls.brake * 100}
-                            step={1}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => setControls( { ...controls, brake: value / 100 } )}
-                            onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Brake, value / 100 )}
-                        /></td>
-                        {isEngine && !compact && <td><Slider
-                            vertical
-                            min={0}
-                            max={100}
-                            value={controls.whistle! * 100}
-                            step={1}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => {
-                                setWhistle( value );
-                                setControls( { ...controls, whistle: value / 100 } )
-                            }}
-                            onAfterChange={() => {
-                                setWhistle( 0 );
-                                setControls( { ...controls, whistle: 0 } )
-                            }}
-                        /></td>}
-                        {isEngine && !compact && <td><Slider
-                            vertical
-                            min={0}
-                            max={100}
-                            value={(controls.generator || 0) * 100}
-                            step={1}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => setControls( { ...controls, generator: value / 100 } )}
-                            onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Generator, value / 100 )}
-                        /></td>}
-                        {isEngine && !compact && <td><Slider
-                            vertical
-                            min={0}
-                            max={100}
-                            value={(controls.compressor || 0) * 100}
-                            step={1}
-                            tipFormatter={( value ) => value + '%'}
-                            tooltipPlacement={'left'}
-                            disabled={!controlEnabled}
-                            marks={{
-                                0: '0%',
-                                100: '100%'
-                            }}
-                            style={{ height: 200, margin: '20px auto' }}
-                            onChange={( value: number ) => setControls( { ...controls, compressor: value / 100 } )}
-                            onAfterChange={( value: number ) => setEngineControls( selectedFrame, FrameCarControl.Compressor, value / 100 )}
-                        /></td>}
-                    </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            }
+            {isEngine && !compact && controlEnabled && !controlledBy && <div style={{ display: 'flex', justifyContent: 'center', margin: 10 }}>
+                <Switch
+                    checked={selectedData.syncedControls}
+                    onChange={( checked ) => {
+                        setControlsSynced( selectedFrame, checked );
+                        setPendingSyncControls( checked );
+                    }}
+                    style={{ marginRight: 10 }}
+                    loading={pendingSyncControls != null && pendingSyncControls !== selectedData.syncedControls}
+                />
+                Synchronize controls with other engines.
+                <Popover content={<p style={{ maxWidth: 375 }}>
+                    By enabling this setting, the controls of this engine will be synchronized to all other coupled engines.
+                    This works when controlling the engine in-game as well as from RROx. (Only regulator, reverser and brake are synchronized)
+                </p>} trigger="hover" zIndex={2500}>
+                    <QuestionCircleOutlined style={{ fontSize: 20, margin: '0 10px', color: '#f98c16', cursor: 'pointer' }} />
+                </Popover>
+            </div>}
             {isEngine && !compact && <table style={{ width: '100%' }}>
                 <thead>
                     <tr>
@@ -273,5 +312,10 @@ export function FrameControls( {
                 </tbody>
             </table>}
         </div>
+        {!compact && <CouplingsBar
+            coupledFrames={getCoupledFrames( data, index, frames )}
+            selectedIndex={selectedFrame}
+            setSelectedIndex={setSelectedFrame}
+        />}
     </div>;
 }
