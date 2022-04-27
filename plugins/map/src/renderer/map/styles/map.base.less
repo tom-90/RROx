@@ -1,0 +1,127 @@
+@import "~leaflet/dist/leaflet.css";
+
+.map {
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	&.map-minimap {
+		.leaflet-control-container {
+			visibility: hidden;
+		}
+	}
+}
+
+.ant-tooltip {
+	z-index: 2000!important;
+}
+
+.ant-design-draggable-modal .map-modal {
+	.ant-modal-close-x {
+		width: 30px;
+		height: 30px;
+		margin: -15px -2px;
+	}
+
+	.ant-design-draggable-modal-title {
+		padding: 2px;
+	}
+
+	.ant-modal-body {
+		padding: 0;
+	}
+
+	.ant-design-draggable-modal-resize-handle-inner {
+		z-index: 3000;
+	}
+
+	&.minimap {
+		.ant-modal-header {
+			display: none;
+		}
+
+		.ant-modal-content {
+			background: none!important;
+			box-shadow: none;
+		}
+		
+		.ant-modal-close-x {
+			display: none;
+		}
+
+		.ant-design-draggable-modal-resize-handle-inner {
+			display: none;
+		}
+	}
+}
+
+.leaflet-container {
+	background: none!important;
+}
+
+.leaflet-popup {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+	z-index: 1000;
+
+	.leaflet-popup-content-wrapper {
+		border-radius: 0;
+	}
+}
+
+.search-popup{
+	margin: 5% auto;
+	min-width: 300px;
+	width: 40%;
+	padding: 10px;
+	position: relative;
+	border-radius: 5px;
+	.search-close{
+		position: absolute;
+		top: 5px;
+		right: 0;
+		button{
+			background: transparent;
+			border: none;
+		}
+	}
+	input{
+		font-size: 20px;
+		margin-bottom: 5px;
+		margin-top: 20px;
+		background: transparent;
+	}
+	.search-results{
+		width: 100%;
+		max-height: 50vh;
+		overflow: auto;
+		padding-right: 2px;
+		.search-result{
+			border: 1px solid black;
+			border-radius: 2px;
+			margin-bottom: 2px;
+			padding: 5px;
+			display: flex;
+			.text{
+				span{
+					line-height: normal;
+					display: block;
+				}
+				.result-title{
+					font-size: 20px;
+				}
+				width: 100%;
+			}
+			.buttons{
+				line-height: normal;
+				width: 20%;
+				display: flex;
+				justify-content: end;
+			}
+		}
+	}
+}
+
+.leaflet-background-pane .background-dark {
+	filter: invert(1);
+}

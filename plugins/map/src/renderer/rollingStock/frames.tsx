@@ -39,7 +39,7 @@ export function FramesList( {
                 className={'frame-list-item'}
             >
                 <List.Item.Meta
-                    avatar={<Avatar shape='square' src={definition.image} size={100} style={{ marginTop: -25 }} />}
+                    avatar={<Avatar shape='square' className='dark-mode-invert' src={definition.image} size={100} style={{ marginTop: -25 }} />}
                     title={`${frame.name.toUpperCase()}${frame.name && frame.number ? ' - ' : ''}${frame.number.toUpperCase() || ''}`}
                     description={definition.engine ? <table>
                             <thead>
