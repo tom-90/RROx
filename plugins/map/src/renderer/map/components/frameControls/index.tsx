@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Slider, Popover, Switch } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { FrameDefinitions } from '../../definitions';
-import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine } from '@rrox/world/shared';
+import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine, SetControlsCommunicator } from '@rrox/world/shared';
 import { CouplingsBar } from './couplingsBar';
 import { useRPC } from '@rrox/api';
 
@@ -30,15 +30,13 @@ export function FrameControls( {
     index,
     frames,
     compact = false,
-    controlEnabled = true,
-    setEngineControls
+    controlEnabled = true
 }: {
     index: number,
     data: IFrameCar,
     frames: IFrameCar[],
     compact?: boolean,
-    controlEnabled?: boolean,
-    setEngineControls: ( index: number, type: FrameCarControl, value: number ) => void,
+    controlEnabled?: boolean
 } ) {
     const [ selectedFrame, setSelectedFrame ] = useState( index );
     const setControlsSynced = useRPC( SetControlsSyncCommunicator );
@@ -65,6 +63,8 @@ export function FrameControls( {
         generator?: number,
         compressor?: number
     }>( controlsData );
+
+    const setEngineControls = useRPC( SetControlsCommunicator );
 
     const setWhistle = useMemo( () => {
         return throttle( ( value: number ) => {

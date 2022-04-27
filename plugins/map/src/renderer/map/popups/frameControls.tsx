@@ -6,8 +6,7 @@ import { MapContext } from '../context';
 import { FrameControls } from '../components';
 import { FrameDefinitions } from '../definitions';
 import { MapMode } from '../types';
-import { IFrameCar, SetControlsCommunicator } from '@rrox/world/shared';
-import { useRPC } from '@rrox/api';
+import { IFrameCar } from '@rrox/world/shared';
 
 export function FrameControlsPopup( {
     className,
@@ -32,8 +31,6 @@ export function FrameControlsPopup( {
 
     const definition = FrameDefinitions[ data.type ];
     const isEngine = definition.engine;
-
-    const setControls = useRPC( SetControlsCommunicator );
 
     return <DraggableModal
         title={<>
@@ -75,7 +72,6 @@ export function FrameControlsPopup( {
         <FrameControls
             index={index}
             data={data}
-            setEngineControls={setControls}
             compact={compact}
             controlEnabled={controlEnabled}
             frames={frames}
