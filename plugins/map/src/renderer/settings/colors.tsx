@@ -18,7 +18,7 @@ import Boxcar from '@rrox/assets/images/cars/boxcar.png';
 import Caboose from '@rrox/assets/images/cars/caboose.png';
 import { MapPreferences } from "../../shared";
 import { useSettings } from "@rrox/api";
-import { FrameCarType, SplineType } from "@rrox/world/shared";
+import { FrameCarType, SplineType } from "@rrox-plugins/world/shared";
 import './style.less';
 
 export function ColorSettings() {

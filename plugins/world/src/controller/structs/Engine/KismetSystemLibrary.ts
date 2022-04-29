@@ -33,4 +33,11 @@ export class UKismetSystemLibrary {
     @Property.Function( "Function Engine.KismetSystemLibrary.LineTraceSingle", [ [ () => UObject ], [ () => FVector ], [ () => FVector ], [ () => ETraceTypeQuery ], [], [ [ () => AActor ] ], [ () => EDrawDebugTrace ], [ () => FHitResult ], [], [ () => FLinearColor ], [ () => FLinearColor ], [], [] ] )
     public LineTraceSingle: ( WorldContextObject: UObject, Start: FVector, End: FVector, TraceChannel: ETraceTypeQuery, bTraceComplex: boolean, ActorsToIgnore: InOutParam<Array<AActor>>, DrawDebugType: EDrawDebugTrace, OutHit: InOutParam<FHitResult>, bIgnoreSelf: boolean, TraceColor: FLinearColor, TraceHitColor: FLinearColor, DrawTime: float ) => Promise<boolean>;
     
+    /**
+     * @param WorldContextObject Object property
+     * @return Boolean property
+     * @flags Final, Native, Static, Public, BlueprintCallable, BlueprintPure
+     */
+    @Property.Function( "Function Engine.KismetSystemLibrary.IsServer", [ [ () => UObject ], [] ] )
+    public IsServer: ( WorldContextObject: UObject ) => Promise<boolean>;
 }

@@ -1,0 +1,38 @@
+@import "./map.base.less";
+
+.leaflet-popup-content-wrapper{
+	background: #2e2e2e !important;
+}
+
+.leaflet-left {
+	.leaflet-control-zoom{
+		background: #2e2e2e!important;
+		border-color: rgba(0,0,0,0.2)!important;
+		a {
+			background: #2e2e2e!important;
+			color: #ffffff!important;
+			border-color: rgba(0,0,0,0.2)!important;
+
+			&:hover {
+				background: #575757!important;
+				color: #ffffff!important;
+			}
+		}
+	}
+	
+	.leaflet-control-layers {
+		background: #2e2e2e!important;
+		border-color: rgba(0,0,0,0.2)!important;
+
+		.leaflet-control-layers-toggle {
+			filter: invert(1)!important;
+		}
+	}
+}
+
+.leaflet-right{
+	.leaflet-control-layers{
+		background: #2e2e2e!important;
+		color: #ffffff!important;
+	}
+}

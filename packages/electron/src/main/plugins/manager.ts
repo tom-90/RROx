@@ -24,7 +24,7 @@ export class PluginManager {
     private installed: { [ name: string ]: IPlugin } = {};
     private loaded   : { [ name: string ]: PluginController } = {};
 
-    private valueProvider: ValueProvider<[ installed: { [ name: string ]: IPlugin }, loaded: string[] ]>;
+    private valueProvider: ValueProvider<[ installed: { [ name: string ]: IPlugin }, loaded: string[], loading: boolean ]>;
     private installer = new PluginInstaller( this.app );
 
     constructor( private app: RROxApp ) {
@@ -41,7 +41,7 @@ export class PluginManager {
             } ) as any
         };
 
-        this.valueProvider = app.communicator.provideValue( PluginsCommunicator, [ this.installed, Object.keys( this.loaded ) ] );
+        this.valueProvider = app.communicator.provideValue( PluginsCommunicator, [ this.installed, Object.keys( this.loaded ), false ] );
 
         app.communicator.handle(   InstallPluginCommunicator, ( name: string, confirm = false ) => this.  installPlugin( name, confirm ) );
         app.communicator.handle( UninstallPluginCommunicator, ( name: string, confirm = false ) => this.uninstallPlugin( name, confirm ) );
@@ -55,8 +55,8 @@ export class PluginManager {
         } );
     }
 
-    private emitUpdate() {
-        this.valueProvider.provide( [ this.installed, Object.keys( this.loaded ) ] );
+    private emitUpdate( loading: boolean = false ) {
+        this.valueProvider.provide( [ this.installed, Object.keys( this.loaded ), loading ] );
     }
 
     public async getInstalledPlugins() {
@@ -94,10 +94,11 @@ export class PluginManager {
         if( this.loaded[ plugin.name ] )
             return true;
 
+        this.emitUpdate( true );
+
         try {
             // Make sure we cannot load the same plugin twice
             this.loaded[ plugin.name ] = new PluginController( this.app, plugin );
-            this.emitUpdate();
 
             for( let dependency of plugin.dependencies )
                 if( !( await this.loadPlugin( dependency ) ) )
@@ -105,10 +106,12 @@ export class PluginManager {
 
             await this.loaded[ plugin.name ].load();
 
+            this.emitUpdate( false );
+
             return true;
         } catch( e ) {
             delete this.loaded[ plugin.name ];
-            this.emitUpdate();
+            this.emitUpdate( false );
 
             Log.error( `Failed to load plugin "${plugin.name}":`, e );
 
@@ -159,6 +162,23 @@ export class PluginManager {
             return res;
 
         await this.getInstalledPlugins();
+    }
+
+    public async installDefaultPlugins() {
+        const defaultPlugins = [
+            '@rrox-plugins/map'
+        ];
+
+        for( let plugin of defaultPlugins ) {
+            try {
+                this.emitUpdate( true );
+                await this.installPlugin( plugin, true );
+            } catch( e ) {
+                Log.warn( 'Failed to load default plugin. Skipping...', plugin, e );
+            }
+        }
+
+        this.emitUpdate( false );
     }
 
     private async addDevPlugin() {

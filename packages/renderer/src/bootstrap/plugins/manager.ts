@@ -3,9 +3,10 @@ import { IPlugin } from "./type";
 import { PluginRenderer } from "./renderer";
 import { RegistrationStore } from "../registrations";
 import { RendererCommunicator, Logger, ValueConsumer, RendererMode, ShareMode } from "@rrox/api";
-import { ElectronLog, LogFunctions } from "electron-log";
+import { LogFunctions } from "electron-log";
 import { SettingsManager } from "./settings";
 import { PluginsCommunicator } from "../../communicators";
+import { EventEmitter2 } from "eventemitter2";
 
 export type WebpackRemotePackages = {
     [ module: string ]: {
@@ -26,7 +27,7 @@ export enum PluginManagerMode {
     Remote,
 }
 
-export class PluginManager {
+export class PluginManager extends EventEmitter2 {
     public registrations = new RegistrationStore();
     public settings: SettingsManager;
 
@@ -37,8 +38,12 @@ export class PluginManager {
     private enabled = false;
     private managerMode: PluginManagerMode = PluginManagerMode.Local;
     private shareMode = ShareMode.NONE;
+    private controllerLoading: boolean = false;
+    private rendererLoading: boolean = false;
 
     constructor( public communicator: RendererCommunicator, public rendererMode: RendererMode ) {
+        super();
+
         this.log = Logger.get( PluginInfo );
         this.settings = new SettingsManager( this.communicator, this.log );
 
@@ -51,15 +56,25 @@ export class PluginManager {
             return;
         this.enabled = true;
         
-        new ValueConsumer( this.communicator, PluginsCommunicator ).on( 'update', ( [ installed, loaded ] ) => {
+        new ValueConsumer( this.communicator, PluginsCommunicator ).on( 'update', ( [ installed, loaded, loading ] ) => {
+            this.controllerLoading = loading;
+            this.emit( 'loading', this.isLoading );
             this.processPluginEvent( installed, loaded );
         } );
     }
 
+    public get isLoading() {
+        return this.controllerLoading || this.rendererLoading;
+    }
+
     private async processPluginEvent( installed: { [ name: string ]: IPlugin }, loaded: string[] ) {
         this.installed = installed;
+        this.rendererLoading = true;
+        this.emit( 'loading', this.isLoading );
         for( let plugin of loaded )
             await this.loadPlugin( plugin );
+        this.rendererLoading = false;
+        this.emit( 'loading', this.isLoading );
     }
 
     public getLoadedPlugins() {

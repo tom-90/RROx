@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { Divider, Form, InputNumber, Slider, Switch, Button } from 'antd';
 import { MapContext } from '../context';
-import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats } from '@rrox/world/shared';
+import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
 
 export function Cheats( {

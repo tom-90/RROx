@@ -1,7 +1,7 @@
 import React from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { ProductDefinitions } from '../definitions';
-import { IStorage, ProductType } from '@rrox/world/shared';
+import { IStorage, ProductType } from '@rrox-plugins/world/shared';
 
 export function StorageInfo( {
     className,
@@ -61,7 +61,7 @@ export function StorageInfo( {
                             </td>
                             <td style={{ width: Math.round( 50 / storages[ storage ].length ) + '%' }}>
                                 {type.split( ' ' ).map( ( item: ProductType, i: number ) => <img
-                                    className="StorageInfoImg"
+                                    className="dark-mode-invert"
                                     src={ProductDefinitions[ item ]?.image}
                                     height={50}
                                     key={i.toString()}

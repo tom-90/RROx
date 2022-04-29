@@ -1,17 +1,20 @@
-import { IPlayer, IWorld, SplineType } from "@rrox/world/shared";
-import React, { useContext } from "react";
+import { IPlayer, IWorld, SplineType } from "@rrox-plugins/world/shared";
+import React, { useContext, useState } from "react";
 import L from "leaflet";
 import { MapContainer, LayersControl, Pane, LayerGroup } from "react-leaflet";
 import { MapContext } from "./context";
 import { Background, Frame, Industry, Player, Sandhouse, Splines, Switch, Turntable, WaterTower } from "./elements";
 import { ContextMenu, Controls, Line } from "./leaflet";
 import { MapMode } from "./types";
+import { SearchPopup } from "./popups";
 
 export function Map( { data, setMap }: {
     data: IWorld,
     setMap: ( map: L.Map ) => void,
 }) {
     const { config, mode, follow, utils, preferences, currentPlayerName } = useContext( MapContext )!;
+
+    const [ searchVisible, setSearchVisible ] = useState(false);
 
     return <MapContainer
         center={config.map.center}
@@ -56,7 +59,9 @@ export function Map( { data, setMap }: {
                         }
                     }
             )}
-            onSearchShow={() => null}
+            onSearchShow={() => {
+                setSearchVisible(true);
+            }}
         />
         <LayersControl>
             <Pane name='background' style={{ zIndex: 0 }}>
@@ -170,5 +175,10 @@ export function Map( { data, setMap }: {
             <Pane name='popups' style={{ zIndex: 100 }} />
         </LayersControl>
         <ContextMenu />
+        <SearchPopup
+            data={data}
+            visible={searchVisible}
+            setVisible={( visible ) => setSearchVisible(visible)}
+        />
     </MapContainer>;
 }

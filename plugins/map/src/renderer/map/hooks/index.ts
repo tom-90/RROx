@@ -5,4 +5,5 @@ export * from './memoCompare';
 export * from './positions';
 export * from './previous';
 export * from './scalingWeight';
+export * from './style';
 export * from './useAutoHide';

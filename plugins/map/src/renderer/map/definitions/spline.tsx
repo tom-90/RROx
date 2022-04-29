@@ -1,4 +1,4 @@
-import { SplineType } from '@rrox/world/shared';
+import { SplineType } from '@rrox-plugins/world/shared';
 
 export const SplineDefinitions: { [ key in SplineType ]: {
     width : number,

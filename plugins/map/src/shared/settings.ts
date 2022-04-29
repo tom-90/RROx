@@ -1,5 +1,5 @@
 import { RendererSettings, SettingsSchema } from "@rrox/api";
-import { FrameCarType, FreightFrameCarType, SplineType } from "@rrox/world/shared";
+import { FrameCarType, FreightFrameCarType, SplineType } from "@rrox-plugins/world/shared";
 
 export type SplineColors = { [ K in SplineType ]: string; };
 

@@ -1,4 +1,4 @@
-import { FrameCarType } from '@rrox/world/shared';
+import { FrameCarType, IFrameCar } from '@rrox-plugins/world/shared';
 import Handcar from '@rrox/assets/images/cars/handcar.png';
 import Porter from '@rrox/assets/images/cars/porter_040.png';
 import Porter2 from '@rrox/assets/images/cars/porter_042.png';

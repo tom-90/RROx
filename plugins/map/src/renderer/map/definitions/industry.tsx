@@ -1,4 +1,4 @@
-import { IndustryType } from '@rrox/world/shared';
+import { IndustryType } from '@rrox-plugins/world/shared';
 
 import LoggingCamp from '@rrox/assets/images/industries/Logging Camp.svg';
 import Sawmill from '@rrox/assets/images/industries/Sawmill.svg';

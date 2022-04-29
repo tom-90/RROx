@@ -5,13 +5,14 @@ import { ErrorBoundary, NotFoundPage } from "@rrox/base-ui";
 
 export function Routes( { homeRoute, children }: { homeRoute: string, children?: React.ReactNode } ) {
     const registrations = useRegistration( RouterRegistration );
-    
+
     return <RouterRoutes>
         <Route path='*' element={<NotFoundPage />} />
         {registrations.map( ( r, i ) => <Route
             key={i}
             path={r.metadata.plugin + '/*'}
             element={<ErrorBoundary
+                key={'error-boundary-' + i}
                 message={[ '@rrox/electron', '@rrox/web' ].includes( r.metadata.plugin )
                     ? undefined : `The ${r.metadata.plugin} plugin experienced an unexpected error.`}
             >

@@ -1,5 +1,5 @@
 import { ContextRegistration, MenuButtonRegistration, RendererMode, useCommunicatorAvailable, OverlayMode, useSettings, SettingsRegistration } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings, ThemeProvider, RendererSettings } from '@rrox/renderer';
+import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings, ThemeProvider, RendererSettings, PluginSpinner } from '@rrox/renderer';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Spin, message, Modal, Input } from 'antd';
@@ -33,6 +33,7 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     manager.registrations.register( ContextRegistration, metadata, <ModeContext.Provider value={{ overlay: OverlayMode.HIDDEN, renderer: RendererMode.WEB }} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
     manager.registrations.register( ContextRegistration, metadata, <ThemeProvider /> );
+    manager.registrations.register( ContextRegistration, metadata, <PluginSpinner manager={manager} /> );
 
     const communicator = manager.communicator as import( './communicator' ).SocketCommunicator;
 

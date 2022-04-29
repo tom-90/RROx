@@ -5,7 +5,7 @@ import { FrameDefinitions } from '../definitions';
 import { Button } from 'antd';
 import { FrameControlsPopup, StorageInfo } from '../popups';
 import L from 'leaflet';
-import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox/world/shared';
+import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 
@@ -125,7 +125,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
             visible={tooltipVisible && mode !== MapMode.MINIMAP}
             setVisible={setTooltipVisible}
         >
-            <img src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon"/>
+            <img className='dark-mode-invert' src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon"/>
             <Button onClick={() => {
                 setTooltipVisible( false );
                 setControlsVisible( true );

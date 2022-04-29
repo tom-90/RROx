@@ -1,5 +1,5 @@
-import { useWorld } from "@rrox/world/renderer";
-import { IWorld } from "@rrox/world/shared";
+import { useWorld } from "@rrox-plugins/world/renderer";
+import { IWorld } from "@rrox-plugins/world/shared";
 import L from "leaflet";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';

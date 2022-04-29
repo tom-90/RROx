@@ -18,3 +18,9 @@ The world loader provides a number of features that can be turned on or off depe
 - **Control Switches**: Enable/disable the ability to remotely control switches.
 - **Teleport**: Enable/disable the ability for a player teleport anywhere on the map.
 - **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.
+
+## Changelog
+
+### v1.0.0 - 30-04-2022
+
+- *Initial release for v2 of RROx.*

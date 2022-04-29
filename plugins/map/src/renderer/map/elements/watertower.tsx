@@ -5,7 +5,7 @@ import { WaterTowerDefinitions } from '../definitions';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
 import { useAutoHide } from './../hooks';
-import { IWatertower, TeleportCommunicator } from '@rrox/world/shared';
+import { IWatertower, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 

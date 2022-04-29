@@ -3,7 +3,7 @@ import { Form, Switch, Select, Divider, Collapse, Empty, Card, Radio, Button } f
 import {useSettings} from "@rrox/api";
 import { GamepadSettings } from "../../shared";
 import { controlNames } from "../../shared/controls";
-import {useWorld} from "@rrox/world/renderer";
+import {useWorld} from "@rrox-plugins/world/renderer";
 import {TestControllerModal} from "./TestControllerModal";
 
 const buttons = [

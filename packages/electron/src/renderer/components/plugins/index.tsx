@@ -30,7 +30,7 @@ export function PluginsPage() {
                 return;
             }
 
-            setPlugins( await res.json() );
+            setPlugins( ( await res.json() ).filter( ( p: any ) => p.name.startsWith( '@rrox-plugins/' ) ) );
         } ).catch( ( e ) => {
             Log.error( 'Failed to retrieve plugins from the plugin registry', e );
             message.error( 'Failed to retrieve plugins from the plugin registry.' );

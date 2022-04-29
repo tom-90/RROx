@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import { StorageInfo } from '../popups';
 import { usePositions, useImageAdjust } from '../hooks';
 import { MapMode } from '../types';
-import { IIndustry, TeleportCommunicator } from '@rrox/world/shared';
+import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
 
 export const Industry = React.memo( function Industry( { data }: { data: IIndustry } ) {
