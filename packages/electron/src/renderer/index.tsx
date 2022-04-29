@@ -1,5 +1,5 @@
 import { ContextRegistration, MenuButtonRegistration, RendererMode, SettingsRegistration } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext, ThemeProvider, RendererSettings } from '@rrox/renderer';
+import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext, ThemeProvider, RendererSettings, PluginSpinner } from '@rrox/renderer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { KeybindsController, ModeContext, Router, UpdateNotify } from './base';
@@ -51,6 +51,7 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     manager.registrations.register( ContextRegistration, metadata, <ModeContext rendererMode={manager.rendererMode} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
     manager.registrations.register( ContextRegistration, metadata, <ThemeProvider /> );
+    manager.registrations.register( ContextRegistration, metadata, <PluginSpinner manager={manager} /> );
     manager.registrations.register( ContextRegistration, metadata, <KeybindsContext.Provider value={new KeybindsController( manager.communicator )} /> );
     manager.registrations.register( ContextRegistration, metadata, <UpdateNotify /> );
 

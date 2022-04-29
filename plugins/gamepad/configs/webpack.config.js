@@ -118,7 +118,7 @@ const renderer = {
                 './shared'  : plugin.sharedEntry,
             },
             remotes: {
-                '@rrox/world': '__webpack_remotes__.load("@rrox/world")'
+                '@rrox-plugins/world': '__webpack_remotes__.load("@rrox-plugins/world")'
             },
             shared: [
                 {

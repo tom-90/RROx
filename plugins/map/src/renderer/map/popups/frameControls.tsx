@@ -6,7 +6,7 @@ import { MapContext } from '../context';
 import { FrameControls } from '../components';
 import { FrameDefinitions } from '../definitions';
 import { MapMode } from '../types';
-import { IFrameCar } from '@rrox/world/shared';
+import { IFrameCar } from '@rrox-plugins/world/shared';
 
 export function FrameControlsPopup( {
     className,

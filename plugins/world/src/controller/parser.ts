@@ -1,6 +1,6 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
-import { FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType } from "../shared";
+import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType } from "../shared";
 import { Acoupler } from "./structs/arr/coupler";
 import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";

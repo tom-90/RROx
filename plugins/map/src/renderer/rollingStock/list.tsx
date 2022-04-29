@@ -1,10 +1,10 @@
 import { PageContent, PageLayout } from "@rrox/base-ui";
-import { useWorld } from "@rrox/world/renderer";
+import { useWorld } from "@rrox-plugins/world/renderer";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "antd";
 import { FrameDefinitions } from "../map/definitions";
-import { FrameCarType } from "@rrox/world/shared";
+import { FrameCarType } from "@rrox-plugins/world/shared";
 import { FramesList } from "./frames";
 
 export function RollingStockListPage() {
@@ -13,11 +13,11 @@ export function RollingStockListPage() {
     const world = useWorld();
 
     const openControl = ( index: number ) => {
-        navigate( `/@rrox/map/controls/${index}` );
+        navigate( `/@rrox-plugins/map/controls/${index}` );
     };
 
     const locate = ( index: number ) => {
-        navigate( '/@rrox/map/map', {
+        navigate( '/@rrox-plugins/map/map', {
             state: {
                 locate: {
                     type : 'frameCars',

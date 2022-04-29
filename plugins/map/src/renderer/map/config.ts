@@ -1,4 +1,4 @@
-import { ILocation } from "@rrox/world/shared";
+import { ILocation } from "@rrox-plugins/world/shared";
 import L from "leaflet";
 
 const GameOptions = {

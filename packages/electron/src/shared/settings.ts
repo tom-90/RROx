@@ -10,6 +10,7 @@ export interface IBaseSettings {
         keybind: KeyCodes[];
     },
     'hardware-acceleration': boolean;
+    'first-install': boolean;
 }
 
 const schema: SettingsSchema<IBaseSettings> = {
@@ -45,6 +46,10 @@ const schema: SettingsSchema<IBaseSettings> = {
         type: 'boolean',
         default: true,
     },
+    'first-install': {
+        type: 'boolean',
+        default: true,
+    }
 };
 
 export const BaseSettings = Settings<IBaseSettings>( PluginInfo, {

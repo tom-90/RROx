@@ -36,7 +36,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		std::byte* ptr = (std::byte*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		std::byte* ptr = (std::byte*)stackItem.object + stackItem.baseOffset + offset;
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -53,7 +53,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		TArray<void*>* ptr = (TArray<void*>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		TArray<void*>* ptr = (TArray<void*>*)((std::byte*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -62,18 +62,17 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		auto reqOffset = request.GetOffset();
 
-		// Write each item
-		std::size_t size = 0;
-		size += static_cast<uint32_t>(ptr->Count);
+		// Cast ptr->Count to size_t
+		size_t size = ptr->Count;
 		response.Write(size);
 
-
+		// Write each item
 		for (int i = 0; i < ptr->Count; i++) {
 			response.Write(i);
 
 			request.SetOffset(reqOffset);
 
-			void* itemPtr = *(unsigned char**)ptr + itemSize * i;
+			void* itemPtr = *(std::byte**)ptr + itemSize * i;
 
 			traversal.push({ itemPtr, 0 });
 
@@ -329,7 +328,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		for (uint32_t i = 0; i < length; i++)
 			data.push_back(request.Read<std::byte>());
 
-		std::byte* ptr = (std::byte*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		std::byte* ptr = (std::byte*)stackItem.object + stackItem.baseOffset + offset;
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -413,7 +412,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		uint32_t offset = request.Read<uint32_t>();
 
-		std::byte* ptr = (std::byte*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		std::byte* ptr = (std::byte*)stackItem.object + stackItem.baseOffset + offset;
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 

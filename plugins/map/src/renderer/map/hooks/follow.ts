@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { IWorld } from "@rrox/world/shared";
-import { useWorld } from "@rrox/world/renderer";
+import { IWorld } from "@rrox-plugins/world/shared";
+import { useWorld } from "@rrox-plugins/world/renderer";
 import { MapMode } from "../types";
 import { usePrevious } from "./previous";
 

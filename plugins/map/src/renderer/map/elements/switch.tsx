@@ -4,7 +4,7 @@ import { Line } from '../leaflet';
 import { SwitchDefinitions } from '../definitions';
 import { Tooltip } from 'react-leaflet';
 import { message } from 'antd';
-import { ISwitch, SwitchType, ChangeSwitchCommunicator } from '@rrox/world/shared';
+import { ISwitch, SwitchType, ChangeSwitchCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
 
 export const Switch = React.memo( function Switch( { data, index }: { data: ISwitch, index: number } ) {

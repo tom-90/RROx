@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input, Button, Modal, List, Avatar } from 'antd';
 import { MapContext } from '../context';
 import { AimOutlined, ControlOutlined } from '@ant-design/icons';
-import { IWorld } from "@rrox/world/shared";
+import { IWorld } from "@rrox-plugins/world/shared";
 import { FrameDefinitions } from "../definitions";
 
 export function SearchPopup( { visible, setVisible, data }: {
@@ -90,7 +90,7 @@ export function SearchPopup( { visible, setVisible, data }: {
                         icon={<ControlOutlined />}
                         onClick={() => {
                             setVisible( false );
-                            navigate( `/@rrox/map/controls/${item.index}` );
+                            navigate( `/@rrox-plugins/map/controls/${item.index}` );
                         }}
                         size='large'
                     /> );
@@ -99,7 +99,7 @@ export function SearchPopup( { visible, setVisible, data }: {
                     icon={<AimOutlined />}
                     onClick={() => {
                         setVisible( false );
-                        navigate( '/@rrox/map/map', {
+                        navigate( '/@rrox-plugins/map/map', {
                             state: {
                                 locate: {
                                     type : item.type === 'player' ? 'players' : 'frameCars' ,

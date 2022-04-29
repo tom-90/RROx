@@ -55,3 +55,9 @@ It is not possible to customize the images used for the industries, water towers
 ## Minimap
 
 It is possible to enable the minimap under the minimap settings. **The minimap will only show if the game overlay is enabled under the `Overlay` settings**.
+
+## Changelog
+
+### v1.0.0 - 30-04-2022
+
+- *Initial release for v2 of RROx.*

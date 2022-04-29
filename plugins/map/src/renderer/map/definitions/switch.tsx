@@ -1,4 +1,4 @@
-import { SwitchType } from '@rrox/world/shared';
+import { SwitchType } from '@rrox-plugins/world/shared';
 
 export const SwitchDefinitions: { [ key in SwitchType ]: {
     width    : number,

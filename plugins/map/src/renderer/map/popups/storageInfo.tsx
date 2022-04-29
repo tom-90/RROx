@@ -1,7 +1,7 @@
 import React from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { ProductDefinitions } from '../definitions';
-import { IStorage, ProductType } from '@rrox/world/shared';
+import { IStorage, ProductType } from '@rrox-plugins/world/shared';
 
 export function StorageInfo( {
     className,

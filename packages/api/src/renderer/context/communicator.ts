@@ -118,15 +118,9 @@ export function useRPC<C extends CommunicatorType<any, ( ...p: any[] ) => any>>(
         return new Promise( ( resolve, reject ) => {
             context.rpc( communicator, ...params )
                 .then( ( value ) => {
-                    if( cancel.current )
-                        reject( new CancelledPromiseError() );
-                    else
-                        resolve( value );
+                    resolve( value );
                 } ).catch( ( e ) => {
-                    if( cancel.current )
-                        reject( new CancelledPromiseError() );
-                    else
-                        reject( e );
+                    reject( e );
                 } );
         } );
     }, [ context, communicator, cancel ] );
@@ -253,12 +247,4 @@ export class ValueConsumer<T> extends EventEmitter2 {
         this.unregisterListener();
     }
 
-}
-
-export class CancelledPromiseError extends Error {
-    constructor() {
-        super( 'Promise has been cancelled.' );
-
-        this.name = 'CancelledPromiseError';
-    }
 }

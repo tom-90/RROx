@@ -2,8 +2,8 @@
   "name": "@rrox/electron",
   "productName": "RailroadsOnline Extended",
   "private": true,
-  "version": "1.13.0",
-  "description": "RailroadsOnline Extended tool for RailroadsOnlineGame",
+  "version": "2.0.0",
+  "description": "Railroads Online Extended is a mod for the game Railroads Online",
   "author": "_tom()",
   "main": ".webpack/main",
   "repository": {
@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.61",
-    "@electron-forge/maker-squirrel": "6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
     "@electron-forge/publisher-github": "^6.0.0-beta.61",
     "@types/bezier-js": "^4.1.0",
@@ -59,6 +58,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-wix": "^6.0.0-beta.63",
+    "@electron-forge/publisher-electron-release-server": "^6.0.0-beta.63",
     "@hot-loader/react-dom": "^17.0.1",
     "@rrox/api": "^1.6.2",
     "@rrox/assets": "^1.6.2",

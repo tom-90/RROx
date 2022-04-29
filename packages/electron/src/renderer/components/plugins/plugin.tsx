@@ -90,6 +90,7 @@ export function Plugin( { name, installed }: { name: string, installed?: IPlugin
                 },
             } );
         } ).catch( ( e ) => {
+            loading.destroy();
             Log.error( 'Failed to install plugin.', e );
             message.error( 'Failed to install plugin.' );
         } );
@@ -129,6 +130,7 @@ export function Plugin( { name, installed }: { name: string, installed?: IPlugin
                 },
             } );
         } ).catch( ( e ) => {
+            loading.destroy();
             Log.error( 'Failed to uninstall plugin.', e );
             message.error( 'Failed to uninstall plugin.' );
         } );

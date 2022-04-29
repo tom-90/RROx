@@ -1,4 +1,4 @@
-import { app, autoUpdater, dialog, session } from 'electron';
+import { app, autoUpdater, BrowserWindow, dialog, session } from 'electron';
 import Updater from 'update-electron-app';
 import Log from 'electron-log';
 import path from 'path';
@@ -7,19 +7,29 @@ import { createAppWindow, createOverlayWindow } from './windows';
 import { Logger } from '@rrox/api';
 import { BaseSettings } from '../shared/settings';
 
-const singleInstanceLock = process.env.NODE_ENV === 'development' ? true : app.requestSingleInstanceLock();
-
-/** Handle creating/removing shortcuts on Windows when installing/uninstalling. */
-if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
+if ( require( 'electron-squirrel-startup' ) || ( process.env.NODE_ENV !== 'development' && !app.requestSingleInstanceLock() ) ) {
     app.quit();
-} else {
+} else if( app.getAppPath().includes( '\\AppData\\Local\\RailroadsOnlineExtended') ) {
+    // Stop auto update from v1
+    Log.info( 'Disabling app due to install location', app.getAppPath() );
+    app.on( 'ready', () => {
+        dialog.showMessageBox( {
+            type   : 'error',
+            buttons: [ 'Close' ],
+            title  : 'Auto-update not supported',
+            message: 'To use the new version of RROx, please uninstall the current version and manually install the new version from the RROx site.'
+        } ).then( () => {
+            app.quit();
+        } );
+    } );
+} else {    
+    // Make logger available for plugins
+    new Logger( Log );
+
     Updater( {
         logger    : Log,
         notifyUser: false, // We manually notify the user with a custom message
     } );
-    
-    // Make logger available for plugins
-    new Logger( Log );
 
     autoUpdater.on( 'update-downloaded', ( event, releaseNotes, releaseName, releaseDate, updateURL ) => {
         Log.log( 'update-downloaded', [ event, releaseNotes, releaseName, releaseDate, updateURL ] )
@@ -34,7 +44,7 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
         dialog.showMessageBox( dialogOpts ).then( ( { response } ) => {
             if ( response === 0 ) autoUpdater.quitAndInstall()
-        } )
+        } );
     } );
 
     if ( process.defaultApp ) {
@@ -56,6 +66,8 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
     } else
         Log.info( 'Hardware acceleration is enabled.' );
 
+    let appWindow: BrowserWindow | undefined = undefined;
+
     app.on( 'ready', async () => {
         try {
             if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
@@ -65,14 +77,53 @@ if ( require( 'electron-squirrel-startup' ) || !singleInstanceLock) {
 
         await rrox.plugins.loadInstalledPlugins();
 
-        rrox.addWindow( createAppWindow() );
+        appWindow = createAppWindow();
+        rrox.addWindow( appWindow );
         rrox.addWindow( createOverlayWindow( rrox ) );
+        
+        if( openURL )
+            handleOpenURL( openURL );
+
+        if( settings.get( 'first-install' ) ) {
+            settings.set( 'first-install', false );
+
+            await rrox.plugins.installDefaultPlugins();
+        }
     } );
 
     app.on( 'second-instance', ( e, argv ) => {
+        let openURL = argv.find( ( arg ) => arg.startsWith( 'rrox://' ) );
+        if( openURL )
+            handleOpenURL( openURL );
+
+        if (appWindow) {
+            if (appWindow.isMinimized()) {
+                appWindow.restore();
+            }
+
+            appWindow.focus();
+        }
     });
 
     app.on( 'window-all-closed', () => {
         app.quit();
     } );
+
+    const handleOpenURL = async ( url: string ) => {
+        if( url && url.startsWith( 'rrox://key/' ) ) {
+            const key = url.substring( 'rrox://key/'.length );
+            if( key ) {
+                try {
+                    await rrox.shared.join( key );
+                } catch( e ) {
+                    Log.error( 'Failed to connect to shared session', e );
+                    dialog.showMessageBox( {
+                        type: 'error',
+                        title: 'Invalid key',
+                        message: 'Could not join the remote session because RROx could not connect to the server using the key.'
+                    } );
+                }
+            }
+        }
+    }
 }

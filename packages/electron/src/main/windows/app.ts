@@ -48,6 +48,10 @@ export function createAppWindow(): BrowserWindow {
     } );
 
     appWindow.webContents.on('will-navigate', function (e, url) {
+        // Ignore webpack req
+        if( process.env.NODE_ENV === 'development' && url === 'http://localhost:3000/app_window_bootstrap' )
+            return;
+
         e.preventDefault();
         shell.openExternal( url );
     });

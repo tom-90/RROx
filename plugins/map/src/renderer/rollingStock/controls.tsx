@@ -4,9 +4,9 @@ import { Button, Typography } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { NotFoundPage, PageContent, PageLayout } from "@rrox/base-ui";
 import { FrameControls } from "../map/components";
-import { useWorld } from "@rrox/world/renderer";
+import { useWorld } from "@rrox-plugins/world/renderer";
 import { useSettings } from "@rrox/api";
-import { WorldSettings } from "@rrox/world/shared";
+import { WorldSettings } from "@rrox-plugins/world/shared";
 
 export function ControlsPage() {
     let { index } = useParams();

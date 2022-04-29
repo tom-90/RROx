@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import { MapContext } from '../context';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
-import { TeleportCommunicator } from '@rrox/world/shared';
+import { TeleportCommunicator } from '@rrox-plugins/world/shared';
 
 export function ContextMenu() {
     const [ visible, setVisible ] = useState( false );

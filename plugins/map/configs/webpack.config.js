@@ -111,7 +111,7 @@ const controller = {
                 '.': plugin.controllerEntry,
             },
             remotes: {
-                '@rrox/world': '__webpack_remotes__.load("@rrox/world")'
+                '@rrox-plugins/world': '__webpack_remotes__.load("@rrox-plugins/world")'
             },
         } ),
     ]
@@ -134,7 +134,7 @@ const renderer = {
                 '.': plugin.rendererEntry,
             },
             remotes: {
-                '@rrox/world': '__webpack_remotes__.load("@rrox/world")'
+                '@rrox-plugins/world': '__webpack_remotes__.load("@rrox-plugins/world")'
             },
             shared: [
                 {

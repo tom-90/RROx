@@ -3,7 +3,7 @@ import { Form, Switch, Select, Divider, Collapse, Empty, InputNumber, Card, Radi
 import {useSettings} from "@rrox/api";
 import { GamepadSettings } from "../../shared";
 import { controlNames } from "../../shared/controls";
-import {useWorld} from "@rrox/world/renderer";
+import {useWorld} from "@rrox-plugins/world/renderer";
 
 const buttons = [
     {button: 0, description: "Bottom button in right cluster"},

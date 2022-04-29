@@ -1,4 +1,4 @@
-import { IPlayer, IWorld, SplineType } from "@rrox/world/shared";
+import { IPlayer, IWorld, SplineType } from "@rrox-plugins/world/shared";
 import React, { useContext, useState } from "react";
 import L from "leaflet";
 import { MapContainer, LayersControl, Pane, LayerGroup } from "react-leaflet";

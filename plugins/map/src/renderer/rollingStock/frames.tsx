@@ -2,7 +2,7 @@ import { Avatar, Button, List } from 'antd';
 import { ControlOutlined, AimOutlined } from '@ant-design/icons';
 import React from 'react';
 import { FrameDefinitions } from '../map/definitions';
-import { IFrameCar } from '@rrox/world/shared';
+import { IFrameCar } from '@rrox-plugins/world/shared';
 
 export function FramesList( {
     data,

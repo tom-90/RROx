@@ -1,5 +1,5 @@
 {
-    "name": "@rrox/gamepad",
+    "name": "@rrox-plugins/gamepad",
     "version": "1.0.0",
     "description": "Gamepad Plugin",
     "author": "faab007nl",
@@ -25,7 +25,7 @@
         "webpack-cli": "^4.9.2"
     },
     "scripts": {
-        "prepack": "webpack -c ./configs/webpack.config.js --mode=production",
+        "prepack": "rm -rf dist && webpack -c ./configs/webpack.config.js --mode=production",
         "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
     },
     "dependencies": {}

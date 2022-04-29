@@ -1,4 +1,4 @@
-import { CoupledFrameItem } from '@rrox/world/shared';
+import { CoupledFrameItem } from '@rrox-plugins/world/shared';
 import React from 'react';
 import { FrameDefinitions } from '../../definitions';
 

@@ -4,7 +4,7 @@ import { MapContext } from '../context';
 import { Shape, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { Cheats } from '../popups';
-import { IPlayer } from '@rrox/world/shared';
+import { IPlayer } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 
 export const Player = React.memo( function Player( { data, index }: { data: IPlayer, index: number } ) {

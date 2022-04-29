@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Slider, Popover, Switch } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { FrameDefinitions } from '../../definitions';
-import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine, SetControlsCommunicator } from '@rrox/world/shared';
+import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine, SetControlsCommunicator } from '@rrox-plugins/world/shared';
 import { CouplingsBar } from './couplingsBar';
 import { useRPC } from '@rrox/api';
 

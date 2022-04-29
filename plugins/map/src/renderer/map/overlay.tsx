@@ -5,11 +5,11 @@ import { Modal } from './modal';
 import { useFollowing, useLocate, useMapStyle } from './hooks';
 import { MapMode } from './types';
 import { Map } from './map';
-import { useWorld } from '@rrox/world/renderer';
+import { useWorld } from '@rrox-plugins/world/renderer';
 import { MapConfig } from './config';
 import { OverlayMode, useOverlayMode, useSettings } from '@rrox/api';
 import { MapPreferences } from '../../shared';
-import { WorldSettings } from '@rrox/world/shared';
+import { WorldSettings } from '@rrox-plugins/world/shared';
 
 export function MapOverlay() {
     const data = useWorld();

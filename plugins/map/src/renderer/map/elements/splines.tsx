@@ -3,7 +3,7 @@ import { Line } from '../leaflet';
 import { SplineDefinitions } from '../definitions';
 import { MapContext } from '../context';
 import { useMemoCompare } from '../hooks';
-import { ISpline, SplineType } from '@rrox/world/shared';
+import { ISpline, SplineType } from '@rrox-plugins/world/shared';
 
 export function Splines( { data, type }: { data: ISpline[], type: SplineType } ) {
     const { utils, preferences } = useContext( MapContext )!;

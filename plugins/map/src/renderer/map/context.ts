@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import L from 'leaflet';
-import { ILocation, IWorldSettings } from "@rrox/world/shared";
+import { ILocation, IWorldSettings } from "@rrox-plugins/world/shared";
 import { MapMode } from "./types";
 import { FollowingData } from "./hooks";
 import { IMapPreferences } from "../../shared";

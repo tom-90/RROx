@@ -5,7 +5,7 @@ import { Image, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
 import { usePositions } from '../hooks';
-import { ISandhouse, TeleportCommunicator } from '@rrox/world/shared';
+import { ISandhouse, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 

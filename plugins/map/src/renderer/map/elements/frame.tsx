@@ -5,7 +5,7 @@ import { FrameDefinitions } from '../definitions';
 import { Button } from 'antd';
 import { FrameControlsPopup, StorageInfo } from '../popups';
 import L from 'leaflet';
-import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox/world/shared';
+import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 

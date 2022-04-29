@@ -1,4 +1,4 @@
-import { ProductType } from '@rrox/world/shared';
+import { ProductType } from '@rrox-plugins/world/shared';
 
 import Barrels from '@rrox/assets/images/products/barrels_p.svg';
 import Beams from '@rrox/assets/images/products/beams_p.svg';
