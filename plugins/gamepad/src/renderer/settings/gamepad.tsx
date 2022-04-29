@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import { Form, Switch, Select, Divider, Collapse, Empty, InputNumber, Card, Radio } from "antd";
+import { Form, Switch, Select, Divider, Collapse, Empty, Card, Radio, Button } from "antd";
 import {useSettings} from "@rrox/api";
 import { GamepadSettings } from "../../shared";
 import { controlNames } from "../../shared/controls";
 import {useWorld} from "@rrox/world/renderer";
+import {TestControllerModal} from "./TestControllerModal";
 
 const buttons = [
     {button: 0, description: "Bottom button in right cluster"},
@@ -34,6 +35,8 @@ export function GamepadSettingsPage() {
     const [ settings, store ] = useSettings( GamepadSettings );
     const [ form ] = Form.useForm();
     const [ controllers, setControllers ] = useState<(Gamepad|null)[]>([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [currentModalController, setCurrentModalController] = useState<(number)>(-1);
     const world = useWorld();
 
     useEffect( () => {
@@ -45,7 +48,10 @@ export function GamepadSettingsPage() {
             const gamepads = navigator.getGamepads();
             setControllers(Array.from(gamepads));
         };
-        window.addEventListener( 'gamepadconnected', listener );
+        window.addEventListener( 'gamepadconnected', (event) => {
+            store.set<string, object>(`gamepad.bindings.${event.gamepad.id}`, {});
+            listener();
+        } );
         window.addEventListener( 'gamepaddisconnected', listener );
 
         listener();
@@ -56,6 +62,16 @@ export function GamepadSettingsPage() {
         };
     }, [] );
 
+    const showModal = (controller_id: React.SetStateAction<number>) => {
+        setCurrentModalController(controller_id);
+        setIsModalVisible(true);
+    };
+
+    const handleClose = () => {
+        setCurrentModalController(-1);
+        setIsModalVisible(false);
+    };
+
     return <Form
         name="settings"
         layout="vertical"
@@ -65,6 +81,12 @@ export function GamepadSettingsPage() {
         onValuesChange={( changes ) => store.setAll(changes)}
         autoComplete="off"
     >
+        <TestControllerModal
+            controllerIndex={currentModalController}
+            isModalVisible={isModalVisible}
+            handleCloseCallback={handleClose}
+        />
+
         <Form.Item
             label="Enable"
             name={[ "gamepad", "enabled" ]}
@@ -91,6 +113,16 @@ export function GamepadSettingsPage() {
                             header={controller?.id}
                             key={controller!.index}
                         >
+                            <Button
+                                type="primary"
+                                onClick={() => {
+                                    showModal(controller!.index);
+                                }}
+                                style={{marginInline: "40px", marginBottom: "20px"}}
+                            >
+                                Test Controller
+                            </Button>
+
                             <Form.Item
                                 label="Engine"
                                 name={[ "gamepad", "bindings", controller!.id, "engine" ]}
@@ -122,7 +154,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -139,7 +170,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -160,7 +190,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -177,7 +206,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -199,7 +227,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -216,7 +243,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -237,7 +263,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -254,7 +279,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -277,7 +301,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -294,7 +317,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -315,7 +337,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="none"
                                     >
                                         <Select.Option value="none" key="none">None</Select.Option>
                                         {Object.entries(controlNames).map(([control, name]) => (
@@ -332,7 +353,6 @@ export function GamepadSettingsPage() {
                                 >
                                     <Select
                                         style={{ maxWidth: 300 }}
-                                        defaultValue="controller_value"
                                     >
                                         <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
                                         <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
@@ -356,7 +376,6 @@ export function GamepadSettingsPage() {
                                     >
                                         <Select
                                             style={{ maxWidth: 300 }}
-                                            defaultValue="none"
                                         >
                                             <Select.Option value="none" key="none">None</Select.Option>
                                             {Object.entries(controlNames).map(([control, name]) => (
@@ -371,9 +390,7 @@ export function GamepadSettingsPage() {
                                         labelCol={{offset: 0}}
                                         wrapperCol={{offset: 0}}
                                     >
-                                        <Radio.Group
-                                            defaultValue="hold"
-                                        >
+                                        <Radio.Group>
                                             <Radio value="hold" key="hold" defaultChecked>Hold</Radio>
                                             <Radio value="toggle" key="toggle">Toggle</Radio>
                                         </Radio.Group>
@@ -387,7 +404,6 @@ export function GamepadSettingsPage() {
                                     >
                                         <Select
                                             style={{ maxWidth: 300 }}
-                                            defaultValue="0"
                                             showSearch
                                             optionFilterProp="children"
                                             filterOption={(input, option) => {
@@ -409,7 +425,6 @@ export function GamepadSettingsPage() {
                                     >
                                         <Select
                                             style={{ maxWidth: 300 }}
-                                            defaultValue="100"
                                             showSearch
                                             optionFilterProp="children"
                                             filterOption={(input, option) => {

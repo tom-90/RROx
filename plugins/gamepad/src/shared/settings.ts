@@ -128,7 +128,7 @@ const schema: SettingsSchema<IGamepadSettings> = {
                                 },
                                 default: {},
                             },
-                            default: [],
+                            default: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
                         }
                     },
                     default: {},
