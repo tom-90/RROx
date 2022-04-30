@@ -18,6 +18,9 @@ module.exports = {
     // Forge Makers
     makers: [
         {
+            name: '@electron-forge/maker-zip'
+        },
+        {
             // Squirrel.Windows is a no-prompt, no-hassle, no-admin method of installing
             // Windows applications and is therefore the most user friendly you can get.
             name: '@electron-forge/maker-squirrel',

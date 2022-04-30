@@ -26,10 +26,14 @@ if ( require( 'electron-squirrel-startup' ) || ( process.env.NODE_ENV !== 'devel
     // Make logger available for plugins
     new Logger( Log );
 
-    Updater( {
-        logger    : Log,
-        notifyUser: false, // We manually notify the user with a custom message
-    } );
+    try {
+        Updater( {
+            logger    : Log,
+            notifyUser: false, // We manually notify the user with a custom message
+        } );
+    } catch( e ) {
+        Log.error( 'Failed to start auto updater', e );
+    }
 
     autoUpdater.on( 'update-downloaded', ( event, releaseNotes, releaseName, releaseDate, updateURL ) => {
         Log.log( 'update-downloaded', [ event, releaseNotes, releaseName, releaseDate, updateURL ] )
