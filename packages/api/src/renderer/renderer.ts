@@ -1,12 +1,15 @@
 import { RendererCommunicator } from "./communicator";
 import { IRegistrationController, Registration, RegistrationParameters, RegistrationType } from "./registrations";
+import { RendererSettingsController } from "./settings";
 import { RendererMode, ShareMode } from "./types";
 
 export interface IPluginRenderer {
     communicator: RendererCommunicator;
 
+    settings: RendererSettingsController;
+
     rendererMode: RendererMode;
-    shareMode   : ShareMode;
+    shareMode: ShareMode;
 
     /**
      * Register the plugin to an existing registration type.

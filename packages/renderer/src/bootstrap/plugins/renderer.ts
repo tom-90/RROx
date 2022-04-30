@@ -5,6 +5,7 @@ import { loadScript } from "../utils";
 import { RegistrationController, RegistrationStore } from "../registrations";
 import { IPlugin } from "./type";
 import { PluginManagerMode } from "./manager";
+import { SettingsManager } from "./settings";
 
 declare const __webpack_remotes__: any;
 declare const __webpack_share_scopes__: any;
@@ -15,6 +16,7 @@ export class PluginRenderer implements IPluginRenderer {
     constructor( 
         private store: RegistrationStore,
         public communicator: RendererCommunicator,
+        public settings: SettingsManager,
         public rendererMode: RendererMode,
         public shareMode: ShareMode,
         private plugin: IPlugin,

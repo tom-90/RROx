@@ -17,4 +17,5 @@ export * from './context';
 export * from './utils';
 export * from './registrations';
 export * from './renderer';
+export * from './settings';
 export * from './types';

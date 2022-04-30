@@ -118,7 +118,14 @@ export class PluginManager extends EventEmitter2 {
                     if( !( await this.loadPlugin( dependency ) ) )
                         throw `Cannot load "${dependency}". It is not installed.`;
     
-                this.loaded[ plugin.name ] = new PluginRenderer( this.registrations, this.communicator, this.rendererMode, this.shareMode, plugin, this.log );
+                this.loaded[ plugin.name ] = new PluginRenderer(
+                    this.registrations,
+                    this.communicator,
+                    this.settings,
+                    this.rendererMode,
+                    this.shareMode,
+                    plugin,
+                this.log );
                 await this.loaded[ plugin.name ].load( this.managerMode );
     
                 return true;
