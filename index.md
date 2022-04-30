@@ -6,22 +6,19 @@ RailroadsOnline Extended provides an in-game minimap, with the ability to remote
 
 RROx needs to inject code into the game to function. However, this is not something regular programs do, and as such, it might get detected by your antivirus.
 
-If necessary, you can add an exception to your antivirus for the following folder: `%localappdata%\RailroadsOnlineExtended`
+If necessary, you can add an exception to your antivirus for the following folder: `C:\Program Files\RROx` (This is the default installation directory. It can be changed during the installation).
 
-All of the code is open-source, such that it can be verified by others to make sure it does not contain any malicious code. The executable that will most likely be detected by the antivirus is the injector. This injector is built using Cheat Engine, which is also open-source and can be found here: [https://github.com/cheat-engine/cheat-engine](https://github.com/cheat-engine/cheat-engine)
+All of the code is [open-source](https://github.com/tom-90/RROx), such that it can be verified by others to make sure it does not contain any malicious code. RROx attaches to the game using [DLL injection](https://wikipedia.org/wiki/DLL_injection). This means that no game files are modified on disk. By closing RROx and restarting the game, the game will run completely unaffected. To start using RROx, click the attach button below.
 
 ## How to use
 
-Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows the basic usage of RROx. In addition, the Info tab gives more a more detailed explanation of how to use it.
-
-Instructions for build mode can be found [here](./build-mode.md).
+Watch the [demo video](https://www.youtube.com/watch?v=Vvz0CANFxD0) that shows the basic usage of RROx *(This video is outdated as it shows version 1. A new video for version 2 will be available soon)*. In addition, the Info tab gives more a more detailed explanation of how to use it.
 
 ## Frequently Asked Questions
 
-- **Attaching fails**: If attaching fails and RROx displays an error code, please follow the troubleshooting steps for the corresponding error code [here](./error-codes.md).
 - **Minimap not visible**: Please make sure that the game is not running in `Native Fullscreen`-mode. Please switch to any other mode to get the minimap to work.
 - **Attaching works, but the map stays empty**: Please make sure that you are **not** running RROx as administrator.
-- **The game screen is black**: Disable hardware acceleration in the minimap settings and restart RROx.
+- **The game screen is black**: Disable hardware acceleration in the overlay settings and restart RROx.
 
 ## Support
 
@@ -31,6 +28,24 @@ To keep all information about RROx in one place, I have set-up a Discord server 
 Troubleshooting information for RROx error codes can be found [here](./error-codes.md).
 
 ## Changelog
+
+### v2.0.0 - 30-04-2022
+
+**Important!** The version 2 update changes the way that RROx is installed. Therefore, to use it, you should uninstall the current version of RROx and reinstall the new version. Older versions will try to automatically update to this new version, but this will fail.
+
+- ``Changed`` RROx no longer uses Cheat Engine to read memory from the game. It now only uses it's own DLL that is injected into the game.
+- ``Changed`` RROx now uses a proper MSI-installer, with configurable options.
+- ``Changed`` RROx now installs into `C:\Program Files\RROx` by default, but this can be changed during the setup.
+- ``Improved`` Overall performance improvements, including a much faster attach time.
+- ``Improved`` The chances of RROx causing a game crash are now much lower.
+- ``Improved`` RROx no longer requires you to attach when you are in game and detach when you leave.
+- ``Added`` New User Interface
+- ``Added`` Plugin system with plugins that contain the RROx functionality. This can be used by 3rd party developers to create new functionality. Documentation on how to use the plugin system will follow.
+- ``Added`` New settings page that is more user-friendly.
+- ``Added`` (Autosave Plugin) Ability to save to 3 special backup slots, that are seperate from the 10 game save slots.
+- ``Added`` (World Plugin) Added configuration options for world refresh intervals and spline intervals.
+- ``Added`` (Devtools Plugin) Added struct list to show game objects, that can be used by plugin developers.
+- ``Removed`` (Map Plugin) Build mode has not been added to v2 yet. It will be added back in after the new spline update.
 
 ### v1.13.0 - 29-01-2022
 
