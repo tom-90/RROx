@@ -58,6 +58,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.0.1 - 30-04-2022
+
+- ``Fixed`` Issue where minimap would not start following player after attaching.
+- ``Fixed`` Issue where hiding the minimap would cause an unexpected error.
+
 ### v1.0.0 - 30-04-2022
 
 - *Initial release for v2 of RROx.*

@@ -23,10 +23,10 @@ export function MapOverlay() {
 
     useMapStyle();
 
+    const currentPlayerName = usePlayerName( data );
+
     if( !preferences.minimap.enabled )
         return null;
-
-    const currentPlayerName = usePlayerName( data );
 
     return <MapContext.Provider
         value={{
