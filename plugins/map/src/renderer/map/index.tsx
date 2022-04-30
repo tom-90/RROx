@@ -43,14 +43,12 @@ export function MapPage() {
                 utils: MapConfig.utils
             }}
         >
-            <Modal>
-                <div className={[ 'map', `map-${mode}`, `corner-${preferences.minimap.corner}` ].join( ' ' )}>
-                    {data ? <Map
-                        data={data}
-                        setMap={setMap}
-                    /> : null}
-                </div>
-            </Modal>
+            <div className={[ 'map', `map-${mode}`, `corner-${preferences.minimap.corner}` ].join( ' ' )}>
+                {data ? <Map
+                    data={data}
+                    setMap={setMap}
+                /> : null}
+            </div>
         </MapContext.Provider>
     </PageLayout>;
 }

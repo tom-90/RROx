@@ -25,9 +25,6 @@ export function MapOverlay() {
 
     const currentPlayerName = usePlayerName( data );
 
-    if( !preferences.minimap.enabled )
-        return null;
-
     return <MapContext.Provider
         value={{
             follow: {
@@ -45,7 +42,7 @@ export function MapOverlay() {
             utils: MapConfig.utils
         }}
     >
-        <Modal>
+        <Modal minimapEnabled={preferences.minimap.enabled}>
             <div className={[ 'map', `map-${mode}`, `corner-${preferences.minimap.corner}` ].join( ' ' )}>
                 {data ? <Map
                     data={data}

@@ -6,7 +6,7 @@ import { MapMode } from './types';
 import { MinimapCorner } from '../../shared';
 import { Theme, useTheme } from '@rrox/api';
 
-export function Modal( { children }: { children?: React.ReactNode }): JSX.Element {
+export function Modal( { children, minimapEnabled }: { children?: React.ReactNode, minimapEnabled: boolean }): JSX.Element {
     const theme = useTheme();
 
     const { mode, preferences } = useContext( MapContext )!;
@@ -15,20 +15,29 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
     const [ savedPosition, setSavedPosition ] = useState<{ x: number, y: number, width: number, height: number } | null>( null );
     const [ isVisible, setVisible ] = useState( true );
 
-    const [ , setForceUpdate ] = useState( 0 );
+    const [ forceUpdate, setForceUpdate ] = useState( 0 );
 
     useEffect( () => {
         let counter = 0;
 
         const listener = () => {
-            setSavedPosition( null );
+            if( mode === MapMode.MINIMAP )
+                setSavedPosition( {
+                    height: window.innerHeight * 0.7,
+                    width: window.innerWidth * 0.5,
+                    y: window.innerHeight * 0.15,
+                    x: window.innerWidth * 0.25,
+                } );
+            else
+                setSavedPosition( null );
+
             setForceUpdate( ++counter );
         };
 
         window.addEventListener( 'resize', listener );
 
         return () => window.removeEventListener( 'resize', listener );
-    }, [] );
+    }, [ mode ] );
 
     useEffect( () => {
         if( mode === MapMode.NORMAL )
@@ -60,19 +69,19 @@ export function Modal( { children }: { children?: React.ReactNode }): JSX.Elemen
 
             ref.current!.resize( x, y, width, height );
             ref.current!.move( x, y );
-        } else if( mode === MapMode.MAP && savedPosition && isVisible ) {
+        } else if( mode === MapMode.MAP && isVisible && savedPosition ) {
             ref.current!.resize( savedPosition.x, savedPosition.y, savedPosition.width, savedPosition.height );
             ref.current!.move( savedPosition.x, savedPosition.y );
             setSavedPosition( null );
         }
-    }, [ mode, preferences.minimap.corner, isVisible ] );
+    }, [ mode, preferences.minimap.corner, isVisible, forceUpdate, savedPosition ] );
 
     if( mode === MapMode.NORMAL )
         return children as JSX.Element;
 
     return <>
         <ControllableModal
-            visible={mode === MapMode.MINIMAP || isVisible}
+            visible={(mode === MapMode.MINIMAP && minimapEnabled) || (mode === MapMode.MAP && isVisible)}
             footer={null}
             destroyOnClose={false}
             onCancel={() => setVisible( false )}

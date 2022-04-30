@@ -58,6 +58,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.0.2 - 30-04-2022
+
+- ``Fixed`` Overlay positioning issue when first opening it.
+- ``Fixed`` Bug where disabling the minimap would disable the overlay entirely. 
+
 ### v1.0.1 - 30-04-2022
 
 - ``Fixed`` Issue where minimap would not start following player after attaching.
