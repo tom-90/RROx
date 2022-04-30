@@ -62,6 +62,7 @@ export class World {
 
     private worldQuery: IQuery<AarrGameStateBase>;
     private splineQuery: IQuery<AarrGameStateBase>;
+    private playerQuery: IQuery<APlayerState>;
     private switchQuery: IQuery<ASwitch>;
     private clientQuery: IQuery<UNetConnection>;
     private clientSplineQuery: IQuery<UNetConnection>;
@@ -215,6 +216,8 @@ export class World {
 
         this.switchQuery = await data.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
 
+        this.playerQuery = await data.prepareQuery( APlayerState, ( p ) => [ p.PlayerNamePrivate, p.PawnPrivate ] );
+
         this.clientQuery = await data.prepareQuery( UNetConnection, ( conn ) => [
             query( conn.OpenActorChannels.all(), ( channel ) => [
                 // Query players
@@ -253,11 +256,19 @@ export class World {
         clearInterval( this.splineInterval! );
 
         this.worldInterval = setInterval( async () => {
-            this.load( LoadType.OBJECTS );
+            try {
+                await this.load( LoadType.OBJECTS );
+            } catch( e ) {
+                Log.error( 'Failed to load world objects', e );
+            }
         }, this.settings.get( 'intervals.world' ) );
 
         this.splineInterval = setInterval( async () => {
-            this.load( LoadType.SPLINES );
+            try {
+                await this.load( LoadType.SPLINES );
+            } catch( e ) {
+                Log.error( 'Failed to load splines', e );
+            }
         }, this.settings.get( 'intervals.splines' ) );
     }
 
@@ -544,8 +555,14 @@ export class World {
 
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        if( !player.PawnPrivate )
+        const playerObj = await data.query( this.playerQuery, player );
+
+        if( !playerObj || !playerObj.PlayerNamePrivate || !playerObj.PawnPrivate )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as this player could not be found.` );
+
+        const name = data.getName( playerObj.PawnPrivate );
+        if( !name?.includes( 'Conductor' ) )
+            return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as the player is inside an engine: ${name}.` );
 
         const vector = await data.create( FVector );
 
@@ -563,7 +580,7 @@ export class World {
             vector.Z = height + 400;
         }
 
-        const success = await player.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
+        const success = await playerObj.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
         
         if( !success )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}'.` );

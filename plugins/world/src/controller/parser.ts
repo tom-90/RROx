@@ -194,7 +194,8 @@ export class WorldParser {
             return undefined;
     
         let index = coupler.OtherCoupler ? frameCars?.findIndex(
-            ( f2 ) => queryAction.equals( coupler.OtherCoupler, f2.MyCouplerFront ) || queryAction.equals( coupler.OtherCoupler, f2.MyCouplerRear )
+            ( f2 ) => ( coupler.OtherCoupler && f2.MyCouplerFront && queryAction.equals( coupler.OtherCoupler, f2.MyCouplerFront ) )
+                || ( coupler.OtherCoupler && f2.MyCouplerRear && queryAction.equals( coupler.OtherCoupler, f2.MyCouplerRear ) )
         ) : undefined;
 
         if( index !== undefined && index < 0 )

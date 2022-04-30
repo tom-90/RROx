@@ -21,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.2 - 30-04-2022
+
+- ``Fixed`` Issue where switches and other objects did not show up on worlds with handcars in them.
+- ``Fixed`` Issue where the player would teleport along with the engine.
+
 ### v1.0.1 - 30-04-2022
 
 - ``Fixed`` Issue where controls cannot be changed using the shared links.

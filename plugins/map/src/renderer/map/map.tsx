@@ -17,6 +17,9 @@ export function Map( { data, setMap }: {
     const [ searchVisible, setSearchVisible ] = useState(false);
     
     const startFollowing = useCallback( () => {
+        if( mode === MapMode.NORMAL )
+            return;
+
         const index = data.players.findIndex( ( p ) => p.name === currentPlayerName );
 
         if( index >= 0 )
@@ -30,10 +33,10 @@ export function Map( { data, setMap }: {
                     );
                 }
             } );
-    }, [ data.players, currentPlayerName ] );
+    }, [ data.players, currentPlayerName, mode ] );
 
     useEffect( () => {
-        if ( data.players.length > 0 && mode !== MapMode.NORMAL )
+        if ( data.players.length > 0 )
             startFollowing();
     }, [ data.players.length > 0, currentPlayerName ] );
 
