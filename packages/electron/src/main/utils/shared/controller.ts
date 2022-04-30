@@ -6,7 +6,7 @@ import { ShareConnectHostCommunicator, ShareMessagesCommunicator, ShareKeys, Sha
 import { ShareCommunicator } from './communicator';
 
 export class ShareController {
-    public static readonly SOCKET_SERVER = 'https://rrox-2.tom90.nl';
+    public static readonly SOCKET_SERVER = 'https://rrox.tom90.nl';
     public static readonly KEY_PATH = 'key';
 
     private modeProvider: ValueProvider<ShareMode>;
@@ -200,7 +200,7 @@ export class ShareController {
 
     private isShared( communicator: string ) { 
         try {
-            const parsed = new URL( communicator, 'https://rrox-2.tom90.nl' );
+            const parsed = new URL( communicator, 'https://rrox.tom90.nl' );
 
             return parsed.searchParams.has( 'shared' ) && parsed.searchParams.get( 'shared' ) === 'true';
         } catch( e ) {

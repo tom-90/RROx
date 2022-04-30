@@ -26,7 +26,7 @@ export function HomePage() {
 
 
     const onEnterKey = useCallback( () => {
-        let key = keyInput.replace( 'https://rrox-2.tom90.nl/key/', '' );
+        let key = keyInput.replace( 'https://rrox.tom90.nl/key/', '' );
 
         if( !key )
             return message.error('Key can not be empty');
