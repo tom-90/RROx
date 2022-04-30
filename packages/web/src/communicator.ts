@@ -11,7 +11,7 @@ export class SocketCommunicator implements RendererCommunicator {
 
     public connect( key: string ) {
         return new Promise<void>( ( resolve, reject ) => {
-            this.socket = io( 'localhost:3001', {
+            this.socket = io( 'https://rrox-2.tom90.nl', {
                 transports: [ 'websocket' ]
             } );
     
