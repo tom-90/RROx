@@ -6,6 +6,7 @@ import { SettingsContext } from "./settings";
 import { CommunicatorContext } from "./communicator";
 import { KeybindsContext } from "./keybinds";
 import { ThemeContext } from "./theme";
+import { BaseOptionsContext } from "./options";
 
 declare const _RROX_Context: RROXContexts;
 
@@ -14,6 +15,7 @@ export interface RROXContexts {
     communicator: Context<CommunicatorContext>
     keybinds: Context<KeybindsContext>;
     mode: Context<ModeContext>;
+    options: Context<BaseOptionsContext>;
     registration: Context<RegistrationContext>;
     settings: Context<SettingsContext>;
     theme: Context<ThemeContext>;

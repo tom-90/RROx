@@ -145,7 +145,7 @@ export function createOverlayWindow( app: RROxApp ): BrowserWindow {
             } else if ( isOverlayEnabled && state !== OverlayMode.SHOWN ) {
                 showUnfocussed();
                 focusGame();
-            } else if ( !isOverlayEnabled || state === OverlayMode.SHOWN ) {
+            } else if ( isOverlayEnabled || state === OverlayMode.SHOWN ) {
                 showFocussed();
                 setTimeout( async () => {
                     let attempts = 0;

@@ -15,7 +15,6 @@ import { Awatertower } from "./structs/arr/watertower";
 import { ABP_Player_Conductor_C } from "./structs/BP_Player_Conductor/BP_Player_Conductor_C";
 import { FLinearColor } from "./structs/CoreUObject/LinearColor";
 import { FVector } from "./structs/CoreUObject/Vector";
-import { AActor } from "./structs/Engine/Actor";
 import { EDrawDebugTrace } from "./structs/Engine/EDrawDebugTrace";
 import { ETraceTypeQuery } from "./structs/Engine/ETraceTypeQuery";
 import { UGameEngine } from "./structs/Engine/GameEngine";
@@ -35,6 +34,12 @@ export interface IWorldObjects {
     sandhouses: Asandhouse[];
     industries: Aindustry[];
     splines: ASplineActor[];
+}
+
+export enum LoadType {
+    OBJECTS,
+    SPLINES,
+    ALL
 }
 
 export class World {
@@ -61,8 +66,17 @@ export class World {
     private clientQuery: IQuery<UNetConnection>;
     private clientSplineQuery: IQuery<UNetConnection>;
 
+    private worldInterval?: NodeJS.Timeout;
+    private splineInterval?: NodeJS.Timeout;
+
     constructor( private plugin: WorldPlugin, private settings: SettingsStore<IWorldSettings> ) {
         this.valueProvider = plugin.controller.communicator.provideValue( WorldCommunicator, this.empty );
+
+        settings.addListener( 'update', () => {
+            if( this.worldInterval !== undefined && this.splineInterval !== undefined ) {
+                this.start();
+            }
+        } );
     }
 
     async prepare() {
@@ -234,6 +248,27 @@ export class World {
         ] );
     }
 
+    public start() {
+        clearInterval( this.worldInterval! );
+        clearInterval( this.splineInterval! );
+
+        this.worldInterval = setInterval( async () => {
+            this.load( LoadType.OBJECTS );
+        }, this.settings.get( 'intervals.world' ) );
+
+        this.splineInterval = setInterval( async () => {
+            this.load( LoadType.SPLINES );
+        }, this.settings.get( 'intervals.splines' ) );
+    }
+
+    public stop() {
+        this.valueProvider.provide( this.empty );
+        clearInterval( this.worldInterval! );
+        clearInterval( this.splineInterval! );
+        this.worldInterval = undefined;
+        this.splineInterval = undefined;
+    }
+
     private async getKismetSystemLibrary() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
@@ -266,7 +301,7 @@ export class World {
         ) )?.GameViewport?.World;
     }
 
-    async load() {
+    async load( type: LoadType ) {
         if( !this.kismetSystemLibrary )
             await this.getKismetSystemLibrary();
         if( !this.world )
@@ -282,12 +317,12 @@ export class World {
         const isServer = await this.kismetSystemLibrary.IsServer( this.world );
 
         if( isServer )
-            return await this.loadServer();
+            return await this.loadServer( type );
         else
-            return await this.loadClient();
+            return await this.loadClient( type );
     }
 
-    private async loadServer() {
+    private async loadServer( type: LoadType ) {
         if( !this.world?.ARRGameState ) {
             await this.getWorld();
             if( !this.world?.ARRGameState ) {
@@ -300,33 +335,32 @@ export class World {
         
         let gameState: AarrGameStateBase | null = this.world.ARRGameState;
 
-        const queryAction = this.plugin.controller.getAction( Actions.QUERY );
-
-        const data = await queryAction.query( this.worldQuery, gameState );
-        const spline = await queryAction.query( this.splineQuery, gameState );
-
-        gameState = data;
-
-        if( gameState && spline ) {
-            gameState.SplineArray = spline.SplineArray;
-        }
-
         if( !gameState )
             return this.parseWorld( this.empty );
 
+        const queryAction = this.plugin.controller.getAction( Actions.QUERY );
+
+        let data: AarrGameStateBase | null = null;
+        let splines: AarrGameStateBase | null = null;
+
+        if( type === LoadType.OBJECTS || type === LoadType.ALL )
+            data = await queryAction.query( this.worldQuery, gameState );
+        if( type === LoadType.SPLINES || type === LoadType.ALL )
+            splines = await queryAction.query( this.splineQuery, gameState );
+
         this.parseWorld( {
-            players    : gameState.PlayerArray,
-            frameCars  : gameState.FrameCarArray,
-            industries : gameState.IndustryArray,
-            sandhouses : gameState.SandhouseArray,
-            switches   : gameState.SwitchArray,
-            turntables : gameState.TurntableArray,
-            watertowers: gameState.WatertowerArray,
-            splines    : gameState.SplineArray || this.data.splines,
+            players    : data?.PlayerArray,
+            frameCars  : data?.FrameCarArray,
+            industries : data?.IndustryArray,
+            sandhouses : data?.SandhouseArray,
+            switches   : data?.SwitchArray,
+            turntables : data?.TurntableArray,
+            watertowers: data?.WatertowerArray,
+            splines    : splines?.SplineArray,
         } );
     }
 
-    private async loadClient() {
+    private async loadClient( type: LoadType ) {
         if( !this.world?.NetDriver?.ServerConnection ) {
             await this.getWorld();
             if( !this.world?.NetDriver?.ServerConnection ) {
@@ -339,70 +373,83 @@ export class World {
 
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
-        const conn = await queryAction.query( this.clientQuery, this.world.NetDriver.ServerConnection );
-        const connSplines = await queryAction.query( this.clientSplineQuery, this.world.NetDriver.ServerConnection );
+        const data: Partial<IWorldObjects> = {};
 
-        const data: IWorldObjects = {
-            frameCars: [],
-            industries: [],
-            players: [],
-            sandhouses: [],
-            splines: [],
-            switches: [],
-            turntables: [],
-            watertowers: [],
-        };
+        if( type === LoadType.OBJECTS || type === LoadType.ALL ) {
+            const conn = await queryAction.query( this.clientQuery, this.world.NetDriver.ServerConnection );
 
-        for( let channel of conn?.OpenActorChannels || [] ) {
-            if( !channel )
-                continue;
-            if( channel.Player )
-                data.players.push( channel.Player );
-            if( channel.FrameCar )
-                data.frameCars.push( channel.FrameCar );
-            if( channel.Industry )
-                data.industries.push( channel.Industry );
-            if( channel.Sandhouse )
-                data.sandhouses.push( channel.Sandhouse );
-            if( channel.Switch )
-                data.switches.push( channel.Switch );
-            if( channel.Turntable )
-                data.turntables.push( channel.Turntable );
-            if( channel.WaterTower )
-                data.watertowers.push( channel.WaterTower );
+            data.players = [];
+            data.frameCars = [];
+            data.industries = [];
+            data.sandhouses = [];
+            data.switches = [];
+            data.turntables = [];
+            data.watertowers = [];
+
+            for( let channel of conn?.OpenActorChannels || [] ) {
+                if( !channel )
+                    continue;
+                if( channel.Player )
+                    data.players.push( channel.Player );
+                if( channel.FrameCar )
+                    data.frameCars.push( channel.FrameCar );
+                if( channel.Industry )
+                    data.industries.push( channel.Industry );
+                if( channel.Sandhouse )
+                    data.sandhouses.push( channel.Sandhouse );
+                if( channel.Switch )
+                    data.switches.push( channel.Switch );
+                if( channel.Turntable )
+                    data.turntables.push( channel.Turntable );
+                if( channel.WaterTower )
+                    data.watertowers.push( channel.WaterTower );
+            }
         }
 
-        for( let channel of connSplines?.OpenActorChannels || [] ) {
-            if( !channel )
-                continue;
-            if( channel.Spline )
-                data.splines.push( channel.Spline );
+        if( type === LoadType.SPLINES || type === LoadType.ALL ) {
+            const connSplines = await queryAction.query( this.clientSplineQuery, this.world.NetDriver.ServerConnection );
+
+            data.splines = [];
+
+            for( let channel of connSplines?.OpenActorChannels || [] ) {
+                if( !channel )
+                    continue;
+                if( channel.Spline )
+                    data.splines.push( channel.Spline );
+            }
         }
 
         return this.parseWorld( data );
     }
 
-    private parseWorld( data: IWorldObjects ) {
+    private parseWorld( data: Partial<IWorldObjects> ) {
+        const completeData: IWorldObjects = {
+            players    : data.players || this.data.players,
+            frameCars  : data.frameCars || this.data.frameCars,
+            industries : data.industries || this.data.industries,
+            sandhouses : data.sandhouses || this.data.sandhouses,
+            switches   : data.switches || this.data.switches,
+            turntables : data.turntables || this.data.turntables,
+            watertowers: data.watertowers || this.data.watertowers,
+            splines    : data.splines || this.data.splines,
+        };
+        
         const world: IWorld = {
-            players: data.players.map( ( d ) => this.plugin.parser.parsePlayer( d ) ),
-            frameCars: data.frameCars.map( ( d ) => this.plugin.parser.parseFrameCar( d, data.frameCars ) ),
-            switches: data.switches.map( ( d ) => this.plugin.parser.parseSwitch( d ) ),
-            turntables: data.turntables.map( ( d ) => this.plugin.parser.parseTurntable( d ) ),
-            watertowers: data.watertowers.map( ( d ) => this.plugin.parser.parseWatertower( d ) ),
-            sandhouses: data.sandhouses.map( ( d ) => this.plugin.parser.parseSandhouse( d ) ),
-            industries: data.industries.map( ( d ) => this.plugin.parser.parseIndustry( d ) ),
-            splines: data.splines.map( ( d ) => this.plugin.parser.parseSpline( d ) ),
+            players: completeData.players.map( ( d ) => this.plugin.parser.parsePlayer( d ) ),
+            frameCars: completeData.frameCars.map( ( d ) => this.plugin.parser.parseFrameCar( d, data.frameCars ) ),
+            switches: completeData.switches.map( ( d ) => this.plugin.parser.parseSwitch( d ) ),
+            turntables: completeData.turntables.map( ( d ) => this.plugin.parser.parseTurntable( d ) ),
+            watertowers: completeData.watertowers.map( ( d ) => this.plugin.parser.parseWatertower( d ) ),
+            sandhouses: completeData.sandhouses.map( ( d ) => this.plugin.parser.parseSandhouse( d ) ),
+            industries: completeData.industries.map( ( d ) => this.plugin.parser.parseIndustry( d ) ),
+            splines: completeData.splines.map( ( d ) => this.plugin.parser.parseSpline( d ) ),
         };
 
-        this.data = data;
+        this.data = completeData;
 
         this.valueProvider.provide( world );
 
         return world;
-    }
-
-    public stop() {
-        this.valueProvider.provide( this.empty );
     }
 
     public async getHeight( position: ILocation2D ) {

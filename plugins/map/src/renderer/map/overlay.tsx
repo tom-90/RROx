@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import L from 'leaflet';
 import { MapContext } from './context';
 import { Modal } from './modal';
-import { useFollowing, useLocate, useMapStyle } from './hooks';
+import { useFollowing, useLocate, useMapStyle, usePlayerName } from './hooks';
 import { MapMode } from './types';
 import { Map } from './map';
 import { useWorld } from '@rrox-plugins/world/renderer';
@@ -27,6 +27,8 @@ export function MapOverlay() {
     if( !preferences.minimap.enabled )
         return null;
 
+    const currentPlayerName = usePlayerName( data );
+
     return <MapContext.Provider
         value={{
             follow: {
@@ -40,7 +42,7 @@ export function MapOverlay() {
                 game: MapConfig.game,
                 map: MapConfig.map,
             },
-            currentPlayerName: '_tom()',
+            currentPlayerName,
             utils: MapConfig.utils
         }}
     >

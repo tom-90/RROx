@@ -6,6 +6,7 @@ import { AttachedContext } from "./attached";
 import { CommunicatorContext } from "./communicator";
 import { KeybindsContext } from "./keybinds";
 import { ThemeContext } from "./theme";
+import { BaseOptionsContext } from "./options";
 
 declare global {
     interface Window {
@@ -18,6 +19,7 @@ window._RROX_Context = {
     communicator: CommunicatorContext,
     keybinds    : KeybindsContext,
     registration: RegistrationContext,
+    options     : BaseOptionsContext,
     settings    : SettingsContext,
     mode        : ModeContext,
     theme       : ThemeContext,

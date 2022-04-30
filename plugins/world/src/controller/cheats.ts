@@ -35,7 +35,7 @@ export class Cheats {
 
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        setInterval( async () => {
+        this.interval = setInterval( async () => {
             if( !this.settings.get( 'features.cheats' ) ) {
                 this.fastSprintPlayers.clear();
             }

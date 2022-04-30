@@ -26,13 +26,12 @@ export default class WorldPlugin extends Controller {
             await this.world.prepare();
             await this.cheats.prepare();
 
-            const interval = setInterval( () => this.world.load(), 1000 );
-
+            this.world.start();
             this.cheats.start();
             this.controlsSync.start();
 
             return () => {
-                clearInterval( interval );
+                this.world.stop();
                 this.cheats.stop();
                 this.world.stop();
                 this.controlsSync.stop();

@@ -111,7 +111,7 @@ module.exports = {
         }
     ],
     publishers: [
-        /*{
+        {
             name: '@electron-forge/publisher-github',
             config: {
                 repository: {
@@ -119,14 +119,6 @@ module.exports = {
                     name: 'RROx'
                 },
                 prerelease: true
-            }
-        }*/
-        {
-            name: '@electron-forge/publisher-electron-release-server',
-            config: {
-                baseUrl: 'https://rrox-release.tom90.nl',
-                username: 'tom',
-                password: 'HIDDEN'
             }
         }
     ],

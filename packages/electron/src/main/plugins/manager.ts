@@ -1,10 +1,10 @@
 import Log from "electron-log";
-import { app as electronApp, dialog } from "electron";
+import { app as electronApp, dialog, shell } from "electron";
 import semver from "semver";
 import { IPlugin } from "./type";
 import { PluginController } from "./controller";
 import { RROxApp } from "../app";
-import { PluginsCommunicator, InstallPluginCommunicator, UninstallPluginCommunicator, RestartCommunicator, UpdatePluginCommunicator, DevPluginCommunicator } from "../../shared/communicators";
+import { OpenLogFileCommunicator, PluginsCommunicator, InstallPluginCommunicator, UninstallPluginCommunicator, RestartCommunicator, UpdatePluginCommunicator, DevPluginCommunicator } from "../../shared/communicators";
 import { PluginInstaller } from "./installer";
 import { ValueProvider } from "@rrox/api";
 
@@ -52,6 +52,10 @@ export class PluginManager {
         app.communicator.handle( RestartCommunicator, () => {
             electronApp.relaunch();
             electronApp.exit();
+        } );
+
+        app.communicator.handle( OpenLogFileCommunicator, () => {
+            shell.openPath( Log.transports.file.getFile().path );
         } );
     }
 

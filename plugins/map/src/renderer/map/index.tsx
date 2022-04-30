@@ -3,7 +3,7 @@ import { PageLayout } from "@rrox/base-ui";
 import L from 'leaflet';
 import { MapContext } from './context';
 import { Modal } from './modal';
-import { useFollowing, useLocate, useMapStyle } from './hooks';
+import { useFollowing, useLocate, useMapStyle, usePlayerName } from './hooks';
 import { MapMode } from './types';
 import { Map } from './map';
 import { useWorld } from '@rrox-plugins/world/renderer';
@@ -24,6 +24,8 @@ export function MapPage() {
 
     useMapStyle();
 
+    const currentPlayerName = usePlayerName( data );
+
     return <PageLayout>
         <MapContext.Provider
             value={{
@@ -38,7 +40,7 @@ export function MapPage() {
                     game: MapConfig.game,
                     map: MapConfig.map,
                 },
-                currentPlayerName: '_tom()',
+                currentPlayerName,
                 utils: MapConfig.utils
             }}
         >

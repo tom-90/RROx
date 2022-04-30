@@ -1,5 +1,5 @@
 import { IPlayer, IWorld, SplineType } from "@rrox-plugins/world/shared";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import L from "leaflet";
 import { MapContainer, LayersControl, Pane, LayerGroup } from "react-leaflet";
 import { MapContext } from "./context";
@@ -7,6 +7,7 @@ import { Background, Frame, Industry, Player, Sandhouse, Splines, Switch, Turnta
 import { ContextMenu, Controls, Line } from "./leaflet";
 import { MapMode } from "./types";
 import { SearchPopup } from "./popups";
+import { usePrevious } from "./hooks";
 
 export function Map( { data, setMap }: {
     data: IWorld,
@@ -15,6 +16,25 @@ export function Map( { data, setMap }: {
     const { config, mode, follow, utils, preferences, currentPlayerName } = useContext( MapContext )!;
 
     const [ searchVisible, setSearchVisible ] = useState(false);
+    
+    const prevWorld = usePrevious( data );
+    useEffect( () => {
+        if ( prevWorld && prevWorld.players.length === 0 && data.players.length > 0 && mode !== MapMode.NORMAL ) {
+            const index = data.players.findIndex( ( p ) => p.name === currentPlayerName );
+
+            if( index >= 0 )
+                follow.setFollowing( {
+                    array: 'players',
+                    index,
+                    apply: ( data: IPlayer, map: L.Map ) => {
+                        map.panTo(
+                            L.latLng( ...utils.scaleLocation( data.location ) ),
+                            { animate: true, duration: 0.5 }
+                        );
+                    }
+                } );
+        }
+    }, [ data.players.length ] );
 
     return <MapContainer
         center={config.map.center}
@@ -26,21 +46,6 @@ export function Map( { data, setMap }: {
         style={{ width: '100%', height: '100%' }}
         whenCreated={( map ) => {
             setMap( map );
-            if ( mode !== MapMode.NORMAL ) {
-                const index = data.players.findIndex( ( p ) => p.name === currentPlayerName );
-
-                if( index && index >= 0 )
-                    follow.setFollowing( {
-                        array: 'players',
-                        index,
-                        apply: ( data: IPlayer, map: L.Map ) => {
-                            map.panTo(
-                                L.latLng( ...utils.scaleLocation( data.location ) ),
-                                { animate: true, duration: 0.5 }
-                            );
-                        }
-                    } );
-            }
         }}
     >
         <Controls

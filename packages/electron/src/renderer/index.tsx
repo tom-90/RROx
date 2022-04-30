@@ -1,5 +1,5 @@
 import { ContextRegistration, MenuButtonRegistration, RendererMode, SettingsRegistration } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext, ThemeProvider, RendererSettings, PluginSpinner } from '@rrox/renderer';
+import { CommunicatorContext, AttachedContextProvider, SettingsContext, RegistrationContext, ContextProvider, Routes, KeybindsContext, ThemeProvider, RendererSettings, PluginSpinner, BaseOptionsContextProvider } from '@rrox/renderer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { KeybindsController, ModeContext, Router, UpdateNotify } from './base';
@@ -7,7 +7,7 @@ import { RouterRegistration, ShareMode } from '@rrox/api';
 import packageInfo from '../../package.json';
 import { OverlaySettings, Router as MainRouter } from './components';
 import { AppstoreAddOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
-import { ShareModeCommunicator } from '../shared';
+import { OpenLogFileCommunicator, ShareModeCommunicator } from '../shared';
 
 export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).PluginManager ) => {
     const metadata = {
@@ -38,7 +38,10 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
 
     manager.registrations.register( SettingsRegistration, metadata, {
         category: [ 'General' ],
-        element : <RendererSettings />
+        element : <RendererSettings
+            version={metadata.version}
+            openLogFile={() => manager.communicator.rpc( OpenLogFileCommunicator )}
+        />
     } );
 
     manager.registrations.register( SettingsRegistration, metadata, {
@@ -54,6 +57,7 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
     manager.registrations.register( ContextRegistration, metadata, <PluginSpinner manager={manager} /> );
     manager.registrations.register( ContextRegistration, metadata, <KeybindsContext.Provider value={new KeybindsController( manager.communicator )} /> );
     manager.registrations.register( ContextRegistration, metadata, <UpdateNotify /> );
+    manager.registrations.register( ContextRegistration, metadata, <BaseOptionsContextProvider /> );
 
     ReactDOM.render(
         <RegistrationContext.Provider value={manager.registrations}>

@@ -164,6 +164,7 @@ export function useValue<T>(
     communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T
 ): T {
     const [ value, setValue ] = useState<T>( initialValue! );
+    const [ hasRetrieved, setHasRetrieved ] = useState( false );
     const isAvailable = useCommunicatorAvailable();
 
     const retrieve = useRPC( communicator );
@@ -175,6 +176,7 @@ export function useValue<T>(
         retrieve()
             .then( ( value ) => {
                 setValue( value as T );
+                setHasRetrieved( true );
             } )
             .catch( ( e ) => {
                 console.error( 'Failed to retrieve value', e );
@@ -182,7 +184,8 @@ export function useValue<T>(
     }, [ isAvailable ] );
 
     useListener( communicator, ( diff ) => {
-        setValue( applyDiff( value, diff ) );
+        if( hasRetrieved )
+            setValue( applyDiff( value, diff ) );
     } );
 
     return value;

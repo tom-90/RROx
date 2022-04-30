@@ -1,5 +1,5 @@
 import { ContextRegistration, MenuButtonRegistration, RendererMode, useCommunicatorAvailable, OverlayMode, useSettings, SettingsRegistration } from '@rrox/api';
-import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings, ThemeProvider, RendererSettings, PluginSpinner } from '@rrox/renderer';
+import { CommunicatorContext, AttachedContextProvider, ModeContext, SettingsContext, RegistrationContext, ContextProvider, Routes, BaseRendererSettings, ThemeProvider, RendererSettings, PluginSpinner, BaseOptionsContextProvider } from '@rrox/renderer';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Spin, message, Modal, Input } from 'antd';
@@ -11,6 +11,7 @@ import { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Router } from './base';
 import { ErrorPage, PageContent, PageLayout } from '@rrox/base-ui';
 import { SocketCommunicatorContext } from './context';
+import { ShareMode } from '@rrox/api/src/renderer/types';
 
 export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).PluginManager ) => {
     const metadata = {
@@ -30,10 +31,11 @@ export const init = async ( manager: import( '@rrox/renderer/bootstrap' ).Plugin
 
     manager.registrations.register( ContextRegistration, metadata, <CommunicatorContext.Provider value={manager.communicator} /> );
     manager.registrations.register( ContextRegistration, metadata, <AttachedContextProvider /> );
-    manager.registrations.register( ContextRegistration, metadata, <ModeContext.Provider value={{ overlay: OverlayMode.HIDDEN, renderer: RendererMode.WEB }} /> );
+    manager.registrations.register( ContextRegistration, metadata, <ModeContext.Provider value={{ overlay: OverlayMode.HIDDEN, renderer: RendererMode.WEB, share: ShareMode.CLIENT }} /> );
     manager.registrations.register( ContextRegistration, metadata, <SettingsContext.Provider value={manager.settings} /> );
     manager.registrations.register( ContextRegistration, metadata, <ThemeProvider /> );
     manager.registrations.register( ContextRegistration, metadata, <PluginSpinner manager={manager} /> );
+    manager.registrations.register( ContextRegistration, metadata, <BaseOptionsContextProvider /> );
 
     const communicator = manager.communicator as import( './communicator' ).SocketCommunicator;
 
