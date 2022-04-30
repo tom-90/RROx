@@ -11,3 +11,4 @@ package/
 plugins/
 storage/
 verdaccio.yaml
+verdaccio.dev.yaml

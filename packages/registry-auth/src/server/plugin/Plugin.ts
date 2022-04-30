@@ -86,7 +86,7 @@ export class Plugin implements IPluginMiddleware<any>, IPluginAuth<any> {
     callback: AuthAccessCallback,
   ): void {
     if (config.access) {
-      const grant = config.access.some((group) => user.groups.includes(group))
+      const grant = config.access.some((group) => user.groups.includes(group) || user.real_groups.includes(group))
       callback(null, grant)
     } else {
       callback(null, true)
@@ -102,7 +102,7 @@ export class Plugin implements IPluginMiddleware<any>, IPluginAuth<any> {
     callback: AuthAccessCallback,
   ): void {
     if (config.publish) {
-      const grant = config.publish.some((group) => user.groups.includes(group))
+      const grant = config.publish.some((group) => user.groups.includes(group) || user.real_groups.includes(group))
       callback(null, grant)
     } else {
       this.allow_access(user, config, callback)
@@ -119,7 +119,7 @@ export class Plugin implements IPluginMiddleware<any>, IPluginAuth<any> {
   ): void {
     if (config.unpublish) {
       const grant = config.unpublish.some((group) =>
-        user.groups.includes(group),
+        user.groups.includes(group) || user.real_groups.includes(group)
       )
       callback(null, grant)
     } else {
