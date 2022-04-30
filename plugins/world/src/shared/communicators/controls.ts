@@ -1,6 +1,6 @@
-import { Communicator } from "@rrox/api";
+import { SharedCommunicator } from "@rrox/api";
 
-export const SetControlsCommunicator = Communicator<{
+export const SetControlsCommunicator = SharedCommunicator<{
     rpc: ( index: number, type: FrameCarControl, value: number ) => void,
 }>( PluginInfo, 'SetControls' );
 

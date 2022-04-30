@@ -21,6 +21,10 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.1 - 30-04-2022
+
+- ``Fixed`` Issue where controls cannot be changed using the shared links.
+
 ### v1.0.0 - 30-04-2022
 
 - *Initial release for v2 of RROx.*
