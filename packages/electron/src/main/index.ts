@@ -114,6 +114,7 @@ if ( require( 'electron-squirrel-startup' ) || ( process.env.NODE_ENV !== 'devel
             const key = url.substring( 'rrox://key/'.length );
             if( key ) {
                 try {
+                    Log.info( 'Joining remote session using key', key );
                     await rrox.shared.join( key );
                 } catch( e ) {
                     Log.error( 'Failed to connect to shared session', e );
