@@ -6,5 +6,6 @@ export * from './playerName';
 export * from './positions';
 export * from './previous';
 export * from './scalingWeight';
+export * from './settings';
 export * from './style';
 export * from './useAutoHide';

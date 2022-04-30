@@ -19,8 +19,9 @@ export function PluginsPage() {
     const onChange = useCallbackDelayed( ( e: string | React.ChangeEvent<HTMLInputElement> ) => {
         let value = typeof e === 'string' ? e : e.target.value;
         if( value === '' ) {
-            setPlugins( [] );
-            return;
+            // To at least get an initial list of plugins,
+            // we search for the @ symbol which all plugins have
+            value = '@';
         }
 
         searchRegistry( value ).then( async ( res ) => {

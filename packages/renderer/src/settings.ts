@@ -8,7 +8,7 @@ export interface IBaseRendererSettings {
 
 const schema: SettingsSchema<IBaseRendererSettings> = {
     'player-name': {
-        type: ['string', 'null'],
+        type: 'string',
     },
     'theme': {
         type   : 'string',

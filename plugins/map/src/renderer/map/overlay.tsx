@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import L from 'leaflet';
 import { MapContext } from './context';
 import { Modal } from './modal';
-import { useFollowing, useLocate, useMapStyle, usePlayerName } from './hooks';
+import { useFollowing, useLocate, useMapSettings, useMapStyle, usePlayerName } from './hooks';
 import { MapMode } from './types';
 import { Map } from './map';
 import { useWorld } from '@rrox-plugins/world/renderer';
 import { MapConfig } from './config';
 import { OverlayMode, useOverlayMode, useSettings } from '@rrox/api';
 import { MapPreferences } from '../../shared';
-import { WorldSettings } from '@rrox-plugins/world/shared';
 
 export function MapOverlay() {
     const data = useWorld();
     const overlayMode = useOverlayMode();
-    const [ settings ] = useSettings( WorldSettings );
+    const settings = useMapSettings();
     const [ preferences ] = useSettings( MapPreferences );
 
     const mode = overlayMode === OverlayMode.FOCUSSED ? MapMode.MAP : MapMode.MINIMAP;
