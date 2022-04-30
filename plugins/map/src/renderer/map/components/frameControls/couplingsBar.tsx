@@ -16,6 +16,7 @@ export function CouplingsBar( {
             const definition = FrameDefinitions[ frame.type ];
 
             return <img
+                className='dark-mode-invert'
                 width={50}
                 style={{
                     transform: flipped ? 'scaleX(-1)' : undefined,

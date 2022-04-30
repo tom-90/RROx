@@ -183,9 +183,6 @@ export class LocalStorageSettingsStore<T extends object> extends EventEmitter2 i
         const settings = getNextSub( 0 );
 
         path.reduce( ( obj, key, i ) => {
-            if( i === path.length - 1 )
-                return;
-
             if( Array.isArray( obj ) )
                 return obj[ Number( key ) ] = getNextSub( i + 1 );
             else

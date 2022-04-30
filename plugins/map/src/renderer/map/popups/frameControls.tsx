@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/icons";
 import { DraggableModal } from 'ant-design-draggable-modal';
@@ -28,6 +29,7 @@ export function FrameControlsPopup( {
 } ) {
     const { mode } = useContext( MapContext )!;
     const [ compact, setCompact ] = useState( false );
+    const navigate = useNavigate();
 
     const definition = FrameDefinitions[ data.type ];
     const isEngine = definition.engine;
@@ -46,7 +48,7 @@ export function FrameControlsPopup( {
             {isEngine && mode === MapMode.NORMAL && <Button
                 type='text'
                 style={{ marginLeft: 10, padding: 5 }}
-                onClick={() => null}
+                onClick={() => navigate( `/@rrox-plugins/map/controls/${index}` )}
                 title="Open controls"
             >
                 <ControlOutlined />
