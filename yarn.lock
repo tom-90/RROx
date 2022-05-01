@@ -2492,7 +2492,7 @@
   integrity sha512-7PGLWa9MZ5x/cWy8EH2VzI4T8q5WpuHbixzCDXqixP/WyqwIrg5NDUPgYuFnB4IEIZF+6nA265mYzswFo/h1Pw==
 
 "@rrox-plugins/world@1.6.2":
-  version "1.0.0"
+  version "1.0.3"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"

@@ -84,7 +84,7 @@ const schema: SettingsSchema<IGamepadSettings> = {
                     type: "object",
                     properties: {
                         engine: {
-                            type: "string",
+                            type: ["string", "number"],
                             default: "map_follow"
                         },
                         left: {

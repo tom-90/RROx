@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { Form, Switch, Select, Divider, Collapse, Empty, Card, Radio, Button } from "antd";
+import { Form, Switch, Select, Divider, Collapse, Empty, Card, Radio, Button, Alert } from "antd";
 import {useSettings} from "@rrox/api";
 import { GamepadSettings } from "../../shared";
 import { controlNames } from "../../shared/controls";
 import {useWorld} from "@rrox-plugins/world/renderer";
 import {TestControllerModal} from "./TestControllerModal";
+import {isEngine} from "@rrox-plugins/world/shared";
 
 const buttons = [
     {button: 0, description: "Bottom button in right cluster"},
@@ -30,6 +31,10 @@ const buttonValues: number[] = [];
 for (let i = -100; i < 101; i++) {
     buttonValues.push(i);
 }
+
+const hasGamepadApiSupport = () => {
+    return window.navigator.getGamepads && typeof window.navigator.getGamepads === 'function';
+};
 
 export function GamepadSettingsPage() {
     const [ settings, store ] = useSettings( GamepadSettings );
@@ -71,6 +76,10 @@ export function GamepadSettingsPage() {
         setCurrentModalController(-1);
         setIsModalVisible(false);
     };
+
+    if(!hasGamepadApiSupport()){
+        return <Alert message="Your browser does not support the Gamepad API - https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API" type="error" />
+    }
 
     return <Form
         name="settings"
@@ -134,7 +143,7 @@ export function GamepadSettingsPage() {
                                     style={{ maxWidth: 300 }}
                                 >
                                     <Select.Option value="map_follow" key="map_follow">Following engine</Select.Option>
-                                    {world?.frameCars.map((car, index) => (
+                                    {world?.frameCars.filter(frame => isEngine(frame)).map((car, index) => (
                                         <Select.Option value={index} key={index}>{car.type + (car.name ? ` (${car.name.replace('<br>', ' ')})` : "")}</Select.Option>
                                     ))}
                                 </Select>
