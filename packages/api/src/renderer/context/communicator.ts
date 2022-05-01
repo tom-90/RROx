@@ -239,7 +239,7 @@ export class ValueConsumer<T> extends EventEmitter2 {
     }
 
     addListener( event: 'update', listener: ( value: T ) => void ) {
-        return super.off( event, listener );
+        return super.on( event, listener );
     }
 
     removeListener( event: 'update', listener: ( value: T ) => void ) {
