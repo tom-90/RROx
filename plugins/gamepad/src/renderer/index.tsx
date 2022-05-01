@@ -2,6 +2,7 @@ import { IPluginRenderer, Renderer, SettingsRegistration, ShareMode } from "@rro
 import React from "react";
 import { GamepadSettingsPage } from "./settings";
 import {LoadListener, UnloadListener} from "./listener";
+import {FrameCarControl, SetControlsCommunicator} from "@rrox-plugins/world/shared";
 
 export default class AutosaveRenderer extends Renderer {
     public load( renderer: IPluginRenderer ): void | Promise<void> {
@@ -9,6 +10,10 @@ export default class AutosaveRenderer extends Renderer {
             category: [ 'Gamepad' ],
             element : <GamepadSettingsPage />
         });
+
+        console.log("communicator available: "+renderer.communicator.isAvailable());
+        console.log("can use controls: "+renderer.communicator.canUse(SetControlsCommunicator));
+        renderer.communicator.rpc(SetControlsCommunicator, 0, FrameCarControl.Regulator, 0.5)
 
         LoadListener(renderer);
     }

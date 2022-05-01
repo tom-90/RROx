@@ -6,20 +6,40 @@ import {DetectAxisMoved} from "./DetectAxisMoved";
 let interval: NodeJS.Timer | null = null;
 let controllers: (Gamepad|null)[] = [];
 export let buttonEvents = {} as gamepadsType;
-let publicRenderer: IPluginRenderer|null = null
 
 export function LoadListener(renderer: IPluginRenderer) {
-    publicRenderer = renderer
     //let world = new ValueConsumer(renderer.communicator, WorldCommunicator);
 
     interval = setInterval(() => {
         gameLoop();
     }, 50);
-}
 
-const setControls = (engine: number, type: FrameCarControl, value: number) => {
-    publicRenderer?.communicator.rpc(SetControlsCommunicator, engine, type, value).then(r => {
-        console.log(`${type} set to ${value}`);
+    const setControls = (engine: number, type: FrameCarControl, value: number) => {
+        renderer.communicator.rpc(SetControlsCommunicator, engine, type, value).then(r => {
+            console.log(`${type} set to ${value}`);
+        });
+    }
+
+    window.addEventListener('gamepad_button_pressed', (e) => {
+        console.log('button pressed');
+
+        // @ts-ignore
+        console.log(e.detail.button.value);
+
+        // @ts-ignore
+        //setControls(0, FrameCarControl.Regulator, e.detail.button.value)
+    });
+    window.addEventListener('gamepad_button_released', (e) => {
+        console.log('button released');
+
+        // @ts-ignore
+        console.log(e.detail.button.value);
+    });
+    window.addEventListener('gamepad_axis_move', (e) => {
+        console.log(' axis move');
+
+        // @ts-ignore
+        console.log(e.detail);
     });
 }
 
@@ -47,28 +67,6 @@ function gameLoop(){
         }
     });
 }
-
-window.addEventListener('gamepad_button_pressed', (e) => {
-    console.log('button pressed');
-
-    // @ts-ignore
-    console.log(e.detail.button.value);
-
-    // @ts-ignore
-    setControls(0, FrameCarControl.Whistle, e.detail.button.value)
-});
-window.addEventListener('gamepad_button_released', (e) => {
-    console.log('button released');
-
-    // @ts-ignore
-    console.log(e.detail.button.value);
-});
-window.addEventListener('gamepad_axis_move', (e) => {
-    console.log(' axis move');
-
-    // @ts-ignore
-    console.log(e.detail);
-});
 
 export function UnloadListener(){
     if(interval != null){
