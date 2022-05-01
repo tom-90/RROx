@@ -273,7 +273,7 @@ export function FrameControls( {
                 <tbody>
                     <tr>
                         <td style={{ textAlign: 'center' }}>{compressor?.airPressure.toFixed( 0 )}</td>
-                        <td style={{ textAlign: 'center' }}>{tender?.water.toFixed( 0 )} / {tender?.maxWater.toFixed( 0 )}</td>
+                        <td style={{ textAlign: 'center' }}>{boiler?.waterAmount.toFixed( 0 )} / {boiler?.maxWaterAmount.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{( speedMs * 2.236936 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( maxSpeedMs * 2.236936 )?.toFixed( 0 )}</td>
                     </tr>

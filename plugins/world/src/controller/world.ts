@@ -447,7 +447,7 @@ export class World {
         
         const world: IWorld = {
             players: completeData.players.map( ( d ) => this.plugin.parser.parsePlayer( d ) ),
-            frameCars: completeData.frameCars.map( ( d ) => this.plugin.parser.parseFrameCar( d, data.frameCars ) ),
+            frameCars: completeData.frameCars.map( ( d ) => this.plugin.parser.parseFrameCar( d, completeData.frameCars ) ),
             switches: completeData.switches.map( ( d ) => this.plugin.parser.parseSwitch( d ) ),
             turntables: completeData.turntables.map( ( d ) => this.plugin.parser.parseTurntable( d ) ),
             watertowers: completeData.watertowers.map( ( d ) => this.plugin.parser.parseWatertower( d ) ),
@@ -544,9 +544,9 @@ export class World {
             return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
 
         if( latestSwitch.switchstate == 0 )
-            character?.ServerSwitchUp( switchInstance );
+            await character?.ServerSwitchUp( switchInstance );
         else if( latestSwitch.switchstate == 1 )
-            character?.ServerSwitchDown( switchInstance );
+            await character?.ServerSwitchDown( switchInstance );
     }
 
     public async teleport( player: APlayerState, location: ILocation | ILocation2D ) {
@@ -616,8 +616,7 @@ export class World {
             case FrameCarControl.Whistle: {
                 if( frameCar.Mywhistle == null )
                     break;
-                await frameCar.SetWhistle( value );
-                await character.ServerSetRaycastWhistle( frameCar.Mywhistle, value );
+                await frameCar.ServerSetWhistle( frameCar, value );
                 break;
             }
             case FrameCarControl.Generator: {

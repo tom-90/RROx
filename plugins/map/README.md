@@ -58,6 +58,10 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.0.3 - 01-05-2022
+
+- ``Fixed`` Bug where water amount would not show correctly.
+
 ### v1.0.2 - 30-04-2022
 
 - ``Fixed`` Overlay positioning issue when first opening it.

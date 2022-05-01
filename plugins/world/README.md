@@ -21,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.3 - 01-05-2022
+
+- ``Fixed`` Glitch where coupling bar would not show entire train.
+- ``Fixed`` Bug where whistle would not go to 100%.
+
 ### v1.0.2 - 30-04-2022
 
 - ``Fixed`` Issue where switches and other objects did not show up on worlds with handcars in them.

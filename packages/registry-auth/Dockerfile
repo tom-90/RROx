@@ -20,6 +20,9 @@ FROM verdaccio/verdaccio
 
 USER root
 
+# Patch notify handlebars template engine with JSON function
+RUN echo $'\n_handlebars.default.registerHelper("json", function(context) {return JSON.stringify(context); });' >> /opt/verdaccio/build/lib/notify/index.js
+
 COPY verdaccio.yaml /verdaccio/conf/config.yaml
 
 COPY --from=builder /var/www/app/dist /verdaccio/plugins/verdaccio-rrox-registry-auth/dist
