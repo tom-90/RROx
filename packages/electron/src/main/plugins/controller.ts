@@ -12,7 +12,7 @@ import { PluginSettingsManager } from "./settings";
 
 export class PluginController extends EventEmitter implements IPluginController {
 
-    public communicator: ControllerCommunicator;
+    public communicator: PluginCommunicator;
     public instance?: Controller;
     public settings: SettingsManager;
 
@@ -62,6 +62,8 @@ export class PluginController extends EventEmitter implements IPluginController 
     
             await controller.load( this );
 
+            this.instance = controller;
+
             return true;
         } catch( e ) {
             this.log.error( 'Failed to load ', e );
@@ -75,6 +77,7 @@ export class PluginController extends EventEmitter implements IPluginController 
 
         try {
             await this.cleanupSetups();
+            await this.communicator.unload();
 
             await this.instance.unload( this );
 
@@ -86,6 +89,18 @@ export class PluginController extends EventEmitter implements IPluginController 
         } catch( e ) {
             this.log.error( 'Failed to unload', e );
             return false;
+        }
+    }
+
+    async reload() {
+        try {
+            if( !( await this.unload() ) )
+                throw new Error( 'Failed unloading' );
+
+            if( !( await this.load() ) )
+                throw new Error( 'Failed loading' );
+        } catch( e ) {
+            this.log.error( 'Failed to reload', this.plugin.name, e );
         }
     }
 

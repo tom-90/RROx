@@ -1,4 +1,4 @@
-import { Settings, SettingsSchema } from "@rrox/api";
+import { Settings, SettingsMode, SettingsSchema } from "@rrox/api";
 import { KeyCodes } from "./keycodes";
 
 export interface IBaseSettings {
@@ -55,3 +55,5 @@ const schema: SettingsSchema<IBaseSettings> = {
 export const BaseSettings = Settings<IBaseSettings>( PluginInfo, {
     schema
 } );
+
+BaseSettings.mode = SettingsMode.CONTROLLER_LOCAL;

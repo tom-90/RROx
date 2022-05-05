@@ -7,3 +7,11 @@ export const SettingsCommunicator = SharedCommunicator<ValueCommunicator<{
 export const SetSettingsCommunicator = Communicator<{
     event: ( plugin: string, updates: { [ key: string ]: any } ) => void;
 }>( PluginInfo, 'set-settings' );
+
+export const LocalSettingsCommunicator = Communicator<ValueCommunicator<{
+    [ plugin: string ]: any
+}>>( PluginInfo, 'local-settings' );
+
+export const SetLocalSettingsCommunicator = Communicator<{
+    event: ( plugin: string, updates: { [ key: string ]: any } ) => void;
+}>( PluginInfo, 'set-local-settings' );

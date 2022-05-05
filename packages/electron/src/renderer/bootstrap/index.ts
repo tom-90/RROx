@@ -22,7 +22,10 @@ export async function init() {
         if ( rendererMode === RendererMode.OVERLAY )
             document.title = 'RROxOverlay';
         
-        new Logger( log() );
+        const electronLog = log();
+        new Logger( electronLog );
+        electronLog.catchErrors();
+        
         const manager = new PluginManager( new SharedCommunicator(), rendererMode );
         
 

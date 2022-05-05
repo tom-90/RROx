@@ -13,6 +13,8 @@ declare const __webpack_share_scopes__: any;
 export class PluginRenderer implements IPluginRenderer {
     public instance?: Renderer;
 
+    private loadMode?: PluginManagerMode;
+
     constructor( 
         private store: RegistrationStore,
         public communicator: RendererCommunicator,
@@ -59,7 +61,24 @@ export class PluginRenderer implements IPluginRenderer {
         return this.store.getController( registration );
     }
 
+    async reload() {
+        try {
+            if( !( await this.unload() ) )
+                throw new Error( 'Failed unloading' );
+
+            if( this.loadMode === undefined )
+                throw new Error( 'Load mode is not available.' );
+
+            if( !( await this.load( this.loadMode ) ) )
+                throw new Error( 'Failed loading' );
+        } catch( e ) {
+            this.log.error( 'Failed to reload', this.plugin.name, e );
+        }
+    }
+
     async load( mode: PluginManagerMode ): Promise<boolean> {
+        this.loadMode = mode;
+    
         try {
             if( !this.plugin.rendererEntry )
                 throw new Error( 'No renderer entry specified.' );
@@ -84,6 +103,8 @@ export class PluginRenderer implements IPluginRenderer {
             const controller = new pluginClass() as Renderer;
     
             await controller.load( this );
+
+            this.instance = controller;
 
             return true;
         } catch( e ) {

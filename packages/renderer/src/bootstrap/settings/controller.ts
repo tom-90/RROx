@@ -1,10 +1,10 @@
-import { RendererCommunicator, SettingsKey, SettingsPath, SettingsStore } from "@rrox/api";
+import { RendererCommunicator, Settings, SettingsKey, SettingsMode, SettingsPath, SettingsStore } from "@rrox/api";
 import { EventEmitter2 } from "eventemitter2";
-import { SetSettingsCommunicator } from "../../communicators";
+import { SetLocalSettingsCommunicator, SetSettingsCommunicator } from "../../communicators";
 
 export class ControllerSettingsStore<T extends object> extends EventEmitter2 implements SettingsStore<T> {
 
-    constructor( private communicator: RendererCommunicator, private plugin: PluginInfo, private settings: T ) {
+    constructor( private communicator: RendererCommunicator, private plugin: PluginInfo, private settings: T, private mode: SettingsMode ) {
         super();
     };
 
@@ -67,7 +67,10 @@ export class ControllerSettingsStore<T extends object> extends EventEmitter2 imp
     }
 
     setAll( values: Partial<T> ): void {
-        this.communicator.emit( SetSettingsCommunicator, this.plugin.name, values );
+        if( this.mode === SettingsMode.CONTROLLER )
+            this.communicator.emit( SetSettingsCommunicator, this.plugin.name, values );
+        else if( this.mode === SettingsMode.CONTROLLER_LOCAL )
+            this.communicator.emit( SetLocalSettingsCommunicator, this.plugin.name, values );
     } 
 
     has( pathOrKey: SettingsKey<T, string> | SettingsPath ): boolean {

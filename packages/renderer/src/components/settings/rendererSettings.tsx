@@ -37,7 +37,6 @@ export function RendererSettings( { version, openLogFile }: { version?: string, 
             <Form.Item
                 label="Player Name"
                 name="player-name"
-                valuePropName="checked"
                 help={<p style={{ padding: '10px 0' }}>To connect to remote sessions using RROx, it is necessary to provide your player name.</p>}
             >
                 <Input placeholder='Steam Player Name' />

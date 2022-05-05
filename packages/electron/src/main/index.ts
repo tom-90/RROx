@@ -25,6 +25,7 @@ if ( require( 'electron-squirrel-startup' ) || ( process.env.NODE_ENV !== 'devel
 } else {    
     // Make logger available for plugins
     new Logger( Log );
+    Log.catchErrors();
 
     try {
         Updater( {

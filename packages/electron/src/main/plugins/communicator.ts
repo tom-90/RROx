@@ -89,12 +89,25 @@ export class IPCCommunicator implements ControllerCommunicator {
 }
 
 export class PluginCommunicator implements ControllerCommunicator {
+    private destroyFunctions: ( () => void )[] = [];
+    private valueProviders: ValueProvider<any>[] = [];
+
     constructor( private rootCommunicator: ControllerCommunicator, private plugin: IPlugin ) {}
+
+    private createDestroyFunction( fn: () => void ): () => void {
+        this.destroyFunctions.push( fn );
+
+        return () => {
+            this.destroyFunctions = this.destroyFunctions.filter( ( f ) => f !== fn );
+
+            return fn();
+        };
+    }
 
     listen<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
         communicator: C, listener: ( ...args: CommunicatorEventParameters<C> ) => void
     ): () => void {
-        return this.rootCommunicator.listen( communicator, listener );
+        return this.createDestroyFunction( this.rootCommunicator.listen( communicator, listener ) );
     }
 
     emit<C extends CommunicatorType<( ...p: any[] ) => void, any>>(
@@ -109,14 +122,18 @@ export class PluginCommunicator implements ControllerCommunicator {
     ): () => void {
         if( communicator.module.name !== this.plugin.name )
             throw new Error( 'Cannot register a handler for a communicator that is not owned by the plugin.' );
-        return this.rootCommunicator.handle( communicator, handler );
+        return this.createDestroyFunction( this.rootCommunicator.handle( communicator, handler ) );
     }
     
     provideValue<T>( communicator: CommunicatorType<( diff: Diff<T>[] ) => void, () => T>, initialValue?: T ): ValueProvider<T> {
         if( communicator.module.name !== this.plugin.name )
             throw new Error( 'Cannot register a value provider for a communicator that is not owned by the plugin.' );
     
-        return this.rootCommunicator.provideValue( communicator, initialValue ) as ValueProvider<T>;
+        const provider = this.rootCommunicator.provideValue( communicator, initialValue ) as ValueProvider<T>;
+
+        this.valueProviders.push( provider );
+
+        return provider;
     }
 
     callListeners<C extends CommunicatorType<( ...p: any[] ) => void, any>>( communicator: C, ...args: CommunicatorEventParameters<C> ): void {
@@ -126,11 +143,20 @@ export class PluginCommunicator implements ControllerCommunicator {
     callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>> {
         return this.rootCommunicator.callHandler( communicator, ...args );
     }
+
+    unload() {
+        this.destroyFunctions.forEach( ( fn ) => fn() );
+        this.destroyFunctions = [];
+
+        this.valueProviders.forEach( ( vp ) => vp.destroy() );
+        this.valueProviders = [];
+    }
 }
 
 export class ValueProvider<T> implements IValueProvider<T> {
     private value?: T;
     private unregisterHandler: () => void;
+    private destroyed = false;
 
     constructor(
         private communicator: ControllerCommunicator,
@@ -147,6 +173,9 @@ export class ValueProvider<T> implements IValueProvider<T> {
     }
 
     provide( value: T ): void {
+        if( this.destroyed )
+            throw new Error( 'Cannot provide value for destroyed value provider.' );
+
         const difference = diff<T>( this.value!, value, {
             normalize: ( path, key, lhs: any, rhs: any ) => {
                 if( typeof lhs === 'number' && typeof rhs === 'number' ) {
@@ -171,6 +200,10 @@ export class ValueProvider<T> implements IValueProvider<T> {
     }
 
     destroy() {
+        if( this.destroyed )
+            return;
+
         this.unregisterHandler();
+        this.destroyed = true;
     }
 }

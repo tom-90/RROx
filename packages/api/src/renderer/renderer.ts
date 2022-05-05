@@ -33,4 +33,9 @@ export interface IPluginRenderer {
      * @param registration Registration to get the controller for
      */
     getRegistrationController<R extends RegistrationType<( ...params: any[] ) => void>>( registration: R ): IRegistrationController<R>;
+
+    /**
+     * Reload the plugin
+     */
+    reload(): void;
 }

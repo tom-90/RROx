@@ -20,6 +20,8 @@ export class Logger {
             ( window as any )[ Logger.LOGGER_KEY ] = instance;
         else if( typeof global !== 'undefined' )
             ( global as any )[ Logger.LOGGER_KEY ] = instance;
+
+        Object.assign( console, instance.scope( '' ) );
     }
 
     /**

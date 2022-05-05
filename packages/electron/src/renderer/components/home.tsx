@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { PageContent, PageLayout } from "@rrox/base-ui";
 import AppIcon from "@rrox/assets/images/appIcon.ico";
 import { Button, Divider, Spin, Steps, Typography, Form, Tooltip, Input, Switch, Tabs, message, Modal } from "antd";
-import { AppstoreOutlined, CheckCircleOutlined, FileSearchOutlined, LoginOutlined, LoadingOutlined, CopyOutlined } from "@ant-design/icons";
-import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareModeCommunicator } from "../../shared";
+import { AppstoreOutlined, CheckCircleOutlined, FileSearchOutlined, LoginOutlined, LoadingOutlined, CopyOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, OpenDLLFolderCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareModeCommunicator } from "../../shared";
 import { useRPC, useValue, ShareMode } from "@rrox/api";
 
 function Step( { step, currentStatus, icon, last, ...restProps }: {
@@ -21,11 +21,13 @@ function Step( { step, currentStatus, icon, last, ...restProps }: {
     />;
 }
 
+type Modal = ReturnType<typeof Modal[ 'error' ]>;
+
 export function HomePage() {
     const attachRpc = useRPC( AttachCommunicator );
     const detachRpc = useRPC( DetachCommunicator );
+    const dllFolderRpc = useRPC( OpenDLLFolderCommunicator );
     const status = useValue( AttachedCommunicator );
-    const attachStatus = useValue( AttachedCommunicator );
     const shareMode = useValue( ShareModeCommunicator );
     const shareKeys = useValue( ShareKeysCommunicator, {} );
     const connectHost = useRPC( ShareConnectHostCommunicator );
@@ -33,10 +35,77 @@ export function HomePage() {
 
     const [ keyInput, setKeyInput ] = useState( '' );
     const [ loadingShared, setLoadingShared ] = useState( false );
+    const [ manualModal, setManualModal ] = useState<Modal | null>( null );
 
     const attach = useCallback( () => {
-        attachRpc().then( ( res ) => res ? message.error( res ) : null );
-    }, [ attachRpc ] );
+        const attachManually = ( modal: Modal ) => {
+
+            attachRpc( true ).then( ( res ) => {
+                if( res ) {
+                    message.error( res );
+                    return;
+                }
+
+                setManualModal( modal );
+
+                modal.update( {
+                    type: 'info',
+                    icon: <InfoCircleOutlined />,
+                    title: 'Attaching...',
+                    content: <div>
+                        <p>
+                            To manually attach to the game, you can use some sort of third-party DLL injector.
+                            One example is the Xenos Injector, but others can be found online.
+                        </p>
+                        <p>
+                            Using this injector, you can inject the RROx DLL that can be found in <a onClick={() => dllFolderRpc()}>this folder</a> into the game process.
+                            The game process is called <code>arr-Win64-Shipping.exe</code>.
+                        </p>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                            <Spin tip={'Waiting for the DLL to establish communication...'} />
+                        </div>
+                    </div>,
+                    closable: false,
+                    width: 500,
+                    okButtonProps: { style: {} },
+                    okText: 'Cancel',
+                    onOk: () => {
+                        detachRpc().then( ( res ) => {
+                            if( res )
+                                message.error( res );
+                            modal.destroy();
+                        } ).catch( () => modal.destroy() );
+                    },
+                } );
+            } );
+        };
+
+        attachRpc().then( ( res ) => {
+            if( !res )
+                return;
+
+            const modal = Modal.error( {
+                title: 'Attaching failed',
+                content: <div>
+                    <p><strong>{res}</strong></p>
+
+                    <p>
+                        RROx failed to automatically attach to the game by injecting the DLL.
+                        If this error persists, you could try manually injecting the DLL using a seperate program.
+                    </p>
+
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button onClick={() => attachManually( modal )} style={{ marginRight: 20 }}>Attach manually</Button>
+                        <Button type='primary' onClick={() => modal.destroy()}>Close</Button>
+                    </div>
+                </div>,
+                closable: false,
+                width: 500,
+                okButtonProps: { style: { display: 'none' } }
+            } );
+        } );
+    }, [ attachRpc, detachRpc, dllFolderRpc, setManualModal ] );
+
     const detach = useCallback( () => {
         detachRpc().then( ( res ) => res ? message.error( res ) : null );
     }, [ detachRpc ] );
@@ -45,6 +114,13 @@ export function HomePage() {
         if( loadingShared )
             setLoadingShared( false );
     }, [ shareMode ] );
+
+    useEffect( () => {
+        if( manualModal && status === AttachStatus.ATTACHED ) {
+            manualModal.destroy();
+            setManualModal( null );
+        }
+    }, [ manualModal, status ] );
 
     const onEnterKey = useCallback( () => {
         let key = keyInput.replace( 'https://rrox.tom90.nl/key/', '' );
@@ -161,7 +237,7 @@ export function HomePage() {
                         </Form.Item>
                     </Form>
                 </Tabs.TabPane>
-                <Tabs.TabPane key='remote' tab='Remote' disabled={shareMode === ShareMode.HOST || (shareMode !== ShareMode.CLIENT && attachStatus === AttachStatus.ATTACHED)}>   
+                <Tabs.TabPane key='remote' tab='Remote' disabled={shareMode === ShareMode.HOST || (shareMode !== ShareMode.CLIENT && status === AttachStatus.ATTACHED)}>   
                     <p>
                         When using RROx in a multiplayer session, you can connect to the host using their shared URL.
                         It is possible to connect via a public URL in which case you will not be able to perform any actions, and only view certain things like the map.

@@ -53,10 +53,10 @@ export interface ControllerCommunicator {
     callListeners<C extends CommunicatorType<( ...p: any[] ) => void, any>>( communicator: C, ...args: CommunicatorEventParameters<C> ): void;
     
     /**
-     * Calls the registered listeners
+     * Calls the registered handler
      *
-     * @param communicator Communicator for which the listeners should be called
-     * @param args Arguments to pass to the listeners
+     * @param communicator Communicator for which the handler should be called
+     * @param args Arguments to pass to the handler
      * @return Return value of handler
      */
     callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>>;

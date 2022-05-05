@@ -55,4 +55,9 @@ export interface IPluginController {
      * @param cleanup (default: true) When true, the clean-up function will be called if the setup function had previously been called.
      */
     removeSetup( callback: SetupFunction, cleanup?: boolean ): void;
+    
+    /**
+     * Reload the plugin
+     */
+    reload(): void;
 }

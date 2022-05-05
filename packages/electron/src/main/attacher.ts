@@ -1,7 +1,8 @@
 import { ValueProvider } from "@rrox/api";
 import path from 'path';
 import fs from 'fs';
-import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator } from "../shared/communicators";
+import { shell } from 'electron';
+import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, OpenDLLFolderCommunicator } from "../shared/communicators";
 import { RROxApp } from "./app";
 import * as injector from 'dll-inject';
 import Log from 'electron-log';
@@ -19,13 +20,23 @@ export class Attacher {
             this.waitForPlugins();
         } );
 
-        this.app.communicator.handle( AttachCommunicator, () => this.attach() );
+        this.app.communicator.handle( AttachCommunicator, ( manual ) => this.attach( manual ) );
         this.app.communicator.handle( DetachCommunicator, () => this.detach() );
+
+        this.app.communicator.handle( OpenDLLFolderCommunicator, async () => {
+            await shell.openPath( path.dirname( path.resolve( __dirname, DLL ) ) );
+        } );
     }
 
-    public async attach(): Promise<string | void> {
+    public async attach( manual: boolean = false ): Promise<string | void> {
         if( this.valueProvider.getValue() !== AttachStatus.DETACHED )
             return;
+
+        if( manual ) {
+            this.app.pipeServer.start();
+            this.valueProvider.provide( AttachStatus.INITIALIZING );
+            return;
+        }
 
         const dllPath = path.resolve( __dirname, DLL );
 
@@ -57,12 +68,14 @@ export class Attacher {
     }
 
     public async detach() {
-        if( this.valueProvider.getValue() !== AttachStatus.ATTACHED )
+        if( this.valueProvider.getValue() === AttachStatus.DETACHED )
             return;
 
         await this.app.pipeServer.stop();
 
         this.app.structs.clear();
+
+        this.valueProvider.provide( AttachStatus.DETACHED );
     }
 
     private async waitForPlugins() {

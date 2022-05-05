@@ -1,24 +1,21 @@
-import { applyDiff, RendererCommunicator, SettingsContext, SettingsMode, SettingsStore, SettingsType } from "@rrox/api";
+import { applyDiff, RendererCommunicator, SettingsContext, SettingsMode, SettingsStore, SettingsType, ValueConsumer } from "@rrox/api";
 import { LogFunctions } from "electron-log";
-import { SettingsCommunicator } from "../../communicators";
+import { LocalSettingsCommunicator, SettingsCommunicator } from "../../communicators";
 import { ControllerSettingsStore, LocalStorageSettingsStore } from "../settings";
 
 export class SettingsManager implements SettingsContext {
-    private settings: { [ plugin: string ]: any } = {};
+    private settings: ValueConsumer<{ [ plugin: string ]: any }>;
+    private localSettings: ValueConsumer<{ [ plugin: string ]: any }>;
     private stores: { [ plugin: string ]: { [ key in SettingsMode ]?: SettingsStore<any> } } = {};
 
     constructor( private communicator: RendererCommunicator, private log: LogFunctions ) {
-        communicator.listen( SettingsCommunicator, ( diff ) => {
-            this.settings = applyDiff( this.settings, diff );
-            this.update();
-        } );
+        this.settings = new ValueConsumer( communicator, SettingsCommunicator, {} );
+        this.localSettings = new ValueConsumer( communicator, LocalSettingsCommunicator, {} );
+        
+        const onUpdate = () => this.update();
 
-        communicator.whenAvailable( () => {
-            communicator.rpc( SettingsCommunicator ).then( ( settings ) => { 
-                this.settings = settings;
-                this.update();
-            } ).catch( ( e ) => this.log.error( 'Failed to load settings', e ) );
-        } );
+        this.settings.addListener( 'update', onUpdate );
+        this.localSettings.addListener( 'update', onUpdate );
     }
 
     get<T extends object>( settings: SettingsType<T> ): SettingsStore<T> {
@@ -29,7 +26,11 @@ export class SettingsManager implements SettingsContext {
         
         switch( settings.mode ) {
             case SettingsMode.CONTROLLER: {
-                store = new ControllerSettingsStore( this.communicator, settings.module, this.settings[ settings.module.name ] );
+                store = new ControllerSettingsStore( this.communicator, settings.module, this.settings.getValue()![ settings.module.name ], settings.mode );
+                break;
+            }
+            case SettingsMode.CONTROLLER_LOCAL: {
+                store = new ControllerSettingsStore( this.communicator, settings.module, this.localSettings.getValue()![ settings.module.name ], settings.mode );
                 break;
             }
             case SettingsMode.RENDERER: {
@@ -50,9 +51,15 @@ export class SettingsManager implements SettingsContext {
     }
 
     private update() {
-        for( let [ plugin, store ] of Object.entries( this.stores ) )
-            if( store[ SettingsMode.CONTROLLER ] && this.settings[ plugin ] !== store[ SettingsMode.CONTROLLER ]!.getAll() )
-                ( store[ SettingsMode.CONTROLLER ] as ControllerSettingsStore<any> ).updateSettingsObject( this.settings[ plugin ] );
+        for( let [ plugin, store ] of Object.entries( this.stores ) ) {
+            const settings = this.settings.getValue()!;
+            const localSettings = this.localSettings.getValue()!;
+
+            if( store[ SettingsMode.CONTROLLER ] && settings[ plugin ] !== store[ SettingsMode.CONTROLLER ]!.getAll() )
+                ( store[ SettingsMode.CONTROLLER ] as ControllerSettingsStore<any> ).updateSettingsObject( settings[ plugin ] );
+            if( store[ SettingsMode.CONTROLLER_LOCAL ] && localSettings[ plugin ] !== store[ SettingsMode.CONTROLLER_LOCAL ]!.getAll() )
+                ( store[ SettingsMode.CONTROLLER_LOCAL ] as ControllerSettingsStore<any> ).updateSettingsObject( localSettings[ plugin ] );
+        }
     }
 
 }

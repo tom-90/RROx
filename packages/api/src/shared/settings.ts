@@ -15,7 +15,8 @@ export interface SettingsConfig<T extends object> {
 
 export enum SettingsMode {
     CONTROLLER,
-    RENDERER
+    RENDERER,
+    CONTROLLER_LOCAL,
 }
 
 export interface SettingsType<T extends object> {

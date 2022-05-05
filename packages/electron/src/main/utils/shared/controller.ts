@@ -131,7 +131,7 @@ export class ShareController {
     }
 
     public broadcast( channel: string, ...data: any[] ) {
-        if( !this.socket || this.getMode() !== ShareMode.HOST )
+        if( !this.socket || this.getMode() !== ShareMode.HOST || !this.isShared( channel ) )
             return
         
         this.socket.emit( 'broadcast', channel, data );
