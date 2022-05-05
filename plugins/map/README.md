@@ -58,6 +58,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.0.4 - 05-05-2022
+
+- ``Fixed`` Scrolling issue for coupling bar in the frame controls popup
+- ``Fixed`` Issue where spline colors would not be saved
+
 ### v1.0.3 - 01-05-2022
 
 - ``Fixed`` Bug where water amount would not show correctly.
