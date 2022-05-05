@@ -29,6 +29,12 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v2.1.0 - 05-05-2022
+
+- ``Added`` Ability to manually inject the DLL into the game in case automatic injection by RROx fails.
+- ``Fixed`` Issue where overlay settings and player name would not be saved.
+- ``Fixed`` Issue where overlay state (large map/minimap) could be synced in shared sessions.
+
 ### v2.0.0 - 30-04-2022
 
 **Important!** The version 2 update changes the way that RROx is installed. Therefore, to use it, you should uninstall the current version of RROx and reinstall the new version. Older versions will try to automatically update to this new version, but this will fail.
