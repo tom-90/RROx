@@ -21,6 +21,12 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.4 - 05-05-2022
+
+- ``Fixed`` Issue where splines would not immediately load after attaching
+- ``Fixed`` Issue where Ironworks would show raw iron instead of steel pipes.
+- ``Fixed`` Issue where shared clients could not set shared controls
+
 ### v1.0.3 - 01-05-2022
 
 - ``Fixed`` Glitch where coupling bar would not show entire train.
