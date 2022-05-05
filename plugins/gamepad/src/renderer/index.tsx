@@ -1,8 +1,8 @@
-import { IPluginRenderer, Renderer, SettingsRegistration, ShareMode } from "@rrox/api";
+import { IPluginRenderer, Renderer, SettingsRegistration, ShareMode, ValueConsumer } from "@rrox/api";
 import React from "react";
 import { GamepadSettingsPage } from "./settings";
 import {LoadListener, UnloadListener} from "./listener";
-import {FrameCarControl, SetControlsCommunicator} from "@rrox-plugins/world/shared";
+import {FrameCarControl, SetControlsCommunicator, WorldCommunicator} from "@rrox-plugins/world/shared";
 
 export default class AutosaveRenderer extends Renderer {
     public load( renderer: IPluginRenderer ): void | Promise<void> {

@@ -6,4 +6,3 @@ export * from './PageContent';
 export * from './PageLayout';
 export * from './SideNav';
 export * from './ThemeSelector';
-export * from './TopNav';

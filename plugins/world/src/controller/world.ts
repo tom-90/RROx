@@ -251,9 +251,21 @@ export class World {
         ] );
     }
 
-    public start() {
+    public async start() {
         clearInterval( this.worldInterval! );
         clearInterval( this.splineInterval! );
+        
+        try {
+            await this.load( LoadType.OBJECTS );
+        } catch( e ) {
+            Log.error( 'Failed to load world objects', e );
+        }
+        
+        try {
+            await this.load( LoadType.SPLINES );
+        } catch( e ) {
+            Log.error( 'Failed to load splines', e );
+        }
 
         this.worldInterval = setInterval( async () => {
             try {

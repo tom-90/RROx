@@ -1,5 +1,5 @@
-import { Communicator } from "@rrox/api";
+import { SharedCommunicator } from "@rrox/api";
 
-export const SetControlsSyncCommunicator = Communicator<{
+export const SetControlsSyncCommunicator = SharedCommunicator<{
     rpc: ( index: number, enabled?: boolean ) => void,
 }>( PluginInfo, 'SetControlsSync' );

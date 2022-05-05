@@ -11,6 +11,13 @@ export default class DevtoolsRenderer extends Renderer {
             linkTo: 'structs',
             icon  : <ProfileOutlined />
         } );
+
+        if ( module.hot ) {
+            module.hot.accept();
+            module.hot.dispose(() => {
+                renderer.reload();
+            });
+        }
     }
     public unload( renderer: IPluginRenderer ): void | Promise<void> {
         console.log( 'devtools unload' );

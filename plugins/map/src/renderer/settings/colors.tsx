@@ -261,7 +261,7 @@ export function ColorSettings() {
                     <tbody>
                         <tr>
                             <td>Track</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRACK ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRACK.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.TRACK}` )}
@@ -271,7 +271,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Rail Deck</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRENDLE_TRACK ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.TRENDLE_TRACK.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.TRENDLE_TRACK}` )}
@@ -281,7 +281,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Variable Grade</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_BANK ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_BANK.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_BANK}` )}
@@ -291,7 +291,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Constant Grade</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_BANK ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_BANK.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_BANK}` )}
@@ -301,7 +301,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Variable Wall</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_WALL ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.VARIABLE_WALL.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.VARIABLE_WALL}` )}
@@ -311,7 +311,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Constant Wall</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_WALL ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.CONSTANT_WALL.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.CONSTANT_WALL}` )}
@@ -321,7 +321,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Wooden Bridge</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.WOODEN_BRIDGE ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.WOODEN_BRIDGE.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.WOODEN_BRIDGE}` )}
@@ -331,7 +331,7 @@ export function ColorSettings() {
                         </tr>
                         <tr>
                             <td>Steel Bridge</td>
-                            <td><Form.Item name={[ 'colors', 'spline', SplineType.IRON_BRIDGE ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.IRON_BRIDGE.toString() ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.spline.${SplineType.IRON_BRIDGE}` )}

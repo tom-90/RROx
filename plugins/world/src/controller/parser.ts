@@ -120,9 +120,15 @@ export class WorldParser {
             educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map(
                 ( storage ) => this.parseStorage( storage )
             ).filter( ( st ): st is IStorage => st !== undefined ),
-            products: [ ind.mystorageproducts1, ind.mystorageproducts2, ind.mystorageproducts3, ind.mystorageproducts4 ].map(
-                ( storage ) => this.parseStorage( storage )
-            ).filter( ( st ): st is IStorage => st !== undefined ),
+            products: [ ind.mystorageproducts1, ind.mystorageproducts2, ind.mystorageproducts3, ind.mystorageproducts4 ]
+                .map(
+                    ( storage ) => this.parseStorage( storage )
+                )
+                .filter( ( st ): st is IStorage => st !== undefined )
+                .map( ( st ) => ind.industrytype === IndustryType.IRONWORKS && st.type === ProductType.RAWIRON ? {
+                    ...st,
+                    type: ProductType.STEELPIPES,
+                } : st ),
             location: this.parseActorLocation( ind ),
             rotation: this.parseActorRotation( ind ),
         } 
