@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { PageContent, PageLayout } from "@rrox/base-ui";
-import AppIcon from "@rrox/assets/images/appIcon.ico";
+import AppIcon from "../../shared/appIcon.ico";
 import { Button, Divider, Spin, Steps, Typography, Form, Tooltip, Input, Switch, Tabs, message, Modal } from "antd";
 import { AppstoreOutlined, CheckCircleOutlined, FileSearchOutlined, LoginOutlined, LoadingOutlined, CopyOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { AttachCommunicator, AttachedCommunicator, AttachStatus, DetachCommunicator, OpenDLLFolderCommunicator, ShareConnectClientCommunicator, ShareConnectHostCommunicator, ShareKeysCommunicator, ShareModeCommunicator } from "../../shared";

@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow } from 'electron';
 import { convertEntryPath } from '../utils/urlPath';
 import path from 'path';
-import appIcon from '@rrox/assets/images/appIcon.ico';
+import appIcon from '../../shared/appIcon.ico';
 
 const dir = __dirname;
 

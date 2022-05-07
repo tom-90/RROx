@@ -1,10 +1,17 @@
 {
     "name": "@rrox/api",
-    "private": true,
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "RailroadsOnline Extended API",
+    "license": "MIT",
     "author": "_tom()",
     "main": "src/index.ts",
+    "files": [
+        "src",
+        "module.ts",
+        "types.ts",
+        "tsconfig.json"
+    ],
+    "homepage": "https://rrox-docs.tom90.nl",
     "repository": {
         "type": "git",
         "url": "https://github.com/tom-90/RROx.git"

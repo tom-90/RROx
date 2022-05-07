@@ -1,20 +1,20 @@
 import { ProductType } from '@rrox-plugins/world/shared';
 
-import Barrels from '@rrox/assets/images/products/barrels_p.svg';
-import Beams from '@rrox/assets/images/products/beams_p.svg';
-import Coal from '@rrox/assets/images/products/coal_p.svg';
-import Cordwood from '@rrox/assets/images/products/cordwood_p.svg';
-import Iron from '@rrox/assets/images/products/iron_p.svg';
-import IronOre from '@rrox/assets/images/products/ironore_p.svg';
-import Logs from '@rrox/assets/images/products/logs_p.svg';
-import Lumber from '@rrox/assets/images/products/lumber_p.svg';
-import CrudeOil from '@rrox/assets/images/products/oil_p.svg';
-import SteelPipes from '@rrox/assets/images/products/pipes_p.svg';
-import Rails from '@rrox/assets/images/products/rails_p.svg';
-import Tools from '@rrox/assets/images/products/tools_p.svg';
-import Firewood from '@rrox/assets/images/products/firewood_p.svg';
-import Water from '@rrox/assets/images/products/water_p.svg';
-import Sand from '@rrox/assets/images/products/sand_p.svg';
+import Barrels from '../../images/products/barrels_p.svg';
+import Beams from '../../images/products/beams_p.svg';
+import Coal from '../../images/products/coal_p.svg';
+import Cordwood from '../../images/products/cordwood_p.svg';
+import Iron from '../../images/products/iron_p.svg';
+import IronOre from '../../images/products/ironore_p.svg';
+import Logs from '../../images/products/logs_p.svg';
+import Lumber from '../../images/products/lumber_p.svg';
+import CrudeOil from '../../images/products/oil_p.svg';
+import SteelPipes from '../../images/products/pipes_p.svg';
+import Rails from '../../images/products/rails_p.svg';
+import Tools from '../../images/products/tools_p.svg';
+import Firewood from '../../images/products/firewood_p.svg';
+import Water from '../../images/products/water_p.svg';
+import Sand from '../../images/products/sand_p.svg';
 
 export const ProductDefinitions: { [ key in ProductType ]: { image: string, offset?: number } } = {
     [ ProductType.CRUDEOIL   ]: { image: CrudeOil   },

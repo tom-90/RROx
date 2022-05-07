@@ -1,6 +1,7 @@
 {
   "name": "@rrox/renderer",
   "version": "1.0.0",
+  "private": true,
   "description": "RailroadsOnline Extended renderer utilities",
   "author": "_tom()",
   "main": "src/index.ts",
@@ -16,7 +17,7 @@
     "@types/path-browserify": "^1.0.0"
   },
   "dependencies": {
-    "@rrox/api": "^1.0.0",
+    "@rrox/api": "^1.0.1",
     "@rrox/base-ui": "^1.0.0",
     "antd": "^4.17.2",
     "ajv": "^8.11.0",

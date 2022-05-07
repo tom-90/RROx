@@ -1,6 +1,7 @@
 {
     "name": "@rrox/web",
     "version": "1.0.0",
+    "private": true,
     "description": "RailroadsOnline Extended web components",
     "author": "_tom()",
     "license": "MIT",
@@ -42,8 +43,7 @@
     },
     "dependencies": {
       "@ant-design/icons": "^4.7.0",
-      "@rrox/api": "^1.0.0",
-      "@rrox/assets": "^1.0.0",
+      "@rrox/api": "^1.0.1",
       "@rrox/base-ui": "^1.0.0",
       "@rrox/renderer": "^1.0.0",
       "antd": "^4.17.2",

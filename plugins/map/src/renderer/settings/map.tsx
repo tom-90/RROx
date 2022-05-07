@@ -2,12 +2,12 @@ import { useSettings } from "@rrox/api";
 import React, { useEffect } from "react";
 import { Form, Radio, Avatar } from "antd";
 import { MapPreferences } from "../../shared";
-import Background1 from '@rrox/assets/images/bg1.jpg';
-import Background2 from '@rrox/assets/images/bg2.jpg';
-import Background3 from '@rrox/assets/images/bg3.jpg';
-import Background4 from '@rrox/assets/images/bg4.jpg';
-import Background5 from '@rrox/assets/images/bg5.jpg';
-import Background6Preview from '@rrox/assets/images/bg6preview.jpg';
+import Background1 from '../images/bg1.jpg';
+import Background2 from '../images/bg2.jpg';
+import Background3 from '../images/bg3.jpg';
+import Background4 from '../images/bg4.jpg';
+import Background5 from '../images/bg5.jpg';
+import Background6Preview from '../images/bg6preview.jpg';
 
 export function MapSettings() {
     const [ preferences, store ] = useSettings( MapPreferences );

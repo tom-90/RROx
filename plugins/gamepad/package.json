@@ -28,7 +28,7 @@
         "@rrox/plugin": "^1.0.0"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.0",
+        "@rrox/api": "^1.0.1",
         "@rrox-plugins/world": "1.0.4",
         "antd": "^4.17.2",
         "react": "^17.0.2"
