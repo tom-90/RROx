@@ -62,7 +62,6 @@
     "@electron-forge/publisher-electron-release-server": "^6.0.0-beta.63",
     "@hot-loader/react-dom": "^17.0.1",
     "@rrox/api": "^1.0.0",
-    "@rrox/assets": "^1.0.0",
     "@rrox/base-ui": "^1.0.0",
     "@rrox/dll": "^1.0.0",
     "@rrox/renderer": "^1.0.0",

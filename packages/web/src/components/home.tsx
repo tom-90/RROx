@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContent, PageLayout } from "@rrox/base-ui";
-import AppIcon from "@rrox/assets/images/appIcon.ico";
+import AppIcon from "../appIcon.ico";
 import { Button, Typography, Form, Input, Tooltip, message, Modal, Avatar } from "antd";
 import { LoginOutlined, GlobalOutlined, DesktopOutlined } from "@ant-design/icons";
 import './style.less';

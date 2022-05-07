@@ -1,14 +1,14 @@
 import { IndustryType } from '@rrox-plugins/world/shared';
 
-import LoggingCamp from '@rrox/assets/images/industries/Logging Camp.svg';
-import Sawmill from '@rrox/assets/images/industries/Sawmill.svg';
-import FreightDepot from '@rrox/assets/images/industries/Freight Depot.svg';
-import Smelter from '@rrox/assets/images/industries/Smelter.svg';
-import IronMine from '@rrox/assets/images/industries/Iron Mine.svg';
-import CoalMine from '@rrox/assets/images/industries/Coal Mine.svg';
-import Refinery from '@rrox/assets/images/industries/Refinery.svg';
-import Ironworks from '@rrox/assets/images/industries/Ironworks.svg';
-import OilField from '@rrox/assets/images/industries/Oil Field.svg';
+import LoggingCamp from '../../images/industries/Logging Camp.svg';
+import Sawmill from '../../images/industries/Sawmill.svg';
+import FreightDepot from '../../images/industries/Freight Depot.svg';
+import Smelter from '../../images/industries/Smelter.svg';
+import IronMine from '../../images/industries/Iron Mine.svg';
+import CoalMine from '../../images/industries/Coal Mine.svg';
+import Refinery from '../../images/industries/Refinery.svg';
+import Ironworks from '../../images/industries/Ironworks.svg';
+import OilField from '../../images/industries/Oil Field.svg';
 
 export const IndustryDefinitions: { [ key in IndustryType ]: {
     name: string,

@@ -5,6 +5,7 @@ const { ModuleFederationPlugin } = require( 'webpack' ).container;
 const HtmlRendererPlugin = require( "./html" );
 const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
 const package = require("../../package.json");
+const path = require( "path" );
 
 module.exports = {
     resolve: {
@@ -99,7 +100,7 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new HtmlRendererPlugin( {
             template: "src/index.html.ejs",
-            favicon: require.resolve( "@rrox/assets/images/appIcon.ico" ),
+            favicon: path.resolve( __dirname, '../../src/appIcon.ico' ),
         } ),
         new ModuleFederationPlugin( {
             name   : 'renderer',

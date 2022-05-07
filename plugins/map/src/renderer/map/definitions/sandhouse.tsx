@@ -1,4 +1,4 @@
-import Sandhouse from '@rrox/assets/images/Sandhouse.svg';
+import Sandhouse from '../../images/Sandhouse.svg';
 
 export const SandhouseDefinitions = {
     rotationOffset: -90,

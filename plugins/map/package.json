@@ -37,7 +37,6 @@
         "@react-leaflet/core": "^1.1.1",
         "@rrox/api": "^1.0.0",
         "@rrox/base-ui": "^1.0.0",
-        "@rrox/assets": "1.0.0",
         "@rrox-plugins/world": "1.0.4",
         "antd": "^4.17.2",
         "ant-design-draggable-modal": "^1.0.0",

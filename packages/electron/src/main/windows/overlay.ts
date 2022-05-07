@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 import { convertEntryPath, focusGame, focusOverlay, getActiveWindow, getGameWindow, isGameFocussed } from '../utils';
-import appIcon from '@rrox/assets/images/appIcon.ico';
+import appIcon from '../../shared/appIcon.ico';
 import { RROxApp } from '../app';
 import { screen } from "electron";
 import { BaseSettings } from '../../shared/settings';
