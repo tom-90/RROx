@@ -1,7 +1,7 @@
 {
     "name": "@rrox/dll",
     "private": true,
-    "version": "1.6.2",
+    "version": "1.0.0",
     "description": "RailroadsOnline Extended DLL",
     "author": "_tom()",
     "repository": {

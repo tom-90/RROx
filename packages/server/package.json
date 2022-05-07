@@ -15,8 +15,8 @@
   "dependencies": {
     "@socket.io/admin-ui": "^0.2.0",
     "cross-env": "^7.0.3",
+    "deep-diff": "^1.0.2",
     "express": "^4.17.2",
-    "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
     "socket.io": "^4.4.0"
   },
@@ -27,7 +27,6 @@
     "@types/node": "^17.0.2",
     "concurrently": "^7.1.0",
     "nodemon": "^2.0.15",
-    "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   }
 }

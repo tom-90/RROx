@@ -21,35 +21,32 @@
         "url": "https://github.com/tom-90/RROx.git"
     },
     "devDependencies": {
-        "@monaco-editor/react": "^4.3.1",
-        "@rrox/api": "^1.6.2",
-        "@rrox/assets": "1.6.2",
+        "@rrox/plugin": "^1.0.0",
         "@types/leaflet": "^1.7.9",
-        "@types/leaflet-curve": "^0.1.2",
-        "@types/leaflet-draw": "^1.0.5",
         "@types/leaflet-imageoverlay-rotated": "^0.1.4",
-        "@types/react": "^18.0.5",
-        "@types/react-inspector": "^4.0.2",
-        "ant-design-draggable-modal": "^1.0.0",
-        "console-feed": "^3.3.0",
-        "leaflet": "^1.7.1",
-        "leaflet-curve": "^1.0.0",
-        "leaflet-draw": "^1.0.4",
-        "leaflet-imageoverlay-rotated": "^0.2.1",
-        "leaflet-snap": "^0.0.4",
-        "monaco-editor": "^0.33.0",
-        "react": "^17.0.2",
-        "react-inspector": "^5.1.1",
-        "react-leaflet": "^3.2.5",
-        "typescript": "^4.4.4",
-        "webpack": "^5.69.1",
-        "webpack-cli": "^4.9.2"
+        "@types/react": "^17.0.39"
     },
     "scripts": {
-        "prepack": "rm -rf dist && webpack -c ./configs/webpack.config.js --mode=production",
-        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
+        "build": "rrox clean && rrox build",
+        "prepack": "yarn build",
+        "start": "yarn dev",
+        "dev": "rrox clean && rrox start"
     },
     "dependencies": {
-        "@rrox-plugins/world": "1.6.2"
+        "@ant-design/icons": "^4.7.0",
+        "@react-leaflet/core": "^1.1.1",
+        "@rrox/api": "^1.0.0",
+        "@rrox/base-ui": "^1.0.0",
+        "@rrox/assets": "1.0.0",
+        "@rrox-plugins/world": "1.0.4",
+        "antd": "^4.17.2",
+        "ant-design-draggable-modal": "^1.0.0",
+        "leaflet": "^1.7.1",
+        "leaflet-imageoverlay-rotated": "^0.2.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-router-dom": "^6.0.2",
+        "react-uid": "^2.3.0",
+        "react-leaflet": "^3.2.5"
     }
 }

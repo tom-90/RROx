@@ -109,14 +109,6 @@ module.exports = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin(),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.resolve( __dirname, '../../../../node_modules/iohook/builds/electron-v98-win32-x64/build/Release/uiohook.dll' ),
-                    to: "native_modules/builds/electron-v98-win32-x64/build/Release/uiohook.dll"
-                },
-            ],
-        }),
         new webpack.DefinePlugin( {
             PluginInfo: JSON.stringify({
                 name: "@rrox/electron",

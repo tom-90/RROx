@@ -1,6 +1,6 @@
 {
     "name": "@rrox/web",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "RailroadsOnline Extended web components",
     "author": "_tom()",
     "license": "MIT",
@@ -18,7 +18,7 @@
     },
     "devDependencies": {
       "@types/node": "^16.11.6",
-      "@types/react": "^17.0.34",
+      "@types/react": "^17.0.39",
       "@types/react-dom": "^17.0.11",
       "@types/webpack-env": "^1.16.3",
       "css-loader": "^6.5.1",
@@ -41,13 +41,17 @@
       "webpack-merge": "^5.8.0"
     },
     "dependencies": {
-      "canvg": "^3.0.10",
+      "@ant-design/icons": "^4.7.0",
+      "@rrox/api": "^1.0.0",
+      "@rrox/assets": "^1.0.0",
+      "@rrox/base-ui": "^1.0.0",
+      "@rrox/renderer": "^1.0.0",
+      "antd": "^4.17.2",
+      "electron-log": "^4.4.1",
       "eventemitter2": "^6.4.5",
-      "konva": "^8.3.2",
       "react": "^17.0.2",
       "react-dom": "^17.0.2",
-      "react-konva": "^17.0.2-5",
-      "react-svg-pan-zoom": "^3.11.0",
+      "react-router-dom": "^6.0.2",
       "socket.io-client": "^4.4.0"
     }
   }

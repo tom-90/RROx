@@ -3,3 +3,4 @@
 .idea
 node_modules
 .parcel-cache
+yarn-error.log

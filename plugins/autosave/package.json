@@ -18,15 +18,19 @@
         "registry": "https://rrox-registry.tom90.nl"
     },
     "devDependencies": {
-        "@rrox/api": "^1.6.2",
-        "react": "^17.0.2",
-        "typescript": "^4.4.4",
-        "webpack": "^5.69.1",
-        "webpack-cli": "^4.9.2"
+        "@types/react": "^17.0.39",
+        "@rrox/plugin": "^1.0.0"
     },
     "scripts": {
-        "prepack": "rm -rf dist && webpack -c ./configs/webpack.config.js --mode=production",
-        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
+        "build": "rrox clean && rrox build",
+        "prepack": "yarn build",
+        "start": "yarn dev",
+        "dev": "rrox clean && rrox start"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@rrox/api": "^1.0.0",
+        "antd": "^4.17.2",
+        "electron": "^15.3.0",
+        "react": "^17.0.2"
+    }
 }

@@ -2,7 +2,7 @@ import { IBasicProperty, PropertyType } from "@rrox/api";
 import { QueryCommands, QueryProperty, QueryPropertyArgs } from "../../query";
 import { RROxApp } from "../../app";
 import { IPropertyConfig } from "./type";
-import { BufferIO } from "src/main/net/io";
+import { BufferIO } from "../../net/io";
 
 enum PropertyFlags
 {
