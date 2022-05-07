@@ -30,7 +30,6 @@ export function createOverlayWindow( app: RROxApp ): BrowserWindow {
         icon: path.resolve( dir, appIcon ),
         webPreferences: {
             nodeIntegration: false,
-            nativeWindowOpen: true,
             contextIsolation: true,
             nodeIntegrationInWorker: false,
             nodeIntegrationInSubFrames: false,

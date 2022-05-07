@@ -13,7 +13,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development yarn rebuild-native && electron-forge start",
     "debug": "cross-env NODE_ENV=development yarn rebuild-native && electron-forge start --inspect-electron",
-    "rebuild-native": "cd ../../ && yarn electron-rebuild -m packages/electron --version 15.3.0",
+    "rebuild-native": "cd ../../ && yarn electron-rebuild -m packages/electron --version 18.2.0",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -42,7 +42,7 @@
     "@welldone-software/why-did-you-render": "^6.2.3",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
-    "electron": "^15.3.0",
+    "electron": "^18.2.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^6.4.0",
     "less": "^4.1.2",
