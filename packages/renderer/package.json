@@ -1,6 +1,7 @@
 {
   "name": "@rrox/renderer",
   "version": "1.0.0",
+  "private": true,
   "description": "RailroadsOnline Extended renderer utilities",
   "author": "_tom()",
   "main": "src/index.ts",

@@ -4,6 +4,13 @@
     "description": "RailroadsOnline Extended API",
     "author": "_tom()",
     "main": "src/index.ts",
+    "files": [
+        "src",
+        "module.ts",
+        "types.ts",
+        "tsconfig.json"
+    ],
+    "homepage": "https://rrox-docs.tom90.nl",
     "repository": {
         "type": "git",
         "url": "https://github.com/tom-90/RROx.git"

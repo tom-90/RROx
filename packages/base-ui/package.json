@@ -1,19 +1,20 @@
 {
     "name": "@rrox/base-ui",
-    "private": true,
     "version": "1.0.0",
     "description": "RailroadsOnline Extended Base UI",
     "author": "_tom()",
     "main": "src/index.tsx",
+    "files": [
+        "src",
+        "tsconfig.json"
+    ],
+    "homepage": "https://rrox-docs.tom90.nl",
     "repository": {
         "type": "git",
         "url": "https://github.com/tom-90/RROx.git"
     },
     "devDependencies": {
         "@types/react": "^17.0.39"
-    },
-    "scripts": {
-        "dev": "webpack -c ./configs/webpack.config.js --mode=development --watch"
     },
     "dependencies": {
         "@rrox/api": "^1.0.0",

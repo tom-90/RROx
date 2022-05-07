@@ -5,14 +5,20 @@
   "author": "_tom()",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://rrox-docs.tom90.nl",
   "repository": {
     "type": "git",
     "url": "https://github.com/tom-90/RROx.git"
   },
   "scripts": {
+    "prepack": "yarn build",
     "build": "rimraf dist && tsc",
     "start": "rimraf dist && tsc -w"
   },
+  "files": [
+      "dist",
+      "cli.js"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
