@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "allowJs": true,
+        "target": "ES6",
+        "module": "ESNext",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "resolveJsonModule": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

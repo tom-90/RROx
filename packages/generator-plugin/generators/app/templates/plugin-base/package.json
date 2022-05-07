@@ -1,0 +1,21 @@
+{
+    "name": "<%= name %>",
+    "version": "1.0.0",
+    "description": "<%= description %>",
+    "rrox": {
+        "controller": "dist/controller/controller.js",
+        "renderer": "dist/renderer/renderer.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "registry": "https://rrox-registry.tom90.nl"
+    },
+    "scripts": {
+        "build": "rrox clean && rrox build",
+        "prepack": "yarn build",
+        "start": "yarn dev",
+        "dev": "rrox clean && rrox start"
+    }
+}
