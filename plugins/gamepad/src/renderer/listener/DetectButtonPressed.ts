@@ -1,4 +1,5 @@
 import {buttonEvents} from "./index";
+import {joypadEventTypes} from "../../shared/joypadTypes";
 
 export function DetectButtonPressed(gamepad: Gamepad){
     gamepad.buttons.forEach((button, key) => {
@@ -12,34 +13,36 @@ export function DetectButtonPressed(gamepad: Gamepad){
             buttonEvents[gamepad.id].buttons[key].button = button;
             buttonEvents[gamepad.id].buttons[key].gamepad = gamepad;
         }
-        if(button.value > 0.01){
+
+        if (!buttonEvents[gamepad.id].buttons[key]) {
             buttonEvents[gamepad.id].buttons[key] = {
-                pressed: true,
+                pressed: false,
+                pressDetected: false,
                 released: false,
                 button: button,
                 index: key,
                 gamepad: gamepad
             };
         }
+        buttonEvents[gamepad.id].buttons[key].pressed = button.pressed;
+
     });
 }
 export function ButtonPress(gamepadKey: string, key: number, event: joypadEventTypes) {
-    if(event.pressed){
+    if(event.pressed && !event.pressDetected){
         const buttonPressEvent = new CustomEvent('gamepad_button_pressed', {
             detail: event
         });
         window.dispatchEvent(buttonPressEvent);
 
-        event.released = true;
-        event.pressed = false;
+        event.pressDetected = true;
     }
-
-    else if(event.released){
+    if(event.pressDetected && !event.pressed){
         const buttonReleaseEvent = new CustomEvent('gamepad_button_released', {
             detail: event
         });
         window.dispatchEvent(buttonReleaseEvent);
 
-        event.released = false;
+        event.pressDetected = false;
     }
 }

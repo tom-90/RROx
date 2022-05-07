@@ -1,4 +1,4 @@
-import {RendererSettings, Settings, SettingsSchema} from "@rrox/api";
+import {RendererSettings, RendererSettingsController, SettingsSchema} from "@rrox/api";
 
 interface Binding {
     binding: string;

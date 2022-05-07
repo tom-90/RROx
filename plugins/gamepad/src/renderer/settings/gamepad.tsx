@@ -8,23 +8,23 @@ import {TestControllerModal} from "./TestControllerModal";
 import {isEngine} from "@rrox-plugins/world/shared";
 
 const buttons = [
-    {button: 0, description: "Bottom button in right cluster"},
-    {button: 1, description: "Right button in right cluster"},
-    {button: 2, description: "Left button in right cluster"},
-    {button: 3, description: "Top button in right cluster"},
-    {button: 4, description: "Shoulder left front button"},
-    {button: 5, description: "Shoulder right front button"},
-    {button: 6, description: "Shoulder left back button"},
-    {button: 7, description: "Shoulder right back button"},
-    {button: 8, description: "Left button in center cluster"},
-    {button: 9, description: "Right button in center cluster"},
-    {button: 10, description: "Left stick pressed button"},
-    {button: 11, description: "Right stick pressed button"},
-    {button: 12, description: "Top button in left cluster"},
-    {button: 13, description: "Bottom button in left cluster"},
-    {button: 14, description: "Left button in left cluster"},
-    {button: 15, description: "Right button in left cluster"},
-    {button: 16, description: "Vendor button 1"},
+    {button: 0, description: "A"},
+    {button: 1, description: "B"},
+    {button: 2, description: "X"},
+    {button: 3, description: "Y"},
+    {button: 4, description: "Left Bumper"},
+    {button: 5, description: "Right Bumper"},
+    {button: 6, description: "Left Trigger"},
+    {button: 7, description: "Right Trigger"},
+    {button: 8, description: "Back"},
+    {button: 9, description: "Start"},
+    {button: 10, description: "Left Stick"},
+    {button: 11, description: "Right Stick"},
+    {button: 12, description: "D-Pad Up"},
+    {button: 13, description: "D-Pad Down"},
+    {button: 14, description: "D-Pad Left"},
+    {button: 15, description: "D-Pad Right"},
+    {button: 16, description: "Xbox Button"},
     {button: 17, description: "Vendor button 2"}
 ];
 const buttonValues: number[] = [];
@@ -143,51 +143,19 @@ export function GamepadSettingsPage() {
                                     style={{ maxWidth: 300 }}
                                 >
                                     <Select.Option value="map_follow" key="map_follow">Following engine</Select.Option>
-                                    {world?.frameCars.filter(frame => isEngine(frame)).map((car, index) => (
-                                        <Select.Option value={index} key={index}>{car.type + (car.name ? ` (${car.name.replace('<br>', ' ')})` : "")}</Select.Option>
-                                    ))}
+                                    {world?.frameCars
+                                        .map((car, index) => ({car, index}))
+                                        .filter(({car}) => isEngine(car))
+                                        .map(({car, index}) => (
+                                            <Select.Option value={index} key={index}>{car.type + (car.name ? ` (${car.name.replace('<br>', ' ')})` : "")}</Select.Option>
+                                        ))
+                                    }
                                 </Select>
                             </Form.Item>
 
                             <Divider orientation="left">Left Stick</Divider>
                             <Card
-                                title="X Axes"
-                                style={{marginInline: "40px", marginBottom: "10px"}}
-                                key="left_x"
-                            >
-                                <Form.Item
-                                    label="Binding"
-                                    name={["gamepad", "bindings", controller!.id, "left", "x", "binding"]}
-                                    labelCol={{offset: 0}}
-                                    wrapperCol={{offset: 0}}
-                                >
-                                    <Select
-                                        style={{ maxWidth: 300 }}
-                                    >
-                                        <Select.Option value="none" key="none">None</Select.Option>
-                                        {Object.entries(controlNames).map(([control, name]) => (
-                                            <Select.Option value={control} key={control}>{name}</Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-
-                                <Form.Item
-                                    label="Value"
-                                    name={["gamepad", "bindings", controller!.id, "left", "x", "value"]}
-                                    labelCol={{offset: 0}}
-                                    wrapperCol={{offset: 0}}
-                                >
-                                    <Select
-                                        style={{ maxWidth: 300 }}
-                                    >
-                                        <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
-                                        <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
-                                    </Select>
-                                </Form.Item>
-                            </Card>
-
-                            <Card
-                                title="Y Axes"
+                                title="Y Axes (Up/Down)"
                                 style={{marginInline: "40px", marginBottom: "10px"}}
                                 key="left_y"
                             >
@@ -222,15 +190,14 @@ export function GamepadSettingsPage() {
                                 </Form.Item>
                             </Card>
 
-                            <Divider orientation="left">Right Stick</Divider>
                             <Card
-                                title="X Axes"
+                                title="X Axes (Left/Right)"
                                 style={{marginInline: "40px", marginBottom: "10px"}}
-                                key="right_x"
+                                key="left_x"
                             >
                                 <Form.Item
                                     label="Binding"
-                                    name={["gamepad", "bindings", controller!.id, "right", "x", "binding"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "x", "binding"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -246,7 +213,7 @@ export function GamepadSettingsPage() {
 
                                 <Form.Item
                                     label="Value"
-                                    name={["gamepad", "bindings", controller!.id, "right", "x", "value"]}
+                                    name={["gamepad", "bindings", controller!.id, "left", "x", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >
@@ -259,8 +226,9 @@ export function GamepadSettingsPage() {
                                 </Form.Item>
                             </Card>
 
+                            <Divider orientation="left">Right Stick</Divider>
                             <Card
-                                title="Y Axes"
+                                title="Y Axes (Up/Down)"
                                 style={{marginInline: "40px", marginBottom: "10px"}}
                                 key="right_y"
                             >
@@ -283,6 +251,42 @@ export function GamepadSettingsPage() {
                                 <Form.Item
                                     label="Value"
                                     name={["gamepad", "bindings", controller!.id, "right", "y", "value"]}
+                                    labelCol={{offset: 0}}
+                                    wrapperCol={{offset: 0}}
+                                >
+                                    <Select
+                                        style={{ maxWidth: 300 }}
+                                    >
+                                        <Select.Option value="controller_value" key="controller_value">Controller value</Select.Option>
+                                        <Select.Option value="controller_change" key="controller_change">Controller change</Select.Option>
+                                    </Select>
+                                </Form.Item>
+                            </Card>
+
+                            <Card
+                                title="X Axes (Left/Right)"
+                                style={{marginInline: "40px", marginBottom: "10px"}}
+                                key="right_x"
+                            >
+                                <Form.Item
+                                    label="Binding"
+                                    name={["gamepad", "bindings", controller!.id, "right", "x", "binding"]}
+                                    labelCol={{offset: 0}}
+                                    wrapperCol={{offset: 0}}
+                                >
+                                    <Select
+                                        style={{ maxWidth: 300 }}
+                                    >
+                                        <Select.Option value="none" key="none">None</Select.Option>
+                                        {Object.entries(controlNames).map(([control, name]) => (
+                                            <Select.Option value={control} key={control}>{name}</Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Value"
+                                    name={["gamepad", "bindings", controller!.id, "right", "x", "value"]}
                                     labelCol={{offset: 0}}
                                     wrapperCol={{offset: 0}}
                                 >

@@ -1,46 +1,27 @@
-import {IPluginRenderer} from "@rrox/api";
-import {FrameCarControl, SetControlsCommunicator} from "@rrox-plugins/world/shared";
 import {ButtonPress, DetectButtonPressed} from "./DetectButtonPressed";
 import {DetectAxisMoved} from "./DetectAxisMoved";
+import {handleButtonPress} from "./handleButtonPress";
+import {handleButtonRelease} from "./handleButtonRelease";
+import {IPluginRenderer} from "@rrox/api";
+import {gamepadsType} from "../../shared/joypadTypes";
+import {handleTriggerChange} from "./handleTriggerChange";
+import {DetectTriggerChange} from "./DetectTriggerChange";
+import {handleAxisMoved} from "./handleAxisMoved";
 
 let interval: NodeJS.Timer | null = null;
 let controllers: (Gamepad|null)[] = [];
 export let buttonEvents = {} as gamepadsType;
 
 export function LoadListener(renderer: IPluginRenderer) {
-    //let world = new ValueConsumer(renderer.communicator, WorldCommunicator);
 
     interval = setInterval(() => {
         gameLoop();
     }, 50);
 
-    const setControls = (engine: number, type: FrameCarControl, value: number) => {
-        renderer.communicator.rpc(SetControlsCommunicator, engine, type, value).then(r => {
-            console.log(`${type} set to ${value}`);
-        });
-    }
-
-    window.addEventListener('gamepad_button_pressed', (e) => {
-        console.log('button pressed');
-
-        // @ts-ignore
-        console.log(e.detail.button.value);
-
-        // @ts-ignore
-        //setControls(0, FrameCarControl.Regulator, e.detail.button.value)
-    });
-    window.addEventListener('gamepad_button_released', (e) => {
-        console.log('button released');
-
-        // @ts-ignore
-        console.log(e.detail.button.value);
-    });
-    window.addEventListener('gamepad_axis_move', (e) => {
-        console.log(' axis move');
-
-        // @ts-ignore
-        console.log(e.detail);
-    });
+    window.addEventListener('gamepad_button_pressed', (e) => handleButtonPress(e, renderer));
+    window.addEventListener('gamepad_button_released', (e) => handleButtonRelease(e, renderer));
+    window.addEventListener('gamepad_trigger_changed', (e) => handleTriggerChange(e, renderer));
+    window.addEventListener('gamepad_axis_move', (e) => handleAxisMoved(e, renderer));
 }
 
 function gameLoop(){
@@ -53,6 +34,7 @@ function gameLoop(){
         if(gamepad){
             DetectButtonPressed(gamepad);
             DetectAxisMoved(gamepad);
+            DetectTriggerChange(gamepad);
 
             if(buttonEvents[gamepad.id]) {
                 let gamepadEvents = buttonEvents[gamepad.id];

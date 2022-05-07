@@ -3,10 +3,8 @@ import {IPluginRenderer, SettingsStore} from "@rrox/api";
 import {GamepadSettings, IGamepadSettings} from "../../shared";
 import {getControlNumber} from "../../shared/controls";
 
-export function handleButtonPress(e: Event, renderer: IPluginRenderer){
+export function handleButtonRelease(e: Event, renderer: IPluginRenderer){
     let settings: SettingsStore<IGamepadSettings> = renderer.settings.get(GamepadSettings);
-
-    let world = getWorld();
 
     // @ts-ignore
     let buttonIndex = e.detail.index;
@@ -22,7 +20,6 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
 
     let buttonMode = buttonSettings.mode;
     let buttonValueUp = buttonSettings.value.up / 100;
-    let buttonValueDown = buttonSettings.value.down / 100;
     let bindingNumber = getControlNumber(buttonBinding);
 
     let engineNumber = null;
@@ -35,19 +32,10 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
     }
 
     if(engineNumber){
-        let frameCar = world?.frameCars[engineNumber];
-        // @ts-ignore
-        let currentValue = frameCar?.controls[buttonBinding];
-
-        let valueToBeSet = 0;
         if(buttonMode == 'hold'){
-            valueToBeSet = buttonValueDown;
-        }else if(buttonMode == 'toggle'){
-            valueToBeSet = currentValue == buttonValueUp ? buttonValueDown : buttonValueUp;
-        }
-
-        if(valueToBeSet >= -1 && valueToBeSet <= 1){
-            setControls(parseInt(engineNumber), bindingNumber, valueToBeSet);
+            if(buttonValueUp >= -1 && buttonValueUp <= 1){
+                setControls(parseInt(engineNumber), bindingNumber, buttonValueUp);
+            }
         }
     }
 

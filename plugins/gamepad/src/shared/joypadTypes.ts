@@ -1,13 +1,14 @@
-type joypadEventTypes = {
+export type joypadEventTypes = {
     pressed: boolean,
+    pressDetected: boolean,
     released: boolean,
     button: GamepadButton|null,
     index: number,
     gamepad: Gamepad|null
 };
-type joypadType = {
+export type joypadType = {
     buttons: joypadEventTypes[]
 };
-type gamepadsType = {
+export type gamepadsType = {
     [key: string]: joypadType
 };
