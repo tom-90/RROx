@@ -11,9 +11,25 @@ interface Side {
     trigger: Binding;
 }
 
+export interface vibrationWarningOption {
+    type: string,
+    value: number,
+    pattern: string
+}
+
 export interface IGamepadSettings {
     gamepad: {
         enabled: boolean;
+        vibrationWarning: {
+            [ key: string ]: {
+                boilerPressure: vibrationWarningOption,
+                airPressure: vibrationWarningOption,
+                waterTemp: vibrationWarningOption,
+                waterLevel: vibrationWarningOption,
+                fireTemp: vibrationWarningOption,
+                fuelAmount: vibrationWarningOption
+            }
+        };
         bindings: {
             [ key: string ]: {
                 engine: string;
@@ -77,6 +93,124 @@ const schema: SettingsSchema<IGamepadSettings> = {
             enabled: {
                 type: "boolean",
                 default: false,
+            },
+            vibrationWarning: {
+                type: "object",
+                additionalProperties: {
+                    type: "object",
+                    properties: {
+                        boilerPressure: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        },
+                        airPressure: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        },
+                        waterTemperature: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        },
+                        waterLevel: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        },
+                        fireTemperature: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        },
+                        fuelAmount: {
+                            type: "object",
+                            properties: {
+                                type: {
+                                    type: "string",
+                                    default: "value",
+                                },
+                                value: {
+                                    type: "number",
+                                    default: 0,
+                                },
+                                pattern: {
+                                    type: "string",
+                                    default: "short",
+                                }
+                            },
+                            default: {},
+                        }
+                    },
+                    default: {},
+                },
+                default: {},
             },
             bindings: {
                 type: "object",

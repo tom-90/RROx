@@ -5,7 +5,6 @@ import {getControlNumber} from "../../shared/controls";
 
 export function handleButtonPress(e: Event, renderer: IPluginRenderer){
     let settings: SettingsStore<IGamepadSettings> = renderer.settings.get(GamepadSettings);
-
     let world = getWorld();
 
     // @ts-ignore

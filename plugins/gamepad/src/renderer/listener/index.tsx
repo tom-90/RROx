@@ -2,20 +2,25 @@ import {ButtonPress, DetectButtonPressed} from "./DetectButtonPressed";
 import {DetectAxisMoved} from "./DetectAxisMoved";
 import {handleButtonPress} from "./handleButtonPress";
 import {handleButtonRelease} from "./handleButtonRelease";
-import {IPluginRenderer} from "@rrox/api";
+import {IPluginRenderer, SettingsStore} from "@rrox/api";
 import {gamepadsType} from "../../shared/joypadTypes";
 import {handleTriggerChange} from "./handleTriggerChange";
 import {DetectTriggerChange} from "./DetectTriggerChange";
 import {handleAxisMoved} from "./handleAxisMoved";
+import {GamepadSettings, IGamepadSettings} from "../../shared";
+import {DetectLowValue} from "./DetectLowValue";
 
 let interval: NodeJS.Timer | null = null;
 let controllers: (Gamepad|null)[] = [];
 export let buttonEvents = {} as gamepadsType;
 
 export function LoadListener(renderer: IPluginRenderer) {
+    let settings: SettingsStore<IGamepadSettings> = renderer.settings.get(GamepadSettings);
 
     interval = setInterval(() => {
-        gameLoop();
+        if(settings.get('gamepad.enabled')){
+            gameLoop(renderer);
+        }
     }, 50);
 
     window.addEventListener('gamepad_button_pressed', (e) => handleButtonPress(e, renderer));
@@ -24,7 +29,7 @@ export function LoadListener(renderer: IPluginRenderer) {
     window.addEventListener('gamepad_axis_move', (e) => handleAxisMoved(e, renderer));
 }
 
-function gameLoop(){
+function gameLoop(renderer: IPluginRenderer){
     const gamepads = navigator.getGamepads();
     controllers = Array.from(gamepads);
 
@@ -35,6 +40,7 @@ function gameLoop(){
             DetectButtonPressed(gamepad);
             DetectAxisMoved(gamepad);
             DetectTriggerChange(gamepad);
+            DetectLowValue(gamepad, renderer);
 
             if(buttonEvents[gamepad.id]) {
                 let gamepadEvents = buttonEvents[gamepad.id];
