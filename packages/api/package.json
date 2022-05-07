@@ -1,7 +1,8 @@
 {
     "name": "@rrox/api",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "RailroadsOnline Extended API",
+    "license": "MIT",
     "author": "_tom()",
     "main": "src/index.ts",
     "files": [

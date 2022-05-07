@@ -31,7 +31,7 @@
         "dev": "rrox clean && rrox start"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.0",
+        "@rrox/api": "^1.0.1",
         "antd": "^4.17.2",
         "react": "^17.0.2"
     }

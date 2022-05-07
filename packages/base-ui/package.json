@@ -2,6 +2,7 @@
     "name": "@rrox/base-ui",
     "version": "1.0.0",
     "description": "RailroadsOnline Extended Base UI",
+    "license": "MIT",
     "author": "_tom()",
     "main": "src/index.tsx",
     "files": [
@@ -17,7 +18,7 @@
         "@types/react": "^17.0.39"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.0",
+        "@rrox/api": "^1.0.1",
         "antd": "^4.17.2",
         "keycode": "^2.2.1",
         "react": "^17.0.2",
