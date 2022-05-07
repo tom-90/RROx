@@ -14,22 +14,24 @@
     "start": "rimraf dist && tsc -w"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "rrox": "cli.js"
-  },
-  "devDependencies": {
-    "rimraf": "^3.0.2",
-    "typescript": "^4.6.4"
   },
   "dependencies": {
     "commander": "^9.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.9",
     "fs-extra": "^10.1.0",
     "ora": "^6.1.0",
+    "rimraf": "^3.0.2",
     "semver": "^7.3.7",
     "type-fest": "^2.12.2",
+    "typescript": "^4.6.4",
     "webpack": "^5.72.0",
     "webpack-dev-server": "^4.8.1",
     "webpack-merge": "^5.8.0"
+  },
+  "devDependencies": {
+    "@types/rimraf": "^3.0.2"
   }
 }

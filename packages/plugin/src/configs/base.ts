@@ -1,9 +1,9 @@
 import webpack from 'webpack';
-import { RROXPackageJson } from '../types.js';
+import { ConfigAPI } from '../types.js';
 
-export function getBaseWebpackConfig( pkg: RROXPackageJson ) {
-    return {
-        mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+export function getBaseWebpackConfig( api: ConfigAPI ) {
+    const base: webpack.Configuration = {
+        mode: api.development ? 'development' : 'production',
         module: {
             rules: [
                 {
@@ -79,14 +79,17 @@ export function getBaseWebpackConfig( pkg: RROXPackageJson ) {
         plugins: [
             new webpack.DefinePlugin( {
                 PluginInfo: JSON.stringify({
-                    name: pkg.name,
-                    version: pkg.version,
+                    name: api.package.name,
+                    version: api.package.version,
                 })
-            } )
+            } ),
         ],
         resolve: {
             extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
         },
-        devtool: process.env.NODE_ENV == 'development' ? 'eval-source-map' : 'source-map',
+        devtool: api.development ? 'eval-source-map' : 'source-map',
     };
+
+    api.controller.merge( base );
+    api.renderer.merge( base );
 }

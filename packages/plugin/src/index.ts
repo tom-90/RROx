@@ -2,6 +2,8 @@ import { Command } from 'commander';
 import { startApp } from './start-app.js';
 import { validatePackage } from './validatePackage.js';
 import { startWebpack } from './webpack.js';
+import path from 'path';
+import rimraf from 'rimraf';
 
 const program = new Command();
 
@@ -34,7 +36,17 @@ program
         await startWebpack( packageJson, false );
     } );
 
+program
+    .command( 'clean' )
+    .argument( '[folder]', 'Folder to clear', 'dist' )
+    .description( 'Clean the dist folder' )
+    .action( ( folder ) => {
+        rimraf.sync( path.resolve( process.cwd(), folder ) );
+    } );
+
 program.parse( process.argv );
 
 if ( program.args.length === 0 )
     program.outputHelp();
+
+export * from './types.js';

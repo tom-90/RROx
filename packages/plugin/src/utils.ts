@@ -1,5 +1,6 @@
 import path from "path";
 import fs from 'fs-extra';
+import { RROXPackageJson } from "./types";
 
 export function distToSrcPath( distPath: string, ext?: string, baseName?: string  ) {
     const normalized = path.normalize( distPath );
@@ -30,4 +31,19 @@ export async function checkEntryPath( distPath: string, ext?: string, baseName?:
     if( mappedPath && await fs.pathExists( path.join( process.cwd(), mappedPath ) ) )
         return mappedPath;
     return undefined;
+}
+
+const PLUGIN_PREFIX = '@rrox-plugins/';
+
+export function getPluginDependencies( pkg: RROXPackageJson ) {
+    let plugins: string[] = [];
+
+    for( let dep in pkg.dependencies )
+        if( dep.startsWith( PLUGIN_PREFIX ) )
+            plugins.push( dep );
+    for( let dep in pkg.devDependencies )
+        if( dep.startsWith( PLUGIN_PREFIX ) )
+            plugins.push( dep );
+
+    return plugins;
 }

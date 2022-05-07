@@ -1,3 +1,5 @@
+import { SharedConfig } from "../types";
+
 export const SHARED_MODULES = {
     controller: {},
     renderer: {
@@ -7,4 +9,7 @@ export const SHARED_MODULES = {
         'react-router-dom': { singleton: true },
         '@rrox/base-ui'   : { singleton: true },
     }
-}
+} as {
+    controller: { [ key: string ]: SharedConfig },
+    renderer  : { [ key: string ]: SharedConfig },
+};
