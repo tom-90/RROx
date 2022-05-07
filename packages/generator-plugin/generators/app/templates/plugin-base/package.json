@@ -1,6 +1,7 @@
 {
     "name": "<%= name %>",
     "version": "1.0.0",
+    "license": "MIT",
     "description": "<%= description %>",
     "rrox": {
         "controller": "dist/controller/controller.js",
@@ -17,5 +18,7 @@
         "prepack": "yarn build",
         "start": "yarn dev",
         "dev": "rrox clean && rrox start"
-    }
+    },
+    "dependencies": {},
+    "devDependencies": {}
 }

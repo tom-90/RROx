@@ -129,6 +129,8 @@ module.exports = class extends Generator {
         else
             this.destinationRoot( path.resolve( this.destinationPath(), this.plugin.shortName ) );
 
+        this.env.cwd = this.destinationPath();
+
         if( !this.generator || !this.plugin )
             return;
 
@@ -162,7 +164,7 @@ module.exports = class extends Generator {
             await this.generator.writing( this );
     }
     
-    install() {
+    async install() {
         this.env.options.nodePackageManager = this.plugin.pkgManager;
     }
 
