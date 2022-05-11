@@ -3,6 +3,7 @@ export * from './imageAdjust';
 export * from './locate';
 export * from './memoCompare';
 export * from './playerName';
+export * from './popupElements';
 export * from './positions';
 export * from './previous';
 export * from './scalingWeight';

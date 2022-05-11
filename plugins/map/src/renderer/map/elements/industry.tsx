@@ -4,12 +4,12 @@ import { IndustryDefinitions } from '../definitions';
 import { Image, Shape, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
-import { usePositions, useImageAdjust } from '../hooks';
+import { usePositions, usePopupElements } from '../hooks';
 import { MapMode } from '../types';
 import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
-import { useHasCommunicatorAccess, useRPC } from '@rrox/api';
+import { useRPC } from '@rrox/api';
 
-export const Industry = React.memo( function Industry( { data }: { data: IIndustry } ) {
+export const Industry = React.memo( function Industry( { data, index }: { data: IIndustry, index: number } ) {
     const { utils, mode, settings, currentPlayerName } = useContext( MapContext )!;
     const [ infoVisible, setInfoVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
@@ -20,6 +20,8 @@ export const Industry = React.memo( function Industry( { data }: { data: IIndust
 
     const definition = IndustryDefinitions[ type ];
 
+    const popupElements = usePopupElements( { industry: data, index } );
+
     const tooltip = <MapTooltip
         title={definition.name}
         visible={tooltipVisible && mode !== MapMode.MINIMAP}
@@ -29,14 +31,6 @@ export const Industry = React.memo( function Industry( { data }: { data: IIndust
             setTooltipVisible( false );
             setInfoVisible( true );
         }}>Show Info</Button>}
-        {settings.features.teleport && <Button
-            style={{ marginTop: 5 }}
-            onClick={() => teleport( currentPlayerName, {
-                X: location.X,
-                Y: location.Y,
-                Z: location.Z + 1000
-            })}
-        >Teleport Here</Button>}
         <StorageInfo
             title={definition.name}
             storages={{
@@ -51,6 +45,7 @@ export const Industry = React.memo( function Industry( { data }: { data: IIndust
                 setTooltipVisible( false );
             }}
         />
+        {popupElements}
     </MapTooltip>;
 
     if ( !definition.image )

@@ -6,6 +6,7 @@ import { Button } from 'antd';
 import { Cheats } from '../popups';
 import { IPlayer } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
+import { usePopupElements } from '../hooks';
 
 export const Player = React.memo( function Player( { data, index }: { data: IPlayer, index: number } ) {
     const { utils, follow, mode, settings, preferences } = useContext( MapContext )!;
@@ -15,6 +16,8 @@ export const Player = React.memo( function Player( { data, index }: { data: IPla
     const { location, rotation, name } = data;
 
     const anchor = utils.scaleLocation( location );
+
+    const popupElements = usePopupElements( { player: data, index } );
 
     return <Shape
         positions={[
@@ -58,6 +61,7 @@ export const Player = React.memo( function Player( { data, index }: { data: IPla
                     setCheatsVisible( true );
                 }}
             >Cheats</Button>}
+            {popupElements}
         </MapTooltip>
         <Cheats
             data={data}

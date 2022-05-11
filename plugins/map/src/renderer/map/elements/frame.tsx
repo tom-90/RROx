@@ -8,6 +8,7 @@ import L from 'leaflet';
 import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
+import { usePopupElements } from '../hooks';
 
 const getStrokeColor = ( brake: number ) => {
     if( brake > 0.5 )
@@ -31,6 +32,8 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
     const [ storageVisible, setStorageVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     
+    const popupElements = usePopupElements( { frame: data, index } );
+
     const anchor = utils.scaleLocation( location );
 
     if( definition.engine )
@@ -78,14 +81,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     >
                         {follow.following?.array === 'frameCars' && follow.following.index === index ? 'Unfollow' : 'Follow'}
                     </Button>
-                    {settings.features.teleport && <Button
-                        style={{ marginTop: 5 }}
-                        onClick={() => teleport( currentPlayerName, {
-                            X: location.X,
-                            Y: location.Y,
-                            Z: location.Z + 500
-                        } )}
-                    >Teleport Here</Button>}
+                    {popupElements}
                 </MapTooltip>
                 <FrameControlsPopup
                     title={`${name.replace("<br>", "").toUpperCase()}${name && number ? ' - ' : ''}${number.toUpperCase() || ''}`}
@@ -137,10 +133,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     setStorageVisible( true );
                 }}
             >Show Freight</Button>}
-            {settings.features.teleport && type === FrameCarType.CABOOSE && <Button
-                style={{ marginTop: 5 }}
-                onClick={() => teleport( currentPlayerName, data.location )}
-            >Teleport Here</Button>}
+            {popupElements}
         </MapTooltip>
         <FrameControlsPopup
             title={frameTitle}

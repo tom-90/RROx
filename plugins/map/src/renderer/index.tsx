@@ -4,7 +4,7 @@ import React from "react";
 import { GlobalOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Router } from "./router";
 import { ColorSettings, MapSettings, MinimapSettings } from "./settings";
-import { MapOverlay } from "./map";
+import { MapOverlay, registerDefaultMapElements } from "./map";
 
 export default class MapRenderer extends Renderer {
     public load( renderer: IPluginRenderer ): void | Promise<void> {
@@ -39,9 +39,13 @@ export default class MapRenderer extends Renderer {
         renderer.register( ContextRegistration, <DraggableModalProvider children={null} /> );
 
         renderer.register( OverlayRegistration, <MapOverlay/> );
+
+        registerDefaultMapElements( renderer );
     }
 
     public unload( renderer: IPluginRenderer ): void | Promise<void> {
 
     }
 }
+
+export * from './map';

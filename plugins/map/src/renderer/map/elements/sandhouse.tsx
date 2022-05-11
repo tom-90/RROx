@@ -4,12 +4,12 @@ import { SandhouseDefinitions } from '../definitions';
 import { Image, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
-import { usePositions } from '../hooks';
+import { usePopupElements, usePositions } from '../hooks';
 import { ISandhouse, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 
-export const Sandhouse = React.memo( function Sandhouse( { data }: { data: ISandhouse } ) {
+export const Sandhouse = React.memo( function Sandhouse( { data, index }: { data: ISandhouse, index: number } ) {
     const { utils, mode, settings, currentPlayerName } = useContext( MapContext )!;
 
     const [ infoVisible, setInfoVisible ] = useState( false );
@@ -43,6 +43,8 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: ISand
         bottomLeft
     ]: [ [ number, number ], [ number, number ], [ number, number ] ] = points;*/
 
+    const popupElements = usePopupElements( { sandhouse: data, index } );
+
     return <Image
         topLeft={topLeft}
         topRight={topRight}
@@ -59,14 +61,6 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: ISand
                 setTooltipVisible( false );
                 setInfoVisible( true );
             }}>Show Info</Button>
-            {settings.features.teleport && <Button
-                style={{ marginTop: 5 }}
-                onClick={() => teleport( currentPlayerName, {
-                    X: location.X,
-                    Y: location.Y,
-                    Z: location.Z + 1000
-                } )}
-            >Teleport Here</Button>}
             <StorageInfo
                 title={'Sandhouse'}
                 storages={{
@@ -79,6 +73,7 @@ export const Sandhouse = React.memo( function Sandhouse( { data }: { data: ISand
                     setTooltipVisible( false );
                 }}
             />
+            {popupElements}
         </MapTooltip>
     </Image>;
 } );

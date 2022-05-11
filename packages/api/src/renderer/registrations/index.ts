@@ -70,8 +70,11 @@ export interface IRegistrationController<R extends RegistrationType<( ...params:
     getRegistrations(): Registration<R>[];
 }
 
-export function Registration<ParameterFunction extends ( ...params: any[] ) => void>( module: string, key: string ): RegistrationType<ParameterFunction> {
-    return { module, key } as RegistrationType<ParameterFunction>;
+export function Registration<ParameterFunction extends ( ...params: any[] ) => void>( module: string | PluginInfo, key: string ): RegistrationType<ParameterFunction> {
+    return {
+        module: typeof module === 'string' ? module : module.name,
+        key,
+    } as RegistrationType<ParameterFunction>;
 }
 
 export * from './context';

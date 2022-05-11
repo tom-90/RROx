@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { PageLayout } from "@rrox/base-ui";
 import L from 'leaflet';
 import { MapContext } from './context';
-import { Modal } from './modal';
 import { useFollowing, useLocate, useMapSettings, useMapStyle, usePlayerName } from './hooks';
 import { MapMode } from './types';
 import { Map } from './map';
@@ -53,4 +52,7 @@ export function MapPage() {
     </PageLayout>;
 }
 
+export * from './context';
 export * from './overlay';
+export * from './registrations';
+export * from './register';

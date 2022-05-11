@@ -4,12 +4,12 @@ import { Shape, Circle, MapTooltip } from '../leaflet';
 import { WaterTowerDefinitions } from '../definitions';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
-import { useAutoHide } from './../hooks';
+import { useAutoHide, usePopupElements } from './../hooks';
 import { IWatertower, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 
-export const WaterTower = React.memo( function WaterTower( { data }: { data: IWatertower } ) {
+export const WaterTower = React.memo( function WaterTower( { data, index }: { data: IWatertower, index: number } ) {
     const { utils, mode, settings, currentPlayerName } = useContext( MapContext )!;
 
     const { location, rotation, waterStorage } = data;
@@ -21,6 +21,8 @@ export const WaterTower = React.memo( function WaterTower( { data }: { data: IWa
 
     let { X: cx, Y: cy } = location;
     let [ x2, y2 ] = utils.rotate( cx, cy, cx + WaterTowerDefinitions.size / 3, cy, rotation.Yaw );
+
+    const popupElements = usePopupElements( { watertower: data, index } );
 
     // Fixes bug where watertowers appear too large when zoomed all the way out.
     if ( useAutoHide( utils.scalePoint( cx, cy ), utils.scalePoint( x2, y2 ) ) )
@@ -55,14 +57,6 @@ export const WaterTower = React.memo( function WaterTower( { data }: { data: IWa
                     setTooltipVisible( false );
                     setInfoVisible( true );
                 }}>Show Info</Button>
-                {settings.features.teleport && <Button
-                    style={{ marginTop: 5 }}
-                    onClick={() => teleport( currentPlayerName, {
-                        X: location.X,
-                        Y: location.Y,
-                        Z: location.Z + 1000
-                    } )}
-                >Teleport Here</Button>}
                 <StorageInfo
                     title={'Water Tower'}
                     storages={{
@@ -75,6 +69,7 @@ export const WaterTower = React.memo( function WaterTower( { data }: { data: IWa
                         setTooltipVisible( false );
                     }}
                 />
+                {popupElements}
             </MapTooltip>
         </Shape>
         <Circle

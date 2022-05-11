@@ -1,1 +1,1 @@
-export * from "./src/controller";
+export * from "./dist/controller";
