@@ -10,6 +10,10 @@
     "scripts": {
         "postinstall": "patch-package"
     },
+    "iohook": {
+        "targets": ["node-88"],
+        "platforms": []
+    },
     "devDependencies": {
         "lerna": "^4.0.0",
         "patch-package": "^6.4.7",

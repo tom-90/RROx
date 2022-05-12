@@ -190,8 +190,8 @@ export function GamepadSettingsPage() {
                                 <Select
                                     style={{ maxWidth: 300 }}
                                 >
-                                    {/*<Select.Option value="map_follow" key="map_follow">Following engine</Select.Option>*/}
-                                    {world?.frameCars
+                                    <Select.Option value="null" key="null">None</Select.Option>
+                                     {world?.frameCars
                                         .map((car, index) => ({car, index}))
                                         .filter(({car}) => isEngine(car))
                                         .map(({car, index}) => (
