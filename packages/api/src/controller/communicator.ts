@@ -3,6 +3,10 @@ import { Diff } from "deep-diff";
 
 type Awaited<T> = T extends PromiseLike<infer U> ? U : T;
 
+/**
+ * The `ControllerCommunicator` allows you to use the declared communicators to listen for events,
+ * emit events, or handle Remote Procedure Calls.
+ */
 export interface ControllerCommunicator {
     /**
      * Registers a listener for a specific communicator.
@@ -62,6 +66,12 @@ export interface ControllerCommunicator {
     callHandler<C extends CommunicatorType<any, ( ...p: any[] ) => any>>( communicator: C, ...args: Parameters<CommunicatorRPCFunction<C>> ): ReturnType<CommunicatorRPCFunction<C>> | Awaited<ReturnType<CommunicatorRPCFunction<C>>>;
 }
 
+/**
+ * Value provider that allows you to provide a value to all the renderers.
+ * You can provide the value using the `provide` method.
+ * This will then send a message containing the differences between the old and new value to all renderers.
+ * This way, the value is transmitted in the most optimal way.
+ */
 export interface ValueProvider<T> {
     /**
      * Get the latest value stored in the value provider.
@@ -77,7 +87,7 @@ export interface ValueProvider<T> {
     provide( value: T ): void;
 
     /**
-     * Destorys the value provider
+     * Destroys the value provider
      */
     destroy(): void;
 }

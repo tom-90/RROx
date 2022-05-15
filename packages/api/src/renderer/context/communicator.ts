@@ -191,6 +191,11 @@ export function useValue<T>(
     return value;
 }
 
+/**
+ * A ValueConsumer allows you to read the value from a `ValueCommunicator`.
+ * The ValueCommunicator will keep this value up to date.
+ * It will broadcast an `update` event whenever the value changes.
+ */
 export class ValueConsumer<T> extends EventEmitter2 {
 
     private value?: T;

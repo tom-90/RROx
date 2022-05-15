@@ -1,5 +1,9 @@
 import { IEnum, IStruct, IFunction } from "../struct";
 
+/**
+ * The Get Struct Action allows you to retrieve metadata from game structs.
+ * The RROx query API uses this same metadata to perform it's queries.
+ */
 export interface IGetStructAction {
     /**
      * Retrieves the struct by it's full name

@@ -4,6 +4,7 @@
     "allowJs": true,
     "target": "ES6",
     "module": "ESNext",
+    "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,

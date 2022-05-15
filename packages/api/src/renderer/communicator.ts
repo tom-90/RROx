@@ -1,5 +1,8 @@
 import { CommunicatorEventParameters, CommunicatorRPCFunction, CommunicatorType } from "../shared";
 
+/**
+ * The renderer communicator allows you to communicate with the controller
+ */
 export interface RendererCommunicator {
     /**
      * Registers a listener for a specific communicator.

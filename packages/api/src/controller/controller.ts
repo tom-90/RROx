@@ -5,8 +5,18 @@ import { SettingsManager } from "./settings";
 export type SetupFunction = () => void | CleanupFunction | Promise<void | CleanupFunction>;
 export type CleanupFunction = () => void | Promise<void>;
 
+/**
+ * The Plugin Controller interface exposes all primary RROx API's that can be used in the controller.
+ */
 export interface IPluginController {
+    /**
+     * The communicator which you can use to listen for events, emit events and handle RPCs
+     */
     communicator: ControllerCommunicator;
+
+    /**
+     * The settings manager allowing you to read and write settings from a declared settings type.
+     */
     settings: SettingsManager;
 
     /**

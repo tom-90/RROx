@@ -1,5 +1,5 @@
 import '../../../types';
-import { NameRef, StructConstructor } from '../struct';
+import { NameRef } from '../struct';
 
 export abstract class IQuery<T extends object> {
     // Property such that no other types of objects are assignable to this type.
@@ -11,6 +11,9 @@ export abstract class IQueryProperty {
     private __QUERY_PROPERTY__?: symbol;
 };
 
+/**
+ * The Array Query Builder allows you to specify what elements in an array you want to retrieve in the query.
+ */
 export type QueryBuilderArray<T extends any[]> = {
     /**
      * Retrieves all elements in the array.
@@ -63,6 +66,9 @@ export type QueryBuilderArray<T extends any[]> = {
     ranges( ranges: [ start: number, end: number ][] ): QueryBuilderProperty<T[ number ]>;
 };
 
+/**
+ * @ignore
+ */
 type Without<T, V, WithNevers = {
     [K in keyof T]: Exclude<T[K], undefined> extends V ? never 
     : (T[K] extends Record<string, unknown> ? Without<T[K], V> : T[K])
@@ -70,6 +76,9 @@ type Without<T, V, WithNevers = {
     [K in keyof WithNevers]: WithNevers[K] extends never ? never : K
   }[keyof WithNevers]>;
 
+/**
+ * The Query Builder allows you to declare which properties you would like to retrieve in the query
+ */
 export type QueryBuilder<T extends object> = {
     [ K in keyof Without<T, Function> ]: QueryBuilderProperty<T[ K ]>;
 }
@@ -83,6 +92,35 @@ export type QueryBuilderResult = ( IQueryProperty | QueryBuilder<any> | QueryBui
 
 export type QueryBuilderFunction<T extends object> = ( obj: QueryBuilder<T> ) => QueryBuilderResult | QueryBuilderResult[];
 
+/**
+ * The query function is a helper method that allows you to write more compact queries.
+ * For example, if in your query, you have:
+ * ```ts
+ * query.prepareQuery( ExampleStruct, ( a ) => [
+ *     a.b.c.d.e1,
+ *     a.b.c.d.e2,
+ *     a.b.c.d.e3,
+ *     a.b.c.d.e4,
+ *     a.b.c.d.e5
+ * ] );
+ * ```
+ * You can shorten this using the query method as follows:
+ * ```ts
+ * query.prepareQuery( ExampleStruct, ( a ) => [
+ *     query( a.b.c.d, ( d ) => [
+ *          d.e1,
+ *          d.e2,
+ *          d.e3,
+ *          d.e4,
+ *          d.e5
+ *     ] ),
+ * ] );
+ * ```
+ * You can nest the query method.
+ * 
+ * @param builder Base object to pass to the callback
+ * @param callback Callback which returns an array of all properties to query.
+ */
 export function query<T extends object>( builder: QueryBuilder<T>, callback: ( builder: QueryBuilder<T> ) => QueryBuilderResult | QueryBuilderResult[] ): QueryBuilderResult {
     return callback( builder ).flat();
 }
