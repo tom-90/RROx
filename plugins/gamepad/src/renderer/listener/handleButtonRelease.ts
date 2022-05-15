@@ -13,7 +13,7 @@ export function handleButtonRelease(e: Event, renderer: IPluginRenderer){
 
     let gamepadSettings = settings.get('gamepad.bindings')[gamepadId];
     let buttonSettings = gamepadSettings.buttons[buttonIndex];
-    let engine: string|number = gamepadSettings.engine;
+    let engine: number|null = gamepadSettings.engine;
 
     let buttonBinding = buttonSettings.binding;
     if(buttonBinding == 'none') return;
@@ -22,19 +22,12 @@ export function handleButtonRelease(e: Event, renderer: IPluginRenderer){
     let buttonValueUp = buttonSettings.value.up / 100;
     let bindingNumber = getControlNumber(buttonBinding);
 
-    let engineNumber = null;
+    if(engine == null) return;
 
-    if(typeof engine == "number"){
-        engineNumber = engine;
-    }else{
-        //TODO
-        // add current follow
-    }
-
-    if(engineNumber){
+    if(engine){
         if(buttonMode == 'hold'){
             if(buttonValueUp >= -1 && buttonValueUp <= 1){
-                setControls(parseInt(engineNumber), bindingNumber, buttonValueUp);
+                setControls(engine, bindingNumber, buttonValueUp);
             }
         }
     }

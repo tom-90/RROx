@@ -30,7 +30,7 @@ export const handleAxisMoved = (e: Event, renderer: IPluginRenderer) => {
     if(stick == 'left') axisSettings = gamepadSettings.left;
     if(stick == 'right') axisSettings = gamepadSettings.right;
 
-    let engine: string|number = gamepadSettings.engine;
+    let engine: number|null = gamepadSettings.engine;
 
     if(!axisSettings) return;
 
@@ -40,37 +40,30 @@ export const handleAxisMoved = (e: Event, renderer: IPluginRenderer) => {
     // @ts-ignore
     let value = axisSettings[axisName].value;
 
-    let engineNumber = null;
+    if(engine == null) return;
 
-    if(typeof engine == "number"){
-        engineNumber = engine;
-    }else{
-        //TODO
-        // add current follow
-    }
-
-    if(engineNumber){
+    if(engine){
         if(binding == 'none') return;
 
-        if(frameCarValues[engineNumber] == undefined){
-            frameCarValues[engineNumber] = {};
-            if(frameCarValues[engineNumber][binding] == undefined){
-                frameCarValues[engineNumber][binding] = 0;
+        if(frameCarValues[engine] == undefined){
+            frameCarValues[engine] = {};
+            if(frameCarValues[engine][binding] == undefined){
+                frameCarValues[engine][binding] = 0;
             }
         }
 
         if(value == "controller_value"){
-            frameCarValues[engineNumber][binding] = axisValue;
+            frameCarValues[engine][binding] = axisValue;
         }else if(value == "controller_change"){
-            frameCarValues[engineNumber][binding] = frameCarValues[engineNumber][binding] + (axisValue / 50);
-            if(frameCarValues[engineNumber][binding] > 1) frameCarValues[engineNumber][binding] = 1;
-            if(frameCarValues[engineNumber][binding] < -1) frameCarValues[engineNumber][binding] = -1;
+            frameCarValues[engine][binding] = frameCarValues[engine][binding] + (axisValue / 50);
+            if(frameCarValues[engine][binding] > 1) frameCarValues[engine][binding] = 1;
+            if(frameCarValues[engine][binding] < -1) frameCarValues[engine][binding] = -1;
         }
 
-        if(frameCarValues[engineNumber] != undefined && frameCarValues[engineNumber][binding] != undefined){
-            if(frameCarValues[engineNumber][binding] >= -1 && frameCarValues[engineNumber][binding] <= 1){
+        if(frameCarValues[engine] != undefined && frameCarValues[engine][binding] != undefined){
+            if(frameCarValues[engine][binding] >= -1 && frameCarValues[engine][binding] <= 1){
                 let bindingNumber = getControlNumber(binding);
-                setControls(parseInt(String(engineNumber)), bindingNumber, frameCarValues[engineNumber][binding]);
+                setControls(engine, bindingNumber, frameCarValues[engine][binding]);
             }
         }
     }

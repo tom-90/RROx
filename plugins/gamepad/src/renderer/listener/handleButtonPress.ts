@@ -14,7 +14,7 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
 
     let gamepadSettings = settings.get('gamepad.bindings')[gamepadId];
     let buttonSettings = gamepadSettings.buttons[buttonIndex];
-    let engine: string|number = gamepadSettings.engine;
+    let engine: number|null = gamepadSettings.engine;
 
     let buttonBinding = buttonSettings.binding;
     if(buttonBinding == 'none') return;
@@ -24,17 +24,10 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
     let buttonValueDown = buttonSettings.value.down / 100;
     let bindingNumber = getControlNumber(buttonBinding);
 
-    let engineNumber = null;
+    if(engine == null) return;
 
-    if(typeof engine == "number"){
-        engineNumber = engine;
-    }else{
-        //TODO
-        // add current follow
-    }
-
-    if(engineNumber){
-        let frameCar = world?.frameCars[engineNumber];
+    if(engine){
+        let frameCar = world?.frameCars[engine];
         // @ts-ignore
         let currentValue = frameCar?.controls[buttonBinding];
 
@@ -46,7 +39,7 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
         }
 
         if(valueToBeSet >= -1 && valueToBeSet <= 1){
-            setControls(parseInt(engineNumber), bindingNumber, valueToBeSet);
+            setControls(engine, bindingNumber, valueToBeSet);
         }
     }
 

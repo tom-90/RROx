@@ -32,7 +32,7 @@ export interface IGamepadSettings {
         };
         bindings: {
             [ key: string ]: {
-                engine: string;
+                engine: number;
                 left: Side;
                 right: Side;
                 buttons: {
@@ -218,8 +218,8 @@ const schema: SettingsSchema<IGamepadSettings> = {
                     type: "object",
                     properties: {
                         engine: {
-                            type: ["string", "number"],
-                            default: "map_follow"
+                            type: ["number", "null"],
+                            default: null,
                         },
                         left: {
                             type: "object",
