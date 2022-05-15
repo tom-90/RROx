@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@rrox-plugins/world": "1.0.4",
+        "@rrox-plugins/map": "1.0.4",
         "@rrox/api": "^1.0.1",
         "antd": "^4.17.2",
         "react": "^17.0.2",
