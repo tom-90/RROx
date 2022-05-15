@@ -4,6 +4,12 @@ export interface ILogger extends LogFunctions {
     scope( label: string ): LogFunctions;
 }
 
+/**
+ * The logger is a generic API that you can use for keeping log messages for your plugin.
+ * By using this API, instead of `console.log`, it will make sure that your log messages
+ * will be stored correctly on all different platforms that RROx runs.
+ * In particular, the RROx desktop app will store your log messages inside the user's AppData folder.
+ */
 export class Logger {
     private static readonly LOGGER_KEY = 'electronLogger';
 

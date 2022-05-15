@@ -6,6 +6,12 @@ export interface SettingsContext {
     get<T extends object>( settings: SettingsType<T> ): SettingsStore<T>;
 }
 
+/**
+ * Hook to retrieve the value and settings store for a declared settings type
+ * 
+ * @param settings Settings type to use
+ * @returns Array containing the settings object value and the settings store
+ */
 export function useSettings<T extends object>( settings: SettingsType<T> ): [
     settings: T,
     store: SettingsStore<T>

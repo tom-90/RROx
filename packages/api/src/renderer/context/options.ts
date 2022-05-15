@@ -8,7 +8,7 @@ export type BaseOptionsContext = {
 /**
  * Retrieve base options that the user has configured for RROx
  *
- * @returns 
+ * @returns Base Options
  */
 export function useBaseOptions(): BaseOptionsContext {
     return useContext( getContext( "options" ) );

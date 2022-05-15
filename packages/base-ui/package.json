@@ -4,7 +4,8 @@
     "description": "RailroadsOnline Extended Base UI",
     "license": "MIT",
     "author": "_tom()",
-    "main": "src/index.tsx",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
         "src",
         "tsconfig.json"
@@ -14,8 +15,14 @@
         "type": "git",
         "url": "https://github.com/tom-90/RROx.git"
     },
+    "scripts": {
+        "build": "cross-env NODE_ENV=production rimraf dist && tsc",
+        "prepack": "yarn build",
+        "postbuild": "copyfiles --exclude src/**/*.{ts,tsx} -u 1 src/**/* dist"
+    },
     "devDependencies": {
-        "@types/react": "^17.0.39"
+        "@types/react": "^17.0.39",
+        "copyfiles": "^2.4.1"
     },
     "dependencies": {
         "@rrox/api": "^1.0.1",

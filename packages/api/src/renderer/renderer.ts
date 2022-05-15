@@ -3,12 +3,28 @@ import { IRegistrationController, Registration, RegistrationParameters, Registra
 import { RendererSettingsController } from "./settings";
 import { RendererMode, ShareMode } from "./types";
 
+/**
+ * The Plugin Renderer interface exposes all primary RROx API's that can be used in the renderer.
+ */
 export interface IPluginRenderer {
+    /**
+     * The communicator allows you to communicate with the controller
+     */
     communicator: RendererCommunicator;
 
+    /**
+     * The settings API allows you to retrieve the values for declared settings objects.
+     */
     settings: RendererSettingsController;
 
+    /**
+     * The mode the renderer is currently running in
+     */
     rendererMode: RendererMode;
+
+    /**
+     * The sharing mode the user has selected
+     */
     shareMode: ShareMode;
 
     /**

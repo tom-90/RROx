@@ -4,7 +4,8 @@
     "description": "RailroadsOnline Extended API",
     "license": "MIT",
     "author": "_tom()",
-    "main": "src/index.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
         "src",
         "module.ts",
@@ -20,6 +21,10 @@
         "@types/deep-diff": "^1.0.1",
         "@types/react": "^17.0.39"
     },
+    "scripts": {
+        "build": "cross-env NODE_ENV=production rimraf dist && tsc",
+        "prepack": "yarn build"
+    }, 
     "dependencies": {
         "antd": "^4.17.2",
         "conf": "^10.0.3",

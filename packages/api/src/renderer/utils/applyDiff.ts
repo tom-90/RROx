@@ -41,8 +41,16 @@ function applyArrayChange( arr: any[], index: number, change: Diff<any> ) {
         }
     }
     return arr;
-  }
+}
 
+/**
+ * Applies a diff object to a source object.
+ * Returns a new object with the applied differences
+ * 
+ * @param source Source to apply the diff to
+ * @param diffs Differenes to apply
+ * @returns New object
+ */
 export function applyDiff<T>( source: T, diffs: Diff<T>[] ): T {
     if( !diffs || diffs.length === 0 )
         return source;
