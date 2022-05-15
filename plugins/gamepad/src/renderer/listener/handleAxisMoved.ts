@@ -40,7 +40,7 @@ export const handleAxisMoved = (e: Event, renderer: IPluginRenderer) => {
     // @ts-ignore
     let value = axisSettings[axisName].value;
 
-    if(engine == null) return;
+    if(engine == -1) return;
 
     if(engine){
         if(binding == 'none') return;

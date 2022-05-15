@@ -24,7 +24,7 @@ export function handleButtonPress(e: Event, renderer: IPluginRenderer){
     let buttonValueDown = buttonSettings.value.down / 100;
     let bindingNumber = getControlNumber(buttonBinding);
 
-    if(engine == null) return;
+    if(engine == -1) return;
 
     if(engine){
         let frameCar = world?.frameCars[engine];

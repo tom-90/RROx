@@ -22,7 +22,7 @@ export function handleButtonRelease(e: Event, renderer: IPluginRenderer){
     let buttonValueUp = buttonSettings.value.up / 100;
     let bindingNumber = getControlNumber(buttonBinding);
 
-    if(engine == null) return;
+    if(engine == -1) return;
 
     if(engine){
         if(buttonMode == 'hold'){

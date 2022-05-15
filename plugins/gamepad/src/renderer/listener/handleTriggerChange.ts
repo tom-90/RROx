@@ -34,7 +34,7 @@ export const handleTriggerChange = (e: Event, renderer: IPluginRenderer) => {
     let binding = buttonSettings.binding;
     let value = buttonSettings.value;
 
-    if(engine == null) return;
+    if(engine == -1) return;
 
     if(engine){
         if(binding == 'none') return;

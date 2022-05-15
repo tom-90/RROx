@@ -190,7 +190,7 @@ export function GamepadSettingsPage() {
                                 <Select
                                     style={{ maxWidth: 300 }}
                                 >
-                                    <Select.Option value="null" key="null">None</Select.Option>
+                                    <Select.Option value={-1} key={-1}>None</Select.Option>
                                      {world?.frameCars
                                         .map((car, index) => ({car, index}))
                                         .filter(({car}) => isEngine(car))
