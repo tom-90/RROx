@@ -1,4 +1,4 @@
-import '../../../types';
+import '../../types/types';
 import { NameRef } from '../struct';
 
 export abstract class IQuery<T extends object> {
