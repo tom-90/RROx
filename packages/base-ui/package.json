@@ -1,14 +1,13 @@
 {
     "name": "@rrox/base-ui",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "RailroadsOnline Extended Base UI",
     "license": "MIT",
     "author": "_tom()",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "src",
-        "tsconfig.json"
+        "dist"
     ],
     "homepage": "https://rrox-docs.tom90.nl",
     "repository": {
@@ -25,7 +24,7 @@
         "copyfiles": "^2.4.1"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.1",
+        "@rrox/api": "^1.0.3",
         "antd": "^4.17.2",
         "keycode": "^2.2.1",
         "react": "^17.0.2",

@@ -17,8 +17,8 @@
     "@types/path-browserify": "^1.0.0"
   },
   "dependencies": {
-    "@rrox/api": "^1.0.1",
-    "@rrox/base-ui": "^1.0.0",
+    "@rrox/api": "^1.0.3",
+    "@rrox/base-ui": "^1.0.2",
     "antd": "^4.17.2",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",

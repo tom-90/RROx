@@ -1,6 +1,6 @@
 {
   "name": "@rrox/plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin builder for RailroadsOnline Extended",
   "author": "_tom()",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "start": "rimraf dist && tsc -w"
   },
   "files": [
-      "dist",
-      "cli.js"
+    "dist",
+    "cli.js"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,6 +25,10 @@
     "rrox": "cli.js"
   },
   "dependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "babel-loader": "^8.2.5",
     "commander": "^9.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.9",
     "fs-extra": "^10.1.0",

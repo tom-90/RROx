@@ -12,6 +12,17 @@ export function getBaseWebpackConfig( api: ConfigAPI ) {
                     use: 'node-loader',
                 },
                 {
+                    // JS/JSX Loader
+                    test: /\.jsx?$/,
+                    exclude: /(node_modules|\.webpack)/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [ '@babel/preset-env', '@babel/preset-react' ]
+                        }
+                    }
+                },
+                {
                     // Typescript loader
                     test: /\.tsx?$/,
                     exclude: /(node_modules|\.webpack)/,

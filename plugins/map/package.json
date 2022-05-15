@@ -21,7 +21,7 @@
         "url": "https://github.com/tom-90/RROx.git"
     },
     "devDependencies": {
-        "@rrox/plugin": "^1.0.0",
+        "@rrox/plugin": "^1.0.1",
         "@types/leaflet": "^1.7.9",
         "@types/leaflet-imageoverlay-rotated": "^0.1.4",
         "@types/react": "^17.0.39"
@@ -35,8 +35,8 @@
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
         "@react-leaflet/core": "^1.1.1",
-        "@rrox/api": "^1.0.1",
-        "@rrox/base-ui": "^1.0.0",
+        "@rrox/api": "^1.0.3",
+        "@rrox/base-ui": "^1.0.2",
         "@rrox-plugins/world": "1.0.4",
         "antd": "^4.17.2",
         "ant-design-draggable-modal": "^1.0.0",

@@ -21,7 +21,7 @@
         "registry": "https://rrox-registry.tom90.nl"
     },
     "devDependencies": {
-        "@rrox/plugin": "^1.0.0",
+        "@rrox/plugin": "^1.0.1",
         "@types/react": "^17.0.39"
     },
     "scripts": {
@@ -31,7 +31,7 @@
         "dev": "rrox clean && rrox start"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.1",
+        "@rrox/api": "^1.0.3",
         "antd": "^4.17.2",
         "react": "^17.0.2"
     }

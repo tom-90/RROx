@@ -24,13 +24,13 @@
         "dev": "rrox clean && rrox start"
     },
     "devDependencies": {
-        "@rrox/plugin": "^1.0.0",
+        "@rrox/plugin": "^1.0.1",
         "@types/react": "^17.0.39"
     },
     "dependencies": {
         "@rrox-plugins/world": "1.0.4",
         "@rrox-plugins/map": "1.0.4",
-        "@rrox/api": "^1.0.1",
+        "@rrox/api": "^1.0.3",
         "antd": "^4.17.2",
         "react": "^17.0.2",
         "react-device-detect": "^2.2.2"

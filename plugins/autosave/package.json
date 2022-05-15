@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "@types/react": "^17.0.39",
-        "@rrox/plugin": "^1.0.0"
+        "@rrox/plugin": "^1.0.1"
     },
     "scripts": {
         "build": "rrox clean && rrox build",
@@ -28,7 +28,7 @@
         "dev": "rrox clean && rrox start"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.1",
+        "@rrox/api": "^1.0.3",
         "antd": "^4.17.2",
         "electron": "^15.3.0",
         "react": "^17.0.2"
