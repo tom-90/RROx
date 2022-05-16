@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import { ConfigAPI } from '../types.js';
+import path from 'path';
 
 export function getBaseWebpackConfig( api: ConfigAPI ) {
     const base: webpack.Configuration = {
@@ -97,6 +98,9 @@ export function getBaseWebpackConfig( api: ConfigAPI ) {
         ],
         resolve: {
             extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+        },
+        resolveLoader: {
+            modules: ['node_modules', path.join(__dirname, '../../node_modules')],
         },
         devtool: api.development ? 'eval-source-map' : 'source-map',
     };
