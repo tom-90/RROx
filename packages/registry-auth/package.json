@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "parcel build",
-    "clean": "rm -rf .parcel-cache/ dist/ package/ plugins/",
+    "clean": "rimraf .parcel-cache/ dist/ package/ plugins/",
     "dev": "yarn update && yarn start",
     "fix": "yarn format && yarn typecheck",
     "format": "prettier --write \"**/*.{ts,js,css,scss,html,json}\"",

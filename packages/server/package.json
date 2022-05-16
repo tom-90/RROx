@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env NODE_ENV=production rm -rf dist && tsc",
+    "build": "cross-env NODE_ENV=production rimraf dist && tsc",
     "start": "concurrently \"yarn dev:build\" \"yarn dev:start\"",
     "start:docker": "docker-compose up -d && yarn dev:build",
     "stop": "docker-compose down",

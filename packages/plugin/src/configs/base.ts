@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import { ConfigAPI } from '../types.js';
 import path from 'path';
+import url from 'url';
 
 export function getBaseWebpackConfig( api: ConfigAPI ) {
     const base: webpack.Configuration = {
@@ -100,7 +101,7 @@ export function getBaseWebpackConfig( api: ConfigAPI ) {
             extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
         },
         resolveLoader: {
-            modules: ['node_modules', path.join(__dirname, '../../node_modules')],
+            modules: ['node_modules', path.join(path.dirname(url.fileURLToPath(import.meta.url)), '../../node_modules')],
         },
         devtool: api.development ? 'eval-source-map' : 'source-map',
     };
