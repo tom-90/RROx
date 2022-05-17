@@ -16,6 +16,7 @@
     "rebuild-native": "cd ../../ && yarn electron-rebuild -m packages/electron --version 18.2.0",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "build": "yarn run make",
     "publish": "electron-forge publish",
     "lint": "eslint src/ --ext .ts,.js,.tsx,.jsx"
   },

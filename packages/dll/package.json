@@ -7,5 +7,9 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/tom-90/RROx.git"
+    },
+    "scripts": {
+        "build:dev": "msbuild /p:Configuration=Debug",
+        "build": "msbuild /p:Configuration=Release"
     }
 }

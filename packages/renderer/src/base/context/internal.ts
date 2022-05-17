@@ -20,7 +20,7 @@ window._RROX_Context = {
     keybinds    : KeybindsContext,
     registration: RegistrationContext,
     options     : BaseOptionsContext,
-    settings    : SettingsContext,
+    settings    : SettingsContext as any,
     mode        : ModeContext,
     theme       : ThemeContext,
 }

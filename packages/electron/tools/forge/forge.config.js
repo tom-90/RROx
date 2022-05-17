@@ -7,7 +7,7 @@ module.exports = {
     packagerConfig: {
         // Set executable name
         executableName: 'RailroadsOnline Extended',
-        icon: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
+        icon: path.resolve( __dirname, '../../src/shared/appIcon.ico' ),
         protocols: [
             {
                 name: 'RailroadsOnline Extended',
@@ -26,8 +26,8 @@ module.exports = {
             name: '@electron-forge/maker-squirrel',
             config: {
                 name: 'RailroadsOnlineExtended',
-                setupIcon: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
-                iconUrl: 'https://github.com/tom-90/RROx/blob/master/packages/assets/images/appIcon.ico?raw=true',
+                setupIcon: path.resolve( __dirname, '../../src/shared/appIcon.ico' ),
+                iconUrl: 'https://github.com/tom-90/RROx/blob/master/packages/electron/src/shared/appIcon.ico?raw=true',
                 setupExe: 'RailroadsOnline Extended Setup.exe',
             },
         },
@@ -40,7 +40,7 @@ module.exports = {
                 shortName: 'RROx',
                 shortcutFolderName: 'RROx',
                 upgradeCode: 'f1fc49c8-0050-47e1-863b-c2c50a7a2b7e',
-                appIconPath: path.resolve( __dirname, '../../../assets/images/appIcon.ico'),
+                appIconPath: path.resolve( __dirname, '../../src/shared/appIcon.ico' ),
                 arch: 'x64',
                 installLevel: 3, // Also default install auto update
                 features: {
