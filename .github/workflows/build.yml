@@ -24,7 +24,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - name: Setup node-gyp
-        run: npm install -g node-gyp && node-gyp configure
+        run: npm install -g node-gyp && node-gyp install
       
       - name: Install dependencies
         run: yarn install --frozen-lockfile
