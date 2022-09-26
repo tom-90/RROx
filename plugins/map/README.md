@@ -1,7 +1,4 @@
 The **RROx Map plugin** loads the world data using the **world loader** plugin and displays it using a map.
-Note: Credit for Version #1.0.4 and previous go to "_Tom()".
-
-Reminder/Note: Beta Splines, Switches, and etc, remain unsupported with this version (and as such will not display on the Map).
 
 ![](https://raw.githubusercontent.com/tom-90/RROx/master/plugins/map/docs/map.png)
 
@@ -63,8 +60,10 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ### v1.0.5 - 26-09-2022
 
-- ``Enhancement`` Added support for Waycar as new rolling stock type.
-- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type.
+- ``Enhancement`` Added support for Waycar as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+
+Note: Beta splines, switches, etc. remain unsupported with this version (and as such will not display on the map).
 
 ### v1.0.4 - 05-05-2022
 

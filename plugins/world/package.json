@@ -2,7 +2,10 @@
     "name": "@rrox-plugins/world",
     "version": "1.0.5",
     "description": "World Loader Plugin",
-    "author": "Mordred",
+    "author": "_tom()",
+    "contributors": [
+        "Mordred"
+    ],
     "rrox": {
         "controller": "dist/controller/controller.js",
         "renderer": "dist/renderer/renderer.js"

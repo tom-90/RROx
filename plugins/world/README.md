@@ -1,5 +1,4 @@
 The **RROx World Loader plugin** loads all world data from game memory. This data can then be used by other plugins like the **RROx map plugin** to show to the user.
-Note: Credit for Version #1.0.4 and previous go to "_Tom()".
 
 # Settings
 
@@ -24,8 +23,8 @@ The world loader provides a number of features that can be turned on or off depe
 
 ### v1.0.5 - 26-09-2022
 
-- ``Enhancement`` Added support for Waycar as new rolling stock type.
-- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type.
+- ``Enhancement`` Added support for Waycar as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.0.4 - 05-05-2022
 
