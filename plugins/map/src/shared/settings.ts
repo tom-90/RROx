@@ -88,6 +88,9 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             [ FrameCarType.COOKE260        ]: { type: 'string', default: '#800080' },
             [ FrameCarType.COOKE260_TENDER ]: { type: 'string', default: '#000000' },
             [ FrameCarType.CABOOSE         ]: { type: 'string', default: '#ff5e5e' },
+			[ FrameCarType.WAYCAR          ]: { type: 'string', default: '#ff5e5e' },
+			[ FrameCarType.MONTEZUMA          ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.MONTEZUMA_TENDER   ]: { type: 'string', default: '#000000' },
 
             [ FrameCarType.FLATCAR_LOGS ]: {
                 type: 'object',

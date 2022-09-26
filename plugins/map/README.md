@@ -58,6 +58,13 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.0.5 - 26-09-2022
+
+- ``Enhancement`` Added support for Waycar as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+
+Note: Beta splines, switches, etc. remain unsupported with this version (and as such will not display on the map).
+
 ### v1.0.4 - 05-05-2022
 
 - ``Fixed`` Scrolling issue for coupling bar in the frame controls popup

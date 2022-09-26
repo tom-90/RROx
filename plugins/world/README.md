@@ -21,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.5 - 26-09-2022
+
+- ``Enhancement`` Added support for Waycar as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.0.4 - 05-05-2022
 
 - ``Fixed`` Issue where splines would not immediately load after attaching

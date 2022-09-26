@@ -1,8 +1,11 @@
 {
     "name": "@rrox-plugins/map",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "Map Plugin",
     "author": "_tom()",
+    "contributors": [
+        "Mordred"
+    ],
     "rrox": {
         "controller": "dist/controller/controller.js",
         "renderer": "dist/renderer/renderer.js",
@@ -37,7 +40,7 @@
         "@react-leaflet/core": "^1.1.1",
         "@rrox/api": "^1.0.3",
         "@rrox/base-ui": "^1.0.2",
-        "@rrox-plugins/world": "1.0.4",
+        "@rrox-plugins/world": "1.0.5",
         "antd": "^4.17.2",
         "ant-design-draggable-modal": "^1.0.0",
         "leaflet": "^1.7.1",
