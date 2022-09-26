@@ -1,4 +1,5 @@
 The **RROx World Loader plugin** loads all world data from game memory. This data can then be used by other plugins like the **RROx map plugin** to show to the user.
+Note: Credit for Version #1.0.4 and previous go to "_Tom()".
 
 # Settings
 
@@ -20,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 - **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.
 
 ## Changelog
+
+### v1.0.5 - 26-09-2022
+
+- ``Enhancement`` Added support for Waycar as new rolling stock type.
+- ``Enhancement`` Added support for Montezuma Locomotive as new locomotive type.
 
 ### v1.0.4 - 05-05-2022
 
