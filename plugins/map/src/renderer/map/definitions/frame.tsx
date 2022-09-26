@@ -62,7 +62,7 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string, image
     [ FrameCarType.TANKER           ]: { image: Tanker         , imageIcon: TankerIcon         , length: 725.6, engine: false, tender: false, freight: true , name: 'Tanker'             },
     [ FrameCarType.BOXCAR           ]: { image: Boxcar         , imageIcon: BoxcarIcon         , length: 762.8, engine: false, tender: false, freight: true , name: 'Boxcar'             },
     [ FrameCarType.CABOOSE          ]: { image: Caboose        , imageIcon: CabooseIcon        , length: 539.6, engine: false, tender: false, freight: false, name: 'Caboose'            },
-	[ FrameCarType.WAYCAR          ]: { image: Waycar        , imageIcon: WaycarIcon        , length: 539.6, engine: false, tender: false, freight: false, name: 'Waycar'            },
-	[ FrameCarType.MONTEZUMA           ]: { image: Montezuma         , imageIcon: MontezumaIcon         , length: 742.1, engine: true , tender: false, freight: false, name: 'Montezuma'             },
-    [ FrameCarType.MONTEZUMA_TENDER    ]: { image: MontezumaTender   , imageIcon: MontezumaTenderIcon   , length: 467.1, engine: false, tender: true , freight: false, name: 'Montezuma Tender'      },
+	[ FrameCarType.WAYCAR          ]: { image: Waycar        , imageIcon: WaycarIcon        , length: 530.6, engine: false, tender: false, freight: false, name: 'Waycar'            },
+	[ FrameCarType.MONTEZUMA           ]: { image: Montezuma         , imageIcon: MontezumaIcon         , length: 618.8, engine: true , tender: false, freight: false, name: 'Montezuma'             },
+    [ FrameCarType.MONTEZUMA_TENDER    ]: { image: MontezumaTender   , imageIcon: MontezumaTenderIcon   , length: 331.2, engine: false, tender: true , freight: false, name: 'Montezuma Tender'      },
 };
