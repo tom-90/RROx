@@ -49,7 +49,7 @@ export function RollingStockListPage() {
 
                     <Tabs.TabPane tab="Tenders &#38; Cabooses" key="3" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
                         <FramesList
-                            data={world?.frameCars.map( ( frame, index ) => ( { frame, index } ) ).filter( ( { frame } ) => FrameDefinitions[ frame.type ].tender || frame.type === FrameCarType.CABOOSE ) ?? []}
+                            data={world?.frameCars.map( ( frame, index ) => ( { frame, index } ) ).filter( ( { frame } ) => FrameDefinitions[ frame.type ].tender || frame.type === FrameCarType.CABOOSE || frame.type === FrameCarType.WAYCAR ) ?? []}
                             onOpenControls={openControl}
                             onLocate={locate}
                         />
