@@ -1,8 +1,8 @@
 {
     "name": "@rrox-plugins/map",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "Map Plugin",
-    "author": "_tom()",
+    "author": "Mordred",
     "rrox": {
         "controller": "dist/controller/controller.js",
         "renderer": "dist/renderer/renderer.js",
