@@ -20,10 +20,16 @@ export enum FrameCarType {
 	WAYCAR = 'waycar',
 	MONTEZUMA = 'montezuma',
 	MONTEZUMA_TENDER = 'montezuma_tender',
+	GLENBROOK = 'glenbrook',
+    GLENBROOK_TENDER = 'glenbrook_tender',
+	SHAY = 'shay',
+	BALDWIN622D = '622D',
 }
 
 export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | FrameCarType.HANDCAR | FrameCarType.EUREKA |
-        FrameCarType.EUREKA_TENDER | FrameCarType.CLIMAX | FrameCarType.HEISLER | FrameCarType.CLASS70 | FrameCarType.CLASS70_TENDER  | FrameCarType.MONTEZUMA | FrameCarType.MONTEZUMA_TENDER;
+        FrameCarType.EUREKA_TENDER | FrameCarType.CLIMAX | FrameCarType.HEISLER | FrameCarType.CLASS70 | FrameCarType.CLASS70_TENDER  | 
+		FrameCarType.MONTEZUMA | FrameCarType.MONTEZUMA_TENDER | FrameCarType.GLENBROOK | FrameCarType.GLENBROOK_TENDER | FrameCarType.SHAY |
+		FrameCarType.BALDWIN622D;
 
 export type FreightFrameCarType = FrameCarType.BOXCAR | FrameCarType.FLATCAR_CORDWOOD | FrameCarType.HOPPER | FrameCarType.FLATCAR_LOGS |
         FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER;

@@ -91,6 +91,10 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
 			[ FrameCarType.WAYCAR          ]: { type: 'string', default: '#ff5e5e' },
 			[ FrameCarType.MONTEZUMA          ]: { type: 'string', default: '#800080' },
             [ FrameCarType.MONTEZUMA_TENDER   ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.GLENBROOK          ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.GLENBROOK_TENDER   ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.SHAY          ]: { type: 'string', default: '#800080' },
+			[ FrameCarType.BALDWIN622D          ]: { type: 'string', default: '#800080' },
 
             [ FrameCarType.FLATCAR_LOGS ]: {
                 type: 'object',

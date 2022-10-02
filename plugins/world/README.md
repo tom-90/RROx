@@ -21,6 +21,12 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.0.6 - 01-10-2022
+
+- ``Enhancement`` Added support for Baldwin 6-22-D Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Shay Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Glenbrook Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.0.5 - 26-09-2022
 
 - ``Enhancement`` Added support for Waycar as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))

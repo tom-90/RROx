@@ -123,7 +123,7 @@ export function getCoupledFrames( frame: IFrameCar, index: number, frames: IFram
     return coupledFrames;
 }
 
-const EngineTypes = [ 'porter_040', 'porter_042', 'handcar', 'eureka', 'climax', 'heisler', 'class70', 'cooke260', 'montezuma' ];
+const EngineTypes = [ 'porter_040', 'porter_042', 'handcar', 'eureka', 'climax', 'heisler', 'class70', 'cooke260', 'montezuma', 'glenbrook', 'shay', '622D' ];
 
 export function isEngine( frame: IFrameCar ) {
     return EngineTypes.includes( frame.type );
