@@ -24,7 +24,7 @@
         "copyfiles": "^2.4.1"
     },
     "dependencies": {
-        "@rrox/api": "^1.0.3",
+        "@rrox/api": "^1.1.0",
         "antd": "^4.17.2",
         "keycode": "^2.2.1",
         "react": "^17.0.2",

@@ -1,7 +1,7 @@
-import { LinkedStructRef, StructRef, StructConstructor } from "@rrox/api";
+import { LinkedStructRef, StructRef, StructConstructor, MultiLinkedStructRef } from "@rrox/api";
 import { QueryActionError, GetStructAction, QueryAction } from "../actions";
 import { RROxApp } from "../app";
-import { GetInstancesRequest, GetInstancesResponse, GetStaticRequest, GetStaticResponse } from "../net";
+import { GetInstancesMultiRequest, GetInstancesMultiResponse, GetInstancesRequest, GetInstancesResponse, GetStaticRequest, GetStaticResponse } from "../net";
 import { GlobalTraverserStep, StructInstance } from "../query";
 import { Struct } from "./struct";
 
@@ -21,7 +21,7 @@ export class StructReference<S extends object> implements StructRef<S> {
         const pipe = this.app.getPipe()!;
         const req  = new GetInstancesRequest( this.app, name, count, deep );
 
-        pipe.request( req );
+        await pipe.request( req );
         const res = await pipe.waitForResponse( req, GetInstancesResponse );
 
         return res.list.map( ( name ) => {
@@ -29,7 +29,7 @@ export class StructReference<S extends object> implements StructRef<S> {
 
             instance.getTraverser().setSteps( [ new GlobalTraverserStep( name ) ] );
 
-            return instance.create();
+            return instance.create() as T;
         } );
     }
 
@@ -45,7 +45,7 @@ export class StructReference<S extends object> implements StructRef<S> {
         const pipe = this.app.getPipe()!;
         const req  = new GetStaticRequest( this.app, name );
 
-        pipe.request( req );
+        await pipe.request( req );
         const res = await pipe.waitForResponse( req, GetStaticResponse );
 
         if( !res.name )
@@ -55,7 +55,7 @@ export class StructReference<S extends object> implements StructRef<S> {
 
         instance.getTraverser().setSteps( [ new GlobalTraverserStep( res.name ) ] );
 
-        return instance.create();
+        return instance.create() as T;
     }
 
     async isA<T extends S>( base: StructConstructor<T> ): Promise<boolean> {
@@ -90,7 +90,6 @@ export class StructReference<S extends object> implements StructRef<S> {
 }
 
 export class LinkedStructReference<S extends object> extends StructReference<S> implements LinkedStructRef<S> {
-
     constructor( app: RROxApp, struct: Struct, protected link: StructConstructor<S> ) {
         super( app, struct );
     };
@@ -125,4 +124,43 @@ export class LinkedStructReference<S extends object> extends StructReference<S> 
         return super.getStatic( base );
     }
 
+    public getName() {
+        return this.app.getAction( QueryAction ).getStructName( this.link );
+    }
+
+    public getConstructor() {
+        return this.link;
+    }
+}
+
+export class MultiLinkedStructReference<S extends object> implements MultiLinkedStructRef<S> {
+    constructor( private app: RROxApp, private subStructs: LinkedStructReference<S>[] ) {
+    }
+
+    getStructs(): LinkedStructRef<S>[] {
+        return this.subStructs;
+    }
+
+    async getInstances( count?: number, deep?: boolean ): Promise<S[] | null> {
+        const names = this.subStructs.map((s) => s.getName());
+
+        if( !this.app.isConnected() )
+            return null;
+
+        const pipe = this.app.getPipe()!;
+        const req  = new GetInstancesMultiRequest( this.app, names, count, deep );
+
+        await pipe.request( req );
+        const res = await pipe.waitForResponse( req, GetInstancesMultiResponse );
+
+        return res.list.map( ( { name, index } ) => {
+            const base = this.subStructs[ index ];
+
+            const instance = new StructInstance( this.app, base.getConstructor() );
+
+            instance.getTraverser().setSteps( [ new GlobalTraverserStep( name ) ] );
+
+            return instance.create() as S;
+        } );
+    }
 }

@@ -290,4 +290,14 @@ export class BasicProperty<T extends PropertyType = PropertyType> implements IBa
 
         this.writeBasicProperty( req, value );
     }
+    
+    public toJSON() {
+        return {
+            type: this.type,
+            name: this.name,
+            arraySize: this.arraySize,
+            offset: this.offset,
+            size: this.size
+        }
+    }
 }

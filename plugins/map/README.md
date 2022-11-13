@@ -58,6 +58,14 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.0 - 13-11-2022
+
+**Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**
+
+- `Added` Support for new spline system.
+
+Note: The new spline system is implemented very differently than the old one. Some artifacts may appear on the map when building new splines or deleting old ones.
+
 ### v1.0.6 - 01-10-2022
 
 - ``Enhancement`` Added support for Baldwin 6-22-D Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))

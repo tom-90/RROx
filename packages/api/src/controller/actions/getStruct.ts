@@ -1,4 +1,4 @@
-import { IEnum, IStruct, IFunction } from "../struct";
+import { IEnum, IStruct, IFunction, StructInfo } from "../struct";
 
 /**
  * The Get Struct Action allows you to retrieve metadata from game structs.
@@ -22,6 +22,13 @@ export interface IGetStructAction {
      * @returns IFunction if function was found, or null otherwise.
      */
     getFunction( name: string ): Promise<IFunction | null>;
+
+    /**
+     * Retrieves an empty struct info metadata object.
+     * 
+     * @param name Name of the struct to retrieve it for.
+     */
+    getInstance<T extends object = any>( name: string ): StructInfo<T>;
 
     /**
      * Retrieves the full list of structs defined in the game.

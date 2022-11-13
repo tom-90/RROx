@@ -1,5 +1,5 @@
 import { IQuery, QueryBuilderFunction } from "../query";
-import { StructConstructor } from "../struct";
+import { MultiLinkedStructRef, StructConstructor } from "../struct";
 import { LinkedStructRef } from "../struct";
 
 /**
@@ -31,6 +31,7 @@ export interface IQueryAction {
      *
      * @param query Prepared query
      * @param base Input struct from the query
+     * @param timeout Query timeout in msec (default = 20000)
      * @returns Query result (or null if it failed)
      * 
      * @example
@@ -39,7 +40,7 @@ export interface IQueryAction {
      *     playerReference
      * );
      */
-    query<T extends object>( query: IQuery<T>, base: T ): Promise<T | null>;
+    query<T extends object>( query: IQuery<T>, base: T, timeout?: number ): Promise<T | null>;
 
     /**
      * Retrieves a reference to the particular struct class.
@@ -50,6 +51,16 @@ export interface IQueryAction {
      * @returns Reference to the struct (or null if failed)
      */
     getReference<T extends object>( base: StructConstructor<T> ): Promise<LinkedStructRef<T> | null>;
+
+    /**
+     * Retrieves a reference to multiple struct class.
+     * Using this reference, it is possible to retrieve all existing instances in game, or get a static reference to the class.
+     * For more information, see the documentation: {@link https://rrox-docs.tom90.nl/basics/querying#querying-globally}
+     *
+     * @param baseConstructors Base classes to get the multi reference for
+     * @returns Reference to multiple structs (or null if failed)
+     */
+    getMultiReference<T extends object>( baseConstructors: StructConstructor<T>[] ): Promise<MultiLinkedStructRef<T> | null>;
 
     /**
      * Stores any changes made to the instance in game memory.

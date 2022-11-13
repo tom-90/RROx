@@ -1,6 +1,8 @@
-import { Actions, IPluginController, Controller } from '@rrox/api';
-import { StructCodeCommunicator, StructListCommunicator, StructListDetails, StructListType } from '../shared';
+import { Actions, IPluginController, Controller, QueryBuilderResult, IProperty, IStruct } from '@rrox/api';
+import { ObjectDetailsCommunicator, ObjectsListCommunicator, StructCodeCommunicator, StructListCommunicator, StructListDetails, StructListType } from '../shared';
 import { generateEnum, generateStruct, GeneratorDefinitionLinks } from './generator';
+import { generateTargetClass, isPropertySupported } from './objectDetails';
+import { DevtoolsREPL } from './repl';
 
 export default class DevToolsPlugin extends Controller {
     public async load( controller: IPluginController ): Promise<void> {
@@ -54,6 +56,50 @@ export default class DevToolsPlugin extends Controller {
             return root;
         } );
 
+        controller.communicator.handle( ObjectsListCommunicator, () => {
+            return controller.getAction( Actions.GET_STRUCT ).getList();
+        } );
+
+        controller.communicator.handle( ObjectDetailsCommunicator, async ( name ) => {
+            const structInfo = controller.getAction( Actions.GET_STRUCT ).getInstance( name );
+
+            const struct = await structInfo.getStruct();
+
+            if( !struct )
+                return null;
+
+            const target = await generateTargetClass( struct, { setName: true } );
+
+            const queryAction = controller.getAction( Actions.QUERY );
+
+            let properties: IProperty[] = [];
+            let s: IStruct | null = struct;
+            while( s ) {
+                properties = properties.concat( s.properties.filter( isPropertySupported ) );
+
+                s = await s.getSuper();
+            }
+
+            const query = await queryAction.prepareQuery( target, ( qb ) => properties.map( ( p ) => qb[ p.name ] ).filter( ( p ) => p ) );
+
+            const targetStructInfo = structInfo.clone( target );
+            const targetInstance = new target( targetStructInfo );
+
+            const instance = await queryAction.query( query, targetInstance );
+
+            const data = JSON.parse( JSON.stringify( instance, (key, val) => {
+                if(typeof val === 'bigint')
+                    return `BigInt(${val.toString()})`;
+                return val;
+            } ) );
+
+            return {
+                ...data,
+                __name: name,
+                __metadata: JSON.parse( JSON.stringify( struct ) ),
+            }
+        } );
+
         controller.communicator.handle( StructCodeCommunicator, async ( structName ): Promise<[ string, GeneratorDefinitionLinks ]> => {
             if( structName === 'root' )
                 return [ '', {} ];
@@ -84,6 +130,8 @@ export default class DevToolsPlugin extends Controller {
 
             return [ '// Could not load ' + type.toLowerCase(), {} ];
         } );
+
+        const repl = new DevtoolsREPL( controller );
     }
     public unload( controller: IPluginController ): void | Promise<void> {
         throw new Error( 'Method not implemented.' );

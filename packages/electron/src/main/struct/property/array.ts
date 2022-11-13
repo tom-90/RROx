@@ -12,16 +12,19 @@ export class ArrayProperty extends BasicProperty<PropertyType.ArrayProperty> imp
         this.inner = inner;
     }
 
+    private readonly arrayQueries = new Map<QueryPropertyArgs<any[]>, QueryProperty<any>>();
+
     public readonly inner: Property;
 
     /**
      * Creates a query builder property for this property type
      */
     public async createQueryBuilder( args: QueryPropertyArgs<[ inner: any[] ]> ): Promise<QueryProperty<any>> {
-        if( this.query )
-            return this.query;
+        const innerArgs = args.getInnerArgs( 0 );
+        if( this.arrayQueries.has( innerArgs ) )
+            return this.arrayQueries.get( innerArgs )!;
 
-        const query = this.query = new QueryProperty<{
+        const query = new QueryProperty<{
             ranges: [ start: number, end: number ][]
         }>(
             ( req, state ) => {
@@ -55,7 +58,9 @@ export class ArrayProperty extends BasicProperty<PropertyType.ArrayProperty> imp
             },
         );
 
-        const innerQuery = await this.inner.createQueryBuilder( args.getInnerArgs( 0 ) );
+        this.arrayQueries.set( innerArgs, query );
+
+        const innerQuery = await this.inner.createQueryBuilder( innerArgs as any );
 
         const addRanges = ( 
             state: QueryState<{

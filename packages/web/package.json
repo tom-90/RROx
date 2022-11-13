@@ -43,7 +43,7 @@
     },
     "dependencies": {
       "@ant-design/icons": "^4.7.0",
-      "@rrox/api": "^1.0.3",
+      "@rrox/api": "^1.1.0",
       "@rrox/base-ui": "^1.0.2",
       "@rrox/renderer": "^1.0.0",
       "antd": "^4.17.2",

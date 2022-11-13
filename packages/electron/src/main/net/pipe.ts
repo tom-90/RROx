@@ -2,9 +2,10 @@ import net from 'net';
 import Log from 'electron-log';
 import { MessageType, Request, Response } from './message';
 import { BufferIO } from './io';
-import { LogMessage, ReadyMessage, GetStructResponse, GetStructListResponse, GetDataResponse, GetInstancesResponse, GetStaticResponse } from './messages';
+import { LogMessage, ReadyMessage, GetStructResponse, GetStructListResponse, GetDataResponse, GetInstancesResponse, GetStaticResponse, GetStructTypeResponse, GetInstancesMultiResponse } from './messages';
 import { RROxApp } from '../app';
 import EventEmitter from 'events';
+import { Mutex } from 'async-mutex';
 
 export declare interface NamedPipe {
     on( event: 'response', listener: ( res: Response ) => void ): this;
@@ -15,6 +16,8 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
 
     private data: Buffer[] = [];
     private messageSize = 0;
+
+    private lock = new Mutex();
 
     constructor( protected app: RROxApp, public socket: net.Socket ) {
         super();
@@ -90,9 +93,11 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
         this.read();
     }
 
-    public request( req: Request ) {
+    public async request( req: Request ) {
         if( !this.open )
             throw new Error( 'NamedPipe has been closed' );
+
+        const release = await this.lock.acquire();
 
         const buffer = new BufferIO();
         req.process( buffer );
@@ -100,12 +105,15 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
         const sizeBuffer = Buffer.allocUnsafe(8);
         sizeBuffer.writeUInt64LE( buffer.size() );
 
-        let success = this.socket.write( Buffer.concat( [
+        const success = this.socket.write( Buffer.concat( [
             sizeBuffer,
             buffer.data()
         ] ) );
+
         if( !success )
-            throw new Error( 'Failed to write buffer to NamedPipe' );
+            await new Promise<void>( ( resolve ) => this.socket.once( 'drain', () => resolve() ) );
+
+        release();
     }
 
     public waitForResponse<T extends Response>( req: Request, resType: { new( ...params: any[] ): T }, timeout = 20000 ): Promise<T> {
@@ -158,6 +166,10 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
                 return new GetInstancesResponse( this.app, data );
             case MessageType.GET_STATIC:
                 return new GetStaticResponse( this.app, data );
+            case MessageType.GET_STRUCT_TYPE:
+                return new GetStructTypeResponse( this.app, data );
+            case MessageType.GET_INSTANCES_MULTI:
+                return new GetInstancesMultiResponse( this.app, data );
             case MessageType.READY:
                 return new ReadyMessage( this.app, data );
         }

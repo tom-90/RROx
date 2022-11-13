@@ -1,5 +1,5 @@
 import { SharedCommunicator } from "@rrox/api";
 
 export const ChangeSwitchCommunicator = SharedCommunicator<{
-    rpc: ( index: number ) => void,
+    rpc: ( index: number, isSplineTrack?: boolean ) => void,
 }>( PluginInfo, 'ChangeSwitch' );

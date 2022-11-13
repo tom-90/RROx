@@ -21,6 +21,7 @@ export function WorldProvider( { children }: { children?: React.ReactNode } ) {
             switches: world?.switches ?? [],
             turntables: world?.turntables ?? [],
             watertowers: world?.watertowers ?? [],
+            splineTracks: world?.splineTracks ?? [],
         }
     }, [ world ] );
 

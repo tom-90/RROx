@@ -4,6 +4,7 @@ import { Aairbrake } from "./airbrake";
 import { Ahandvalve } from "./handvalve";
 import { Ajohnsonbar } from "./johnsonbar";
 import { Aregulator } from "./regulator";
+import { ASplineTrack } from "./SplineTrack";
 import { ASwitch } from "./Switch";
 import { Awhistle } from "./whistle";
 
@@ -95,4 +96,13 @@ export class ASCharacter extends ACharacter {
      */
     @Property.Function( "Function arr.SCharacter.ChangePlayerMoney", [ [] ] )
     public ChangePlayerMoney: ( deltamoney: float ) => Promise<void>;
+
+    /**
+     * @param Track Object property
+     * @param SwitchUp Boolean property
+     * @flags Net, Native, Event, Protected, NetServer
+     */
+    @Property.Function( "Function arr.SCharacter.ServerSetSplineTrackSwitch", [ [ () => ASplineTrack ], [] ] )
+    public ServerSetSplineTrackSwitch: ( Track: ASplineTrack, SwitchUp: boolean ) => Promise<void>;
+    
 }

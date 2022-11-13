@@ -23,13 +23,13 @@ private:
 	std::unique_ptr<GeneratedStruct> structObj{};
 	std::unique_ptr<GeneratedEnum> enumObj{};
 	std::unique_ptr<GeneratedFunction> functionObj{};
-	StructResponseType type;
+	StructResponseType structType;
 
 public:
-	GetStructResponse() : type(StructResponseType::NotFound), Response(MessageType::GET_STRUCT) {};
-	GetStructResponse(GeneratedStruct* structObj) : type(StructResponseType::Struct), structObj(structObj), Response(MessageType::GET_STRUCT) {};
-	GetStructResponse(GeneratedEnum* enumObj) : type(StructResponseType::Enum), enumObj(enumObj), Response(MessageType::GET_STRUCT) {};
-	GetStructResponse(GeneratedFunction* functionObj) : type(StructResponseType::Function), functionObj(functionObj), Response(MessageType::GET_STRUCT) {};
+	GetStructResponse() : structType(StructResponseType::NotFound), Response(MessageType::GET_STRUCT) {};
+	GetStructResponse(GeneratedStruct* structObj) : structType(StructResponseType::Struct), structObj(structObj), Response(MessageType::GET_STRUCT) {};
+	GetStructResponse(GeneratedEnum* enumObj) : structType(StructResponseType::Enum), enumObj(enumObj), Response(MessageType::GET_STRUCT) {};
+	GetStructResponse(GeneratedFunction* functionObj) : structType(StructResponseType::Function), functionObj(functionObj), Response(MessageType::GET_STRUCT) {};
 
 	void Process(Buffer& data) override;
 };

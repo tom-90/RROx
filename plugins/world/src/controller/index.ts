@@ -3,6 +3,8 @@ import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommuni
 import { Cheats } from './cheats';
 import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
+import { ASplineTrack } from './structs/arr/SplineTrack';
+import { ASwitch } from './structs/arr/Switch';
 import { World } from './world';
 
 export default class WorldPlugin extends Controller {
@@ -47,8 +49,12 @@ export default class WorldPlugin extends Controller {
             await this.world.teleport( player, location );
         } );
 
-        controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex ) => {
-            const switchInstance = this.world.data.switches[ switchIndex ];
+        controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex, isSplineTrack = false ) => {
+            let switchInstance: ASwitch | ASplineTrack | undefined;
+            if(isSplineTrack)
+                switchInstance = this.world.data.splineTracks[ switchIndex ];
+            else
+                switchInstance = this.world.data.switches[ switchIndex ];
             
             if( !switchInstance )
                 return Log.warn( `Cannot change switch as it could not be found.` );

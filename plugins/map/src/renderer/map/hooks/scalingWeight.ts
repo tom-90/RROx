@@ -20,7 +20,5 @@ export function useScalingWeight( weight: number = 0 ): {
         return weight * 0.5 / ( centerLatLng.distanceTo( latLngX ) / 10 );
     };
 
-    const calculatedWeight = useMemo( () => calculateWeight( weight ), [] );
-
-    return { ref: ref as React.Ref<L.Path>, weight: calculatedWeight };
+    return { ref: ref as React.Ref<L.Path>, weight: calculateWeight( weight ) };
 }

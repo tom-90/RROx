@@ -1,4 +1,4 @@
-import { Actions, InOutParam, IPluginController, IQuery, query, QueryBuilder, SettingsStore, ValueProvider } from "@rrox/api";
+import { Actions, InOutParam, IPluginController, IQuery, MultiLinkedStructRef, query, QueryBuilder, SettingsStore, StructConstructor, ValueProvider } from "@rrox/api";
 import WorldPlugin from ".";
 import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings } from "../shared";
 import { Geometry } from "./geometry";
@@ -8,6 +8,7 @@ import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";
 import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
+import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
@@ -24,6 +25,7 @@ import { UNetConnection } from "./structs/Engine/NetConnection";
 import { APlayerState } from "./structs/Engine/PlayerState";
 import { UWorld } from "./structs/Engine/World";
 import { Vector2D } from "./vector";
+import * as SplineTrackRefs from './structs/splineTrackRefs';
 
 export interface IWorldObjects {
     players: APlayerState[];
@@ -34,6 +36,7 @@ export interface IWorldObjects {
     sandhouses: Asandhouse[];
     industries: Aindustry[];
     splines: ASplineActor[];
+    splineTracks: ASplineTrack[];
 }
 
 export enum LoadType {
@@ -55,6 +58,7 @@ export class World {
         switches: [],
         turntables: [],
         watertowers: [],
+        splineTracks: [],
     };
     
     public data: IWorldObjects = this.empty;
@@ -64,11 +68,17 @@ export class World {
     private splineQuery: IQuery<AarrGameStateBase>;
     private playerQuery: IQuery<APlayerState>;
     private switchQuery: IQuery<ASwitch>;
+    private splineTrackQuery: IQuery<ASplineTrack>;
     private clientQuery: IQuery<UNetConnection>;
     private clientSplineQuery: IQuery<UNetConnection>;
 
+    private splineTrackReference: MultiLinkedStructRef<ASplineTrack> | null = null;
+
     private worldInterval?: NodeJS.Timeout;
     private splineInterval?: NodeJS.Timeout;
+
+    private busy = false;
+    private hasSplineTracks = false;
 
     constructor( private plugin: WorldPlugin, private settings: SettingsStore<IWorldSettings> ) {
         this.valueProvider = plugin.controller.communicator.provideValue( WorldCommunicator, this.empty );
@@ -132,7 +142,7 @@ export class World {
             sw.switchtype,
             sw.switchstate,
             sw.RootComponent.RelativeLocation,
-            sw.RootComponent.RelativeRotation
+            sw.RootComponent.RelativeRotation,
         ];
 
         const turntableQuery = ( tt: QueryBuilder<Aturntable> ) => [
@@ -214,6 +224,27 @@ export class World {
             splineQuery( gameState.SplineArray.all() ),
         ] );
 
+        this.splineTrackQuery = await data.prepareQuery( ASplineTrack as StructConstructor<ASplineTrack>, ( splineTrack ) => [
+            splineTrack.StartLocation,
+            splineTrack.StartTangent,
+            splineTrack.EndLocation,
+            splineTrack.EndTangent,
+            splineTrack.switchstate,
+            splineTrack.RootComponent.RelativeRotation,
+            splineTrack.splinecomp1endrelativelocation,
+            splineTrack.splinecomp2endrelativelocation,
+        ] );
+
+        this.hasSplineTracks = (await data.getReference(SplineTrackRefs.ABP_SplineTrack_DriveTrack_C)) !== null;
+
+        Log.info('Has beta spline tracks: ' + this.hasSplineTracks);
+
+        if(this.hasSplineTracks)
+            this.splineTrackReference = await data.getMultiReference(
+                // Reversing the array has much better cache hit chances
+                Object.values(SplineTrackRefs as { [key: string]: StructConstructor<ASplineTrack> }).reverse()
+            );
+
         this.switchQuery = await data.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
 
         this.playerQuery = await data.prepareQuery( APlayerState, ( p ) => [ p.PlayerNamePrivate, p.PawnPrivate ] );
@@ -268,18 +299,26 @@ export class World {
         }
 
         this.worldInterval = setInterval( async () => {
+            if(this.busy) return;
+            this.busy = true;
             try {
                 await this.load( LoadType.OBJECTS );
             } catch( e ) {
                 Log.error( 'Failed to load world objects', e );
+            } finally {
+                this.busy = false;
             }
         }, this.settings.get( 'intervals.world' ) );
 
         this.splineInterval = setInterval( async () => {
+            if(this.busy) return;
+            this.busy = true;
             try {
                 await this.load( LoadType.SPLINES );
             } catch( e ) {
                 Log.error( 'Failed to load splines', e );
+            } finally {
+                this.busy = false;
             }
         }, this.settings.get( 'intervals.splines' ) );
     }
@@ -365,21 +404,45 @@ export class World {
 
         let data: AarrGameStateBase | null = null;
         let splines: AarrGameStateBase | null = null;
+        let splineTracks: ASplineTrack[] | null = null;
 
         if( type === LoadType.OBJECTS || type === LoadType.ALL )
             data = await queryAction.query( this.worldQuery, gameState );
-        if( type === LoadType.SPLINES || type === LoadType.ALL )
+        if( type === LoadType.SPLINES || type === LoadType.ALL ) {
             splines = await queryAction.query( this.splineQuery, gameState );
+            
+            splineTracks = [];
+
+            if( this.splineTrackReference ) {
+                const instances = await this.splineTrackReference.getInstances();
+                
+                if(instances) {
+                    // Reversing the array gives better cache hit rates
+                    for(const instance of instances.reverse()) {
+                       const splineTrack = await queryAction.query(
+                            this.splineTrackQuery,
+                            instance, 
+                            40000 // This can take quite long the first run
+                        );
+
+                        if(splineTrack)
+                            splineTracks.push(splineTrack)
+                    }
+                    
+                }
+            } 
+        }
 
         this.parseWorld( {
-            players    : data?.PlayerArray,
-            frameCars  : data?.FrameCarArray,
-            industries : data?.IndustryArray,
-            sandhouses : data?.SandhouseArray,
-            switches   : data?.SwitchArray,
-            turntables : data?.TurntableArray,
-            watertowers: data?.WatertowerArray,
-            splines    : splines?.SplineArray,
+            players     : data?.PlayerArray,
+            frameCars   : data?.FrameCarArray,
+            industries  : data?.IndustryArray,
+            sandhouses  : data?.SandhouseArray,
+            switches    : data?.SwitchArray,
+            turntables  : data?.TurntableArray,
+            watertowers : data?.WatertowerArray,
+            splines     : splines?.SplineArray,
+            splineTracks: splineTracks ?? undefined,
         } );
     }
 
@@ -440,6 +503,27 @@ export class World {
                 if( channel.Spline )
                     data.splines.push( channel.Spline );
             }
+
+            data.splineTracks = [];
+
+            if( this.splineTrackReference ) {
+                const instances = await this.splineTrackReference.getInstances();
+                
+                if(instances) {
+                    // Reversing the array gives better cache hit rates
+                    for(const instance of instances.reverse()) {
+                       const splineTrack = await queryAction.query(
+                            this.splineTrackQuery,
+                            instance, 
+                            40000 // This can take quite long the first run
+                        );
+
+                        if(splineTrack)
+                            data.splineTracks.push(splineTrack)
+                    }
+                    
+                }
+            } 
         }
 
         return this.parseWorld( data );
@@ -447,14 +531,15 @@ export class World {
 
     private parseWorld( data: Partial<IWorldObjects> ) {
         const completeData: IWorldObjects = {
-            players    : data.players || this.data.players,
-            frameCars  : data.frameCars || this.data.frameCars,
-            industries : data.industries || this.data.industries,
-            sandhouses : data.sandhouses || this.data.sandhouses,
-            switches   : data.switches || this.data.switches,
-            turntables : data.turntables || this.data.turntables,
-            watertowers: data.watertowers || this.data.watertowers,
-            splines    : data.splines || this.data.splines,
+            players     : data.players || this.data.players,
+            frameCars   : data.frameCars || this.data.frameCars,
+            industries  : data.industries || this.data.industries,
+            sandhouses  : data.sandhouses || this.data.sandhouses,
+            switches    : data.switches || this.data.switches,
+            turntables  : data.turntables || this.data.turntables,
+            watertowers : data.watertowers || this.data.watertowers,
+            splines     : data.splines || this.data.splines,
+            splineTracks: data.splineTracks || this.data.splineTracks,
         };
         
         const world: IWorld = {
@@ -466,6 +551,7 @@ export class World {
             sandhouses: completeData.sandhouses.map( ( d ) => this.plugin.parser.parseSandhouse( d ) ),
             industries: completeData.industries.map( ( d ) => this.plugin.parser.parseIndustry( d ) ),
             splines: completeData.splines.map( ( d ) => this.plugin.parser.parseSpline( d ) ),
+            splineTracks: completeData.splineTracks.map( ( d ) => this.plugin.parser.parseSplineTrack( d ) ),
         };
 
         this.data = completeData;
@@ -540,25 +626,36 @@ export class World {
         return characters[ 0 ];
     }
 
-    public async setSwitch( switchInstance: ASwitch ) {
-        debugger;
+    public async setSwitch( switchInstance: ASwitch | ASplineTrack ) {
         if( !this.settings.get( 'features.controlSwitches' ) )
             return;
 
         const data = this.plugin.controller.getAction( Actions.QUERY );
+        
+        if(switchInstance instanceof ASwitch) {
+            const character = await this.getCharacter();
+            if( !character )
+                return Log.warn( `Cannot change switch as no character could be found.` );
+    
+            const latestSwitch = await data.query( this.switchQuery, switchInstance );
+            if( !latestSwitch )
+                return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
+    
+            if( latestSwitch.switchstate == 0 )
+                await character?.ServerSwitchUp( switchInstance );
+            else if( latestSwitch.switchstate == 1 )
+                await character?.ServerSwitchDown( switchInstance );
+        } else if(switchInstance instanceof ASplineTrack) {
+            const character = await this.getCharacter();
+            if( !character )
+                return Log.warn( `Cannot change switch as no character could be found.` );
 
-        const character = await this.getCharacter();
-        if( !character )
-            return Log.warn( `Cannot change switch as no character could be found.` );
+            const latestSwitch = await data.query( this.splineTrackQuery, switchInstance );
+            if( !latestSwitch )
+                return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
 
-        const latestSwitch = await data.query( this.switchQuery, switchInstance );
-        if( !latestSwitch )
-            return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
-
-        if( latestSwitch.switchstate == 0 )
-            await character?.ServerSwitchUp( switchInstance );
-        else if( latestSwitch.switchstate == 1 )
-            await character?.ServerSwitchDown( switchInstance );
+            await character.ServerSetSplineTrackSwitch(switchInstance, latestSwitch.switchstate !== 1);
+        }
     }
 
     public async teleport( player: APlayerState, location: ILocation | ILocation2D ) {

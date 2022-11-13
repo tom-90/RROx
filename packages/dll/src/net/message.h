@@ -11,6 +11,8 @@ enum class MessageType : uint16_t {
 	GET_DATA = 5,
 	GET_INSTANCES = 6,
 	GET_STATIC = 7,
+	GET_STRUCT_TYPE = 8,
+	GET_INSTANCES_MULTI = 9
 };
 
 class Message {

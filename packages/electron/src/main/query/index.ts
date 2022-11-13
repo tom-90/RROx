@@ -47,7 +47,7 @@ export class Query<T extends object> extends IQuery<T> {
         };
     }
 
-    async query( base: StructInstance<T> ): Promise<T | null> {
+    async query( base: StructInstance<T>, timeout?: number ): Promise<T | null> {
         if( !this.app.isConnected() || !this.request || !this.responseHandler )
             return null;
 
@@ -65,9 +65,9 @@ export class Query<T extends object> extends IQuery<T> {
         const pipe = this.app.getPipe()!;
         const request = new GetDataRequest( this.app, req );
 
-        pipe.request( request );
+        await pipe.request( request );
 
-        const res = await pipe.waitForResponse( request, GetDataResponse );
+        const res = await pipe.waitForResponse( request, GetDataResponse, timeout );
 
 
         if( !traverseResHandler( res.data ) )

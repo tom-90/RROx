@@ -80,3 +80,23 @@ export interface LinkedStructRef<S extends object> extends StructRef<S> {
      */
     getStatic( base: StructConstructor<S> ): Promise<S | null>;
 }
+
+/**
+ * Reference to multiple static classes.
+ * Can be used to more efficiently query a lot of different types of structs simultaniously.
+ */
+ export interface MultiLinkedStructRef<S extends object> {
+    /**
+     * Retrieves the underlying structs of this multi struct
+     */
+    getStructs(): LinkedStructRef<S>[];
+    
+    /**
+     * Retrieve a list of all instantiations of the classes beloning to this multi ref.
+     * For effiency, it is possible to limit the number of instances to get.
+     *
+     * @param count Maximum number of instances to get
+     * @param deep Whether or not to check super classes
+     */
+    getInstances( count?: number, deep?: boolean ): Promise<S[] | null>;
+}

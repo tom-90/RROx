@@ -1,6 +1,6 @@
 import { useMonaco } from "@monaco-editor/react";
 import { CommunicatorRPCFunction } from "@rrox/api";
-import { editor, Uri } from "monaco-editor";
+import { editor, IDisposable, Uri } from "monaco-editor";
 import { StructCodeCommunicator } from "../../../shared";
 
 const Types = `
@@ -85,14 +85,14 @@ declare type float = number;
 declare type double = number;
 `;
 
-export const getFileName = ( structName: string ) =>
-        'inmemory://rrox/devtools/structs/' + encodeURIComponent( structName );
+export const getFileName = ( structName: string, id: number ) =>
+        `inmemory://rrox/devtools/structs/${id}/file/${encodeURIComponent( structName )}`;
 
-export const getStructName = ( url: string ) => {
+export const getStructName = ( url: string, id: number ) => {
     const path = new URL( url ).pathname;
-    if( !path.startsWith( '//rrox/devtools/structs/' ) )
+    if( !path.startsWith( `//rrox/devtools/structs/${id}/file/` ) )
         return undefined;
-    return decodeURIComponent( path.substring( '//rrox/devtools/structs/'.length ) );
+    return decodeURIComponent( path.substring( `//rrox/devtools/structs/${id}/file/`.length ) );
 }
 
 type Monaco = Exclude<ReturnType<typeof useMonaco>, null>;
@@ -102,7 +102,10 @@ export const onMonacoMount = (
     monaco: Monaco,
     getStructCode: CommunicatorRPCFunction<typeof StructCodeCommunicator>,
     setSelected: ( structName: string ) => void,
+    id: number,
 ) => {
+    const disposables: IDisposable[] = [];
+
     // @ts-expect-error
     const editorService = editor._codeEditorService;
 
@@ -113,11 +116,12 @@ export const onMonacoMount = (
         definitions: { [ key: string ]: string },
     } } = {};
 
+    const orig = editorService.openCodeEditor;
     editorService.openCodeEditor = async ( input: { resource: Uri }, source: any ) => {
         const result = await openEditorBase(input, source);
         if( result === null ) {
             const fileName = input.resource.toString();
-            const structName = getStructName( fileName );
+            const structName = getStructName( fileName, id );
 
             if( !structName )
                 return; // Unknown file name
@@ -126,6 +130,8 @@ export const onMonacoMount = (
                 const [ code, definitions ] = await getStructCode( structName );
 
                 const model = monaco?.editor.createModel( code, 'typescript', monaco.Uri.parse( fileName ) );
+
+                disposables.push( model );
 
                 files[ fileName ] = {
                     model,
@@ -146,17 +152,17 @@ export const onMonacoMount = (
         typeRoots: [ 'inmemory://rrox/devtools/types' ]
     } );
 
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    disposables.push( monaco.languages.typescript.typescriptDefaults.addExtraLib(
         Types,
         'inmemory://rrox/devtools/types/index.d.ts'
-    );
+    ) );
 
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions( {
         noSemanticValidation: true,
         noSyntaxValidation: true,
     } );
 
-    monaco.languages.registerDeclarationProvider( 'typescript', {
+    disposables.push( monaco.languages.registerDeclarationProvider( 'typescript', {
         provideDeclaration( model, position ) {
             const file = files[ model.uri.toString() ];
             if( !file )
@@ -167,12 +173,18 @@ export const onMonacoMount = (
                 return;
             
             const structName = file.definitions[ word.word ];
-            const definitionFileName = getFileName( structName );
+            const definitionFileName = getFileName( structName, id );
 
             return {
                 uri  : monaco.Uri.parse( definitionFileName ),
                 range: new monaco.Range( 0, 0, 0, 10 )
             };
         },
-    } );
+    } ) );
+
+    return () => {
+        console.log('dispose');
+        editorService.openCodeEditor = orig;
+        disposables.forEach((d) => d.dispose());
+    }
 };
