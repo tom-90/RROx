@@ -58,6 +58,12 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.1 - 13-11-2022
+
+**Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**
+
+- `Fixed` Bug where track would not be displayed on top of rail + ballast type III and only the groundwork was rendered.
+
 ### v1.1.0 - 13-11-2022
 
 **Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**

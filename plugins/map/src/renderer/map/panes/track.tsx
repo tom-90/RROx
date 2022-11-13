@@ -7,7 +7,7 @@ import { SplineTracks } from '../elements/splineTracks';
 
 const SplineTrackTypes = [
     SplineTrackType.RAIL_WALL_3FT_01,
-    SplineTrackType.RAIL_BALLAST_3FT_H01, SplineTrackType.RAIL_BALLAST_3FT_H05, SplineTrackType.BALLAST_H10,
+    SplineTrackType.RAIL_BALLAST_3FT_H01, SplineTrackType.RAIL_BALLAST_3FT_H05, SplineTrackType.RAIL_BALLAST_3FT_H10,
     SplineTrackType.RAIL_3FT_SPAWN, SplineTrackType.RAIL_3FT, SplineTrackType.RAIL_3FT_ENGINEHOUSE,
     SplineTrackType.TRESTLE_3FT_WOOD_01, SplineTrackType.TRESTLE_3FT_PILE_01, SplineTrackType.TRESTLE_3FT_STEEL_01
 ];
