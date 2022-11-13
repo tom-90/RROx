@@ -32,7 +32,7 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 ### v2.2.0 - 13-11-2022
 
 - ``Added`` Additional API's necessary for the world and map plugins to load the new spline system.
-- 
+  
 ### v2.1.0 - 05-05-2022
 
 - ``Added`` Ability to manually inject the DLL into the game in case automatic injection by RROx fails.
