@@ -90,4 +90,16 @@ export class Struct implements IStruct {
             ...( await superClass.getAllFunctions() ),
         ]
     }
+
+    public toJSON() {
+        return {
+            fullName  : this.fullName,
+            cppName   : this.cppName,
+            superName : this.superName,
+            isClass   : this.isClass,
+            size      : this.size,
+            properties: this.properties,
+            functions : this.functions,
+        }
+    }
 }

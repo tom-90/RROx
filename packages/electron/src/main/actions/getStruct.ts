@@ -1,7 +1,8 @@
-import { IGetStructAction } from "@rrox/api";
+import { IGetStructAction, StructInfo } from "@rrox/api";
 import { Action } from "./action";
 import { GetStructListRequest, GetStructListResponse, GetStructRequest, GetStructResponse, StructResponseType } from "../net";
 import { Enum, Function, Struct } from "../struct";
+import { GlobalTraverserStep, StructInstance } from "../query";
 
 export class GetStructAction extends Action implements IGetStructAction {
 
@@ -24,10 +25,25 @@ export class GetStructAction extends Action implements IGetStructAction {
         const pipe = this.app.getPipe()!;
         const req  = new GetStructListRequest( this.app );
 
-        pipe.request( req );
+        await pipe.request( req );
         const res = await pipe.waitForResponse( req, GetStructListResponse, 60000 );
 
         return res.list;
+    }
+
+    /**
+     * Retrieves an empty struct info metadata object.
+     * 
+     * @param name Name of the struct to retrieve it for.
+     */
+    getInstance<T extends object = any>( name: string ): StructInstance<T> {
+        const struct = new StructInstance<T>( this.app );
+
+        struct.setName( name );
+
+        struct.getTraverser().setSteps( [ new GlobalTraverserStep( name ) ] );
+
+        return struct;
     }
 
     private async retrieve<T extends Struct | Function | Enum>(
@@ -50,7 +66,7 @@ export class GetStructAction extends Action implements IGetStructAction {
         const pipe = this.app.getPipe()!;
         const req  = new GetStructRequest( this.app, name );
 
-        pipe.request( req );
+        await pipe.request( req );
         const res = await pipe.waitForResponse( req, GetStructResponse );
         
         if( res.structType !== responseType || !res.data )

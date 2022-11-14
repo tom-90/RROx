@@ -101,6 +101,29 @@ std::vector<FUObjectItem*> FUObjectArray::FindInstances(const UObject* obj, cons
 	return instances;
 };
 
+std::vector<std::tuple<UObject*, FUObjectItem*>> FUObjectArray::FindInstances(const std::vector<UObject*>& objs, const uint32_t count, const bool deep) {
+	std::vector<std::tuple<UObject*, FUObjectItem*>> instances;
+
+	for (int32_t i = 0; i < ObjObjects.NumElements; i++) {
+		FUObjectItem* item = ObjObjects.GetObjectPtr(i);
+
+		if (item && item->Object) {
+			for (auto obj : objs) {
+				if (item->Object->ClassPrivate == obj || (deep && HasSuper(obj, item->Object->ClassPrivate))) {
+					if (IsObjectTemplate(item->Object))
+						continue;
+
+					instances.push_back({ obj, item });
+					if (count > 0 && instances.size() == count)
+						return instances;
+				}
+			}
+		}
+	}
+
+	return instances;
+};
+
 FUObjectItem* FUObjectArray::FindStatic(const UObject* obj) {
 	for (int32_t i = 0; i < ObjObjects.NumElements; i++) {
 		FUObjectItem* item = ObjObjects.GetObjectPtr(i);

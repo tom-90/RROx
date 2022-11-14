@@ -13,6 +13,8 @@
 #include "./net/messages/getstatic.h"
 #include "./net/messages/getstruct.h"
 #include "./net/messages/getstructlist.h"
+#include "./net/messages/getstructtype.h"
+#include "./net/messages/getinstancesmulti.h"
 #include "./net/messages/ready.h"
 
 size_t FNameEntryAllocator::NumEntries = 0;
@@ -144,6 +146,18 @@ void Injector::processMessages() {
 		}
 		case MessageType::GET_STATIC: {
 			GetStaticRequest req = GetStaticRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_STRUCT_TYPE: {
+			GetStructTypeRequest req = GetStructTypeRequest(message);
+			req.pipe = &communicator;
+			req.Process();
+			break;
+		}
+		case MessageType::GET_INSTANCES_MULTI: {
+			GetInstancesMultiRequest req = GetInstancesMultiRequest(message);
 			req.pipe = &communicator;
 			req.Process();
 			break;

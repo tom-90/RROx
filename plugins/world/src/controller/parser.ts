@@ -1,11 +1,12 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
-import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType } from "../shared";
+import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack } from "../shared";
 import { Acoupler } from "./structs/arr/coupler";
 import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";
 import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
+import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
@@ -165,6 +166,44 @@ export class WorldParser {
         }
 
         return segments;
+    }
+
+    public parseSplineTrack( s: ASplineTrack ): ISplineTrack {
+        return {
+            type: s.type,
+            location: {
+                X: s.StartLocation.X,
+                Y: s.StartLocation.Y,
+                Z: s.StartLocation.Z,
+            },
+            rotation: this.parseActorRotation(s),
+            tangentStart: {
+                X: s.StartTangent.X,
+                Y: s.StartTangent.Y,
+                Z: s.StartTangent.Z,
+            },
+            locationEnd: {
+                X: s.EndLocation.X,
+                Y: s.EndLocation.Y,
+                Z: s.EndLocation.Z,
+            },
+            tangentEnd: {
+                X: s.EndTangent.X,
+                Y: s.EndTangent.Y,
+                Z: s.EndTangent.Z,
+            },
+            switchState: s.switchstate,
+            switchEnd1: {
+                X: s.splinecomp1endrelativelocation.X,
+                Y: s.splinecomp1endrelativelocation.Y,
+                Z: s.splinecomp1endrelativelocation.Z,
+            },
+            switchEnd2: {
+                X: s.splinecomp2endrelativelocation.X,
+                Y: s.splinecomp2endrelativelocation.Y,
+                Z: s.splinecomp2endrelativelocation.Z,
+            },
+        };
     }
 
     public parseActorLocation( actor: AActor ): ILocation {

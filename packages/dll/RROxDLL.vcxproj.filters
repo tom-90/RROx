@@ -84,6 +84,12 @@
     <ClCompile Include="src\injector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\net\messages\getstructtype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\net\messages\getinstancesmulti.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\net\messages\getdata.h">
@@ -165,6 +171,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\injector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\net\messages\getstructtype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\net\messages\getinstancesmulti.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

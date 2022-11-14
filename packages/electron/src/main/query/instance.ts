@@ -1,13 +1,12 @@
 import { StructInfo, StructConstructor, PROPERTY_LIST_METADATA, FUNCTION_LIST_METADATA, PROPERTY_NAME_METADATA, FUNCTION_NAME_METADATA, IProperty, FUNCTION_ARGS_METADATA, InOutParam } from "@rrox/api";
-import { Query } from ".";
 import { QueryAction, GetStructAction } from "../actions";
 import { RROxApp } from "../app";
-import { GetDataRequest, GetDataResponse } from "../net";
+import { GetDataRequest, GetDataResponse, StructResponseType, GetStructTypeRequest, GetStructTypeResponse } from "../net";
 import { BufferIO } from "../net/io";
-import { Property } from "../struct";
+import { Struct } from "../struct";
 import { QueryPropertyArgs } from "./args";
 import { QueryCommands } from "./commands";
-import { QueryProperty, QueryPropertyResponseHandler } from "./property";
+import { QueryPropertyResponseHandler } from "./property";
 import { QueryState } from "./state";
 import { FakeTraverserStep, Traverser } from "./traverser";
 
@@ -177,6 +176,33 @@ export class StructInstance<T extends object> implements StructInfo<T> {
     }
 
     /**
+     * Retrieve metadata attached to this struct
+     */
+    public async getStruct(): Promise<Struct | null> {
+        const name = this.getName();
+
+        if( !name )
+            throw new StructInstanceError( 'Name is not available' );
+
+        const request = new GetStructTypeRequest( this.app, name );
+
+        if( !this.app.isConnected() )
+            return null;
+
+        const pipe = this.app.getPipe()!;
+
+        await pipe.request( request );
+
+        const response = await pipe.waitForResponse( request, GetStructTypeResponse );
+
+        console.log( response.structType );
+        if( response.structType !== StructResponseType.Struct )
+            throw new StructInstanceError( 'Unexpected Struct response' );
+
+        return response.data as Struct;
+    }
+
+    /**
      * Set retrieved data for instance
      * @param key 
      * @param value 
@@ -241,7 +267,7 @@ export class StructInstance<T extends object> implements StructInfo<T> {
 
         const pipe = this.app.getPipe()!;
 
-        pipe.request( request );
+        await pipe.request( request );
 
         await pipe.waitForResponse( request, GetDataResponse );
     }
@@ -340,7 +366,7 @@ export class StructInstance<T extends object> implements StructInfo<T> {
 
         const pipe = this.app.getPipe()!;
 
-        pipe.request( request );
+        await pipe.request( request );
 
         const res = await pipe.waitForResponse( request, GetDataResponse );
 
@@ -400,7 +426,7 @@ export class StructInstance<T extends object> implements StructInfo<T> {
 
         const pipe = this.app.getPipe()!;
 
-        pipe.request( request );
+        await pipe.request( request );
 
         const res = await pipe.waitForResponse( request, GetDataResponse );
 

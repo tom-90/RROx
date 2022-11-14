@@ -1,6 +1,6 @@
 {
     "name": "@rrox-plugins/map",
-    "version": "1.0.6",
+    "version": "1.1.1",
     "description": "Map Plugin",
     "author": "_tom()",
     "contributors": [
@@ -37,18 +37,19 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.7.0",
+        "@elfalem/leaflet-curve": "^0.9.1",
         "@react-leaflet/core": "^1.1.1",
-        "@rrox/api": "^1.0.3",
+        "@rrox-plugins/world": "1.1.0",
+        "@rrox/api": "^1.1.0",
         "@rrox/base-ui": "^1.0.2",
-        "@rrox-plugins/world": "1.0.6",
-        "antd": "^4.17.2",
         "ant-design-draggable-modal": "^1.0.0",
+        "antd": "^4.17.2",
         "leaflet": "^1.7.1",
         "leaflet-imageoverlay-rotated": "^0.2.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-leaflet": "^3.2.5",
         "react-router-dom": "^6.0.2",
-        "react-uid": "^2.3.0",
-        "react-leaflet": "^3.2.5"
+        "react-uid": "^2.3.0"
     }
 }

@@ -7,3 +7,6 @@ export * from './splines';
 export * from './switch';
 export * from './turntable';
 export * from './watertower';
+export * from './splineTracks';
+export * from './splineTrackSwitch';
+export * from './splineTrackCross';

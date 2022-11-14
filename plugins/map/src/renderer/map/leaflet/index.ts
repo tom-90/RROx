@@ -1,6 +1,7 @@
 export * from './circle';
 export * from './contextMenu';
 export * from './controls';
+export * from './curve';
 export * from './image';
 export * from './line';
 export * from './setup';

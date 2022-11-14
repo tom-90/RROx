@@ -76,7 +76,7 @@ if ( require( 'electron-squirrel-startup' ) || ( process.env.NODE_ENV !== 'devel
     app.on( 'ready', async () => {
         try {
             if( process.env.NODE_ENV === 'development' && process.env.LOCALAPPDATA ) {
-                await session.defaultSession.loadExtension( path.resolve( process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.3_0' ) );
+                await session.defaultSession.loadExtension( path.resolve( process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.24.6_0' ) );
             }
         } catch( e ) {}
 

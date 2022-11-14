@@ -26,9 +26,11 @@
     <ClCompile Include="src\net\message.cpp" />
     <ClCompile Include="src\net\messages\getdata.cpp" />
     <ClCompile Include="src\net\messages\getinstances.cpp" />
+    <ClCompile Include="src\net\messages\getinstancesmulti.cpp" />
     <ClCompile Include="src\net\messages\getstatic.cpp" />
     <ClCompile Include="src\net\messages\getstruct.cpp" />
     <ClCompile Include="src\net\messages\getstructlist.cpp" />
+    <ClCompile Include="src\net\messages\getstructtype.cpp" />
     <ClCompile Include="src\net\messages\log.cpp" />
     <ClCompile Include="src\net\messages\ready.cpp" />
     <ClCompile Include="src\net\pipe.cpp" />
@@ -50,9 +52,11 @@
     <ClInclude Include="src\net\message.h" />
     <ClInclude Include="src\net\messages\getdata.h" />
     <ClInclude Include="src\net\messages\getinstances.h" />
+    <ClInclude Include="src\net\messages\getinstancesmulti.h" />
     <ClInclude Include="src\net\messages\getstatic.h" />
     <ClInclude Include="src\net\messages\getstruct.h" />
     <ClInclude Include="src\net\messages\getstructlist.h" />
+    <ClInclude Include="src\net\messages\getstructtype.h" />
     <ClInclude Include="src\net\messages\log.h" />
     <ClInclude Include="src\net\messages\ready.h" />
     <ClInclude Include="src\net\pipe.h" />

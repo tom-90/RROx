@@ -1106,16 +1106,16 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
-  version "7.16.3"
-  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.16.3.tgz"
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.16.3":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.16.3":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
   integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
+  version "7.16.3"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.16.3.tgz"
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1528,6 +1528,13 @@
   optionalDependencies:
     global-agent "^3.0.0"
     global-tunnel-ng "^2.7.1"
+
+"@elfalem/leaflet-curve@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@elfalem/leaflet-curve/-/leaflet-curve-0.9.1.tgz#e9a9e4fe6304958178d0d6dfa0d10bf81b48b418"
+  integrity sha512-qRx+GK68e+j60TJ9/e/xIC31ON2owmEIxYajGbX+FQ/knOSlGTIgZYhQvLIeChU/1RQd+ly7Up6z62LWOjLyWQ==
+  optionalDependencies:
+    "@tweenjs/tween.js" "^17.2.0"
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -2368,19 +2375,19 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@monaco-editor/loader@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.2.0.tgz#373fad69973384624e3d9b60eefd786461a76acd"
-  integrity sha512-cJVCG/T/KxXgzYnjKqyAgsKDbH9mGLjcXxN6AmwumBwa2rVFkwvGcUj1RJtD0ko4XqLqJxwqsN/Z/KURB5f1OQ==
+"@monaco-editor/loader@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.3.2.tgz#04effbb87052d19cd7d3c9d81c0635490f9bb6d8"
+  integrity sha512-BTDbpHl3e47r3AAtpfVFTlAi7WXv4UQ/xZmz8atKl4q7epQV5e7+JbigFDViWF71VBi4IIBdcWP57Hj+OWuc9g==
   dependencies:
     state-local "^1.0.6"
 
-"@monaco-editor/react@^4.3.1":
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.3.1.tgz#d65bcbf174c39b6d4e7fec43d0cddda82b70a12a"
-  integrity sha512-f+0BK1PP/W5I50hHHmwf11+Ea92E5H1VZXs+wvKplWUWOfyMa1VVwqkJrXjRvbcqHL+XdIGYWhWNdi4McEvnZg==
+"@monaco-editor/react@^4.4.6":
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.4.6.tgz#8ae500b0edf85276d860ed702e7056c316548218"
+  integrity sha512-Gr3uz3LYf33wlFE3eRnta4RxP5FSNxiIV9ENn2D2/rN8KgGAD8ecvcITRtsbbyuOuNkwbuHYxfeaz2Vr+CtyFA==
   dependencies:
-    "@monaco-editor/loader" "^1.2.0"
+    "@monaco-editor/loader" "^1.3.2"
     prop-types "^15.7.2"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -3360,6 +3367,35 @@
   resolved "https://registry.yarnpkg.com/@react-leaflet/core/-/core-1.1.1.tgz#827fd05bb542cf874116176d8ef48d5b12163f81"
   integrity sha512-7PGLWa9MZ5x/cWy8EH2VzI4T8q5WpuHbixzCDXqixP/WyqwIrg5NDUPgYuFnB4IEIZF+6nA265mYzswFo/h1Pw==
 
+"@rrox-plugins/map@1.0.6":
+  version "1.0.6"
+  resolved "https://rrox-registry.tom90.nl/@rrox-plugins%2fmap/-/map-1.0.6.tgz#5833e5b778abf85e6a429c6dbeb81c5692481348"
+  integrity sha512-aIFkBg+Q60c2ycqgprgpCESQuTPFVAwxOal9GxuAlHgFnCzZZjlQngwT6gm8KRsBsNfBI/ZY120ozDulZo81Dw==
+  dependencies:
+    "@ant-design/icons" "^4.7.0"
+    "@react-leaflet/core" "^1.1.1"
+    "@rrox-plugins/world" "1.0.6"
+    "@rrox/api" "^1.0.3"
+    "@rrox/base-ui" "^1.0.2"
+    ant-design-draggable-modal "^1.0.0"
+    antd "^4.17.2"
+    leaflet "^1.7.1"
+    leaflet-imageoverlay-rotated "^0.2.1"
+    react "^17.0.2"
+    react-dom "^17.0.2"
+    react-leaflet "^3.2.5"
+    react-router-dom "^6.0.2"
+    react-uid "^2.3.0"
+
+"@rrox-plugins/world@1.0.6":
+  version "1.0.6"
+  resolved "https://rrox-registry.tom90.nl/@rrox-plugins%2fworld/-/world-1.0.6.tgz#d3149f1279b051ed3bb8e3aed47598b4c3c064de"
+  integrity sha512-Uuynll2Jwve/dgRiwVuYjN+oM5uqeQwLPSaj9Bc0n6iX29qs2uuHv9Vy7Q3DXMIcObgxJGsmBKAPG3TCZt0oFg==
+  dependencies:
+    "@rrox/api" "^1.0.3"
+    antd "^4.17.2"
+    react "^17.0.2"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.14.0.tgz"
@@ -3411,6 +3447,11 @@
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
+
+"@tweenjs/tween.js@^17.2.0":
+  version "17.6.0"
+  resolved "https://registry.yarnpkg.com/@tweenjs/tween.js/-/tween.js-17.6.0.tgz#61bc86c372bcc5a9f744e661dd6ae16f5ee7d0ef"
+  integrity sha512-utSXj0WHi4qr/iyfFHGMJBaL+ixQ2N7BAmx1R5g8jBqykJfjBUQ0hKWwXf767hbALC3zOoOIofKYSDWu5n04JQ==
 
 "@types/aws-lambda@^8.10.83":
   version "8.10.93"
@@ -3820,6 +3861,14 @@
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-17.0.11.tgz"
   dependencies:
     "@types/react" "*"
+
+"@types/react-inspector@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-inspector/-/react-inspector-4.0.2.tgz#cf6b4b305f33d7aa5df7d4fb5db2e437b01daf23"
+  integrity sha512-qU+yzQzsq5ywoLq+6ZGpGpNXDr376YPHz6jp/4nvahqtomk81rNZYkOfVx19JzxUQCoVHU1veFvygZhRfEFQOw==
+  dependencies:
+    "@types/react" "*"
+    csstype "^3.0.2"
 
 "@types/react-router-dom@^5.3.2":
   version "5.3.2"
@@ -9838,6 +9887,14 @@ is-docker@^2.0.0, is-docker@^2.1.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/is-docker/-/is-docker-2.2.1.tgz"
 
+is-dom@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/is-dom/-/is-dom-1.1.0.tgz#af1fced292742443bb59ca3f76ab5e80907b4e8a"
+  integrity sha512-u82f6mvhYxRPKpw8V1N0W8ce1xXwOrQtgGcxl6UCL5zBmZu3is/18K0rR7uFCnMDuAsS/3W54mGL4vsaFUQlEQ==
+  dependencies:
+    is-object "^1.0.1"
+    is-window "^1.0.2"
+
 is-dotfile@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/is-dotfile/-/is-dotfile-1.0.3.tgz#a6a2f32ffd2dfb04f5ca25ecd0f6b83cf798a1e1"
@@ -10017,6 +10074,11 @@ is-obj@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/is-obj/-/is-obj-2.0.0.tgz"
 
+is-object@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/is-object/-/is-object-1.0.2.tgz#a56552e1c665c9e950b4a025461da87e72f86fcf"
+  integrity sha512-2rRIahhZr2UWb45fIOuvZGpFtz0TyOZLf32KxBbSoUCeZR495zCKlWUKKUByk3geS2eAs7ZAABt0Y/Rx0GiQGA==
+
 is-path-cwd@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/is-path-cwd/-/is-path-cwd-2.2.0.tgz"
@@ -10167,6 +10229,11 @@ is-weakref@^1.0.2:
 is-what@^3.12.0:
   version "3.14.1"
   resolved "https://registry.npmjs.org/is-what/-/is-what-3.14.1.tgz"
+
+is-window@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/is-window/-/is-window-1.0.2.tgz#2c896ca53db97de45d3c33133a65d8c9f563480d"
+  integrity sha1-LIlspT25feRdPDMTOmXYyfVjSA0=
 
 is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
@@ -11525,10 +11592,10 @@ moment@^2.24.0, moment@^2.25.3:
   version "2.29.1"
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
 
-monaco-editor@^0.33.0:
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
-  integrity sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==
+monaco-editor@^0.34.1:
+  version "0.34.1"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.34.1.tgz#1b75c4ad6bc4c1f9da656d740d98e0b850a22f87"
+  integrity sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ==
 
 morgan@^1.9.1:
   version "1.10.0"
@@ -13188,15 +13255,7 @@ promzard@^0.3.0:
   dependencies:
     read "1"
 
-prop-types@^15.6.1:
-  version "15.7.2"
-  resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
-  dependencies:
-    loose-envify "^1.4.0"
-    object-assign "^4.1.1"
-    react-is "^16.8.1"
-
-prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.0.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -13204,6 +13263,14 @@ prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.13.1"
+
+prop-types@^15.6.1:
+  version "15.7.2"
+  resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.8.1"
 
 proto-list@~1.2.1:
   version "1.2.4"
@@ -13787,6 +13854,15 @@ react-icons@^3.7.0:
   integrity sha512-JRgiI/vdF6uyBgyZhVyYJUZAop95Sy4XDe/jmT3R/bKliFWpO/uZBwvSjWEdxwzec7SYbEPNPck0Kff2tUGM2Q==
   dependencies:
     camelcase "^5.0.0"
+
+react-inspector@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-5.1.1.tgz#58476c78fde05d5055646ed8ec02030af42953c8"
+  integrity sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    is-dom "^1.0.0"
+    prop-types "^15.0.0"
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
@@ -17143,6 +17219,11 @@ xterm-addon-fit@^0.5.0:
 xterm-addon-search@^0.8.0:
   version "0.8.1"
   resolved "https://registry.npmjs.org/xterm-addon-search/-/xterm-addon-search-0.8.1.tgz"
+
+xterm@^4.18.0:
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.18.0.tgz#a1f6ab2c330c3918fb094ae5f4c2562987398ea1"
+  integrity sha512-JQoc1S0dti6SQfI0bK1AZvGnAxH4MVw45ZPFSO6FHTInAiau3Ix77fSxNx3mX4eh9OL4AYa8+4C8f5UvnSfppQ==
 
 xterm@^4.9.0:
   version "4.15.0"

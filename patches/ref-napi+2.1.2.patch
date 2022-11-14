@@ -1,0 +1,8 @@
+diff --git a/node_modules/ref-napi/prebuilds/win32-x64/electron.napi.node b/node_modules/ref-napi/prebuilds/win32-x64/electron.napi.node
+deleted file mode 100644
+index 27b163e..0000000
+Binary files a/node_modules/ref-napi/prebuilds/win32-x64/electron.napi.node and /dev/null differ
+diff --git a/node_modules/ref-napi/prebuilds/win32-x64/node.napi.node b/node_modules/ref-napi/prebuilds/win32-x64/node.napi.node
+deleted file mode 100644
+index 93d1214..0000000
+Binary files a/node_modules/ref-napi/prebuilds/win32-x64/node.napi.node and /dev/null differ

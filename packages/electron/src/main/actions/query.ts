@@ -1,7 +1,7 @@
 import { IQueryAction, IQuery, QueryBuilderFunction, STRUCT_NAME_METADATA, PROPERTY_LIST_METADATA, QueryBuilder, PROPERTY_NAME_METADATA, PROPERTY_TYPE_METADATA, PropertyType, StructConstructor, PROPERTY_ARGS_METADATA } from "@rrox/api";
 import 'reflect-metadata';
 import { Query, StructInstance, QueryProperty, QueryPropertyArgs, QueryPropertyResponseHandler } from "../query";
-import { LinkedStructReference, Property } from "../struct";
+import { LinkedStructReference, MultiLinkedStructReference, Property } from "../struct";
 import { Action } from "./action";
 import { GetStructAction } from "./getStruct";
 
@@ -120,10 +120,10 @@ export class QueryAction extends Action implements IQueryAction {
 
         await query.prepare();
 
-        return query;
+        return query as IQuery<T>;
     }
 
-    async query<T extends object>( query: IQuery<T>, base: T ): Promise<T | null> {
+    async query<T extends object>( query: IQuery<T>, base: T, timeout?: number ): Promise<T | null> {
         if( !( query instanceof Query ) )
             throw new QueryActionError( 'Invalid query object' );
 
@@ -132,7 +132,7 @@ export class QueryAction extends Action implements IQueryAction {
         if( !instance )
             throw new QueryActionError( 'Invalid base object' );
 
-        return ( query as Query<T> ).query( instance );
+        return ( query as Query<T> ).query( instance, timeout );
     }
 
     async getReference<T extends object>( base: StructConstructor<T> ): Promise<LinkedStructReference<T> | null> {
@@ -145,6 +145,21 @@ export class QueryAction extends Action implements IQueryAction {
         return new LinkedStructReference( this.app, struct, base );
     }
 
+    async getMultiReference<T extends object>( baseConstructors: StructConstructor<T>[] ): Promise<MultiLinkedStructReference<T> | null> {
+        const structs: LinkedStructReference<T>[] = [];
+
+        for(const base of baseConstructors) {
+            const struct = await this.getReference<T>(base);
+            if(struct !== null)
+                structs.push(struct);
+        }
+
+        if(structs.length === 0)
+            return null;
+
+        return new MultiLinkedStructReference<T>( this.app, structs );
+    }
+
     async create<T extends object>( base: StructConstructor<T> ): Promise<T> {
         const structName = this.getStructName( base );
         const struct = await this.app.getAction( GetStructAction ).getStruct( structName );
@@ -152,7 +167,7 @@ export class QueryAction extends Action implements IQueryAction {
         if( !struct || struct.isClass )
             throw new QueryActionError( `Cannot create struct of type ${base?.name}. Only simple structs, starting with the letter F (e.g. FVector) can be created by RROx.` );
 
-        return new StructInstance( this.app, base ).create();
+        return new StructInstance( this.app, base ).create() as T;
     }
 
     save<T extends object>( instance: T ): Promise<void> {

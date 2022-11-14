@@ -3,6 +3,7 @@ import { Tree, Input, TreeDataNode, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { StructListDetails } from '../../shared';
 import './style.less';
+import { useCallbackDelayed } from '../hooks/callbackDelayed';
 
 const walkTree = ( node: TreeDataNode, callback: ( node: TreeDataNode, parent: TreeDataNode ) => void ) => {
     const walk = ( node: TreeDataNode, parent: TreeDataNode ) => {
@@ -11,20 +12,6 @@ const walkTree = ( node: TreeDataNode, callback: ( node: TreeDataNode, parent: T
     };
 
     node.children?.forEach( ( n ) => walk( n, node ) );
-};
-
-const useCallbackDelayed = <P extends any[]>(
-    callback: ( ...params: P ) => void, delay: number, dependencies: React.DependencyList
-): ( ...params: P ) => void => {
-    const ref = useRef<NodeJS.Timeout>();
-    useEffect( () => {
-        return () => clearTimeout( ref.current! );
-    }, [] );
-
-    return useCallback( ( ...params: P ) => {
-        clearTimeout( ref.current! );
-        ref.current = setTimeout( () => callback( ...params ), delay);
-    }, dependencies );
 };
 
 interface DataNode extends TreeDataNode {

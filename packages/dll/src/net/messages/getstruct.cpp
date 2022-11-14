@@ -28,12 +28,12 @@ void GetStructRequest::Process() {
 void GetStructResponse::Process(Buffer& data) {
 	Response::Process(data);
 
-	data.Write(type);
+	data.Write(structType);
 
-	if (type == StructResponseType::Struct && structObj)
+	if (structType == StructResponseType::Struct && structObj)
 		structObj->Serialize(data);
-	else if (type == StructResponseType::Function && functionObj)
+	else if (structType == StructResponseType::Function && functionObj)
 		functionObj->Serialize(data);
-	else if (type == StructResponseType::Enum && enumObj)
+	else if (structType == StructResponseType::Enum && enumObj)
 		enumObj->Serialize(data);
 }

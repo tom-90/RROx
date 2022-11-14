@@ -88,4 +88,13 @@ export class Function implements IFunction {
 
         return flags.join( ', ' );
     }
+    
+    public toJSON() {
+        return {
+            fullName: this.fullName,
+            cppName: this.cppName,
+            size: this.size,
+            params: this.params
+        }
+    }
 }

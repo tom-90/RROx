@@ -2,7 +2,7 @@ import { IFrameCar } from "./frameCar";
 import { IIndustry } from "./industry";
 import { IPlayer } from "./player";
 import { ISandhouse } from "./sandhouse";
-import { ISpline } from "./spline";
+import { ISpline, ISplineTrack } from "./spline";
 import { ISwitch } from "./switch";
 import { ITurntable } from "./turntable";
 import { IWatertower } from "./watertower";
@@ -16,6 +16,7 @@ export interface IWorld {
     sandhouses: ISandhouse[];
     industries: IIndustry[];
     splines: ISpline[];
+    splineTracks: ISplineTrack[];
 }
 
 export * from './enums';
