@@ -176,7 +176,11 @@ export class WorldParser {
                 Y: s.StartLocation.Y,
                 Z: s.StartLocation.Z,
             },
-            rotation: this.parseActorRotation(s),
+            rotation: s.RootComponent?.RelativeRotation ? this.parseActorRotation(s) : {
+                Yaw: 0,
+                Pitch: 0,
+                Roll: 0,
+            },
             tangentStart: {
                 X: s.StartTangent.X,
                 Y: s.StartTangent.Y,

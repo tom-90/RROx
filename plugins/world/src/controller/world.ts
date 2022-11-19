@@ -1,6 +1,6 @@
 import { Actions, InOutParam, IPluginController, IQuery, MultiLinkedStructRef, query, QueryBuilder, SettingsStore, StructConstructor, ValueProvider } from "@rrox/api";
 import WorldPlugin from ".";
-import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings } from "../shared";
+import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
 import { Geometry } from "./geometry";
 import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
 import { Acoupler } from "./structs/arr/coupler";
@@ -406,8 +406,29 @@ export class World {
         let splines: AarrGameStateBase | null = null;
         let splineTracks: ASplineTrack[] | null = null;
 
-        if( type === LoadType.OBJECTS || type === LoadType.ALL )
+        if( type === LoadType.OBJECTS || type === LoadType.ALL ) {
             data = await queryAction.query( this.worldQuery, gameState );
+        }
+
+        if( type === LoadType.OBJECTS) {
+            splineTracks = this.data.splineTracks;
+        
+            for(let i = 0; i < splineTracks.length; i++) {
+                const oldTrack = splineTracks[ i ];
+
+                if(!this.isSwitch(oldTrack))
+                    continue;
+
+                const newTrack = await queryAction.query(
+                    this.splineTrackQuery,
+                    oldTrack
+                );
+
+                if( newTrack )
+                    splineTracks[ i ] = newTrack;
+            }
+        }
+        
         if( type === LoadType.SPLINES || type === LoadType.ALL ) {
             splines = await queryAction.query( this.splineQuery, gameState );
             
@@ -419,7 +440,7 @@ export class World {
                 if(instances) {
                     // Reversing the array gives better cache hit rates
                     for(const instance of instances.reverse()) {
-                       const splineTrack = await queryAction.query(
+                        const splineTrack = await queryAction.query(
                             this.splineTrackQuery,
                             instance, 
                             40000 // This can take quite long the first run
@@ -430,7 +451,7 @@ export class World {
                     }
                     
                 }
-            } 
+            }
         }
 
         this.parseWorld( {
@@ -741,5 +762,14 @@ export class World {
                 break;
             }
         }
+    }
+
+    private isSwitch(track: ASplineTrack) {
+        return [
+            SplineTrackType.SWITCH_3FT_LEFT, SplineTrackType.SWITCH_3FT_LEFT_MIRROR,
+            SplineTrackType.SWITCH_3FT_RIGHT, SplineTrackType.SWITCH_3FT_RIGHT_MIRROR,
+            SplineTrackType.SWITCH_BALLAST_3FT_LEFT, SplineTrackType.SWITCH_BALLAST_3FT_LEFT_MIRROR,
+            SplineTrackType.SWITCH_BALLAST_3FT_RIGHT, SplineTrackType.SWITCH_BALLAST_3FT_RIGHT_MIRROR,
+        ].includes(track.type);
     }
 }

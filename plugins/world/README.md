@@ -21,11 +21,20 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.1 - 19-11-2022
+
+**Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**
+
+- ``Enhancement`` Improved refresh interval for switches. They now follow the world refresh interval, instead of the spline refresh interval.
+- ``Fixed`` Bug where RROx would freeze after building new splines.
+
+Note: The new spline system is implemented very differently than the old one. Some artifacts may appear on the map when building new splines or deleting old ones.
+
 ### v1.1.0 - 13-11-2022
 
 **Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**
 
-- `Added` Support for new spline system.
+- ``Added`` Support for new spline system.
 
 Note: The new spline system is implemented very differently than the old one. Some artifacts may appear on the map when building new splines or deleting old ones.
 
