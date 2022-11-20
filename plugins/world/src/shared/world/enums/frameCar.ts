@@ -24,6 +24,10 @@ export enum FrameCarType {
     GLENBROOK_TENDER = 'glenbrook_tender',
 	SHAY = 'shay',
 	BALDWIN622D = '622D',
+    MOSCA = 'mosca',
+    MOSCA_TENDER = 'mosca_tender',
+
+    UNKNOWN = 'unknown',
 }
 
 export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | FrameCarType.HANDCAR | FrameCarType.EUREKA |

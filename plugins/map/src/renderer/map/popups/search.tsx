@@ -19,7 +19,7 @@ export function SearchPopup( { visible, setVisible, data }: {
         title: string,
         desc: string,
         type: 'engine' | 'tender' | 'freight' | 'player',
-        image?: string,
+        image?: string | null,
     }[] = [];
 
     data.frameCars.forEach( ( frame, i ) => {

@@ -57,7 +57,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     visible={tooltipVisible && mode !== MapMode.MINIMAP}
                     setVisible={setTooltipVisible}
                 >
-                    <img className='dark-mode-invert' src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon" />
+                    {definition.image && <img className='dark-mode-invert' src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon" />}
                     <Button onClick={() => {
                         setTooltipVisible( false );
                         setControlsVisible( true );
@@ -121,7 +121,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
             visible={tooltipVisible && mode !== MapMode.MINIMAP}
             setVisible={setTooltipVisible}
         >
-            <img className='dark-mode-invert' src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon"/>
+            {definition.image && <img className='dark-mode-invert' src={definition.image} width={100} height={100} style={{ margin: '-10px auto 20px auto' }} alt="Tooltip Icon"/>}
             <Button onClick={() => {
                 setTooltipVisible( false );
                 setControlsVisible( true );

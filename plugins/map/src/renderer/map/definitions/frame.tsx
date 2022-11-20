@@ -24,6 +24,8 @@ import Glenbrook from '../../images/cars/glenbrook.png';
 import GlenbrookTender from '../../images/cars/glenbrook_tender.png';
 import Shay from '../../images/cars/shay.png';
 import BALDWIN622D from '../../images/cars/baldwin622D.png';
+import Mosca from '../../images/cars/mosca.png';
+import MoscaTender from '../../images/cars/mosca_tender.png';
 
 import HandcarIcon from '../../images/carsIcon/handcar.png';
 import PorterIcon from '../../images/carsIcon/porter_040.png';
@@ -50,8 +52,10 @@ import GlenbrookIcon from '../../images/carsIcon/glenbrook.png';
 import GlenbrookTenderIcon from '../../images/carsIcon/glenbrook_tender.png';
 import ShayIcon from '../../images/carsIcon/shay.png';
 import BALDWIN622DIcon from '../../images/carsIcon/baldwin622D.png';
+import MoscaIcon from '../../images/carsIcon/mosca.png';
+import MoscaTenderIcon from '../../images/carsIcon/mosca_tender.png';
 
-export const FrameDefinitions: { [ key in FrameCarType ]: { image: string, imageIcon: string, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
+export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null, imageIcon: string | null, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
     [ FrameCarType.HANDCAR          ]: { image: Handcar        , imageIcon: HandcarIcon        , length: 360.2, engine: true , tender: false, freight: false, name: 'Handcar'            },
     [ FrameCarType.PORTER           ]: { image: Porter         , imageIcon: PorterIcon         , length: 331.2, engine: true , tender: false, freight: false, name: 'Porter'             },
     [ FrameCarType.PORTER2          ]: { image: Porter2        , imageIcon: Porter2Icon        , length: 401.4, engine: true , tender: false, freight: false, name: 'Porter 2'           },
@@ -70,11 +74,14 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string, image
     [ FrameCarType.TANKER           ]: { image: Tanker         , imageIcon: TankerIcon         , length: 725.6, engine: false, tender: false, freight: true , name: 'Tanker'             },
     [ FrameCarType.BOXCAR           ]: { image: Boxcar         , imageIcon: BoxcarIcon         , length: 762.8, engine: false, tender: false, freight: true , name: 'Boxcar'             },
     [ FrameCarType.CABOOSE          ]: { image: Caboose        , imageIcon: CabooseIcon        , length: 539.6, engine: false, tender: false, freight: false, name: 'Caboose'            },
-	[ FrameCarType.WAYCAR          ]: { image: Waycar        , imageIcon: WaycarIcon        , length: 530.6, engine: false, tender: false, freight: false, name: 'Waycar'            },
-	[ FrameCarType.MONTEZUMA           ]: { image: Montezuma         , imageIcon: MontezumaIcon         , length: 618.8, engine: true , tender: false, freight: false, name: 'Montezuma'             },
-    [ FrameCarType.MONTEZUMA_TENDER    ]: { image: MontezumaTender   , imageIcon: MontezumaTenderIcon   , length: 331.2, engine: false, tender: true , freight: false, name: 'Montezuma Tender'      },
-	[ FrameCarType.GLENBROOK           ]: { image: Glenbrook         , imageIcon: GlenbrookIcon         , length: 742.1, engine: true , tender: false, freight: false, name: 'Glenbrook'             },
-    [ FrameCarType.GLENBROOK_TENDER    ]: { image: GlenbrookTender   , imageIcon: GlenbrookTenderIcon   , length: 467.1, engine: false, tender: true , freight: false, name: 'Glenbrook Tender'      },
-    [ FrameCarType.SHAY           ]: { image: Shay         , imageIcon: ShayIcon         , length: 789.9, engine: true , tender: false, freight: false, name: 'Shay'             },
-    [ FrameCarType.BALDWIN622D           ]: { image: BALDWIN622D         , imageIcon: BALDWIN622DIcon         , length: 789.9, engine: true , tender: false, freight: false, name: 'Baldwin 6-22-D'             },
+	[ FrameCarType.WAYCAR           ]: { image: Waycar         , imageIcon: WaycarIcon         , length: 530.6, engine: false, tender: false, freight: false, name: 'Waycar'             },
+	[ FrameCarType.MONTEZUMA        ]: { image: Montezuma      , imageIcon: MontezumaIcon      , length: 618.8, engine: true , tender: false, freight: false, name: 'Montezuma'          },
+    [ FrameCarType.MONTEZUMA_TENDER ]: { image: MontezumaTender, imageIcon: MontezumaTenderIcon, length: 331.2, engine: false, tender: true , freight: false, name: 'Montezuma Tender'   },
+	[ FrameCarType.GLENBROOK        ]: { image: Glenbrook      , imageIcon: GlenbrookIcon      , length: 742.1, engine: true , tender: false, freight: false, name: 'Glenbrook'          },
+    [ FrameCarType.GLENBROOK_TENDER ]: { image: GlenbrookTender, imageIcon: GlenbrookTenderIcon, length: 467.1, engine: false, tender: true , freight: false, name: 'Glenbrook Tender'   },
+    [ FrameCarType.SHAY             ]: { image: Shay           , imageIcon: ShayIcon           , length: 789.9, engine: true , tender: false, freight: false, name: 'Shay'               },
+    [ FrameCarType.BALDWIN622D      ]: { image: BALDWIN622D    , imageIcon: BALDWIN622DIcon    , length: 789.9, engine: true , tender: false, freight: false, name: 'Baldwin 6-22-D'     },
+    [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: Mosca              , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
+    [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTender        , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
+    [ FrameCarType.UNKNOWN          ]: { image: null           , imageIcon: null               , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'            },
 };
