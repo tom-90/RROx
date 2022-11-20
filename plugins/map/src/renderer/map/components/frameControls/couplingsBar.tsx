@@ -24,7 +24,7 @@ export function CouplingsBar( {
                     backgroundColor: index === selectedIndex ? '#999' :
                         ( !isCoupled ? '#ff8383' : undefined )
                 }}
-                src={definition.imageIcon}
+                src={definition.imageIcon ?? undefined}
                 onClick={() => setSelectedIndex( index )}
                 key={i}
                 alt="Coupling Bar Icon"

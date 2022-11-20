@@ -30,7 +30,7 @@ export class WorldParser {
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         return {
-            type: frameCar.FrameType as FrameCarType,
+            type: Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType) ? frameCar.FrameType as FrameCarType : FrameCarType.UNKNOWN,
             name: frameCar.framename,
             number: frameCar.FrameNumber,
             location: this.parseActorLocation( frameCar ),

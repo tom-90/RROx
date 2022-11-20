@@ -21,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.2 - 20-11-2022
+
+- ``Added`` Support for Mosca
+- ``Fixed`` Crashes when RROx encounters unknown locomotives. It will now display them as unkown on the map.
+
 ### v1.1.1 - 19-11-2022
 
 **Important: This version of the plugin requires the RROx desktop app version 2.2.0 or higher.**
