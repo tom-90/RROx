@@ -16,4 +16,6 @@ export const SplineDefinitions: { [ key in SplineType ]: {
     [ SplineType.CONSTANT_WALL ]: { width: 1000, height: 1000 },
 
     [ SplineType.IRON_BRIDGE   ]: { width: 1500, height: 2700 },
+
+    [ SplineType.BUMPER        ]: { width: 400 , height: 30 },
 };

@@ -10,12 +10,14 @@ import Refinery from '../../images/industries/Refinery.svg';
 import Ironworks from '../../images/industries/Ironworks.svg';
 import OilField from '../../images/industries/Oil Field.svg';
 
-export const IndustryDefinitions: { [ key in IndustryType ]: {
+export type IndustryDefinition = {
     name: string,
     image?: string,
     points: [ [ number, number ], [ number, number ], [ number, number ] ] | [ [ number, number ], [ number, number ] ],
     fillColor?: string,
-} } = {
+};
+
+export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition } = {
     [ IndustryType.LOGGING_CAMP ]: {
         name: 'Logging Camp',
         image: LoggingCamp,
@@ -85,5 +87,10 @@ export const IndustryDefinitions: { [ key in IndustryType ]: {
         name: 'Engine Shed',
         points: [ [ -500, 0 ], [ 500, 2000 ] ],
         fillColor: '#ff5959',
+    },
+    [ IndustryType.TELEGRAPH_OFFICE ]: {
+        name: 'Telegraph Office',
+        points: [ [ -150, -200 ], [ 150, 200 ] ],
+        fillColor: '#6e0810',
     },
 };

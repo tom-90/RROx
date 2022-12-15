@@ -158,6 +158,7 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                     [ SplineType.CONSTANT_WALL ]: { type: 'string', default: '#a9a9a9' },
                     [ SplineType.WOODEN_BRIDGE ]: { type: 'string', default: '#ffa500' },
                     [ SplineType.IRON_BRIDGE   ]: { type: 'string', default: '#add8e6' },
+                    [ SplineType.BUMPER        ]: { type: 'string', default: '#e6020e' },
                 },
                 default: {}
             },

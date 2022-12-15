@@ -3,7 +3,7 @@ import React, { useContext, useMemo } from 'react';
 import { MapContext } from '../context';
 import { SplineTracks } from './splineTracks';
 
-export const SplineTrackCross90 = React.memo( function Switch( { data }: { data: ISplineTrack } ) {
+export const SplineTrackCross = React.memo( function Switch( { data, degrees }: { data: ISplineTrack, degrees: number } ) {
     const { utils } = useContext( MapContext )!;
 
     const track2 = useMemo<ISplineTrack>(() => {
@@ -15,7 +15,7 @@ export const SplineTrackCross90 = React.memo( function Switch( { data }: { data:
             centerY,
             data.location.X,
             data.location.Y,
-            90
+            degrees
         );
 
         const [ endX, endY ] = utils.rotate(
@@ -23,7 +23,7 @@ export const SplineTrackCross90 = React.memo( function Switch( { data }: { data:
             centerY,
             data.locationEnd.X,
             data.locationEnd.Y,
-            90
+            degrees
         );
 
         return {

@@ -58,10 +58,13 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
-### v1.1.3 - 13-12-2022
+### v1.1.3 - 15-12-2022
 
 - ``Fixed`` Support for Mosca RROx Engine Controls Sync. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Fixed`` Mosca Icon using full/named Mosca RROx Image instead of the RROx Icon Image version (without the name). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Added`` 45 degree cross and bumper splines.
+- ``Added`` Telegraph office.
+- ``Fixed`` Issue where RROx would crash when new industries/buildings are added. They will now be displayed as 'Unknown' on the map.
 
 ### v1.1.2 - 20-11-2022
 

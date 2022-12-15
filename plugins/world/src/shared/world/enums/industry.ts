@@ -13,4 +13,5 @@ export enum IndustryType {
     ENGINE_SHED_GOLD = 12,
     ENGINE_SHED_RED = 13,
     ENGINE_SHED_BROWN = 14,
+    TELEGRAPH_OFFICE = 16,
 }
