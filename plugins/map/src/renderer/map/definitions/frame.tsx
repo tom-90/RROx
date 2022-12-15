@@ -81,7 +81,7 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
     [ FrameCarType.GLENBROOK_TENDER ]: { image: GlenbrookTender, imageIcon: GlenbrookTenderIcon, length: 467.1, engine: false, tender: true , freight: false, name: 'Glenbrook Tender'   },
     [ FrameCarType.SHAY             ]: { image: Shay           , imageIcon: ShayIcon           , length: 789.9, engine: true , tender: false, freight: false, name: 'Shay'               },
     [ FrameCarType.BALDWIN622D      ]: { image: BALDWIN622D    , imageIcon: BALDWIN622DIcon    , length: 789.9, engine: true , tender: false, freight: false, name: 'Baldwin 6-22-D'     },
-    [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: Mosca              , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
-    [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTender        , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
+    [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: MoscaIcon              , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
+    [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTenderIcon        , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
     [ FrameCarType.UNKNOWN          ]: { image: null           , imageIcon: null               , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'            },
 };

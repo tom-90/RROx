@@ -58,6 +58,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.3 - 13-12-2022
+
+- ``Fixed`` Support for Mosca RROx Engine Controls Sync. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Mosca Icon using full/named Mosca RROx Image instead of the RROx Icon Image version (without the name). (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.2 - 20-11-2022
 
 - ``Added`` Support for Mosca

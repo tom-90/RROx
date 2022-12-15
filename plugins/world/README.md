@@ -21,6 +21,10 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.3 - 13-12-2022
+
+- ``Fixed`` Controls Sync Support for Mosca. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.2 - 20-11-2022
 
 - ``Added`` Support for Mosca
