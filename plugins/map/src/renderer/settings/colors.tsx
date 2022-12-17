@@ -452,6 +452,16 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
                         <tr>
+                            <td>Bumper</td>
+                            <td><Form.Item name={[ 'colors', 'spline', SplineType.BUMPER.toString() ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.spline.${SplineType.BUMPER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+                        <tr>
                             <td>Player</td>
                             <td><Form.Item name={[ 'colors', 'player' ]}><input type='color' /></Form.Item></td>
                             <td><Button

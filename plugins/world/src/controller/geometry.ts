@@ -67,6 +67,8 @@ export class Geometry {
             [ SplineType.CONSTANT_WALL ]: 500,
 
             [ SplineType.IRON_BRIDGE   ]: 750,
+            
+            [ SplineType.BUMPER        ]: 150,
         };
 
         for( let spline of splines )

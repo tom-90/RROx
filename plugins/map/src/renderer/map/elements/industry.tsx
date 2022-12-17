@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MapContext } from '../context';
-import { IndustryDefinitions } from '../definitions';
+import { IndustryDefinition, IndustryDefinitions } from '../definitions';
 import { Image, Shape, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
@@ -10,15 +10,17 @@ import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
 
 export const Industry = React.memo( function Industry( { data, index }: { data: IIndustry, index: number } ) {
-    const { utils, mode, settings, currentPlayerName } = useContext( MapContext )!;
+    const { utils, mode } = useContext( MapContext )!;
     const [ infoVisible, setInfoVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
     
     const { type, location, rotation, products, educts } = data;
 
-    const teleport = useRPC( TeleportCommunicator );
-
-    const definition = IndustryDefinitions[ type ];
+    const definition = ( IndustryDefinitions[ type ] as IndustryDefinition | undefined ) ?? {
+        name: 'Unknown',
+        points: [ [ -500, 0 ], [ 500, 500 ] ],
+        fillColor: '#666',
+    };
 
     const popupElements = usePopupElements( { industry: data, index } );
 

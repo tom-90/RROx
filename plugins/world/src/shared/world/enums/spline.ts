@@ -11,6 +11,8 @@ export enum SplineType {
     CONSTANT_WALL = 6,
 
     IRON_BRIDGE   = 7,
+
+    BUMPER        = 8,
 }
 
 export enum SplineTrackType {
@@ -27,6 +29,7 @@ export enum SplineTrackType {
 
     // Switches/crossings
     CROSS90_3FT = 'CROSS90_3FT',
+    CROSS45_3FT = 'CROSS45_3FT',
     SWITCH_BALLAST_3FT_LEFT = 'SWITCH_BALLAST_3FT_LEFT',
     SWITCH_BALLAST_3FT_LEFT_MIRROR = 'SWITCH_BALLAST_3FT_LEFT_MIRROR',
     SWITCH_BALLAST_3FT_RIGHT = 'SWITCH_BALLAST_3FT_RIGHT',
@@ -52,4 +55,7 @@ export enum SplineTrackType {
 
     // Unknown (probably game internal)
     DRIVETRACK = 'DRIVETRACK',
+
+    // Other
+    BUMPER = 'BUMPER',
 }
