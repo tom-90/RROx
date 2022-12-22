@@ -58,6 +58,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.4 - 22-12-2022
+
+- ``Enhancement`` Added support for Cooke Consolidation as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Plow as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.3 - 15-12-2022
 
 - ``Fixed`` Support for Mosca RROx Engine Controls Sync. (Thanks to [Mordred](https://github.com/mordred-random))

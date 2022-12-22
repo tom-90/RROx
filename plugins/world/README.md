@@ -21,6 +21,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.4 - 22-12-2022
+
+- ``Enhancement`` Added support for Cooke Consolidation as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Plow as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.3 - 15-12-2022
 
 - ``Fixed`` Controls Sync Support for Mosca. (Thanks to [Mordred](https://github.com/mordred-random))
