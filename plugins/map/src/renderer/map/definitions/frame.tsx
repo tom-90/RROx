@@ -26,6 +26,9 @@ import Shay from '../../images/cars/shay.png';
 import BALDWIN622D from '../../images/cars/baldwin622D.png';
 import Mosca from '../../images/cars/mosca.png';
 import MoscaTender from '../../images/cars/mosca_tender.png';
+import Cooke280 from '../../images/cars/cooke280.png';
+import Cooke280Tender from '../../images/cars/cooke280_tender.png';
+import Plow from '../../images/cars/plow.png';
 
 import HandcarIcon from '../../images/carsIcon/handcar.png';
 import PorterIcon from '../../images/carsIcon/porter_040.png';
@@ -54,6 +57,9 @@ import ShayIcon from '../../images/carsIcon/shay.png';
 import BALDWIN622DIcon from '../../images/carsIcon/baldwin622D.png';
 import MoscaIcon from '../../images/carsIcon/mosca.png';
 import MoscaTenderIcon from '../../images/carsIcon/mosca_tender.png';
+import Cooke280Icon from '../../images/carsIcon/cooke260.png';
+import Cooke280TenderIcon from '../../images/carsIcon/cooke260_tender.png';
+import PlowIcon from '../../images/carsIcon/plow.png';
 
 export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null, imageIcon: string | null, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
     [ FrameCarType.HANDCAR          ]: { image: Handcar        , imageIcon: HandcarIcon        , length: 360.2, engine: true , tender: false, freight: false, name: 'Handcar'            },
@@ -83,5 +89,8 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
     [ FrameCarType.BALDWIN622D      ]: { image: BALDWIN622D    , imageIcon: BALDWIN622DIcon    , length: 789.9, engine: true , tender: false, freight: false, name: 'Baldwin 6-22-D'     },
     [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: MoscaIcon              , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
     [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTenderIcon        , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
+	[ FrameCarType.COOKE280            ]: { image: Cooke280          , imageIcon: Cooke280Icon              , length: 787.8, engine: true , tender: false, freight: false, name: 'Cooke Consolidation'              },
+    [ FrameCarType.COOKE280_TENDER  ]: { image: Cooke280Tender , imageIcon: Cooke280TenderIcon , length: 581.7, engine: false, tender: true , freight: false, name: 'Cooke Consolidation Tender' },
+	[ FrameCarType.PLOW           ]: { image: Plow         , imageIcon: PlowIcon         , length: 530.6, engine: false, tender: false, freight: false, name: 'Plow'             },
     [ FrameCarType.UNKNOWN          ]: { image: null           , imageIcon: null               , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'            },
 };

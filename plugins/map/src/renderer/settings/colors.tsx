@@ -22,6 +22,8 @@ import Glenbrook from '../images/cars/glenbrook.png';
 import Shay from '../images/cars/shay.png';
 import BALDWIN622D from '../images/cars/baldwin622D.png';
 import Mosca from '../images/cars/mosca.png';
+import Cooke280 from '../images/cars/cooke280.png';
+import Plow from '../images/cars/plow.png';
 import { MapPreferences } from "../../shared";
 import { useSettings } from "@rrox/api";
 import { FrameCarType, SplineType } from "@rrox-plugins/world/shared";
@@ -207,6 +209,17 @@ export function ColorSettings() {
                             ><ReloadOutlined /></Button></td>
                         </tr>
 						<tr>
+                            <td><img className='dark-mode-invert' src={Cooke280} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.COOKE280 ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.COOKE280_TENDER ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.COOKE280}`, `colors.${FrameCarType.COOKE280_TENDER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
                             <td><img className='dark-mode-invert' src={Class70} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.CLASS70 ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.CLASS70_TENDER ]}><input type='color' /></Form.Item></td>
@@ -314,6 +327,17 @@ export function ColorSettings() {
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.WAYCAR}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plow} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLOW ]}><input type='color' /></Form.Item></td>
+                            <td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLOW}` )}
                                 title='Reset to default value'
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
