@@ -10,6 +10,8 @@ import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
+import { Acrane } from "./structs/arr/crane";
+import { Achute } from "./structs/arr/chute";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
 import { Awatertower } from "./structs/arr/watertower";
@@ -184,7 +186,10 @@ export class World {
             ].map( ( storage ) => [
                 storage.currentamountitems,
                 storage.maxitems,
-                storage.storagetype
+                storage.storagetype,
+				storage.Mycrane1,
+				storage.Mycrane2,
+				storage.Mycrane3
             ] ).flat(),
         ];
 
@@ -763,6 +768,127 @@ export class World {
             }
         }
     }
+	
+	
+	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number, loadFullCar: boolean) {
+		if( !this.settings.get( 'features.controlCranes' ) )
+            return;
+
+		if (industryInstance instanceof Aindustry) {
+			const character = await this.getCharacter();
+			if( !character )
+				return Log.warn( `Cannot use crane as no character could be found.` );
+			
+			var storageInstance = this.getIndustryStorage(industryInstance, storageOutputIndex);
+			if (storageInstance instanceof Astorage) {
+				var craneInstance = this.getStorageCrane(storageInstance, craneNumber);
+				if (craneInstance instanceof Acrane) {
+
+					if (loadFullCar == false){
+						await character.ServerUseCrane( craneInstance );
+					}
+					else {
+						let loadCount = this.getFreightCountForFullCar(storageInstance.storagetype);
+						const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+						for (let count = 0; count < loadCount; count++){
+							await character.ServerUseCrane( craneInstance );
+							
+							await sleep(15000); // sleep/wait for 15 seconds
+						}
+					}
+				}
+				else {
+					Log.warn('Cannot use crane as craneInstance is invalid.');
+				}
+			}
+			else {
+				Log.warn('Cannot use crane as storageInstance is invalid.');
+			}
+		}
+    }
+	
+	private getIndustryStorage(industryInstance: Aindustry, storageOutputIndex: number) {
+		if (industryInstance instanceof Aindustry) {			
+			let storageInstance: Astorage;
+			
+			switch( storageOutputIndex ) {
+				case 0:
+					storageInstance = industryInstance.mystorageproducts1;
+					return storageInstance;
+				case 1:
+					storageInstance = industryInstance.mystorageproducts2;
+					return storageInstance;
+				case 2:
+					storageInstance = industryInstance.mystorageproducts3;
+					return storageInstance;
+				case 3:
+					storageInstance = industryInstance.mystorageproducts4;
+					return storageInstance;
+				default:
+					Log.warn( `Cannot get StorageInstance as the storageIndex is out of bounds.` );
+					return undefined;
+			}
+		}
+		else {
+			return undefined;
+		}
+	}
+
+	private getStorageCrane(storageInstance: Astorage, craneNumber: number) {
+		if (storageInstance instanceof Astorage) {			
+			let craneInstance: Acrane;
+			
+			switch( craneNumber ) {
+				case 1:
+					craneInstance = storageInstance.Mycrane1;
+					return craneInstance;
+				case 2:
+					craneInstance = storageInstance.Mycrane2;
+					return craneInstance;
+				case 3:
+					craneInstance = storageInstance.Mycrane3;
+					return craneInstance;
+				default:
+					Log.warn( `Cannot get CraneInstance as the craneNumber is out of bounds.`);
+					return undefined;
+			}
+		}
+		else {
+			return undefined;
+		}
+	}
+
+	public getFreightCountForFullCar ( cargoType: string) {
+		switch( cargoType ) {
+			case 'log':
+				return 6;
+			case 'cordwood':
+				return 8;
+			case 'lumber':
+				return 6;
+			case 'beam':
+				return 3;	
+			case 'rawiron':
+				return 3;
+			case 'rail':
+				return 10;
+			case 'steelpipe':
+				return 9;
+			case 'crate_tools':
+				return 32;
+			case 'ironore':
+				return 10;
+			case 'coal':
+				return 10;
+			case 'crudeoil':
+				return 10;
+			case 'oilbarrel':
+				return 46;
+			default:
+				return 1;
+		}
+	}
 
     private isSwitch(track: ASplineTrack) {
         return [

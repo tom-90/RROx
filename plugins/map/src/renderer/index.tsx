@@ -1,7 +1,7 @@
 import { ContextRegistration, IPluginRenderer, MenuButtonRegistration, OverlayRegistration, Renderer, RendererMode, RouterRegistration, SettingsRegistration } from "@rrox/api";
 import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import React from "react";
-import { GlobalOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { GlobalOutlined, UnorderedListOutlined, TeamOutlined} from "@ant-design/icons";
 import { Router } from "./router";
 import { ColorSettings, MapSettings, MinimapSettings } from "./settings";
 import { MapOverlay, registerDefaultMapElements } from "./map";
@@ -18,6 +18,11 @@ export default class MapRenderer extends Renderer {
         renderer.register( MenuButtonRegistration, 'Rolling Stock', {
             linkTo: 'controls',
             icon  : <UnorderedListOutlined />
+        } );
+
+		renderer.register( MenuButtonRegistration, 'Player List', {
+            linkTo: 'players',
+            icon  : <TeamOutlined />
         } );
 
         renderer.register( SettingsRegistration, {

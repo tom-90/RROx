@@ -18,8 +18,13 @@ The world loader provides a number of features that can be turned on or off depe
 - **Control Switches**: Enable/disable the ability to remotely control switches.
 - **Teleport**: Enable/disable the ability for a player teleport anywhere on the map.
 - **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.
+- **Control Cranes**: Enable/disable the ability to remotely cranes.
 
 ## Changelog
+
+### v1.1.5 - 29-01-2023
+
+- ``Enhancement`` Added support for Remotely Controlling Cranes. (Thanks to [Mordred](https://github.com/mordred-random)). With Additional big thanks to _Tom() for the UI Assistance and refinement around this feature.
 
 ### v1.1.4 - 22-12-2022
 

@@ -59,6 +59,7 @@ export const WaterTower = React.memo( function WaterTower( { data, index }: { da
                 }}>Show Info</Button>
                 <StorageInfo
                     title={'Water Tower'}
+					parentIndex={index}
                     storages={{
                         'Water Level': [ waterStorage ],
                     }}

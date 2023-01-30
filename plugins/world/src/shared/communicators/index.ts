@@ -4,3 +4,4 @@ export * from './controlsSync';
 export * from './switch';
 export * from './teleport';
 export * from './world';
+export * from './storage';

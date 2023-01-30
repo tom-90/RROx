@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
-import { CompressOutlined, ExpandOutlined, ControlOutlined } from "@ant-design/icons";
+import { CompressOutlined, ExpandOutlined, ControlOutlined, AimOutlined } from "@ant-design/icons";
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { MapContext } from '../context';
 import { FrameControls } from '../components';
@@ -33,6 +33,19 @@ export function FrameControlsPopup( {
 
     const definition = FrameDefinitions[ data.type ];
     const isEngine = definition.engine;
+	
+	
+	const locate = ( index: number ) => {
+        navigate( '/@rrox-plugins/map/map', {
+            state: {
+                locate: {
+                    type : 'frameCars',
+                    index: index,
+                }
+            }
+        } );
+    }
+	
 
     return <DraggableModal
         title={<>
@@ -53,6 +66,13 @@ export function FrameControlsPopup( {
             >
                 <ControlOutlined />
             </Button>}
+			{mode === MapMode.NORMAL && <Button
+                type='text'
+                style={{ marginLeft: 10, padding: 5 }}
+				title="Locate on the map"
+				onClick={() => locate( index )}
+                icon={<AimOutlined />}
+            />}
         </>}
         visible={isVisible}
         className={[ className || '', 'frame-controls-modal' ].join( ' ' )}

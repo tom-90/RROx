@@ -150,6 +150,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
         />
         <StorageInfo
             title={frameTitle}
+			parentIndex={index}
             className={mode === MapMode.MINIMAP ? 'modal-hidden' : undefined}
             storages={{
                 Freight: freight ? [ freight ] : []

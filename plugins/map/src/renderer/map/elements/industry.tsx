@@ -35,6 +35,7 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         }}>Show Info</Button>}
         <StorageInfo
             title={definition.name}
+			parentIndex={index}
             storages={{
                 Input: educts,
                 Output: products

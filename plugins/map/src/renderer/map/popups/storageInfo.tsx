@@ -1,11 +1,15 @@
 import React from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
+import { Button } from 'antd';
 import { ProductDefinitions } from '../definitions';
 import { IStorage, ProductType } from '@rrox-plugins/world/shared';
+import { storageUseCrane } from '@rrox-plugins/world/shared';
+import { useRPC } from '@rrox/api';
 
 export function StorageInfo( {
     className,
     title,
+	parentIndex,
     storages,
     isVisible,
     onClose,
@@ -13,11 +17,15 @@ export function StorageInfo( {
 }: {
     className?: string,
     title: string,
+	parentIndex: number,
     storages: { [ category: string ]: IStorage[] },
     isVisible: boolean,
     onClose: () => void,
     height?: number
 } ) {
+
+	const currentUseCrane = useRPC( storageUseCrane );
+
     return <DraggableModal
         className={className}
         title={title}
@@ -52,7 +60,15 @@ export function StorageInfo( {
                     </tr>}
                     <tr>
                         {storages[ storage ].map( ( { currentAmount, maxAmount, type }, i: number ) => <React.Fragment key={i.toString()}>
-                            <td style={{
+                            <table style={{
+								width: '100%',
+								marginBottom: 20
+							}}>
+							
+							<tbody>
+							<tr>
+							
+							<td style={{
                                 textAlign: 'right',
                                 width: Math.round( 50 / storages[ storage ].length ) + '%',
                                 paddingRight: 5,
@@ -68,8 +84,57 @@ export function StorageInfo( {
                                     style={{ display: 'block', marginLeft: ProductDefinitions[ item ]?.offset ? ProductDefinitions[ item ].offset : 0 }}
                                 />)}
                             </td>
+							
+							</tr>
+							<tr>
+							
+							<td style={{
+                                textAlign: 'right',
+                                width: Math.round( 50 / storages[ storage ].length / 6 ) + '%',
+                                paddingRight: 5,
+                            }}>
+								<Button onClick={() => {
+									currentUseCrane (parentIndex, i, 1, false);
+								}}>
+								"Crane 1"
+								</Button>
+							</td>
+							<td style={{ width: Math.round( 50 / storages[ storage ].length / 6 ) + '%' }}>
+								<Button onClick={() => {
+									currentUseCrane (parentIndex, i, 1, true);
+								}}>
+								"Crane 1 All"
+								</Button>
+							</td>
+							<td style={{
+                                textAlign: 'right',
+                                width: Math.round( 50 / storages[ storage ].length / 6 ) + '%',
+                                paddingRight: 5,
+                            }}>
+								<Button onClick={() => {
+									currentUseCrane (parentIndex, i, 2, false);
+								}}>
+								"Crane 2"
+								</Button>
+							</td>
+							<td style={{ width: Math.round( 50 / storages[ storage ].length / 6 ) + '%' }}>
+								<Button onClick={() => {
+									currentUseCrane (parentIndex, i, 2, true);
+								}}>
+								"Crane 2 All"
+								</Button>
+							</td>
+							
+							</tr>
+							
+							</tbody>
+							</table>
+							
                         </React.Fragment>)}
                     </tr>
+                   
+
+				   
                 </tbody>
             </table>
         ) }

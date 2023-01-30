@@ -8,6 +8,8 @@ import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
+import { Acrane } from "./structs/arr/crane";
+import { Achute } from "./structs/arr/chute";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
 import { Awatertower } from "./structs/arr/watertower";
@@ -233,6 +235,15 @@ export class WorldParser {
             currentAmount: storage.currentamountitems,
             maxAmount: storage.maxitems,
             type: storage.storagetype as ProductType,
+			crane1: storage.Mycrane1 ? {
+				type: storage.Mycrane1.freighttype as ProductType,
+            } : undefined,
+			crane2: storage.Mycrane2 ? {
+				type: storage.Mycrane2.freighttype as ProductType,
+            } : undefined,
+			crane3: storage.Mycrane3 ? {
+                type: storage.Mycrane3.freighttype as ProductType,
+            } : undefined,
         }
     }
 
