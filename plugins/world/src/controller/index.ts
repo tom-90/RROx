@@ -117,7 +117,7 @@ export default class WorldPlugin extends Controller {
                 this.controlsSync.removeEngine( frameCar );
         } );
 
-		controller.communicator.handle( storageUseCrane, async ( industryIndex, storageOutputIndex, craneNumber, loadFullCar ) => {
+		controller.communicator.handle( storageUseCrane, async ( industryIndex, storageOutputIndex, craneNumber ) => {
 			let industryInstance: Aindustry | undefined;
             industryInstance = this.world.data.industries[ industryIndex ];
 			
@@ -133,7 +133,7 @@ export default class WorldPlugin extends Controller {
 				return Log.warn( `Cannot use crane as the craneNumber is out of bounds.` );
 			
 			
-			await this.world.useCrane( industryInstance, storageOutputIndex, craneNumber, loadFullCar );			
+			await this.world.useCrane( industryInstance, storageOutputIndex, craneNumber );			
         } );
 
     }

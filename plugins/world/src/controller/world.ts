@@ -770,7 +770,7 @@ export class World {
     }
 	
 	
-	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number, loadFullCar: boolean) {
+	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number) {
 		if( !this.settings.get( 'features.controlCranes' ) )
             return;
 
@@ -783,20 +783,7 @@ export class World {
 			if (storageInstance instanceof Astorage) {
 				var craneInstance = this.getStorageCrane(storageInstance, craneNumber);
 				if (craneInstance instanceof Acrane) {
-
-					if (loadFullCar == false){
-						await character.ServerUseCrane( craneInstance );
-					}
-					else {
-						let loadCount = this.getFreightCountForFullCar(storageInstance.storagetype);
-						const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
-						for (let count = 0; count < loadCount; count++){
-							await character.ServerUseCrane( craneInstance );
-							
-							await sleep(15000); // sleep/wait for 15 seconds
-						}
-					}
+					await character.ServerUseCrane( craneInstance );
 				}
 				else {
 					Log.warn('Cannot use crane as craneInstance is invalid.');
@@ -856,37 +843,6 @@ export class World {
 		}
 		else {
 			return undefined;
-		}
-	}
-
-	public getFreightCountForFullCar ( cargoType: string) {
-		switch( cargoType ) {
-			case 'log':
-				return 6;
-			case 'cordwood':
-				return 8;
-			case 'lumber':
-				return 6;
-			case 'beam':
-				return 3;	
-			case 'rawiron':
-				return 3;
-			case 'rail':
-				return 10;
-			case 'steelpipe':
-				return 9;
-			case 'crate_tools':
-				return 32;
-			case 'ironore':
-				return 10;
-			case 'coal':
-				return 10;
-			case 'crudeoil':
-				return 10;
-			case 'oilbarrel':
-				return 46;
-			default:
-				return 1;
 		}
 	}
 

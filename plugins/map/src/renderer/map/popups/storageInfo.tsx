@@ -94,37 +94,19 @@ export function StorageInfo( {
                                 paddingRight: 5,
                             }}>
 								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 1, false);
+									currentUseCrane (parentIndex, i, 1);
 								}}>
 								"Crane 1"
 								</Button>
 							</td>
 							<td style={{ width: Math.round( 50 / storages[ storage ].length / 6 ) + '%' }}>
 								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 1, true);
-								}}>
-								"Crane 1 All"
-								</Button>
-							</td>
-							<td style={{
-                                textAlign: 'right',
-                                width: Math.round( 50 / storages[ storage ].length / 6 ) + '%',
-                                paddingRight: 5,
-                            }}>
-								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 2, false);
+									currentUseCrane (parentIndex, i, 2);
 								}}>
 								"Crane 2"
 								</Button>
 							</td>
-							<td style={{ width: Math.round( 50 / storages[ storage ].length / 6 ) + '%' }}>
-								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 2, true);
-								}}>
-								"Crane 2 All"
-								</Button>
-							</td>
-							
+														
 							</tr>
 							
 							</tbody>

@@ -5,6 +5,7 @@ import { MapContext } from '../context';
 import { AimOutlined, ControlOutlined } from '@ant-design/icons';
 import { IWorld } from "@rrox-plugins/world/shared";
 import { FrameDefinitions } from "../definitions";
+import PlayerImage from '../../images/players/player.png';
 
 export function SearchPopup( { visible, setVisible, data }: {
     visible: boolean,
@@ -56,7 +57,8 @@ export function SearchPopup( { visible, setVisible, data }: {
             index: i,
             title: player.name,
             desc: 'Player',
-            type: 'player'
+            type: 'player',
+			image: PlayerImage,
         } );
     } );
 
@@ -114,7 +116,7 @@ export function SearchPopup( { visible, setVisible, data }: {
                 return (
                     <List.Item actions={buttons}>
                         <List.Item.Meta
-                            avatar={<Avatar shape='square' src={item.image} size={100} style={{ marginTop: -35, opacity: item.image != null ? 1 : 0 }} />}
+                            avatar={<Avatar shape='square' src={item.image} size={100} style={{ marginTop: -25, opacity: item.image != null ? 1 : 0 }} />}
                             title={item.title}
                             description={item.desc}
                         />
