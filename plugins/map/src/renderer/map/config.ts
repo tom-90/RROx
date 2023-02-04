@@ -21,6 +21,7 @@ const MapOptions = {
 const Utils = {
     scalePoint   : ( x: number, y: number ): [ Y: number, X: number ] => [ y / scale, -1 * x / scale ],
     scaleLocation: ( location: ILocation ): [ Y: number, X: number ] => [ location.Y / scale, -1 * location.X / scale ],
+    addLocations: ( a: [ number, number ], b: [ number, number ] ): [ number, number ] => [ a[0] + b[0], a[1] + b[1] ],
     scaleNumber  : ( num: number ) => num / scale,
 
     revertScalePoint: ( lat: number, lng: number ): [ number, number ] => [ -1 * lng * scale, lat * scale ],

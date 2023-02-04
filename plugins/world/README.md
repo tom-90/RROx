@@ -22,9 +22,9 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
-### v1.1.5 - 29-01-2023
+### v1.1.5 - 04-02-2023
 
-- ``Enhancement`` Added support for Remotely Controlling Cranes. (Thanks to [Mordred](https://github.com/mordred-random)).
+- ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).
 
 ### v1.1.4 - 22-12-2022
 

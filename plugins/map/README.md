@@ -62,13 +62,14 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
-### v1.1.5 - 29-01-2023
+### v1.1.5 - 04-02-2023
 
-- ``Enhancement`` Added support for Remotely Controlling Cranes. (Thanks to [Mordred](https://github.com/mordred-random)). With Additional big thanks to _Tom() for the UI Assistance and refinement around this feature.
-- ``Enhancement`` Added Player List functionality to RROx. (Thanks to [Mordred](https://github.com/mordred-random))
-- ``Enhancement`` Added Player Image to existing RROx Map Search popup. (Thanks to [Mordred](https://github.com/mordred-random))
-- ``Enhancement`` Added support for Teleporting directly to Waycars (Similar to Engines & Cabooses). (Thanks to [Mordred](https://github.com/mordred-random))
-- ``Enhancement`` Added locate button on the Rolling Stock Controls Popup, when using the RROx normal/desktop view. (Note: This is not supported using the RROx Overlay Map). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).
+- ``Added`` Cranes now show up on the map and can be activated by clicking on them, or by using the information popup of the industry.
+- ``Added`` Player list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added player image to existing RROx Map Search popup. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Support for teleporting directly to waycars (Similar to Engines & Cabooses). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added locate button on the Rolling Stock Controls popup, when using the RROx normal/desktop view. (Note: This is not supported using the RROx Overlay Map). (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.4 - 22-12-2022
 

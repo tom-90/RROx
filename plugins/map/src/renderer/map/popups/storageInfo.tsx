@@ -24,7 +24,7 @@ export function StorageInfo( {
     height?: number
 } ) {
 
-	const currentUseCrane = useRPC( storageUseCrane );
+	const useCrane = useRPC( storageUseCrane );
 
     return <DraggableModal
         className={className}
@@ -59,64 +59,57 @@ export function StorageInfo( {
                         >{storage}</td>
                     </tr>}
                     <tr>
-                        {storages[ storage ].map( ( { currentAmount, maxAmount, type }, i: number ) => <React.Fragment key={i.toString()}>
+                        {storages[ storage ].map( ( { currentAmount, maxAmount, type, cranes }, storageIndex: number ) => <React.Fragment key={storageIndex.toString()}>
                             <table style={{
 								width: '100%',
 								marginBottom: 20
 							}}>
-							
-							<tbody>
-							<tr>
-							
-							<td style={{
-                                textAlign: 'right',
-                                width: Math.round( 50 / storages[ storage ].length ) + '%',
-                                paddingRight: 5,
-                            }}>
-                                {currentAmount} / {maxAmount}
-                            </td>
-                            <td style={{ width: Math.round( 50 / storages[ storage ].length ) + '%' }}>
-                                {type.split( ' ' ).map( ( item: ProductType, i: number ) => <img
-                                    className="dark-mode-invert"
-                                    src={ProductDefinitions[ item ]?.image}
-                                    height={50}
-                                    key={i.toString()}
-                                    style={{ display: 'block', marginLeft: ProductDefinitions[ item ]?.offset ? ProductDefinitions[ item ].offset : 0 }}
-                                />)}
-                            </td>
-							
-							</tr>
-							<tr>
-							
-							<td style={{
-                                textAlign: 'right',
-                                width: Math.round( 50 / storages[ storage ].length / 6 ) + '%',
-                                paddingRight: 5,
-                            }}>
-								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 1);
-								}}>
-								"Crane 1"
-								</Button>
-							</td>
-							<td style={{ width: Math.round( 50 / storages[ storage ].length / 6 ) + '%' }}>
-								<Button onClick={() => {
-									currentUseCrane (parentIndex, i, 2);
-								}}>
-								"Crane 2"
-								</Button>
-							</td>
-														
-							</tr>
-							
-							</tbody>
-							</table>
-							
+                                <tbody>
+                                    <tr>
+                                        <td style={{
+                                            textAlign: 'right',
+                                            width: Math.round( 50 / storages[ storage ].length ) + '%',
+                                            paddingRight: 5,
+                                        }}>
+                                            {currentAmount} / {maxAmount}
+                                        </td>
+                                        <td style={{ width: Math.round( 50 / storages[ storage ].length ) + '%' }}>
+                                            {type.split( ' ' ).map( ( item: ProductType, i: number ) => <img
+                                                className="dark-mode-invert"
+                                                src={ProductDefinitions[ item ]?.image}
+                                                height={50}
+                                                key={i.toString()}
+                                                style={{ display: 'block', marginLeft: ProductDefinitions[ item ]?.offset ? ProductDefinitions[ item ].offset : 0 }}
+                                            />)}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {cranes.length > 0 &&
+                                <table style={{
+                                    width: '100%',
+                                    marginBottom: 20
+                                }}>
+                                    <tbody>
+                                        <tr>
+                                            {cranes.map((c) => <td style={{
+                                                textAlign: 'center',
+                                                width: Math.round( 50 / storages[ storage ].length / 6 ) + '%',
+                                                paddingRight: 5,
+                                            }}>
+                                                <Button onClick={() => {
+                                                    useCrane(parentIndex, storageIndex, c.id);
+                                                }}>
+                                                    Use crane {c.id}
+                                                </Button>
+                                            </td>
+                                            )}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
                         </React.Fragment>)}
                     </tr>
-                   
-
-				   
                 </tbody>
             </table>
         ) }

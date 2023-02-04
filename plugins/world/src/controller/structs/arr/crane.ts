@@ -1,5 +1,6 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
+import { USceneComponent } from "../Engine/SceneComponent";
 
 @Struct( "Class arr.crane" )
 export class Acrane extends AActor {
