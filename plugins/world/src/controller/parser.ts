@@ -8,11 +8,15 @@ import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
+import { Acrane } from "./structs/arr/crane";
+import { Achute } from "./structs/arr/chute";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
 import { Awatertower } from "./structs/arr/watertower";
 import { AActor } from "./structs/Engine/Actor";
 import { APlayerState } from "./structs/Engine/PlayerState";
+import { FRotator } from "./structs/CoreUObject/Rotator";
+import { FVector } from "./structs/CoreUObject/Vector";
 
 export class WorldParser {
 
@@ -68,6 +72,9 @@ export class WorldParser {
                 type: frameCar.MyFreight.currentfreighttype as ProductType,
                 currentAmount: frameCar.MyFreight.currentfreight,
                 maxAmount: frameCar.MyFreight.maxfreight,
+                location: this.parseActorLocation(frameCar.MyFreight),
+                rotation: this.parseActorRotation(frameCar.MyFreight),
+                cranes: [],
             } : undefined,
             couplers: {
                 front: this.parseCoupler( frameCar.MyCouplerFront, frameCars ),
@@ -211,28 +218,49 @@ export class WorldParser {
     }
 
     public parseActorLocation( actor: AActor ): ILocation {
-        return {
-            X: actor.RootComponent.RelativeLocation.X,
-            Y: actor.RootComponent.RelativeLocation.Y,
-            Z: actor.RootComponent.RelativeLocation.Z,
-        }
+        return this.parseLocation(actor.RootComponent.RelativeLocation);
     }
 
     public parseActorRotation( actor: AActor ): IRotation {
+        return this.parseRotation(actor.RootComponent.RelativeRotation);
+    }
+
+    public parseLocation( location: FVector ): ILocation {
         return {
-            Pitch: actor.RootComponent.RelativeRotation.Pitch,
-            Yaw: actor.RootComponent.RelativeRotation.Yaw,
-            Roll: actor.RootComponent.RelativeRotation.Roll,
+            X: location.X,
+            Y: location.Y,
+            Z: location.Z,
+        }
+    }
+
+    public parseRotation( rotation: FRotator ): IRotation {
+        return {
+            Pitch: rotation.Pitch,
+            Yaw: rotation.Yaw,
+            Roll: rotation.Roll,
         }
     }
 
     public parseStorage( storage?: Astorage ): IStorage | undefined {
         if( !storage )
             return undefined;
+
         return {
             currentAmount: storage.currentamountitems,
             maxAmount: storage.maxitems,
             type: storage.storagetype as ProductType,
+            location: this.parseLocation( storage.RootComponent.AttachParent.RelativeLocation ),
+            rotation: this.parseRotation( storage.RootComponent.AttachParent.RelativeRotation ),
+            cranes: [
+                { id: 1, crane: storage.Mycrane1 },
+                { id: 2, crane: storage.Mycrane2 },
+                { id: 3, crane: storage.Mycrane3 }
+            ].filter((c) => c.crane != null).map((c) => ({
+                id: c.id,
+				type: c.crane.freighttype as ProductType,
+                location: this.parseLocation( c.crane.RootComponent.AttachParent.RelativeLocation ),
+                rotation: this.parseRotation( c.crane.RootComponent.AttachParent.RelativeRotation ),
+            })),
         }
     }
 

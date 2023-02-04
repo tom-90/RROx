@@ -38,6 +38,7 @@ export interface MapContextData {
     utils: {
         scalePoint: (x: number, y: number) => [lat: number, long: number];
         scaleLocation: (location: ILocation) => [lat: number, long: number];
+        addLocations: (a: [ x: number, y: number ], b: [ x: number, y: number ]) => [ x: number, y: number ];
         scaleNumber: (num: number) => number;
         revertScalePoint: (lat: number, lng: number) => [ x: number, y: number ];
         rotate: (cx: number, cy: number, x: number, y: number, angle: number) => [ x: number, y: number ];

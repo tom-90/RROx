@@ -24,6 +24,10 @@ For industries, freight cars, firewood depots, water towers and sandhouses, it i
 
 ![](https://raw.githubusercontent.com/tom-90/RROx/master/plugins/map/docs/freight-info.png)
 
+## Control Cranes
+
+By clicking on an industry, you can open up the industry info (see Freight Information above). Additionally this window allows you to remotely control the cranes at this industry. It is also possible to control cranes by clicking on them on the map.
+
 ## Cheats
 
 ### Teleporting
@@ -57,6 +61,15 @@ It is not possible to customize the images used for the industries, water towers
 It is possible to enable the minimap under the minimap settings. **The minimap will only show if the game overlay is enabled under the `Overlay` settings**.
 
 ## Changelog
+
+### v1.1.5 - 04-02-2023
+
+- ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).
+- ``Added`` Cranes now show up on the map and can be activated by clicking on them, or by using the information popup of the industry.
+- ``Added`` Player list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added player image to existing RROx Map Search popup. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Support for teleporting directly to waycars (Similar to Engines & Cabooses). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added locate button on the Rolling Stock Controls popup, when using the RROx normal/desktop view. (Note: This is not supported using the RROx Overlay Map). (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.4 - 22-12-2022
 

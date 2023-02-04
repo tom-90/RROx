@@ -1,10 +1,11 @@
 import { IPluginController, Controller } from '@rrox/api';
-import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator } from '../shared';
+import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator, storageUseCrane  } from '../shared';
 import { Cheats } from './cheats';
 import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
 import { ASplineTrack } from './structs/arr/SplineTrack';
 import { ASwitch } from './structs/arr/Switch';
+import { Aindustry } from './structs/arr/industry';
 import { World } from './world';
 
 export default class WorldPlugin extends Controller {
@@ -115,6 +116,26 @@ export default class WorldPlugin extends Controller {
             else
                 this.controlsSync.removeEngine( frameCar );
         } );
+
+		controller.communicator.handle( storageUseCrane, async ( industryIndex, storageOutputIndex, craneNumber ) => {
+			let industryInstance: Aindustry | undefined;
+            industryInstance = this.world.data.industries[ industryIndex ];
+			
+			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+			
+            if( !industryInstance )
+                return Log.warn( `Cannot use crane as the industry could not be found.` );
+			
+			if (storageOutputIndex < 0 || storageOutputIndex > 3)
+				return Log.warn( `Cannot use crane as the storageIndex is out of bounds.` );
+			
+			if (craneNumber < 1 || craneNumber > 4)
+				return Log.warn( `Cannot use crane as the craneNumber is out of bounds.` );
+			
+			
+			await this.world.useCrane( industryInstance, storageOutputIndex, craneNumber );			
+        } );
+
     }
     
     public unload( controller: IPluginController ): void | Promise<void> {

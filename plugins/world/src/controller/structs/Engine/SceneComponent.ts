@@ -10,6 +10,12 @@ export class USceneComponent extends UActorComponent {
         super( struct );
         struct.apply( this );
     }
+    
+    /**
+     * An object property containing information of a subobject.
+     */
+    @Property.Object( "AttachParent", () => USceneComponent )
+    public AttachParent: USceneComponent;
 
     /**
      * A struct property containing information of a subobject.

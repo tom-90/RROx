@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { MapContext } from '../context';
 import { IndustryDefinition, IndustryDefinitions } from '../definitions';
 import { Image, Shape, MapTooltip } from '../leaflet';
@@ -8,6 +8,7 @@ import { usePositions, usePopupElements } from '../hooks';
 import { MapMode } from '../types';
 import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
+import { Crane } from './crane';
 
 export const Industry = React.memo( function Industry( { data, index }: { data: IIndustry, index: number } ) {
     const { utils, mode } = useContext( MapContext )!;
@@ -35,6 +36,7 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         }}>Show Info</Button>}
         <StorageInfo
             title={definition.name}
+			parentIndex={index}
             storages={{
                 Input: educts,
                 Output: products
@@ -50,22 +52,31 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         {popupElements}
     </MapTooltip>;
 
+    const cranes = useMemo(() => {
+        return [...data.products, ...data.educts].map((s, i) => s.cranes.map((crane) =>
+            <Crane key={`${index}-${i}-${crane.id}`} data={crane} storage={s} industry={data} industryIndex={index} storageIndex={i} />
+        )).flat();
+    }, [data, index]);
+
     if ( !definition.image )
-        return <Shape
-            positions={[
-                utils.scalePoint( definition.points[ 0 ][ 0 ], definition.points[ 0 ][ 1 ] ),
-                utils.scalePoint( definition.points[ 0 ][ 0 ], definition.points[ 1 ][ 1 ] ),
-                utils.scalePoint( definition.points[ 1 ][ 0 ], definition.points[ 1 ][ 1 ] ),
-                utils.scalePoint( definition.points[ 1 ][ 0 ], definition.points[ 0 ][ 1 ] ),
-            ]}
-            anchor={utils.scaleLocation( location )}
-            rotation={Math.round( rotation.Yaw ) - 90}
-            color={'black'}
-            fillColor={definition.fillColor || 'grey'}
-            fillOpacity={1}
-            weight={60}
-            interactive
-        >{tooltip}</Shape>;
+        return <>
+            {cranes}
+            <Shape
+                positions={[
+                    utils.scalePoint( definition.points[ 0 ][ 0 ], definition.points[ 0 ][ 1 ] ),
+                    utils.scalePoint( definition.points[ 0 ][ 0 ], definition.points[ 1 ][ 1 ] ),
+                    utils.scalePoint( definition.points[ 1 ][ 0 ], definition.points[ 1 ][ 1 ] ),
+                    utils.scalePoint( definition.points[ 1 ][ 0 ], definition.points[ 0 ][ 1 ] ),
+                ]}
+                anchor={utils.scaleLocation( location )}
+                rotation={Math.round( rotation.Yaw ) - 90}
+                color={'black'}
+                fillColor={definition.fillColor || 'grey'}
+                fillOpacity={1}
+                weight={60}
+                interactive
+            >{tooltip}</Shape>
+        </>;
 
     const anchor = utils.scaleLocation( location );
 
@@ -91,13 +102,16 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         bottomLeft
     ]: [ [ number, number ], [ number, number ], [ number, number ] ] = points;*/
 
-    return <Image
-        topLeft={topLeft}
-        topRight={topRight}
-        bottomLeft={bottomLeft}
-        url={definition.image}
-        interactive
-    >
-        {tooltip}
-    </Image>;
+    return <>
+        {cranes}
+        <Image
+            topLeft={topLeft}
+            topRight={topRight}
+            bottomLeft={bottomLeft}
+            url={definition.image}
+            interactive
+        >
+            {tooltip}
+        </Image>
+    </>;
 } );

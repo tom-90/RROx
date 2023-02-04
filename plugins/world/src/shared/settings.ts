@@ -11,6 +11,7 @@ export interface IWorldSettings {
         controlSwitches: boolean;
         build: boolean;
         cheats: boolean;
+		controlCranes: boolean;
     }
 }
 
@@ -53,6 +54,11 @@ const schema: SettingsSchema<IWorldSettings> = {
             },
         
             cheats: {
+                type: 'boolean',
+                default: true
+            },
+			
+			controlCranes: {
                 type: 'boolean',
                 default: true
             },

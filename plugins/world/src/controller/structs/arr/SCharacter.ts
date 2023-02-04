@@ -7,6 +7,8 @@ import { Aregulator } from "./regulator";
 import { ASplineTrack } from "./SplineTrack";
 import { ASwitch } from "./Switch";
 import { Awhistle } from "./whistle";
+import { Acrane } from "./crane";
+import { Achute } from "./chute";
 
 @Struct( "Class arr.SCharacter" )
 export class ASCharacter extends ACharacter {
@@ -105,4 +107,20 @@ export class ASCharacter extends ACharacter {
     @Property.Function( "Function arr.SCharacter.ServerSetSplineTrackSwitch", [ [ () => ASplineTrack ], [] ] )
     public ServerSetSplineTrackSwitch: ( Track: ASplineTrack, SwitchUp: boolean ) => Promise<void>;
     
+	/**
+     * @param crane Object property
+     * @flags Net, Native, Event, Protected, NetServer
+     */
+    @Property.Function( "Function arr.SCharacter.ServerUseCrane", [ [ () => Acrane ] ] )
+    public ServerUseCrane: ( crane: Acrane ) => Promise<void>;
+    
+    /**
+     * @param chute Object property
+     * @param inputX Float number property
+     * @param inputY Float number property
+     * @flags Net, Native, Event, Protected, NetServer
+     */
+    @Property.Function( "Function arr.SCharacter.ServerUseChute", [ [ () => Achute ], [], [] ] )
+    public ServerUseChute: ( chute: Achute, inputX: float, inputY: float ) => Promise<void>;
+	
 }

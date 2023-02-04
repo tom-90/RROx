@@ -51,5 +51,12 @@ export function FeaturesSettings() {
         >
             <Switch />
         </Form.Item>
+		<Form.Item
+            label="Control Cranes"
+            name={[ 'features', 'controlCranes' ]}
+            valuePropName="checked"
+        >
+            <Switch />
+        </Form.Item>
     </Form>;
 }

@@ -10,6 +10,8 @@ import { Asandhouse } from "./structs/arr/sandhouse";
 import { ASplineActor } from "./structs/arr/SplineActor";
 import { ASplineTrack } from "./structs/arr/SplineTrack";
 import { Astorage } from "./structs/arr/storage";
+import { Acrane } from "./structs/arr/crane";
+import { Achute } from "./structs/arr/chute";
 import { ASwitch } from "./structs/arr/Switch";
 import { Aturntable } from "./structs/arr/turntable";
 import { Awatertower } from "./structs/arr/watertower";
@@ -132,6 +134,8 @@ export class World {
             car.MyFreight.currentfreight,
             car.MyFreight.maxfreight,
             car.MyFreight.currentfreighttype,
+            car.MyFreight.RootComponent.RelativeLocation,
+            car.MyFreight.RootComponent.RelativeRotation,
             car.MyCouplerFront.OtherCoupler,
             car.MyCouplerFront.bIsCoupled,
             car.MyCouplerRear.OtherCoupler,
@@ -155,6 +159,8 @@ export class World {
             wt.Mystorage.currentamountitems,
             wt.Mystorage.maxitems,
             wt.Mystorage.storagetype,
+            wt.Mystorage.RootComponent.AttachParent.RelativeLocation,
+            wt.Mystorage.RootComponent.AttachParent.RelativeRotation,
             wt.RootComponent.RelativeLocation,
             wt.RootComponent.RelativeRotation
         ];
@@ -163,6 +169,8 @@ export class World {
             sh.Mystorage.currentamountitems,
             sh.Mystorage.maxitems,
             sh.Mystorage.storagetype,
+            sh.Mystorage.RootComponent.AttachParent.RelativeLocation,
+            sh.Mystorage.RootComponent.AttachParent.RelativeRotation,
             sh.RootComponent.RelativeLocation,
             sh.RootComponent.RelativeRotation
         ];
@@ -184,7 +192,19 @@ export class World {
             ].map( ( storage ) => [
                 storage.currentamountitems,
                 storage.maxitems,
-                storage.storagetype
+                storage.storagetype,
+                storage.RootComponent.AttachParent.RelativeLocation,
+                storage.RootComponent.AttachParent.RelativeRotation,
+
+                ...[
+                    storage.Mycrane1,
+                    storage.Mycrane2,
+                    storage.Mycrane3,
+                ].map((crane) => [
+                    crane.freighttype,
+                    crane.RootComponent.AttachParent.RelativeLocation,
+                    crane.RootComponent.AttachParent.RelativeRotation,
+                ]).flat(),
             ] ).flat(),
         ];
 
@@ -763,6 +783,83 @@ export class World {
             }
         }
     }
+	
+	
+	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number) {
+		if( !this.settings.get( 'features.controlCranes' ) )
+            return;
+
+		if (industryInstance instanceof Aindustry) {
+			const character = await this.getCharacter();
+			if( !character )
+				return Log.warn( `Cannot use crane as no character could be found.` );
+			
+			var storageInstance = this.getIndustryStorage(industryInstance, storageOutputIndex);
+			if (storageInstance instanceof Astorage) {
+				var craneInstance = this.getStorageCrane(storageInstance, craneNumber);
+				if (craneInstance instanceof Acrane) {
+					await character.ServerUseCrane( craneInstance );
+				}
+				else {
+					Log.warn('Cannot use crane as craneInstance is invalid.');
+				}
+			}
+			else {
+				Log.warn('Cannot use crane as storageInstance is invalid.');
+			}
+		}
+    }
+	
+	private getIndustryStorage(industryInstance: Aindustry, storageOutputIndex: number) {
+		if (industryInstance instanceof Aindustry) {			
+			let storageInstance: Astorage;
+			
+			switch( storageOutputIndex ) {
+				case 0:
+					storageInstance = industryInstance.mystorageproducts1;
+					return storageInstance;
+				case 1:
+					storageInstance = industryInstance.mystorageproducts2;
+					return storageInstance;
+				case 2:
+					storageInstance = industryInstance.mystorageproducts3;
+					return storageInstance;
+				case 3:
+					storageInstance = industryInstance.mystorageproducts4;
+					return storageInstance;
+				default:
+					Log.warn( `Cannot get StorageInstance as the storageIndex is out of bounds.` );
+					return undefined;
+			}
+		}
+		else {
+			return undefined;
+		}
+	}
+
+	private getStorageCrane(storageInstance: Astorage, craneNumber: number) {
+		if (storageInstance instanceof Astorage) {			
+			let craneInstance: Acrane;
+			
+			switch( craneNumber ) {
+				case 1:
+					craneInstance = storageInstance.Mycrane1;
+					return craneInstance;
+				case 2:
+					craneInstance = storageInstance.Mycrane2;
+					return craneInstance;
+				case 3:
+					craneInstance = storageInstance.Mycrane3;
+					return craneInstance;
+				default:
+					Log.warn( `Cannot get CraneInstance as the craneNumber is out of bounds.`);
+					return undefined;
+			}
+		}
+		else {
+			return undefined;
+		}
+	}
 
     private isSwitch(track: ASplineTrack) {
         return [

@@ -31,3 +31,4 @@ export * from './storage';
 export * from './switch';
 export * from './turntable';
 export * from './watertower';
+export * from './crane';

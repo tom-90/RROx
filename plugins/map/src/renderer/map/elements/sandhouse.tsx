@@ -63,6 +63,7 @@ export const Sandhouse = React.memo( function Sandhouse( { data, index }: { data
             }}>Show Info</Button>
             <StorageInfo
                 title={'Sandhouse'}
+				parentIndex={index}
                 storages={{
                     'Sand Level': [ sandStorage ],
                 }}
