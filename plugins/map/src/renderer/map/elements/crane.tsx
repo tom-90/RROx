@@ -10,7 +10,7 @@ import { ICrane, IIndustry, IStorage, storageUseCrane, TeleportCommunicator } fr
 import { useRPC } from '@rrox/api';
 
 export const Crane = React.memo( function Crane( { data, industry, storage, industryIndex, storageIndex }: { data: ICrane, industry: IIndustry, storage: IStorage, industryIndex: number, storageIndex: number } ) {
-    const { utils, mode } = useContext( MapContext )!;
+    const { utils, mode, settings } = useContext( MapContext )!;
     
     const { location, rotation, id, type } = data;
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
@@ -48,7 +48,7 @@ export const Crane = React.memo( function Crane( { data, industry, storage, indu
         visible={tooltipVisible && mode !== MapMode.MINIMAP}
         setVisible={setTooltipVisible}
     >
-        <Button onClick={() => useCrane(industryIndex, storageIndex, id)}>Activate</Button>
+        <Button disabled={!settings.features.controlCranes} onClick={() => useCrane(industryIndex, storageIndex, id)}>Activate</Button>
     </MapTooltip>;
 
     return <Circle

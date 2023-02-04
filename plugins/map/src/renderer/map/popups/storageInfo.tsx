@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { DraggableModal } from 'ant-design-draggable-modal';
 import { Button } from 'antd';
 import { ProductDefinitions } from '../definitions';
 import { IStorage, ProductType } from '@rrox-plugins/world/shared';
 import { storageUseCrane } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
+import { MapContext } from '../context';
 
 export function StorageInfo( {
     className,
@@ -23,6 +24,7 @@ export function StorageInfo( {
     onClose: () => void,
     height?: number
 } ) {
+    const { settings } = useContext( MapContext )!;
 
 	const useCrane = useRPC( storageUseCrane );
 
@@ -85,7 +87,7 @@ export function StorageInfo( {
                                     </tr>
                                 </tbody>
                             </table>
-                            {cranes.length > 0 &&
+                            {cranes.length > 0 && settings.features.controlCranes &&
                                 <table style={{
                                     width: '100%',
                                     marginBottom: 20

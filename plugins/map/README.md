@@ -26,7 +26,7 @@ For industries, freight cars, firewood depots, water towers and sandhouses, it i
 
 ## Control Cranes
 
-By clicking on an industry, you can open up the industry info (see Freight Information above). Additionally this window allows you to remotely control the cranes at this industry.
+By clicking on an industry, you can open up the industry info (see Freight Information above). Additionally this window allows you to remotely control the cranes at this industry. It is also possible to control cranes by clicking on them on the map.
 
 ## Cheats
 
