@@ -16,20 +16,20 @@ import Firewood from '../../images/products/firewood_p.svg';
 import Water from '../../images/products/water_p.svg';
 import Sand from '../../images/products/sand_p.svg';
 
-export const ProductDefinitions: { [ key in ProductType ]: { image: string, offset?: number } } = {
-    [ ProductType.CRUDEOIL   ]: { image: CrudeOil   },
-    [ ProductType.COAL       ]: { image: Coal       },
-    [ ProductType.IRONORE    ]: { image: IronOre    },
-    [ ProductType.STEELPIPES ]: { image: SteelPipes },
-    [ ProductType.RAILS      ]: { image: Rails      },
-    [ ProductType.FIREWOOD   ]: { image: Firewood   },
-    [ ProductType.TOOLS      ]: { image: Tools      },
-    [ ProductType.WATER      ]: { image: Water      },
-    [ ProductType.SAND       ]: { image: Sand       },
-    [ ProductType.BEAM       ]: { image: Beams   , offset: -5 },
-    [ ProductType.CORDWOOD   ]: { image: Cordwood, offset: -5 },
-    [ ProductType.RAWIRON    ]: { image: Iron    , offset: -5 },
-    [ ProductType.LOG        ]: { image: Logs    , offset: -5 },
-    [ ProductType.LUMBER     ]: { image: Lumber  , offset: -5 },
-    [ ProductType.OILBARREL  ]: { image: Barrels , offset: 2  },
+export const ProductDefinitions: { [ key in ProductType ]: { name: string, image: string, offset?: number } } = {
+    [ ProductType.CRUDEOIL   ]: { name: 'Crude oil'  , image: CrudeOil   },
+    [ ProductType.COAL       ]: { name: 'Coal'       , image: Coal       },
+    [ ProductType.IRONORE    ]: { name: 'Iron ore'   , image: IronOre    },
+    [ ProductType.STEELPIPES ]: { name: 'Steel pipes', image: SteelPipes },
+    [ ProductType.RAILS      ]: { name: 'Rails'      , image: Rails      },
+    [ ProductType.FIREWOOD   ]: { name: 'Firewood'   , image: Firewood   },
+    [ ProductType.TOOLS      ]: { name: 'Tools'      , image: Tools      },
+    [ ProductType.WATER      ]: { name: 'Water'      , image: Water      },
+    [ ProductType.SAND       ]: { name: 'Sand'       , image: Sand       },
+    [ ProductType.BEAM       ]: { name: 'Beams'      , image: Beams   , offset: -5 },
+    [ ProductType.CORDWOOD   ]: { name: 'Cordwood'   , image: Cordwood, offset: -5 },
+    [ ProductType.RAWIRON    ]: { name: 'Raw iron'   , image: Iron    , offset: -5 },
+    [ ProductType.LOG        ]: { name: 'Logs'       , image: Logs    , offset: -5 },
+    [ ProductType.LUMBER     ]: { name: 'Lumber'     , image: Lumber  , offset: -5 },
+    [ ProductType.OILBARREL  ]: { name: 'Oil barrels', image: Barrels , offset: 2  },
 };

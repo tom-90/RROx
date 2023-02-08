@@ -134,6 +134,8 @@ export class World {
             car.MyFreight.currentfreight,
             car.MyFreight.maxfreight,
             car.MyFreight.currentfreighttype,
+            car.MyFreight.RootComponent.RelativeLocation,
+            car.MyFreight.RootComponent.RelativeRotation,
             car.MyCouplerFront.OtherCoupler,
             car.MyCouplerFront.bIsCoupled,
             car.MyCouplerRear.OtherCoupler,
@@ -157,6 +159,8 @@ export class World {
             wt.Mystorage.currentamountitems,
             wt.Mystorage.maxitems,
             wt.Mystorage.storagetype,
+            wt.Mystorage.RootComponent.AttachParent.RelativeLocation,
+            wt.Mystorage.RootComponent.AttachParent.RelativeRotation,
             wt.RootComponent.RelativeLocation,
             wt.RootComponent.RelativeRotation
         ];
@@ -165,6 +169,8 @@ export class World {
             sh.Mystorage.currentamountitems,
             sh.Mystorage.maxitems,
             sh.Mystorage.storagetype,
+            sh.Mystorage.RootComponent.AttachParent.RelativeLocation,
+            sh.Mystorage.RootComponent.AttachParent.RelativeRotation,
             sh.RootComponent.RelativeLocation,
             sh.RootComponent.RelativeRotation
         ];
@@ -187,9 +193,18 @@ export class World {
                 storage.currentamountitems,
                 storage.maxitems,
                 storage.storagetype,
-				storage.Mycrane1,
-				storage.Mycrane2,
-				storage.Mycrane3
+                storage.RootComponent.AttachParent.RelativeLocation,
+                storage.RootComponent.AttachParent.RelativeRotation,
+
+                ...[
+                    storage.Mycrane1,
+                    storage.Mycrane2,
+                    storage.Mycrane3,
+                ].map((crane) => [
+                    crane.freighttype,
+                    crane.RootComponent.AttachParent.RelativeLocation,
+                    crane.RootComponent.AttachParent.RelativeRotation,
+                ]).flat(),
             ] ).flat(),
         ];
 
