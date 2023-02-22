@@ -1,5 +1,5 @@
 import { Avatar, Button, Col, Form, InputNumber, List, Row, Slider } from 'antd';
-import { ControlOutlined, AimOutlined } from '@ant-design/icons';
+import { ControlOutlined, AimOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats } from '@rrox-plugins/world/shared';
 import PlayerImage from '../images/players/player.png';
@@ -16,6 +16,7 @@ export function PlayerList({
 }) {
     const [form] = Form.useForm();
     const [cheats, setCheatsData] = useState<ICheats | undefined>(undefined);
+    const [expand, setExpand] = useState(false);
 
     const getCheats = useRPC(GetPlayerCheats);
     const setCheats = useRPC(SetPlayerCheats);
@@ -35,11 +36,19 @@ export function PlayerList({
             let actions = [];
 
             actions.push(<Button
+                title='Cheats'
+                icon={<ControlOutlined />}
+                onClick={() => { setExpand(!expand); }}
+                size='large'
+            />);
+
+            actions.push(<Button
                 title="Locate on the map"
                 icon={<AimOutlined />}
                 onClick={() => onLocate(index)}
                 size='large'
             />);
+
 
             let cheatsForm = <Form
                 form={form}
@@ -150,7 +159,7 @@ export function PlayerList({
                     </Col>
                     <Col flex={6}>{/* intentionally empty */}</Col>
                 </Row>
-            </Form >;
+            </Form>;
 
 
             return <List.Item
@@ -160,7 +169,9 @@ export function PlayerList({
                     // avatar={<Avatar shape='square' className='dark-mode-invert' src={PlayerDefinitions.image} size={100} style={{ marginTop: -25 }} />}
                     avatar={<Avatar shape='square' className='dark-mode-invert' src={PlayerImage} size={100} style={{ marginTop: -25 }} />}
                     title={`${player.name.toUpperCase()}`}
-                    description={cheatsForm}
+                    description={<div id={'cheats_menu_' + player.name}>
+                        {expand ? cheatsForm : null}
+                    </div>}
                 />
             </List.Item>;
         }}
