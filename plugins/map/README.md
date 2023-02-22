@@ -64,7 +64,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ### v1.1.6 - DD-MM-2023
 
-- ``Enhancement`` Add all cheats to player list.
+- ``Enhancement`` Added a collapsible cheat menu to the player list, per-player.
 
 ### v1.1.5 - 04-02-2023
 
