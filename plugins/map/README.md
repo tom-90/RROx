@@ -62,6 +62,10 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.6 - DD-MM-2023
+
+- ``Enhancement`` Add all cheats to player list.
+
 ### v1.1.5 - 04-02-2023
 
 - ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).
