@@ -65,7 +65,6 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 ### v1.1.6 - 21-02-2023
 
 - ``Enhancement`` Added a collapsible cheat menu to the player list, per-player.
-- ``Known Bug`` Sprint and Flying Speed sliders are reset to 0 when you re-enter the player list. Your cheats are still applied correctly.
 
 ### v1.1.5 - 04-02-2023
 
