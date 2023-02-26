@@ -6,9 +6,6 @@ import PlayerImage from '../images/players/player.png';
 import { useRPC } from '@rrox/api';
 import { useMapSettings } from '../map/hooks';
 
-type SetExpander = React.Dispatch<React.SetStateAction<boolean>>;
-type Expander = { isExpanded: boolean, setExpand: SetExpander };
-
 export function PlayerList({
     data,
     onLocate
@@ -18,21 +15,28 @@ export function PlayerList({
 }) {
     const [form] = Form.useForm();
     const mapSettings = useMapSettings();
-    const [cheats, setCheatsData] = useState<ICheats | undefined>(undefined);
+    const [cheats, setCheatsData] = useState<{ [index: number]: ICheats }>({});
 
-    let playerExpands = new Map<number, Expander>(data.map(({ index }) => {
-        let [isExpanded, setExpand] = useState<boolean>(false);
-        return [index, { isExpanded, setExpand }]
-    }));
+    const [expandedPlayers, setExpandedPlayers] = useState(new Set<number>());
 
     const getCheats = useRPC(GetPlayerCheats);
     const setCheats = useRPC(SetPlayerCheats);
     const setMoneyXP = useRPC(SetMoneyXPCheats);
 
     useEffect(() => {
-        data.forEach((element: { index: number, player: IPlayer }) => {
-            getCheats(element.player.name).then((cheats) => { setCheatsData(cheats); });
-        })
+        if(!mapSettings.features.cheats) return;
+
+        Promise.all(
+            data.map(({index, player}) => getCheats(player.name)
+                .then((cheats) => ({index, cheats})))
+        ).then((cheatsData) => {
+            const obj: { [index: number]: ICheats } = {};
+            for(const {index, cheats} of cheatsData)
+                if(cheats)
+                    obj[index] = cheats;
+
+            setCheatsData(obj);
+        });
     }, [data, getCheats]);
 
     return <List
@@ -47,8 +51,13 @@ export function PlayerList({
                     title='Cheats'
                     icon={<ControlOutlined />}
                     onClick={() => {
-                        let playerEntry = playerExpands.get(index);
-                        playerEntry?.setExpand(!playerEntry.isExpanded);
+                        const isExpanded = expandedPlayers.has(index);
+                        const newSet = new Set(expandedPlayers);
+                        if(isExpanded)
+                            newSet.delete(index);
+                        else
+                            newSet.add(index);
+                        setExpandedPlayers(newSet);
                     }}
                     size='large'
                 />);
@@ -71,11 +80,11 @@ export function PlayerList({
                         mapSettings.features.cheats ?
                             <div id={'cheats_menu_' + player.name}>
                                 {
-                                    playerExpands.get(index)?.isExpanded ? <Form
+                                    expandedPlayers.has(index) ? <Form
                                         form={form}
                                         initialValues={{
-                                            flySpeed: cheats?.flySpeed || 0,
-                                            walkSpeed: cheats?.walkSpeed || 0,
+                                            flySpeed: cheats[index]?.flySpeed || 0,
+                                            walkSpeed: cheats[index]?.walkSpeed || 0,
                                         }}
                                         onValuesChange={(changes) => {
                                             const { walkSpeed, flySpeed } = form.getFieldsValue();
