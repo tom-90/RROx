@@ -28,8 +28,8 @@
         "@types/react": "^17.0.39"
     },
     "dependencies": {
-        "@rrox-plugins/world": "1.1.5",
-        "@rrox-plugins/map": "1.1.5",
+        "@rrox-plugins/world": "1.1.6",
+        "@rrox-plugins/map": "1.1.6",
         "@rrox/api": "^1.1.0",
         "antd": "^4.17.2",
         "react": "^17.0.2",

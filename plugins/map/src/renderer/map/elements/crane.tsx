@@ -18,7 +18,6 @@ export const Crane = React.memo( function Crane( { data, industry, storage, indu
 	const useCrane = useRPC( storageUseCrane );
 
     const center = useMemo(() => {
-        console.log(industry, storage, data);
         const storageLocation = utils.rotate(
             0,
             0,
