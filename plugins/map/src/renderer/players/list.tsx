@@ -11,28 +11,24 @@ export function PlayersListPage() {
 
     const world = useWorld();
 
-    const locate = ( index: number ) => {
-        navigate( '/@rrox-plugins/map/map', {
+    const locate = (index: number) => {
+        navigate('/@rrox-plugins/map/map', {
             state: {
                 locate: {
-                    type : 'players',
+                    type: 'players',
                     index: index,
                 }
             }
-        } );
+        });
     }
 
     return (
         <PageLayout>
             <PageContent style={{ maxWidth: 1200 }}>
-                
-				
-				<PlayerList
-					data={world?.players.map( ( player, index ) => ( { player, index } ) ) ?? []}
-					onLocate={locate}
-				/>
-				
-
+                <PlayerList
+                    data={world?.players.map((player, index) => ({ player, index })) ?? []}
+                    onLocate={locate}
+                />
             </PageContent>
         </PageLayout>
     );
