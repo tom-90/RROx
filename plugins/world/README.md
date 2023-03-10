@@ -22,6 +22,10 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.6 - 26-02-2023
+
+- ``Fixed`` Sprint speed would always show as default speed when reopening the popup/list for cheats.
+
 ### v1.1.5 - 04-02-2023
 
 - ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).

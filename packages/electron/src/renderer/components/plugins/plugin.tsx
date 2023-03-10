@@ -103,7 +103,7 @@ export function Plugin( { name, installed }: { name: string, installed?: IPlugin
             if( !res ) {
                 loading.update( {
                     title: 'Restart required',
-                    content: 'RROx needs to be restarted for the changes te apply.',
+                    content: 'RROx needs to be restarted for the changes to apply.',
                     closable: false,
                     maskClosable: false,
                     cancelText: undefined,

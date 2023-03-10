@@ -62,6 +62,11 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.6 - 26-02-2023
+
+- ``Enhancement`` Added a collapsible cheat menu to the player list. (Thanks to [bigyihsuan](https://github.com/bigyihsuan))
+- ``Added`` New and improved icons for the newer locomotives. (Thanks to [illudedPerception](https://github.com/illudedPerception))
+
 ### v1.1.5 - 04-02-2023
 
 - ``Added`` Support for remotely controlling cranes. (Thanks to [Mordred](https://github.com/mordred-random)).

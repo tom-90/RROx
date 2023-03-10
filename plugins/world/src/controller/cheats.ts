@@ -89,11 +89,11 @@ export class Cheats {
 
         const character = await this.getCharacter( player );
 
-        const hasFastSprint = Array.from( this.fastSprintPlayers.keys() ).some( ( p ) => data.equals( p, character ) );
+        const fastSprintKey = Array.from( this.fastSprintPlayers.keys() ).find( ( p ) => data.equals( p, character ) );
     
         return {
             flySpeed: character.CharacterMovement.MovementMode === EMovementMode.MOVE_Flying ? character.CharacterMovement.MaxFlySpeed : undefined,
-            walkSpeed: hasFastSprint ? character.CharacterMovement.MaxWalkSpeed : undefined,
+            walkSpeed: fastSprintKey ? this.fastSprintPlayers.get(fastSprintKey) : undefined,
         }
     }
 
