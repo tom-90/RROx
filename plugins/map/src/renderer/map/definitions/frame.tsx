@@ -29,6 +29,16 @@ import MoscaTender from '../../images/cars/mosca_tender.png';
 import Cooke280 from '../../images/cars/cooke280.png';
 import Cooke280Tender from '../../images/cars/cooke280_tender.png';
 import Plow from '../../images/cars/plow.png';
+import Stockcar from '../../images/cars/stock_car.png';
+import Skeletoncar from '../../images/cars/skeleton_log_car.png';
+import CoffinTanker from '../../images/cars/coffin_tanker.png';
+import HopperBB from '../../images/cars/ebt_hopper.png';
+import RubyBasin from '../../images/cars/ruby_basin.png';
+import MasonBogie from '../../images/cars/mason_bogie.png';
+import Cooke260Coal from '../../images/cars/cooke260_coal.png';
+import Cooke260TenderCoal from '../../images/cars/cooke260_tender_coal.png';
+import Tweetsie280 from '../../images/cars/etwnc280.png';
+import Tweetsie280Tender from '../../images/cars/etwnc280_tender.png';
 
 import HandcarIcon from '../../images/carsIcon/handcar.png';
 import PorterIcon from '../../images/carsIcon/porter_040.png';
@@ -60,6 +70,18 @@ import MoscaTenderIcon from '../../images/carsIcon/mosca_tender.png';
 import Cooke280Icon from '../../images/carsIcon/cooke260.png';
 import Cooke280TenderIcon from '../../images/carsIcon/cooke260_tender.png';
 import PlowIcon from '../../images/carsIcon/plow.png';
+import StockcarIcon from '../../images/carsIcon/stock_car.png';
+import SkeletoncarIcon from '../../images/carsIcon/skeleton_log_car.png';
+import CoffinTankerIcon from '../../images/carsIcon/coffin_tanker.png';
+import HopperBBIcon from '../../images/carsIcon/ebt_hopper.png';
+import RubyBasinIcon from '../../images/carsIcon/ruby_basin.png';
+import MasonBogieIcon from '../../images/carsIcon/mason_bogie.png';
+import Cooke260CoalIcon from '../../images/carsIcon/cooke260_coal.png';
+import Cooke260TenderCoalIcon from '../../images/carsIcon/cooke260_tender_coal.png';
+import Tweetsie280Icon from '../../images/carsIcon/etwnc280.png';
+import Tweetsie280TenderIcon from '../../images/carsIcon/etwnc280_tender.png';
+
+
 
 export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null, imageIcon: string | null, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
     [ FrameCarType.HANDCAR          ]: { image: Handcar        , imageIcon: HandcarIcon        , length: 360.2, engine: true , tender: false, freight: false, name: 'Handcar'            },
@@ -87,10 +109,21 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
     [ FrameCarType.GLENBROOK_TENDER ]: { image: GlenbrookTender, imageIcon: GlenbrookTenderIcon, length: 467.1, engine: false, tender: true , freight: false, name: 'Glenbrook Tender'   },
     [ FrameCarType.SHAY             ]: { image: Shay           , imageIcon: ShayIcon           , length: 789.9, engine: true , tender: false, freight: false, name: 'Shay'               },
     [ FrameCarType.BALDWIN622D      ]: { image: BALDWIN622D    , imageIcon: BALDWIN622DIcon    , length: 789.9, engine: true , tender: false, freight: false, name: 'Baldwin 6-22-D'     },
-    [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: MoscaIcon              , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
-    [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTenderIcon        , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
-	[ FrameCarType.COOKE280            ]: { image: Cooke280          , imageIcon: Cooke280Icon              , length: 787.8, engine: true , tender: false, freight: false, name: 'Cooke Consolidation'              },
+    [ FrameCarType.MOSCA            ]: { image: Mosca          , imageIcon: MoscaIcon          , length: 777.8, engine: true , tender: false, freight: false, name: 'Mosca'              },
+    [ FrameCarType.MOSCA_TENDER     ]: { image: MoscaTender    , imageIcon: MoscaTenderIcon    , length: 581.7, engine: false, tender: true , freight: false, name: 'Mosca Tender'       },
+	[ FrameCarType.COOKE280         ]: { image: Cooke280       , imageIcon: Cooke280Icon       , length: 787.8, engine: true , tender: false, freight: false, name: 'Cooke Consolidation'              },
     [ FrameCarType.COOKE280_TENDER  ]: { image: Cooke280Tender , imageIcon: Cooke280TenderIcon , length: 581.7, engine: false, tender: true , freight: false, name: 'Cooke Consolidation Tender' },
-	[ FrameCarType.PLOW           ]: { image: Plow         , imageIcon: PlowIcon         , length: 530.6, engine: false, tender: false, freight: false, name: 'Plow'             },
+	[ FrameCarType.PLOW           	]: { image: Plow           , imageIcon: PlowIcon           , length: 530.6, engine: false, tender: false, freight: false, name: 'Plow'               },
+	[ FrameCarType.SKELETONCAR     	]: { image: Skeletoncar    , imageIcon: SkeletoncarIcon    , length: 530.6, engine: false, tender: false, freight: true , name: 'Skeleton Car'       },
+	[ FrameCarType.HOPPERBB         ]: { image: HopperBB       , imageIcon: HopperBBIcon       , length: 725.6, engine: false, tender: false, freight: true , name: 'EBT Hopper'             },
+    [ FrameCarType.TANKERNCO        ]: { image: CoffinTanker   , imageIcon: CoffinTankerIcon   , length: 789.9, engine: false, tender: false, freight: true , name: 'Coffin Tanker'             },
+    [ FrameCarType.STOCKCAR         ]: { image: Stockcar       , imageIcon: StockcarIcon       , length: 789.9, engine: false, tender: false, freight: true , name: 'Stock Car'          },
+	[ FrameCarType.TENMILE          ]: { image: MasonBogie     , imageIcon: MasonBogieIcon     , length: 853.7, engine: true , tender: false, freight: false, name: 'Mason Bogie'        },
+	[ FrameCarType.RUBYBASIN        ]: { image: RubyBasin      , imageIcon: RubyBasinIcon      , length: 853.7, engine: true , tender: false, freight: false, name: 'Ruby Basin'        },
+	[ FrameCarType.COOKE260COAL         ]: { image: Cooke260Coal       , imageIcon: Cooke260CoalIcon       , length: 777.8, engine: true , tender: false, freight: false, name: 'Cooke Mogul Coal'        },
+    [ FrameCarType.COOKE260COAL_TENDER  ]: { image: Cooke260TenderCoal , imageIcon: Cooke260TenderCoalIcon , length: 581.7, engine: false, tender: true , freight: false, name: 'Cooke Mogul Tender Coal' },
+	[ FrameCarType.TWEETSIE280         ]: { image: Tweetsie280        , imageIcon: Tweetsie280Icon       , length: 878.9, engine: true , tender: false, freight: false, name: 'ET&WNC 280'        },
+    [ FrameCarType.TWEETSIE280_TENDER  ]: { image: Tweetsie280Tender  , imageIcon: Tweetsie280TenderIcon , length: 618.8, engine: false, tender: true , freight: false, name: 'ET&WNC 280 Tender' },
+	
     [ FrameCarType.UNKNOWN          ]: { image: null           , imageIcon: null               , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'            },
 };

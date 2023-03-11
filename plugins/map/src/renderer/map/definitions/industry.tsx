@@ -88,7 +88,7 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
         points: [ [ -500, 0 ], [ 500, 2000 ] ],
         fillColor: '#ff5959',
     },
-    [ IndustryType.TELEGRAPH_OFFICE ]: {
+	[ IndustryType.TELEGRAPH_OFFICE ]: {
         name: 'Telegraph Office',
         points: [ [ -150, -200 ], [ 150, 200 ] ],
         fillColor: '#6e0810',

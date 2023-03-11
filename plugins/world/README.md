@@ -22,6 +22,18 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.7 - 11-03-2023
+
+- ``Enhancement`` Added support for Cooke 2-6-0 (Coal Version) Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for ET&WNC 280 Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Mason Bogie Tenmile Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Ruby Basin 2-8-0T Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Skeleton car as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for EBT Hopper as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Coffin Tanker as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for Stock car as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
+
 ### v1.1.6 - 26-02-2023
 
 - ``Fixed`` Sprint speed would always show as default speed when reopening the popup/list for cheats.

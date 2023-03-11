@@ -100,7 +100,23 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
 			[ FrameCarType.BALDWIN622D      ]: { type: 'string', default: '#800080' },
 			[ FrameCarType.COOKE280        ]: { type: 'string', default: '#800080' },
             [ FrameCarType.COOKE280_TENDER ]: { type: 'string', default: '#000000' },
+			
+			[ FrameCarType.TENMILE             ]: { type: 'string', default: '#800080' },
+			[ FrameCarType.RUBYBASIN      ]: { type: 'string', default: '#800080' },
+			[ FrameCarType.COOKE260COAL        ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.COOKE260COAL_TENDER ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.TWEETSIE280        ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.TWEETSIE280_TENDER ]: { type: 'string', default: '#000000' },
+			
 
+			[ FrameCarType.SKELETONCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#cd775c' },
+                    loaded: { type: 'string', default: '#cd775c' },
+                },
+                default: {}
+            },
             [ FrameCarType.FLATCAR_LOGS ]: {
                 type: 'object',
                 properties: {
@@ -133,11 +149,27 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 },
                 default: {}
             },
+			[ FrameCarType.HOPPERBB ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    loaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
             [ FrameCarType.TANKER ]: {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#d3d3d3' },
                     loaded: { type: 'string', default: '#d3d3d3' },
+                },
+                default: {}
+            },
+			[ FrameCarType.TANKERNCO ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#c5c5c5' },
+                    loaded: { type: 'string', default: '#c5c5c5' },
                 },
                 default: {}
             },
@@ -149,6 +181,15 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 },
                 default: {}
             },
+			[ FrameCarType.STOCKCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#6b6b6b' },
+                    loaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
+
 
             spline: {
                 type: 'object',
