@@ -299,7 +299,7 @@ export function FrameControls( {
                         <th style={{ width: '25%' }}>Current Speed</th>
                         <th style={{ width: '25%' }}>Max Speed</th>
                         <th style={{ width: '25%' }}>Water Level</th>
-                        <th style={{ width: '25%' }}>Firewood Amount</th>
+                        <th style={{ width: '25%' }}>Fuel Amount</th>
                     </tr>
                 </thead>
                 <tbody>

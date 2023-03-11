@@ -29,14 +29,26 @@ export enum FrameCarType {
 	COOKE280 = 'cooke280',
     COOKE280_TENDER = 'cooke280_tender',
 	PLOW = 'plow',
-	
+	SKELETONCAR = 'skeletoncar',
+	HOPPERBB = 'hopperBB',
+	TANKERNCO = 'tankcarNCO',
+	STOCKCAR = 'stockcar',
+	TENMILE = 'tenmile',
+	RUBYBASIN = 'rubybasin',
+	COOKE260COAL = 'cooke260_new',
+	COOKE260COAL_TENDER = 'cooke260_new_tender',
+	TWEETSIE280 = 'tweetsie280',
+	TWEETSIE280_TENDER = 'tweetsie280_tender',
+		
     UNKNOWN = 'unknown',
 }
 
 export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | FrameCarType.HANDCAR | FrameCarType.EUREKA |
         FrameCarType.EUREKA_TENDER | FrameCarType.CLIMAX | FrameCarType.HEISLER | FrameCarType.CLASS70 | FrameCarType.CLASS70_TENDER | FrameCarType.COOKE260 | FrameCarType.COOKE260_TENDER |
 		FrameCarType.MONTEZUMA | FrameCarType.MONTEZUMA_TENDER | FrameCarType.GLENBROOK | FrameCarType.GLENBROOK_TENDER | FrameCarType.SHAY |
-		FrameCarType.BALDWIN622D | FrameCarType.MOSCA | FrameCarType.COOKE280;
+		FrameCarType.BALDWIN622D | FrameCarType.MOSCA | FrameCarType.COOKE280 | FrameCarType.TENMILE | FrameCarType.RUBYBASIN | 
+		FrameCarType.COOKE260COAL | FrameCarType.COOKE260COAL_TENDER | FrameCarType.TWEETSIE280 | FrameCarType.TWEETSIE280_TENDER;
+
 
 export type FreightFrameCarType = FrameCarType.BOXCAR | FrameCarType.FLATCAR_CORDWOOD | FrameCarType.HOPPER | FrameCarType.FLATCAR_LOGS |
-        FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER;
+        FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER | FrameCarType.SKELETONCAR | FrameCarType.HOPPERBB | FrameCarType.TANKERNCO | FrameCarType.STOCKCAR;
