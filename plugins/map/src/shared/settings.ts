@@ -91,22 +91,22 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             [ FrameCarType.MOSCA_TENDER     ]: { type: 'string', default: '#000000' },
             [ FrameCarType.CABOOSE          ]: { type: 'string', default: '#ff5e5e' },
 			[ FrameCarType.WAYCAR           ]: { type: 'string', default: '#ff5e5e' },
-			[ FrameCarType.PLOW           ]: { type: 'string', default: '#f0a330' },
+			[ FrameCarType.PLOW             ]: { type: 'string', default: '#f0a330' },
 			[ FrameCarType.MONTEZUMA        ]: { type: 'string', default: '#800080' },
             [ FrameCarType.MONTEZUMA_TENDER ]: { type: 'string', default: '#000000' },
 			[ FrameCarType.GLENBROOK        ]: { type: 'string', default: '#800080' },
             [ FrameCarType.GLENBROOK_TENDER ]: { type: 'string', default: '#000000' },
 			[ FrameCarType.SHAY             ]: { type: 'string', default: '#800080' },
 			[ FrameCarType.BALDWIN622D      ]: { type: 'string', default: '#800080' },
-			[ FrameCarType.COOKE280        ]: { type: 'string', default: '#800080' },
-            [ FrameCarType.COOKE280_TENDER ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.COOKE280         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.COOKE280_TENDER  ]: { type: 'string', default: '#000000' },
 			
 			[ FrameCarType.TENMILE             ]: { type: 'string', default: '#800080' },
-			[ FrameCarType.RUBYBASIN      ]: { type: 'string', default: '#800080' },
+			[ FrameCarType.RUBYBASIN           ]: { type: 'string', default: '#800080' },
 			[ FrameCarType.COOKE260COAL        ]: { type: 'string', default: '#800080' },
             [ FrameCarType.COOKE260COAL_TENDER ]: { type: 'string', default: '#000000' },
-			[ FrameCarType.TWEETSIE280        ]: { type: 'string', default: '#800080' },
-            [ FrameCarType.TWEETSIE280_TENDER ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.TWEETSIE280         ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.TWEETSIE280_TENDER  ]: { type: 'string', default: '#000000' },
 			
 
 			[ FrameCarType.SKELETONCAR ]: {

@@ -88,9 +88,74 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
         points: [ [ -500, 0 ], [ 500, 2000 ] ],
         fillColor: '#ff5959',
     },
-	[ IndustryType.TELEGRAPH_OFFICE ]: {
+    [ IndustryType.TELEGRAPH_OFFICE ]: {
         name: 'Telegraph Office',
         points: [ [ -150, -200 ], [ 150, 200 ] ],
         fillColor: '#6e0810',
+    },
+    [ IndustryType.LARGE_ENGINE_SHED_RED ]: {
+        name: 'Engine Shed',
+        points: [ [ -490, 0 ], [ 490, 2100 ] ],
+        fillColor: '#ff5959',
+    },
+    [ IndustryType.LARGE_ENGINE_SHED_BEIGE ]: {
+        name: 'Engine Shed',
+        points: [ [ -490, 0 ], [ 490, 2100 ] ],
+        fillColor: '#ffef9c',
+    },
+    [ IndustryType.LARGE_ENGINE_SHED_BROWN ]: {
+        name: 'Engine Shed',
+        points: [ [ -490, 0 ], [ 490, 2100 ] ],
+        fillColor: '#5c4936',
+    },
+    [ IndustryType.LARGE_ENGINE_SHED_OLD ]: {
+        name: 'Engine Shed',
+        points: [ [ -490, 0 ], [ 490, 2100 ] ],
+        fillColor: '#d5e5eb',
+    },
+    [ IndustryType.COALINGTOWER ]: {
+        name: 'Coaling Tower',
+        points: [ [ 300, 50 ], [ 900, 650 ] ],
+        fillColor: '#5c4936',
+    },
+    [ IndustryType.WATERTOWER1870_RED ]: {
+        name: 'Water Tower',
+        points: [ [ -250, 250 ], [ 250, 750 ] ],
+        fillColor: '#ff5959',
+    },
+    [ IndustryType.WATERTOWER1870_BROWN ]: {
+        name: 'Water Tower',
+        points: [ [ -250, 250 ], [ 250, 750 ] ],
+        fillColor: '#5c4936',
+    },
+    [ IndustryType.WATERTOWER1870_BEIGE ]: {
+        name: 'Water Tower',
+        points: [ [ -250, 250 ], [ 250, 750 ] ],
+        fillColor: '#ffef9c',
+    },
+    [ IndustryType.WATERTOWER1870_OLD ]: {
+        name: 'Water Tower',
+        points: [ [ -250, 250 ], [ 250, 750 ] ],
+        fillColor: '#d5e5eb',
+    },
+    [ IndustryType.KANASKATWATERTOWER_RED ]: {
+        name: 'Water Tower',
+        points: [ [ -150, 300 ], [ 150, 700 ] ],
+        fillColor: '#ff5959',
+    },
+    [ IndustryType.KANASKATWATERTOWER_BROWN ]: {
+        name: 'Water Tower',
+        points: [ [ -150, 300 ], [ 150, 700 ] ],
+        fillColor: '#5c4936',
+    },
+    [ IndustryType.KANASKATWATERTOWER_BEIGE ]: {
+        name: 'Water Tower',
+        points: [ [ -150, 300 ], [ 150, 700 ] ],
+        fillColor: '#ffef9c',
+    },
+    [ IndustryType.KANASKATWATERTOWER_OLD ]: {
+        name: 'Water Tower',
+        points: [ [ -150, 300 ], [ 150, 700 ] ],
+        fillColor: '#d5e5eb',
     },
 };

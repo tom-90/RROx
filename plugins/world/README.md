@@ -32,7 +32,8 @@ The world loader provides a number of features that can be turned on or off depe
 - ``Enhancement`` Added support for EBT Hopper as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added support for Coffin Tanker as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added support for Stock car as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
-
+- ``Enhancement`` Added support for 3-way switch.
+- ``Enhancement`` Added support for new coaling towers, water towers and engine sheds.
 
 ### v1.1.6 - 26-02-2023
 

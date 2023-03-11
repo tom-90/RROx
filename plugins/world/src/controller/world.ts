@@ -695,7 +695,14 @@ export class World {
             if( !latestSwitch )
                 return Log.warn( `Cannot change switch as it's state could not be retrieved.` );
 
-            await character.ServerSetSplineTrackSwitch(switchInstance, latestSwitch.switchstate !== 1);
+            if(latestSwitch.maxSwitchState === latestSwitch.switchstate) {
+                for(let i = 0; i < latestSwitch.maxSwitchState; i++) {
+                    await character.ServerSetSplineTrackSwitch(switchInstance, false);
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+            } else {
+                await character.ServerSetSplineTrackSwitch(switchInstance, true);
+            }
         }
     }
 
@@ -867,6 +874,8 @@ export class World {
             SplineTrackType.SWITCH_3FT_RIGHT, SplineTrackType.SWITCH_3FT_RIGHT_MIRROR,
             SplineTrackType.SWITCH_BALLAST_3FT_LEFT, SplineTrackType.SWITCH_BALLAST_3FT_LEFT_MIRROR,
             SplineTrackType.SWITCH_BALLAST_3FT_RIGHT, SplineTrackType.SWITCH_BALLAST_3FT_RIGHT_MIRROR,
+            SplineTrackType.SWITCH_3WAY_3FT_LEFT, SplineTrackType.SWITCH_3WAY_BALLAST_3FT_LEFT,
+            SplineTrackType.SWITCH_3WAY_3FT_RIGHT, SplineTrackType.SWITCH_3WAY_BALLAST_3FT_RIGHT,
         ].includes(track.type);
     }
 }

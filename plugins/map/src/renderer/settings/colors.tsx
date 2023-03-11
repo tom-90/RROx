@@ -53,7 +53,7 @@ export function ColorSettings() {
         return ( changedValues: any, callback: ( changedValues: any ) => void ) => {
             values = { ...values, ...changedValues };
 
-            if( timeout != null )
+            if ( timeout != null )
                 clearTimeout( timeout );
 
             timeout = setTimeout( () => {
@@ -118,7 +118,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={MasonBogie} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.TENMILE ]}><input type='color' /></Form.Item></td>
                             <td />
@@ -140,7 +140,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Montezuma} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.MONTEZUMA ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.MONTEZUMA_TENDER ]}><input type='color' /></Form.Item></td>
@@ -151,7 +151,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Eureka} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.EUREKA ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.EUREKA_TENDER ]}><input type='color' /></Form.Item></td>
@@ -162,7 +162,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Glenbrook} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.GLENBROOK ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.GLENBROOK_TENDER ]}><input type='color' /></Form.Item></td>
@@ -195,7 +195,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={RubyBasin} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.RUBYBASIN ]}><input type='color' /></Form.Item></td>
                             <td />
@@ -206,7 +206,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Shay} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.SHAY ]}><input type='color' /></Form.Item></td>
                             <td />
@@ -239,7 +239,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Cooke260Coal} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.COOKE260COAL ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.COOKE260COAL_TENDER ]}><input type='color' /></Form.Item></td>
@@ -250,7 +250,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Cooke280} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.COOKE280 ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.COOKE280_TENDER ]}><input type='color' /></Form.Item></td>
@@ -261,7 +261,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Class70} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.CLASS70 ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.CLASS70_TENDER ]}><input type='color' /></Form.Item></td>
@@ -272,7 +272,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Etwnc280} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.TWEETSIE280 ]}><input type='color' /></Form.Item></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.TWEETSIE280_TENDER ]}><input type='color' /></Form.Item></td>
@@ -296,10 +296,10 @@ export function ColorSettings() {
                         </tr>
                     </thead>
                     <tbody>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={SkeletonCar} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.SKELETONCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.SKELETONCAR, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.SKELETONCAR, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.SKELETONCAR}.unloaded`, `colors.${FrameCarType.SKELETONCAR}.loaded` )}
@@ -307,10 +307,10 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={FlatcarLogs} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_LOGS, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_LOGS, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_LOGS, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_LOGS}.unloaded`, `colors.${FrameCarType.FLATCAR_LOGS}.loaded` )}
@@ -321,7 +321,7 @@ export function ColorSettings() {
                         <tr>
                             <td><img className='dark-mode-invert' src={FlatcarCordwood} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_CORDWOOD, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_CORDWOOD, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_CORDWOOD, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_CORDWOOD}.unloaded`, `colors.${FrameCarType.FLATCAR_CORDWOOD}.loaded` )}
@@ -332,7 +332,7 @@ export function ColorSettings() {
                         <tr>
                             <td><img className='dark-mode-invert' src={FlatcarStakes} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_STAKES, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_STAKES, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.FLATCAR_STAKES, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.FLATCAR_STAKES}.unloaded`, `colors.${FrameCarType.FLATCAR_STAKES}.loaded` )}
@@ -343,7 +343,7 @@ export function ColorSettings() {
                         <tr>
                             <td><img className='dark-mode-invert' src={Hopper} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.HOPPER, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPER, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPER, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.HOPPER}.unloaded`, `colors.${FrameCarType.HOPPER}.loaded` )}
@@ -351,10 +351,10 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={HopperBB} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.HOPPERBB, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPERBB, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.HOPPERBB, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.HOPPERBB}.unloaded`, `colors.${FrameCarType.HOPPERBB}.loaded` )}
@@ -365,7 +365,7 @@ export function ColorSettings() {
                         <tr>
                             <td><img className='dark-mode-invert' src={Tanker} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.TANKER, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.TANKER, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.TANKER, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.TANKER}.unloaded`, `colors.${FrameCarType.TANKER}.loaded` )}
@@ -373,10 +373,10 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={TankerNCO} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.TANKERNCO, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.TANKERNCO, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.TANKERNCO, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.TANKER}.unloaded`, `colors.${FrameCarType.TANKER}.loaded` )}
@@ -387,7 +387,7 @@ export function ColorSettings() {
                         <tr>
                             <td><img className='dark-mode-invert' src={Boxcar} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.BOXCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.BOXCAR, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.BOXCAR, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.BOXCAR}.unloaded`, `colors.${FrameCarType.BOXCAR}.loaded` )}
@@ -395,10 +395,10 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Stockcar} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.STOCKCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
-                            <td><Form.Item name={[ 'colors', FrameCarType.STOCKCAR, 'loaded'   ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.STOCKCAR, 'loaded' ]}><input type='color' /></Form.Item></td>
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.STOCKCAR}.unloaded`, `colors.${FrameCarType.STOCKCAR}.loaded` )}
@@ -417,7 +417,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Waycar} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.WAYCAR ]}><input type='color' /></Form.Item></td>
                             <td />
@@ -428,7 +428,7 @@ export function ColorSettings() {
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
                         </tr>
-						<tr>
+                        <tr>
                             <td><img className='dark-mode-invert' src={Plow} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.PLOW ]}><input type='color' /></Form.Item></td>
                             <td />
