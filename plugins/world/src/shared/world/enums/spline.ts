@@ -53,6 +53,7 @@ export enum SplineTrackType {
 
     // Turntables
     TURNTABLE_3FT = 'TURNTABLE_3FT',
+	TURNTABLE_3FT_NEVADA = 'TURNTABLE_3FT_NEVADA',
 
     // Ballast
     WALL_01 = 'WALL_01',
