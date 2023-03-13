@@ -23,6 +23,5 @@ export class Aturntable extends AActor {
      * An object property containing information of a subobject.
      */
     @Property.Object( "deckmesh", () => USceneComponent )
-    public deckmesh: USceneComponent;
-    
+    public deckmesh: USceneComponent;    
 }

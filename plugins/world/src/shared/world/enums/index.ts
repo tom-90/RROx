@@ -3,3 +3,4 @@ export * from './industry';
 export * from './product';
 export * from './spline';
 export * from './switch';
+export * from './turntable';

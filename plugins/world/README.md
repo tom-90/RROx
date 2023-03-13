@@ -23,7 +23,8 @@ The world loader provides a number of features that can be turned on or off depe
 ## Changelog
 
 ### v1.1.8 - 13-03-2023
-- ``Enhancement`` Work on correctly displaying large turn table with correct size.
+- ``Enhancement`` Correctly show turntable size and rotation.
+- ``Enhancement`` Retrieve coal tower storage amounts.
 
 ### v1.1.7 - 11-03-2023
 

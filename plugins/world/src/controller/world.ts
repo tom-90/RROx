@@ -150,9 +150,10 @@ export class World {
         ];
 
         const turntableQuery = ( tt: QueryBuilder<Aturntable> ) => [
+            tt.turntabletype,
             tt.deckmesh.RelativeRotation,
             tt.RootComponent.RelativeLocation,
-            tt.RootComponent.RelativeRotation
+            tt.RootComponent.RelativeRotation,
         ];
 
         const watertowerQuery = ( wt: QueryBuilder<Awatertower> ) => [
@@ -206,6 +207,13 @@ export class World {
                     crane.RootComponent.AttachParent.RelativeRotation,
                 ]).flat(),
             ] ).flat(),
+
+            ind.educt1type,
+            ind.educt1amount,
+            ind.educt1amountmax,
+            ind.product1type,
+            ind.product1amount,
+            ind.product1amountmax
         ];
 
         const splineQuery = ( spline: QueryBuilder<ASplineActor> ) =>  [
