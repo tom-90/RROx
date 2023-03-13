@@ -24,6 +24,7 @@ export * from './BP_SplineTrack_914_trestle_pile_01_C';
 export * from './BP_SplineTrack_914_trestle_steel_01_C';
 export * from './BP_SplineTrack_914_trestle_wood_01_C';
 export * from './BP_SplineTrack_914_turntable_C';
+export * from './BP_SplineTrack_914_turntable_nevada_C';
 export * from './BP_SplineTrack_914_wall_01_C';
 export * from './BP_SplineTrack_914_wall_01_norail_C';
 export * from './BP_SplineTrack_ballast_h01_C';

@@ -1,6 +1,6 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
-import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack } from "../shared";
+import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack, Log } from "../shared";
 import { Acoupler } from "./structs/arr/coupler";
 import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";
@@ -96,10 +96,11 @@ export class WorldParser {
 
     public parseTurntable( tt: Aturntable ): ITurntable {
         return {
+            type: tt.turntabletype,
             deckRotation: {
                 Pitch: tt.deckmesh.RelativeRotation.Pitch,
-                Yaw: tt.deckmesh.RelativeRotation.Pitch,
-                Roll: tt.deckmesh.RelativeRotation.Pitch,
+                Yaw: tt.deckmesh.RelativeRotation.Yaw,
+                Roll: tt.deckmesh.RelativeRotation.Roll,
             },
             location: this.parseActorLocation( tt ),
             rotation: this.parseActorRotation( tt ),
@@ -123,7 +124,7 @@ export class WorldParser {
     }
     
     public parseIndustry( ind: Aindustry ): IIndustry {
-        return {
+        const industry = {
             type: ind.industrytype,
             educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map(
                 ( storage ) => this.parseStorage( storage )
@@ -140,6 +141,46 @@ export class WorldParser {
             location: this.parseActorLocation( ind ),
             rotation: this.parseActorRotation( ind ),
         } 
+
+        // COAL TOWER STUPIDITY
+        if(ind.educt1type) {
+            industry.educts.push( {
+                currentAmount: ind.educt1amount,
+                maxAmount: ind.educt1amountmax,
+                type: ind.educt1type as ProductType,
+                cranes: [],
+                location: {
+                    X: 0,
+                    Y: 0,
+                    Z: 0,
+                },
+                rotation: {
+                    Pitch: 0,
+                    Yaw: 0,
+                    Roll: 0
+                }
+            } );
+        }
+        if(ind.product1type) {
+            industry.products.push( {
+                currentAmount: ind.product1amount,
+                maxAmount: ind.product1amountmax,
+                type: ind.product1type as ProductType,
+                cranes: [],
+                location: {
+                    X: 0,
+                    Y: 0,
+                    Z: 0,
+                },
+                rotation: {
+                    Pitch: 0,
+                    Yaw: 0,
+                    Roll: 0
+                }
+            } );
+        }
+
+        return industry;
     }
 
     public parseSpline( s: ASplineActor ): ISpline {

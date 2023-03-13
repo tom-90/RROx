@@ -11,7 +11,9 @@
         "postinstall": "patch-package"
     },
     "iohook": {
-        "targets": ["node-88"],
+        "targets": [
+            "node-88"
+        ],
         "platforms": []
     },
     "devDependencies": {
