@@ -13,6 +13,7 @@ export abstract class ASplineTrack extends AActor {
     }
 
     public abstract readonly type: SplineTrackType;
+    public readonly maxSwitchState: number = 1;
 
     /**
      * A struct property containing information of a subobject.

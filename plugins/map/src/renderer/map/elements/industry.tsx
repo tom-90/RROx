@@ -4,7 +4,7 @@ import { IndustryDefinition, IndustryDefinitions } from '../definitions';
 import { Image, Shape, MapTooltip } from '../leaflet';
 import { Button } from 'antd';
 import { StorageInfo } from '../popups';
-import { usePositions, usePopupElements } from '../hooks';
+import { usePositions, usePopupElements, useImageAdjust } from '../hooks';
 import { MapMode } from '../types';
 import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
@@ -14,7 +14,7 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
     const { utils, mode } = useContext( MapContext )!;
     const [ infoVisible, setInfoVisible ] = useState( false );
     const [ tooltipVisible, setTooltipVisible ] = useState( false );
-    
+
     const { type, location, rotation, products, educts } = data;
 
     const definition = ( IndustryDefinitions[ type ] as IndustryDefinition | undefined ) ?? {
@@ -30,13 +30,13 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         visible={tooltipVisible && mode !== MapMode.MINIMAP}
         setVisible={setTooltipVisible}
     >
-        {(educts?.length > 0 || products?.length > 0) &&<Button onClick={() => {
+        {( educts?.length > 0 || products?.length > 0 ) && <Button onClick={() => {
             setTooltipVisible( false );
             setInfoVisible( true );
         }}>Show Info</Button>}
         <StorageInfo
             title={definition.name}
-			parentIndex={index}
+            parentIndex={index}
             storages={{
                 Input: educts,
                 Output: products
@@ -52,11 +52,11 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         {popupElements}
     </MapTooltip>;
 
-    const cranes = useMemo(() => {
-        return [...data.products, ...data.educts].map((s, i) => s.cranes.map((crane) =>
+    const cranes = useMemo( () => {
+        return [ ...data.products, ...data.educts ].map( ( s, i ) => s.cranes.map( ( crane ) =>
             <Crane key={`${index}-${i}-${crane.id}`} data={crane} storage={s} industry={data} industryIndex={index} storageIndex={i} />
-        )).flat();
-    }, [data, index]);
+        ) ).flat();
+    }, [ data, index ] );
 
     if ( !definition.image )
         return <>
@@ -90,17 +90,17 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         utils.scalePoint( ...definition.points[ 2 ]! ),
     ], anchor, rotation.Yaw );
 
-    /*const { points, markers } = useImageAdjust( [
+    /* const { points, markers } = useImageAdjust( [
         utils.scalePoint( ...definition.points[ 0 ] ),
         utils.scalePoint( ...definition.points[ 1 ] ),
-        utils.scalePoint( ...definition.points[ 2 ] ),
-    ], anchor, Rotation[ 1 ] );
+        utils.scalePoint( ...definition.points[ 2 ]! ),
+    ], anchor, rotation.Yaw );
 
     const [
         topLeft,
         topRight,
         bottomLeft
-    ]: [ [ number, number ], [ number, number ], [ number, number ] ] = points;*/
+    ]: [ [ number, number ], [ number, number ], [ number, number ] ] = points; */
 
     return <>
         {cranes}
