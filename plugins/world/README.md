@@ -22,6 +22,9 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.8 - 13-03-2023
+- ``Enhancement`` Work on correctly displaying large turn table with correct size.
+
 ### v1.1.7 - 11-03-2023
 
 - ``Enhancement`` Added support for Cooke 2-6-0 (Coal Version) Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))

@@ -62,6 +62,10 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.8 - 13-03-2023
+- ``Fixed`` Corrected missing lead on both 3-way (left) switches. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Work on correctly displaying large turn table with correct size.
+
 ### v1.1.7 - 11-03-2023
 
 - ``Enhancement`` Added support for Cooke 2-6-0 (Coal Version) Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
@@ -77,7 +81,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 - ``Fixed`` Adjusted Tender Controls Pop-up to list "Fuel Amount" instead of "Firewood Amount" (in support of new Coal powered locomotives and consistency with Locomotive Controls). (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added support for 3-way switch.
 - ``Enhancement`` Added support for new coaling towers, water towers and engine sheds.
-- 
+ 
 ### v1.1.6 - 26-02-2023
 
 - ``Enhancement`` Added a collapsible cheat menu to the player list. (Thanks to [bigyihsuan](https://github.com/bigyihsuan))

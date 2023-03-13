@@ -1,6 +1,6 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
-import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack } from "../shared";
+import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack, Log } from "../shared";
 import { Acoupler } from "./structs/arr/coupler";
 import { Aframecar } from "./structs/arr/framecar";
 import { Aindustry } from "./structs/arr/industry";
@@ -95,7 +95,10 @@ export class WorldParser {
     }
 
     public parseTurntable( tt: Aturntable ): ITurntable {
-        return {
+	
+		Log.info('tt.turntabletype: ' + tt.turntabletype); // Tom help why is this empty? Need to know the type to correctly display the correct size on the RROx Map.
+	
+		return {
             deckRotation: {
                 Pitch: tt.deckmesh.RelativeRotation.Pitch,
                 Yaw: tt.deckmesh.RelativeRotation.Pitch,
