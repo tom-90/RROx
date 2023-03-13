@@ -66,5 +66,56 @@ export class Aindustry extends AActor {
      */
     @Property.Int( "industrytype" )
     public industrytype: int32;
+
+    
+    // COAL TOWER STUPIDITY
+
+    /**
+     * A string property.
+     */
+    @Property.Str( "educt1type" )
+    public educt1type: string;
+    
+    /**
+     * A string property.
+     */
+    @Property.Str( "product1type" )
+    public product1type: string;
+    
+    /**
+     * A `int32` number property (range `-2147483648` to `+2147483647`).
+     * 
+     * @min `-2147483648`
+     * @max `+2147483647`
+     */
+    @Property.Int( "educt1amount" )
+    public educt1amount: int32;
+    
+    /**
+     * A `int32` number property (range `-2147483648` to `+2147483647`).
+     * 
+     * @min `-2147483648`
+     * @max `+2147483647`
+     */
+    @Property.Int( "product1amount" )
+    public product1amount: int32;
+    
+    /**
+     * A `int32` number property (range `-2147483648` to `+2147483647`).
+     * 
+     * @min `-2147483648`
+     * @max `+2147483647`
+     */
+    @Property.Int( "educt1amountmax" )
+    public educt1amountmax: int32;
+    
+    /**
+     * A `int32` number property (range `-2147483648` to `+2147483647`).
+     * 
+     * @min `-2147483648`
+     * @max `+2147483647`
+     */
+    @Property.Int( "product1amountmax" )
+    public product1amountmax: int32;
     
 }

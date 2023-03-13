@@ -65,6 +65,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 ### v1.1.8 - 13-03-2023
 - ``Fixed`` Corrected missing lead on both 3-way (left) switches. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Work on correctly displaying large turn table with correct size.
+- ``Enhancement`` Show coal tower storage amounts.
 
 ### v1.1.7 - 11-03-2023
 
