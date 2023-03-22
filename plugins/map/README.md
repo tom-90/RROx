@@ -44,6 +44,23 @@ Flying and fast sprint can be enabled from the same `Cheats`-menu.
 
 ![](https://raw.githubusercontent.com/tom-90/RROx/master/plugins/map/docs/cheats.png)
 
+## Information Lists
+
+Helpful information read from your game world.
+
+### Rolling Stock
+
+Details, locate functionality, and controls for the various rolling stock in the game world.
+
+### Player List
+
+Names, locate functionality, and cheat menu for all the connected players
+
+
+### Industry List
+
+Details and storage amounts for the primary industries and the fueling buildings within the game world.
+
 # Settings
 
 ## Map Background
@@ -61,6 +78,9 @@ It is not possible to customize the images used for the industries, water towers
 It is possible to enable the minimap under the minimap settings. **The minimap will only show if the game overlay is enabled under the `Overlay` settings**.
 
 ## Changelog
+
+### v1.1.9 - 22-03-2023
+- ``Added`` Industry list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.8 - 13-03-2023
 - ``Fixed`` Corrected missing lead on both 3-way (left) switches. (Thanks to [Mordred](https://github.com/mordred-random))

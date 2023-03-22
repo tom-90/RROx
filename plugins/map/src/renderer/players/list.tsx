@@ -3,7 +3,6 @@ import { useWorld } from "@rrox-plugins/world/renderer";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "antd";
-//import { FrameDefinitions } from "../map/definitions";
 import { PlayerList } from "./players";
 
 export function PlayersListPage() {
