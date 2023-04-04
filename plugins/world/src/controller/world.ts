@@ -744,13 +744,40 @@ export class World {
 
             vector.Z = height + 400;
         }
-
-        const success = await playerObj.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
+		
+		// Call to force Player/Camera Reset
+		await this.playerCameraReset(player);
+		
+        const success = await player.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
         
         if( !success )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}'.` );
     }
+	
+	public async playerCameraReset( player: APlayerState ) {
+		// Force Player Model Rotation (Pitch & Roll) Reset, along with Camera Rotation (Roll only) reset. (Fixes issue noted after RRO update #230324; where player model & camera turns/rotates after leaving locomotive).
+		
+		const data = this.plugin.controller.getAction( Actions.QUERY );
+		const playerObj = await data.query( this.playerQuery, player );
 
+        if( !playerObj || !playerObj.PlayerNamePrivate || !playerObj.PawnPrivate )
+            return Log.warn( `Cannot reset player camera/model for player '${player.PlayerNamePrivate}' as this player could not be found.` );
+
+        const name = data.getName( playerObj.PawnPrivate );
+        if( !name?.includes( 'Conductor' ) )
+            return Log.warn( `Cannot reset player camera/model for player '${player.PlayerNamePrivate}' as the player is inside an engine: ${name}.` );
+
+		// Force Player Rotation Pitch & Roll Reset. (Fixes issue noted after RRO update #230324; where player model turns/rotates after leaving locomotive).
+		const rotation = await playerObj.PawnPrivate.K2_GetActorRotation();
+		rotation.Pitch = 0;
+		rotation.Roll = 0;
+		const rotationSetStatus = await playerObj.PawnPrivate.K2_SetActorRelativeRotation(rotation, false, null as any, false );
+		
+		// Force Player Camera Rotation Roll Reset via canceling out current roll value. (Fixes issue noted after RRO update #230324; where camera turns/rotates after leaving locomotive).
+		const camRotation = await player.PawnPrivate.GetControlRotation();
+		player.PawnPrivate.AddControllerRollInput(-1 * camRotation.Roll);
+	}
+	
     public async setControls( frameCar: Aframecar, type: FrameCarControl, value: number ) {
         if( !this.settings.get( 'features.controlEngines' ) )
             return;
