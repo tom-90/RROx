@@ -79,6 +79,9 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.10 04-04-2023
+- ``Enhancement`` Added Reset Player Camera/Model button to RROx Player list functionality. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.9 - 22-03-2023
 - ``Added`` Industry list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
 

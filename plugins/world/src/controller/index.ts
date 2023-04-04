@@ -1,5 +1,5 @@
 import { IPluginController, Controller } from '@rrox/api';
-import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator, storageUseCrane  } from '../shared';
+import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator, storageUseCrane, PlayerCameraReset  } from '../shared';
 import { Cheats } from './cheats';
 import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
@@ -48,6 +48,15 @@ export default class WorldPlugin extends Controller {
                 return Log.warn( `Cannot teleport player '${playerName}' as this player could not be found.` );
 
             await this.world.teleport( player, location );
+        } );
+		
+		controller.communicator.handle( PlayerCameraReset, async ( playerName ) => {
+            const player = this.world.data.players.find( ( player ) => player.PlayerNamePrivate === playerName );
+
+            if( !player || !player.PawnPrivate )
+                return Log.warn( `Cannot reset camera/model player '${playerName}' as this player could not be found.` );
+
+            await this.world.playerCameraReset( player );
         } );
 
         controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex, isSplineTrack = false ) => {
