@@ -1,7 +1,7 @@
 import { Avatar, Button, Col, Form, InputNumber, List, Row, Slider } from 'antd';
-import { ControlOutlined, AimOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
+import { ControlOutlined, AimOutlined, DownOutlined, UpOutlined, CameraOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats } from '@rrox-plugins/world/shared';
+import { GetPlayerCheats, ICheats, IPlayer, SetMoneyXPCheats, SetPlayerCheats, PlayerCameraReset } from '@rrox-plugins/world/shared';
 import PlayerImage from '../images/players/player.png';
 import { useRPC } from '@rrox/api';
 import { useMapSettings } from '../map/hooks';
@@ -22,6 +22,7 @@ export function PlayerList({
     const getCheats = useRPC(GetPlayerCheats);
     const setCheats = useRPC(SetPlayerCheats);
     const setMoneyXP = useRPC(SetMoneyXPCheats);
+	const resetPlayerCamera = useRPC( PlayerCameraReset );
 
     useEffect(() => {
         if(!mapSettings.features.cheats) return;
@@ -45,8 +46,15 @@ export function PlayerList({
         renderItem={({ index, player }) => {
 
             let actions = [];
-
-            if (mapSettings.features.cheats) {
+			
+			actions.push(<Button
+                title="Reset Player Camera/Model"
+                icon={<CameraOutlined />}
+                onClick={() => resetPlayerCamera(player.name)}
+                size='large'
+            />);
+			
+			if (mapSettings.features.cheats) {
                 actions.push(<Button
                     title='Cheats'
                     icon={<ControlOutlined />}

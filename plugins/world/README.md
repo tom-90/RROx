@@ -22,6 +22,9 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.9 - 04-04-2023
+- ``Enhancement`` Added functionality to Reset Player Camera/Model. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.8 - 13-03-2023
 - ``Enhancement`` Correctly show turntable size and rotation.
 - ``Enhancement`` Retrieve coal tower storage amounts.
