@@ -12,6 +12,7 @@ export interface IWorldSettings {
         build: boolean;
         cheats: boolean;
 		controlCranes: boolean;
+		resetFramecars: boolean;
     }
 }
 

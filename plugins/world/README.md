@@ -19,8 +19,13 @@ The world loader provides a number of features that can be turned on or off depe
 - **Teleport**: Enable/disable the ability for a player teleport anywhere on the map.
 - **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.
 - **Control Cranes**: Enable/disable the ability to remotely cranes.
+- **Rolling Stock Location Reset**: Added functionality for Rolling Stock Location Reset, which allows Game/Session Host (will not work for RROx Clients) to reset rolling stock location if required (may need re-railing after reset).
+	--> Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item).
 
 ## Changelog
+
+### v1.1.10 04-17-2023
+- ``Enhancement`` Added functionality for Rolling Stock Location Reset, which allows Game/Session Host (will not display/work for RROx Clients) to reset rolling stock location if required. This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock). Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item). (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.9 - 04-04-2023
 - ``Enhancement`` Added functionality to Reset Player Camera/Model. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))

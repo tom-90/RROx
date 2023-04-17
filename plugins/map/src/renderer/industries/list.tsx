@@ -6,6 +6,7 @@ import { Tabs } from "antd";
 import { IndustryDefinitions } from "../map/definitions";
 import { IndustryType } from "@rrox-plugins/world/shared";
 import { IndustryList } from "./industries";
+import { EconomyInformation } from "./economyInformation";
 
 export function IndustryListPage() {
     const navigate = useNavigate();
@@ -40,7 +41,9 @@ export function IndustryListPage() {
                             onLocate={locate}
                         />
                     </Tabs.TabPane>
-
+					<Tabs.TabPane tab="Economy Information" key="3" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
+						<EconomyInformation/>
+					</Tabs.TabPane>
                 </Tabs>
             </PageContent>
         </PageLayout>

@@ -826,6 +826,49 @@ export class World {
         }
     }
 	
+	public async resetFrameCar( frameCar: Aframecar ) {
+		// Force Framecar Location & Rotation Reset to bring the Framecar back to the Origin/Spawn Area.
+		if( !frameCar )
+            return Log.warn( `Cannot reset FrameCar as this frameCar could not be found.` );
+		
+		// Attempt to turn off the regulator and apply the brakes on the FrameCar.
+		const character = await this.getCharacter();
+        if ( character ){
+            // Found Server Character (required to setControls on the FrameCar).
+			
+			// Set the Regulator (if it is not null, aka it exists)
+			if ( frameCar.MyRegulator != null )
+                await character.ServerSetRaycastRegulator( frameCar.MyRegulator, 0 );
+			
+			// Set the Brake
+			if ( frameCar.MyBrake != null )
+                await character.ServerSetRaycastBake( frameCar.MyBrake, 100 );
+		}
+		
+		// Get current location and rotation.
+		const location = await frameCar.K2_GetActorLocation();
+		const rotation = await frameCar.K2_GetActorRotation();
+		
+		// Bring the location back to the spawn/origin area:
+		location.X = 720;
+		location.Y = -459;
+		
+		// Get the correct height for the location
+		const height = await this.getHeight( location );
+
+		if( !height )
+			return Log.warn( `Cannot teleport framecar '${frameCar.framename}' as the height of the location could not be determined.` );
+
+		location.Z = height + 500; // Place the framecar above the area (allowing it to fall into place with gravity and avoids direct collisions on teleport).
+		
+		// Force the Rotation to reset (aka: Set back to the spawning/starting Rotation).
+		rotation.Pitch = 0;
+		rotation.Yaw = 90;
+		rotation.Roll = 0;
+		
+		// Set the location and rotation.
+		const locationAndRotationSetStatus = await frameCar.K2_SetActorLocationAndRotation(location, rotation, false, null as any, false );
+	}
 	
 	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number) {
 		if( !this.settings.get( 'features.controlCranes' ) )
