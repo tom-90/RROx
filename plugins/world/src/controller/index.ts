@@ -3,10 +3,8 @@ import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommuni
 import { Cheats } from './cheats';
 import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
-import { ASplineTrack } from './structs/arr/SplineTrack';
-import { ASwitch } from './structs/arr/Switch';
-import { Aindustry } from './structs/arr/industry';
 import { World } from './world';
+import { Structs } from './structs/types';
 
 export default class WorldPlugin extends Controller {
     public world: World;
@@ -60,7 +58,7 @@ export default class WorldPlugin extends Controller {
         } );
 
         controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex, isSplineTrack = false ) => {
-            let switchInstance: ASwitch | ASplineTrack | undefined;
+            let switchInstance: Structs.ASwitch | Structs.ASplineTrack | undefined;
             if(isSplineTrack)
                 switchInstance = this.world.data.splineTracks[ switchIndex ];
             else
@@ -127,7 +125,7 @@ export default class WorldPlugin extends Controller {
         } );
 
 		controller.communicator.handle( storageUseCrane, async ( industryIndex, storageOutputIndex, craneNumber ) => {
-			let industryInstance: Aindustry | undefined;
+			let industryInstance: Structs.Aindustry | undefined;
             industryInstance = this.world.data.industries[ industryIndex ];
 			
 			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));

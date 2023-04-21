@@ -35,6 +35,17 @@ bool Injector::load() {
 
 	NamePoolData = memory.getSymbol<FNamePool>();
 
+
+	uint32_t UEVersion = determineVersion();
+	if (UEVersion == 5) {
+		log("Determined engine is UE5");
+		UObjectProcessEventOffset = 0x4B;
+	}
+	else {
+		log("Determined engine is UE4");
+		UObjectProcessEventOffset = 0x42;
+	}
+
 	ReadyMessage readyMsg;
 	readyMsg.Send();
 
@@ -46,6 +57,35 @@ bool Injector::load() {
 void Injector::stop() {
 	log("Stopping Injector");
 	communicator.Close();
+}
+
+uint32_t Injector::determineVersion() {
+	FUObjectItem* item = memory.getSymbol<FUObjectArray>()->FindObject("Class Engine.GameUserSettings");
+	if (item && item->Object) {
+		int32_t version_offset = 0;
+
+		WUObject wrapped = item->Object;
+		if (wrapped.IsA<WUStruct>()) {
+			WUStruct wrapped_struct = wrapped.Cast<WUStruct>();
+			for (auto prop = wrapped_struct.GetChildProperties().Cast<WFProperty>(); prop; prop = prop.GetNext().Cast<WFProperty>()) {
+				if (prop.GetName() == "Version") {
+					version_offset = prop.GetOffset();
+					break;
+				}
+			}
+		}
+
+		// Tried to distinguish between version values, but turns out, even in UE4, version = 5 (at least in current RailroadsOnline)
+		// But turns out the offset is different, so that works :)
+		if (version_offset == 0xA4) {
+			return 4;
+		}
+		else {
+			return 5;
+		}
+	}
+
+	return -1;
 }
 
 void Injector::parseTable() {

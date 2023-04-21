@@ -1,5 +1,7 @@
 #include "uobject.h"
 
+int UObjectProcessEventOffset = 0x4B;
+
 std::string UObject::GetFullName() {
 	std::string name;
 	for (auto outer = OuterPrivate; outer; outer = outer->OuterPrivate) { name = outer->GetName() + "." + name; }
@@ -15,5 +17,5 @@ std::string UObject::GetName()
 void UObject::ProcessEvent(UFunction* fn, void* parms)
 {
 	auto vtable = *reinterpret_cast<void***>(this);
-	reinterpret_cast<void(*)(void*, void*, void*)>(vtable[0x42])(this, fn, parms);
+	reinterpret_cast<void(*)(void*, void*, void*)>(vtable[UObjectProcessEventOffset])(this, fn, parms);
 }
