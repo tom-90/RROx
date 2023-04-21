@@ -24,7 +24,8 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
-### v1.1.10 04-17-2023
+### v1.1.10 21-04-2023
+- ``Added`` Support for RailroadsOnline Unreal Engine 5
 - ``Enhancement`` Added functionality for Rolling Stock Location Reset, which allows Game/Session Host (will not display/work for RROx Clients) to reset rolling stock location if required. This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock). Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item). (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.9 - 04-04-2023
