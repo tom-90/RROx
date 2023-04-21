@@ -814,7 +814,7 @@ export class World {
         }
     }
 	
-	public async resetFrameCar( frameCar: Aframecar ) {
+	public async resetFrameCar( frameCar: Structs.Aframecar ) {
 		// Force Framecar Location & Rotation Reset to bring the Framecar back to the Origin/Spawn Area.
 		if( !frameCar )
             return Log.warn( `Cannot reset FrameCar as this frameCar could not be found.` );
