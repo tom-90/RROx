@@ -5,7 +5,7 @@ import { FrameDefinitions } from '../definitions';
 import { Button } from 'antd';
 import { FrameControlsPopup, StorageInfo } from '../popups';
 import L from 'leaflet';
-import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator } from '@rrox-plugins/world/shared';
+import { IFrameCar, FrameCarType, EngineFrameCarType, FreightFrameCarType, TeleportCommunicator, FramecarResetCommunicator } from '@rrox-plugins/world/shared';
 import { MapMode } from '../types';
 import { useRPC } from '@rrox/api';
 import { usePopupElements } from '../hooks';
@@ -27,6 +27,8 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
     const definition = FrameDefinitions[ type ];
 
     const teleport = useRPC( TeleportCommunicator );
+	
+	const framecarReset = useRPC( FramecarResetCommunicator );
 
     const [ controlsVisible, setControlsVisible ] = useState( false );
     const [ storageVisible, setStorageVisible ] = useState( false );
@@ -82,6 +84,12 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     {follow.following?.array === 'frameCars' && follow.following.index === index ? 'Unfollow' : 'Follow'}
                 </Button>
                 {popupElements}
+				{settings.features.resetFramecars && <Button 
+					style={{ marginTop: 25 }}
+					onClick={() => {
+						framecarReset( index );
+					}}
+				>Reset Framecar Location</Button>}
             </MapTooltip>
             <FrameControlsPopup
                 title={`${name.replace( "<br>", "" ).toUpperCase()}${name && number ? ' - ' : ''}${number.toUpperCase() || ''}`}
@@ -134,6 +142,12 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                 }}
             >Show Freight</Button>}
             {popupElements}
+			{settings.features.resetFramecars && <Button 
+				style={{ marginTop: 25 }}
+				onClick={() => {
+					framecarReset( index );
+				}}
+			>Reset Framecar Location</Button>}
         </MapTooltip>
         <FrameControlsPopup
             title={frameTitle}

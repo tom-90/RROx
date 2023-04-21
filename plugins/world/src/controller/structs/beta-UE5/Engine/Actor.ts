@@ -63,4 +63,16 @@ export class AActor extends UObject {
     @Property.Function( "Function Engine.Actor.K2_SetActorRelativeRotation", [ [ () => FRotator ], [], [ () => FHitResult ], [] ] )
     public K2_SetActorRelativeRotation: ( NewRelativeRotation: FRotator, bSweep: boolean, SweepHitResult: InOutParam<FHitResult>, bTeleport: boolean ) => Promise<void>;
 	
+	/**
+     * @param NewLocation Struct property
+     * @param NewRotation Struct property
+     * @param bSweep Boolean property
+     * @param SweepHitResult Struct property
+     * @param bTeleport Boolean property
+     * @return Boolean property
+     * @flags Final, Native, Public, HasOutParms, HasDefaults, BlueprintCallable
+     */
+    @Property.Function( "Function Engine.Actor.K2_SetActorLocationAndRotation", [ [ () => FVector ], [ () => FRotator ], [], [ () => FHitResult ], [], [] ] )
+    public K2_SetActorLocationAndRotation: ( NewLocation: FVector, NewRotation: FRotator, bSweep: boolean, SweepHitResult: InOutParam<FHitResult>, bTeleport: boolean ) => Promise<boolean>;
+	
 }

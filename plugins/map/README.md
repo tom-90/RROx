@@ -32,7 +32,7 @@ By clicking on an industry, you can open up the industry info (see Freight Infor
 
 ### Teleporting
 
-It is possible to teleport to any engine, caboose industry, firewood depot, water tower or sandhouse by clicking on it and clicking on `Teleport Here`. It is also possible to right-click anywhere on the map and choosing `Teleport Here`.
+It is possible to teleport to any engine, caboose, waycar, industry, firewood depot, coaling tower, water tower or sandhouse by clicking on it and clicking on `Teleport Here`. It is also possible to right-click anywhere on the map and choosing `Teleport Here`.
 
 ### Setting Money & XP
 
@@ -56,10 +56,22 @@ Details, locate functionality, and controls for the various rolling stock in the
 
 Names, locate functionality, and cheat menu for all the connected players
 
-
 ### Industry List
 
 Details and storage amounts for the primary industries and the fueling buildings within the game world.
+
+## Helpful Extras Items
+
+### Player Camera/Model Reset
+Added button to RROx Player List. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives
+
+### Rolling Stock (Framecar) Reset Location Functionality (Game/Session Hosts  List
+Added Button to RROx Rolling Stock popup on RROx Map to allow Game/Session Host (will not display/work for RROx Clients) to reset rolling stock locations.
+-This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock).
+-Please be aware of the following:
+	-Momement is kept during/after location reset due to Game Logic/Implementation.
+	-May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case).
+	-Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item).
 
 # Settings
 
@@ -78,6 +90,17 @@ It is not possible to customize the images used for the industries, water towers
 It is possible to enable the minimap under the minimap settings. **The minimap will only show if the game overlay is enabled under the `Overlay` settings**.
 
 ## Changelog
+
+### v1.1.11 04-17-2023
+- ``Fixed`` Corrected Cargo Icons/Images showing incorrect prices. These have been adjusted to only show the cargo/item being transported. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Map Plugin Backgrounds #1 and #5, to remove incorrect prices. These have been adjusted to remove the cargo/price details & fully support any map (including moved industries). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Economy Information Tab to the Industry list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added "Industry Inputs and Outputs Reference Chart" to the Economy Information Tab on the Industry list menu. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added "Item/Cargo Prices Reference Chart" to the Economy Information Tab on the Industry list menu. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Fixed Freight Info Image in Map Plugin Description/Documentation to align with current RROx Functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Seperated Rolling Stock lists for Tenders and Cabooses/Miscellaneous Rolling Stock for ease of finding non-tenders on larger sessions. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Button to Rolling Stock popup on RROx Map to allow Game/Session Host (will not display/work for RROx Clients) to reset rolling stock locations. This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock). Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Teleporting to a non-industries/buildings/rolling stock will close the Teleport Pop-up on the map after the teleport is called. (See RROx logs in the RROx settings should a Teleport be unsuccessful). (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.10 04-04-2023
 - ``Enhancement`` Added Reset Player Camera/Model button to RROx Player list functionality. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))
