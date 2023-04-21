@@ -1,28 +1,13 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
 import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack, Log } from "../shared";
-import { Acoupler } from "./structs/arr/coupler";
-import { Aframecar } from "./structs/arr/framecar";
-import { Aindustry } from "./structs/arr/industry";
-import { Asandhouse } from "./structs/arr/sandhouse";
-import { ASplineActor } from "./structs/arr/SplineActor";
-import { ASplineTrack } from "./structs/arr/SplineTrack";
-import { Astorage } from "./structs/arr/storage";
-import { Acrane } from "./structs/arr/crane";
-import { Achute } from "./structs/arr/chute";
-import { ASwitch } from "./structs/arr/Switch";
-import { Aturntable } from "./structs/arr/turntable";
-import { Awatertower } from "./structs/arr/watertower";
-import { AActor } from "./structs/Engine/Actor";
-import { APlayerState } from "./structs/Engine/PlayerState";
-import { FRotator } from "./structs/CoreUObject/Rotator";
-import { FVector } from "./structs/CoreUObject/Vector";
+import { Structs } from './structs/types';
 
 export class WorldParser {
 
     constructor( private plugin: WorldPlugin ) {}
 
-    public parsePlayer( player: APlayerState ): IPlayer {
+    public parsePlayer( player: Structs.APlayerState ): IPlayer {
         return {
             name    : player.PlayerNamePrivate,
             location: this.parseActorLocation( player.PawnPrivate ),
@@ -30,7 +15,7 @@ export class WorldParser {
         }
     }
 
-    public parseFrameCar( frameCar: Aframecar, frameCars?: Aframecar[] ): IFrameCar {
+    public parseFrameCar( frameCar: Structs.Aframecar, frameCars?: Structs.Aframecar[] ): IFrameCar {
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         return {
@@ -84,7 +69,7 @@ export class WorldParser {
         }
     }
 
-    public parseSwitch( swtch: ASwitch ): ISwitch {
+    public parseSwitch( swtch: Structs.ASwitch ): ISwitch {
         return {
             type: swtch.switchtype,
             state: swtch.switchstate,
@@ -94,7 +79,7 @@ export class WorldParser {
         }
     }
 
-    public parseTurntable( tt: Aturntable ): ITurntable {
+    public parseTurntable( tt: Structs.Aturntable ): ITurntable {
         return {
             type: tt.turntabletype,
             deckRotation: {
@@ -107,7 +92,7 @@ export class WorldParser {
         }
     }
 
-    public parseWatertower( wt: Awatertower ): IWatertower {
+    public parseWatertower( wt: Structs.Awatertower ): IWatertower {
         return {
             waterStorage: this.parseStorage( wt.Mystorage )!,
             location: this.parseActorLocation( wt ),
@@ -115,7 +100,7 @@ export class WorldParser {
         }
     }
 
-    public parseSandhouse( sh: Asandhouse ): ISandhouse {
+    public parseSandhouse( sh: Structs.Asandhouse ): ISandhouse {
         return {
             sandStorage: this.parseStorage( sh.Mystorage )!,
             location: this.parseActorLocation( sh ),
@@ -123,7 +108,7 @@ export class WorldParser {
         }
     }
     
-    public parseIndustry( ind: Aindustry ): IIndustry {
+    public parseIndustry( ind: Structs.Aindustry ): IIndustry {
         const industry = {
             type: ind.industrytype,
             educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map(
@@ -183,7 +168,7 @@ export class WorldParser {
         return industry;
     }
 
-    public parseSpline( s: ASplineActor ): ISpline {
+    public parseSpline( s: Structs.ASplineActor ): ISpline {
         return {
             type    : s.SplineType,
             segments: this.parseSplineSegments( s ),
@@ -192,7 +177,7 @@ export class WorldParser {
         };
     }
 
-    public parseSplineSegments( spline: ASplineActor ) {
+    public parseSplineSegments( spline: Structs.ASplineActor ) {
         const segments: ISplineSegment[] = [];
 
         for( let i = 0; i < spline.SplineControlPoints.length - 1; i++ ) {
@@ -216,7 +201,7 @@ export class WorldParser {
         return segments;
     }
 
-    public parseSplineTrack( s: ASplineTrack ): ISplineTrack {
+    public parseSplineTrack( s: Structs.ASplineTrack ): ISplineTrack {
         return {
             type: s.type,
             location: {
@@ -258,15 +243,15 @@ export class WorldParser {
         };
     }
 
-    public parseActorLocation( actor: AActor ): ILocation {
+    public parseActorLocation( actor: Structs.AActor ): ILocation {
         return this.parseLocation(actor.RootComponent.RelativeLocation);
     }
 
-    public parseActorRotation( actor: AActor ): IRotation {
+    public parseActorRotation( actor: Structs.AActor ): IRotation {
         return this.parseRotation(actor.RootComponent.RelativeRotation);
     }
 
-    public parseLocation( location: FVector ): ILocation {
+    public parseLocation( location: Structs.FVector ): ILocation {
         return {
             X: location.X,
             Y: location.Y,
@@ -274,7 +259,7 @@ export class WorldParser {
         }
     }
 
-    public parseRotation( rotation: FRotator ): IRotation {
+    public parseRotation( rotation: Structs.FRotator ): IRotation {
         return {
             Pitch: rotation.Pitch,
             Yaw: rotation.Yaw,
@@ -282,7 +267,7 @@ export class WorldParser {
         }
     }
 
-    public parseStorage( storage?: Astorage ): IStorage | undefined {
+    public parseStorage( storage?: Structs.Astorage ): IStorage | undefined {
         if( !storage )
             return undefined;
 
@@ -305,7 +290,7 @@ export class WorldParser {
         }
     }
 
-    private parseCoupler( coupler?: Acoupler, frameCars?: Aframecar[] ) {
+    private parseCoupler( coupler?: Structs.Acoupler, frameCars?: Structs.Aframecar[] ) {
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         if( !coupler )

@@ -13,6 +13,8 @@ public:
 
 	bool load();
 
+	uint32_t determineVersion();
+
 	void stop();
 
 	void parseTable();

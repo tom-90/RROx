@@ -1,14 +1,10 @@
 import { Actions, IPluginController } from "@rrox/api";
 import WorldPlugin from ".";
 import { FrameCarControl, getCoupledFrames, ICheats, isEngine } from "../shared";
-import { Aframecar } from "./structs/arr/framecar";
-import { ASCharacter } from "./structs/arr/SCharacter";
-import { EMovementMode } from "./structs/Engine/EMovementMode";
-import { APawn } from "./structs/Engine/Pawn";
-import { APlayerState } from "./structs/Engine/PlayerState";
+import { Structs } from "./structs/types";
 
 export class ControlsSynchronizer {
-    public synchronizedEngines: Aframecar[] = [];
+    public synchronizedEngines: Structs.Aframecar[] = [];
 
     private interval: NodeJS.Timeout;
 
@@ -79,7 +75,7 @@ export class ControlsSynchronizer {
         clearInterval( this.interval );
     }
 
-    public addEngine( engine: Aframecar ) {
+    public addEngine( engine: Structs.Aframecar ) {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         if( this.synchronizedEngines.some( ( e ) => data.equals( e, engine ) ) )
@@ -87,7 +83,7 @@ export class ControlsSynchronizer {
         this.synchronizedEngines.push( engine );
     }
 
-    public removeEngine( engine: Aframecar ) {
+    public removeEngine( engine: Structs.Aframecar ) {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         this.synchronizedEngines = this.synchronizedEngines.filter( ( e ) => !data.equals( e, engine ) );
