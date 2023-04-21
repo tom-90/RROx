@@ -1,6 +1,6 @@
 {
     "name": "@rrox-plugins/autosave",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Autosave Plugin",
     "author": "_tom()",
     "rrox": {

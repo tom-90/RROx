@@ -65,6 +65,18 @@ export class Autosaver {
     }
 
     private async autosave() {
+        const structAction = this.controller.getAction( Actions.GET_STRUCT );
+        const struct = await structAction.getStruct( 'Class arr.arrGameModeBase' );
+
+        if( !struct )
+            return;
+
+        if(struct.functions.some((f) => f.cppName === 'AutoSaveGame')) {
+            Log.log('Disabling auto-save as this is not supported and can cause crashes on the beta-branch.');
+            this.stop();
+            return;
+        }
+        
         const gameMode = await this.getGameMode();
 
         if( !gameMode )
