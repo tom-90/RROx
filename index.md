@@ -29,6 +29,11 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v2.2.1 - 21-04-2023
+
+- ``Added`` Support for Unreal Engine 5 (for RailroadsOnline Weather & Sky update)
+- ``Fixed`` Typo in plugin update message
+
 ### v2.2.0 - 13-11-2022
 
 - ``Added`` Additional API's necessary for the world and map plugins to load the new spline system.
