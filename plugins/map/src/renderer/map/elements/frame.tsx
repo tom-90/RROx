@@ -119,7 +119,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
         rotation={Math.round( rotation.Yaw ) - 90}
         color={getStrokeColor( controls.brake )}
         fillColor={definition.freight
-            ? preferences.colors[ type as FreightFrameCarType ][ freight && freight.currentAmount > 0 ? 'loaded' : 'unloaded' ]
+            ? preferences.colors[ type as FreightFrameCarType ][ freight && freight.currentAmount > 0 ? (freight && freight.currentAmount == freight.maxAmount ? 'fullyloaded' : 'partiallyloaded') : 'unloaded' ]
             : preferences.colors[ type as EngineFrameCarType ]}
         fillOpacity={1}
         interactive

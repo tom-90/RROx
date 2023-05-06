@@ -59,13 +59,11 @@ export function IndustryList( {
 										<table style={{
 											width: '100%',
 											marginBottom: 20,
-											color: 'black',
 										}}>
 											<thead>
 												<tr>
 													<th style={{
 														textAlign: 'center',
-														color: 'black',
 													}} colSpan={2}>
 														Input
 													</th>
@@ -80,7 +78,7 @@ export function IndustryList( {
 																width: '50%',
 																paddingRight: 5,	
 															}}>
-																<span style={{ color: currentAmount < 10 ? (maxAmount == 0 ? "black" : "red") : "black" }}>{currentAmount} </span> / {maxAmount}
+																<span style={{ color: currentAmount < 10 ? (maxAmount == 0 ? "" : "red") : "" }}>{currentAmount} </span> / {maxAmount}
 															</td>
 															<td style={{ width: '50%' }}>
 																{type.split( ' ' ).map( ( item: ProductType ) => <img
@@ -102,13 +100,11 @@ export function IndustryList( {
 										<table style={{
 											width: '100%',
 											marginBottom: 20,
-											color: 'black',
 										}}>
 											<thead>
 												<tr>
 													<th style={{
 														textAlign: 'center',
-														color: 'black',
 													}} colSpan={2}>
 														Output
 													</th>
