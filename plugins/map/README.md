@@ -91,11 +91,12 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
-### v1.1.12 06-05-2023
+### v1.1.12 27-05-2023
 - ``Fixed`` Corrected text colours on the Industry Information List Tables. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Fixed`` Corrected text colours on the Economy Information Tab Tables. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Fixed`` Corrected text colours on the Rolling Stock List. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Improved Rolling Stock Map Color Settings/Options to allow for the option to display/differentiate between "Partially Loaded" and "Fully Loaded" cars. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for new Steel Truss Bridges. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.11 17-04-2023
 - ``Fixed`` Corrected Cargo Icons/Images showing incorrect prices. These have been adjusted to only show the cargo/item being transported. (Thanks to [Mordred](https://github.com/mordred-random))

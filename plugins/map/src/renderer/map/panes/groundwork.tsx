@@ -13,7 +13,7 @@ const SplineTrackToSpline = {
         SplineTrackType.RAIL_3FT_SPAWN
     ],
     [ SplineType.WOODEN_BRIDGE ]: [ SplineTrackType.TRESTLE_3FT_WOOD_01, SplineTrackType.TRESTLE_3FT_PILE_01 ],
-    [ SplineType.IRON_BRIDGE ]: [ SplineTrackType.TRESTLE_3FT_STEEL_01 ],
+    [ SplineType.IRON_BRIDGE ]: [ SplineTrackType.TRESTLE_3FT_STEEL_01, SplineTrackType.BRIDGE_3FT_STEEL_TRUSS_01 ],
 };
 
 const SplineTrackSwitchesToSpline = {
