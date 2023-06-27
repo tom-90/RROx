@@ -24,6 +24,17 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.12 27-06-2023
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Cane Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Logging Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Stake Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Bulkhead Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Lowside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Medium Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Highside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "EWA Plantation Box Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Waualua Agricultural Tank Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.11 27-05-2023
 - ``Enhancement`` Added Support for new Steel Truss Bridges. (Thanks to [Mordred](https://github.com/mordred-random))
 
