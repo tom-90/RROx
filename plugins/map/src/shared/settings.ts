@@ -109,7 +109,87 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
 			[ FrameCarType.TWEETSIE280         ]: { type: 'string', default: '#800080' },
             [ FrameCarType.TWEETSIE280_TENDER  ]: { type: 'string', default: '#000000' },
 			
-
+			[ FrameCarType.PLANTATIONCAR_FLATCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#6b6b6b' },
+                    partiallyloaded: { type: 'string', default: '#6b6b6b' },
+					fullyloaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_LOGS ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#cd5c5c' },
+                    partiallyloaded: { type: 'string', default: '#cd5c5c' },
+					fullyloaded: { type: 'string', default: '#cd5c5c' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#adff2f' },
+                    partiallyloaded: { type: 'string', default: '#adff2f' },
+					fullyloaded: { type: 'string', default: '#adff2f' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#ffa500' },
+                    partiallyloaded: { type: 'string', default: '#ffa500' },
+					fullyloaded: { type: 'string', default: '#ffa500' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_SMALL ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_LARGE ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_TANKER ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#d3d3d3' },
+                    partiallyloaded: { type: 'string', default: '#d3d3d3' },
+					fullyloaded: { type: 'string', default: '#d3d3d3' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_BOXCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#6b6b6b' },
+                    partiallyloaded: { type: 'string', default: '#6b6b6b' },
+					fullyloaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
 			[ FrameCarType.SKELETONCAR ]: {
                 type: 'object',
                 properties: {
@@ -200,7 +280,6 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 },
                 default: {}
             },
-
 
             spline: {
                 type: 'object',

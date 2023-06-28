@@ -32,6 +32,16 @@ import RubyBasin from '../images/cars/ruby_basin.png';
 import MasonBogie from '../images/cars/mason_bogie.png';
 import Cooke260Coal from '../images/cars/cooke260_coal.png';
 import Etwnc280 from '../images/cars/etwnc280.png';
+import Plantationcar_Flatcar from '../images/cars/plantationcar_flatcar.png';
+import Plantationcar_Flatcar_Logs from '../images/cars/plantationcar_flatcar_logs.png';
+import Plantationcar_Flatcar_Stakes from '../images/cars/plantationcar_flatcar_stakes.png';
+import Plantationcar_Flatcar_Stakes_Bulkhead from '../images/cars/plantationcar_flatcar_stakes_bulkhead.png';
+import Plantationcar_Hopper_Small from '../images/cars/plantationcar_hopper_small.png';
+import Plantationcar_Hopper_Medium from '../images/cars/plantationcar_hopper_medium.png';
+import Plantationcar_Hopper_Large from '../images/cars/plantationcar_hopper_large.png';
+import Plantationcar_Tanker from '../images/cars/plantationcar_tanker.png';
+import Plantationcar_Boxcar from '../images/cars/plantationcar_boxcar.png';
+
 
 import { MapPreferences } from "../../shared";
 import { useSettings } from "@rrox/api";
@@ -296,7 +306,116 @@ export function ColorSettings() {
 							<th>Fully Loaded</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>					
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Flatcar} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_FLATCAR}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+					
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Flatcar_Logs} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_LOGS, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_LOGS, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_LOGS, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_LOGS}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_LOGS}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_LOGS}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Flatcar_Stakes} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Flatcar_Stakes_Bulkhead} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Hopper_Small} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_SMALL, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_SMALL, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_SMALL, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_HOPPER_SMALL}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_SMALL}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_SMALL}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Hopper_Medium} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Hopper_Large} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_LARGE, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_LARGE, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_HOPPER_LARGE, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_HOPPER_LARGE}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_LARGE}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_HOPPER_LARGE}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Tanker} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_TANKER, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_TANKER, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_TANKER, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_TANKER}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_TANKER}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_TANKER}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Plantationcar_Boxcar} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_BOXCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_BOXCAR, 'partiallyloaded' ]}><input type='color' /></Form.Item></td>
+							<td><Form.Item name={[ 'colors', FrameCarType.PLANTATIONCAR_BOXCAR, 'fullyloaded' ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.PLANTATIONCAR_BOXCAR}.unloaded`, `colors.${FrameCarType.PLANTATIONCAR_BOXCAR}.partiallyloaded`, `colors.${FrameCarType.PLANTATIONCAR_BOXCAR}.fullyloaded` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
                         <tr>
                             <td><img className='dark-mode-invert' src={SkeletonCar} /></td>
                             <td><Form.Item name={[ 'colors', FrameCarType.SKELETONCAR, 'unloaded' ]}><input type='color' /></Form.Item></td>
