@@ -2,44 +2,10 @@ import { Actions, InOutParam, IPluginController, IQuery, MultiLinkedStructRef, q
 import WorldPlugin from ".";
 import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
 import { Geometry } from "./geometry";
-import { AarrGameStateBase } from "./structs/arr/arrGameStateBase";
-import { Acoupler } from "./structs/arr/coupler";
-import { Aframecar } from "./structs/arr/framecar";
-import { Aindustry } from "./structs/arr/industry";
-import { Asandhouse } from "./structs/arr/sandhouse";
-import { ASplineActor } from "./structs/arr/SplineActor";
-import { ASplineTrack } from "./structs/arr/SplineTrack";
-import { Astorage } from "./structs/arr/storage";
-import { Acrane } from "./structs/arr/crane";
-import { Achute } from "./structs/arr/chute";
-import { ASwitch } from "./structs/arr/Switch";
-import { Aturntable } from "./structs/arr/turntable";
-import { Awatertower } from "./structs/arr/watertower";
-import { ABP_Player_Conductor_C } from "./structs/BP_Player_Conductor/BP_Player_Conductor_C";
-import { FLinearColor } from "./structs/CoreUObject/LinearColor";
-import { FVector } from "./structs/CoreUObject/Vector";
-import { EDrawDebugTrace } from "./structs/Engine/EDrawDebugTrace";
-import { ETraceTypeQuery } from "./structs/Engine/ETraceTypeQuery";
-import { UGameEngine } from "./structs/Engine/GameEngine";
-import { FHitResult } from "./structs/Engine/HitResult";
-import { UKismetSystemLibrary } from "./structs/Engine/KismetSystemLibrary";
-import { UNetConnection } from "./structs/Engine/NetConnection";
-import { APlayerState } from "./structs/Engine/PlayerState";
-import { UWorld } from "./structs/Engine/World";
+import { Structs, IWorldObjects } from "./structs/types";
+import * as BetaStructs from "./structs/beta-UE5";
+import * as MainStructs from './structs/main-UE4';
 import { Vector2D } from "./vector";
-import * as SplineTrackRefs from './structs/splineTrackRefs';
-
-export interface IWorldObjects {
-    players: APlayerState[];
-    frameCars: Aframecar[];
-    switches: ASwitch[];
-    turntables: Aturntable[];
-    watertowers: Awatertower[];
-    sandhouses: Asandhouse[];
-    industries: Aindustry[];
-    splines: ASplineActor[];
-    splineTracks: ASplineTrack[];
-}
 
 export enum LoadType {
     OBJECTS,
@@ -48,8 +14,8 @@ export enum LoadType {
 }
 
 export class World {
-    private world?: UWorld | null;
-    private kismetSystemLibrary?: UKismetSystemLibrary | null;
+    private world?: Structs.UWorld | null;
+    private kismetSystemLibrary?: Structs.UKismetSystemLibrary | null;
 
     private readonly empty = {
         frameCars: [],
@@ -62,19 +28,21 @@ export class World {
         watertowers: [],
         splineTracks: [],
     };
+
+    public structs: typeof BetaStructs | typeof MainStructs;
     
     public data: IWorldObjects = this.empty;
     public valueProvider: ValueProvider<IWorld>;
 
-    private worldQuery: IQuery<AarrGameStateBase>;
-    private splineQuery: IQuery<AarrGameStateBase>;
-    private playerQuery: IQuery<APlayerState>;
-    private switchQuery: IQuery<ASwitch>;
-    private splineTrackQuery: IQuery<ASplineTrack>;
-    private clientQuery: IQuery<UNetConnection>;
-    private clientSplineQuery: IQuery<UNetConnection>;
+    private worldQuery: IQuery<Structs.AarrGameStateBase>;
+    private splineQuery: IQuery<Structs.AarrGameStateBase>;
+    private playerQuery: IQuery<Structs.APlayerState>;
+    private switchQuery: IQuery<Structs.ASwitch>;
+    private splineTrackQuery: IQuery<Structs.ASplineTrack>;
+    private clientQuery: IQuery<Structs.UNetConnection>;
+    private clientSplineQuery: IQuery<Structs.UNetConnection>;
 
-    private splineTrackReference: MultiLinkedStructRef<ASplineTrack> | null = null;
+    private splineTrackReference: MultiLinkedStructRef<Structs.ASplineTrack> | null = null;
 
     private worldInterval?: NodeJS.Timeout;
     private splineInterval?: NodeJS.Timeout;
@@ -95,16 +63,18 @@ export class World {
     async prepare() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
+        await this.determineVersion();
+
         await this.getKismetSystemLibrary();
         await this.getWorld();
 
-        const playerQuery = ( player: QueryBuilder<APlayerState> ) => [
+        const playerQuery = ( player: QueryBuilder<Structs.APlayerState> ) => [
             player.PlayerNamePrivate,
             player.PawnPrivate.RootComponent.RelativeLocation,
             player.PawnPrivate.RootComponent.RelativeRotation
         ];
 
-        const frameCarQuery = ( car: QueryBuilder<Aframecar> ) => [
+        const frameCarQuery = ( car: QueryBuilder<Structs.Aframecar> ) => [
             car.FrameType,
             car.framename,
             car.FrameNumber,
@@ -142,20 +112,21 @@ export class World {
             car.MyCouplerRear.bIsCoupled,
         ];
 
-        const switchQuery = ( sw: QueryBuilder<ASwitch> ) => [
+        const switchQuery = ( sw: QueryBuilder<Structs.ASwitch> ) => [
             sw.switchtype,
             sw.switchstate,
             sw.RootComponent.RelativeLocation,
             sw.RootComponent.RelativeRotation,
         ];
 
-        const turntableQuery = ( tt: QueryBuilder<Aturntable> ) => [
+        const turntableQuery = ( tt: QueryBuilder<Structs.Aturntable> ) => [
+            tt.turntabletype,
             tt.deckmesh.RelativeRotation,
             tt.RootComponent.RelativeLocation,
-            tt.RootComponent.RelativeRotation
+            tt.RootComponent.RelativeRotation,
         ];
 
-        const watertowerQuery = ( wt: QueryBuilder<Awatertower> ) => [
+        const watertowerQuery = ( wt: QueryBuilder<Structs.Awatertower> ) => [
             wt.Mystorage.currentamountitems,
             wt.Mystorage.maxitems,
             wt.Mystorage.storagetype,
@@ -165,7 +136,7 @@ export class World {
             wt.RootComponent.RelativeRotation
         ];
 
-        const sandhouseQuery = ( sh: QueryBuilder<Asandhouse> ) => [
+        const sandhouseQuery = ( sh: QueryBuilder<Structs.Asandhouse> ) => [
             sh.Mystorage.currentamountitems,
             sh.Mystorage.maxitems,
             sh.Mystorage.storagetype,
@@ -175,7 +146,7 @@ export class World {
             sh.RootComponent.RelativeRotation
         ];
 
-        const industryQuery = ( ind: QueryBuilder<Aindustry> ) => [
+        const industryQuery = ( ind: QueryBuilder<Structs.Aindustry> ) => [
             ind.industrytype,
             ind.RootComponent.RelativeLocation,
             ind.RootComponent.RelativeRotation,
@@ -206,9 +177,16 @@ export class World {
                     crane.RootComponent.AttachParent.RelativeRotation,
                 ]).flat(),
             ] ).flat(),
+
+            ind.educt1type,
+            ind.educt1amount,
+            ind.educt1amountmax,
+            ind.product1type,
+            ind.product1amount,
+            ind.product1amountmax
         ];
 
-        const splineQuery = ( spline: QueryBuilder<ASplineActor> ) =>  [
+        const splineQuery = ( spline: QueryBuilder<Structs.ASplineActor> ) =>  [
             spline.SplineControlPoints.all(),
             spline.SplineMeshBoolArray.all(),
             spline.SplineType,
@@ -216,7 +194,7 @@ export class World {
             spline.RootComponent.RelativeRotation
         ];
 
-        this.worldQuery = await data.prepareQuery( AarrGameStateBase, ( gameState ) => [
+        this.worldQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase, ( gameState ) => [
             // Query players
             playerQuery( gameState.PlayerArray.all() ),
 
@@ -239,12 +217,12 @@ export class World {
             industryQuery( gameState.IndustryArray.all() ),
         ] );
 
-        this.splineQuery = await data.prepareQuery( AarrGameStateBase, ( gameState ) => [
+        this.splineQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase, ( gameState ) => [
             // Query splines
             splineQuery( gameState.SplineArray.all() ),
         ] );
 
-        this.splineTrackQuery = await data.prepareQuery( ASplineTrack as StructConstructor<ASplineTrack>, ( splineTrack ) => [
+        this.splineTrackQuery = await data.prepareQuery( this.structs.arr.ASplineTrack as StructConstructor<Structs.ASplineTrack>, ( splineTrack ) => [
             splineTrack.StartLocation,
             splineTrack.StartTangent,
             splineTrack.EndLocation,
@@ -255,21 +233,21 @@ export class World {
             splineTrack.splinecomp2endrelativelocation,
         ] );
 
-        this.hasSplineTracks = (await data.getReference(SplineTrackRefs.ABP_SplineTrack_DriveTrack_C)) !== null;
+        this.hasSplineTracks = (await data.getReference(this.structs.BP_SplineTracks.ABP_SplineTrack_DriveTrack_C)) !== null;
 
         Log.info('Has beta spline tracks: ' + this.hasSplineTracks);
 
         if(this.hasSplineTracks)
             this.splineTrackReference = await data.getMultiReference(
                 // Reversing the array has much better cache hit chances
-                Object.values(SplineTrackRefs as { [key: string]: StructConstructor<ASplineTrack> }).reverse()
+                Object.values(this.structs.BP_SplineTracks as { [key: string]: StructConstructor<Structs.ASplineTrack> }).reverse()
             );
 
-        this.switchQuery = await data.prepareQuery( ASwitch, ( sw ) => [ sw.switchstate ] );
+        this.switchQuery = await data.prepareQuery( this.structs.arr.ASwitch, ( sw ) => [ sw.switchstate ] );
 
-        this.playerQuery = await data.prepareQuery( APlayerState, ( p ) => [ p.PlayerNamePrivate, p.PawnPrivate ] );
+        this.playerQuery = await data.prepareQuery( this.structs.Engine.APlayerState, ( p ) => [ p.PlayerNamePrivate, p.PawnPrivate ] );
 
-        this.clientQuery = await data.prepareQuery( UNetConnection, ( conn ) => [
+        this.clientQuery = await data.prepareQuery( this.structs.Engine.UNetConnection, ( conn ) => [
             query( conn.OpenActorChannels.all(), ( channel ) => [
                 // Query players
                 playerQuery( channel.Player ),
@@ -294,7 +272,7 @@ export class World {
             ] ),
         ] );
 
-        this.clientSplineQuery = await data.prepareQuery( UNetConnection, ( conn ) => [
+        this.clientSplineQuery = await data.prepareQuery( this.structs.Engine.UNetConnection, ( conn ) => [
             query( conn.OpenActorChannels.all(), ( channel ) => [
                 // Query players
                 splineQuery( channel.Spline ),
@@ -351,10 +329,28 @@ export class World {
         this.splineInterval = undefined;
     }
 
+    private async determineVersion() {
+        const data = this.plugin.controller.getAction( Actions.QUERY );
+
+        Log.info('Trying beta branch version');
+
+        try {
+            await data.prepareQuery(BetaStructs.CoreUObject.FVector, () => []);
+
+            Log.info('Beta branch version detected');
+
+            this.structs = BetaStructs;
+        } catch(e) {
+            Log.info('Falling back to stable branch version, because beta branch version gave error:', e);
+
+            this.structs = MainStructs;
+        }
+    }
+
     private async getKismetSystemLibrary() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        const kismetRef = await data.getReference( UKismetSystemLibrary );
+        const kismetRef = await data.getReference( this.structs.Engine.UKismetSystemLibrary );
         if( kismetRef )
             this.kismetSystemLibrary = await kismetRef.getStatic();
         else
@@ -364,7 +360,7 @@ export class World {
     private async getWorld() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        const ref = await data.getReference( UGameEngine );
+        const ref = await data.getReference( this.structs.Engine.UGameEngine );
         if( !ref )
             return;
             
@@ -375,7 +371,7 @@ export class World {
         const [ engine ] = instances;
 
         this.world = ( await data.query(
-            await data.prepareQuery( UGameEngine, ( qb ) => [
+            await data.prepareQuery( this.structs.Engine.UGameEngine, ( qb ) => [
                 qb.GameViewport.World.ARRGameState,
                 qb.GameViewport.World.NetDriver.ServerConnection,
             ] ),
@@ -415,16 +411,16 @@ export class World {
             }
         }
         
-        let gameState: AarrGameStateBase | null = this.world.ARRGameState;
+        let gameState: Structs.AarrGameStateBase | null = this.world.ARRGameState;
 
         if( !gameState )
             return this.parseWorld( this.empty );
 
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
-        let data: AarrGameStateBase | null = null;
-        let splines: AarrGameStateBase | null = null;
-        let splineTracks: ASplineTrack[] | null = null;
+        let data: Structs.AarrGameStateBase | null = null;
+        let splines: Structs.AarrGameStateBase | null = null;
+        let splineTracks: Structs.ASplineTrack[] | null = null;
 
         if( type === LoadType.OBJECTS || type === LoadType.ALL ) {
             data = await queryAction.query( this.worldQuery, gameState );
@@ -615,30 +611,30 @@ export class World {
         if( !this.kismetSystemLibrary )
             return;
 
-        const start = await data.create( FVector );
+        const start = await data.create( this.structs.CoreUObject.FVector );
         start.X = position.X;
         start.Y = position.Y;
         start.Z = 50000;
 
-        const end = await data.create( FVector );
+        const end = await data.create( this.structs.CoreUObject.FVector );
         end.X = position.X;
         end.Y = position.Y;
         end.Z = 0;
 
-        const result = new InOutParam( await data.create( FHitResult ) );
+        const result = new InOutParam( await data.create( this.structs.Engine.FHitResult ) );
 
         const hasHit = await this.kismetSystemLibrary.LineTraceSingle(
             this.world.ARRGameState,
             start,
             end,
-            ETraceTypeQuery.TraceTypeQuery1,
+            this.structs.Engine.ETraceTypeQuery.TraceTypeQuery1,
             false,
             new InOutParam( [] ),
-            EDrawDebugTrace.None,
+            this.structs.Engine.EDrawDebugTrace.None,
             result,
             false,
-            await data.create( FLinearColor ),
-            await data.create( FLinearColor ),
+            await data.create( this.structs.CoreUObject.FLinearColor ),
+            await data.create( this.structs.CoreUObject.FLinearColor ),
             0
         );
 
@@ -656,7 +652,7 @@ export class World {
     public async getCharacter() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        const ref = await data.getReference( ABP_Player_Conductor_C );
+        const ref = await data.getReference( this.structs.BP_Player_Conductor.ABP_Player_Conductor_C );
         if( !ref )
             return;
 
@@ -667,13 +663,13 @@ export class World {
         return characters[ 0 ];
     }
 
-    public async setSwitch( switchInstance: ASwitch | ASplineTrack ) {
+    public async setSwitch( switchInstance: Structs.ASwitch | Structs.ASplineTrack ) {
         if( !this.settings.get( 'features.controlSwitches' ) )
             return;
 
         const data = this.plugin.controller.getAction( Actions.QUERY );
         
-        if(switchInstance instanceof ASwitch) {
+        if(switchInstance instanceof this.structs.arr.ASwitch) {
             const character = await this.getCharacter();
             if( !character )
                 return Log.warn( `Cannot change switch as no character could be found.` );
@@ -686,7 +682,7 @@ export class World {
                 await character?.ServerSwitchUp( switchInstance );
             else if( latestSwitch.switchstate == 1 )
                 await character?.ServerSwitchDown( switchInstance );
-        } else if(switchInstance instanceof ASplineTrack) {
+        } else if(switchInstance instanceof this.structs.arr.ASplineTrack) {
             const character = await this.getCharacter();
             if( !character )
                 return Log.warn( `Cannot change switch as no character could be found.` );
@@ -706,7 +702,7 @@ export class World {
         }
     }
 
-    public async teleport( player: APlayerState, location: ILocation | ILocation2D ) {
+    public async teleport( player: Structs.APlayerState, location: ILocation | ILocation2D ) {
         if( !this.settings.get( 'features.teleport' ) )
             return;
 
@@ -721,7 +717,7 @@ export class World {
         if( !name?.includes( 'Conductor' ) )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}' as the player is inside an engine: ${name}.` );
 
-        const vector = await data.create( FVector );
+        const vector = await data.create( this.structs.CoreUObject.FVector );
 
         vector.X = location.X;
         vector.Y = location.Y;
@@ -736,14 +732,41 @@ export class World {
 
             vector.Z = height + 400;
         }
-
-        const success = await playerObj.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
+		
+		// Call to force Player/Camera Reset
+		await this.playerCameraReset(player);
+		
+        const success = await player.PawnPrivate.K2_SetActorLocation( vector, false, null as any, false );
         
         if( !success )
             return Log.warn( `Cannot teleport player '${player.PlayerNamePrivate}'.` );
     }
+	
+	public async playerCameraReset( player: Structs.APlayerState ) {
+		// Force Player Model Rotation (Pitch & Roll) Reset, along with Camera Rotation (Roll only) reset. (Fixes issue noted after RRO update #230324; where player model & camera turns/rotates after leaving locomotive).
+		
+		const data = this.plugin.controller.getAction( Actions.QUERY );
+		const playerObj = await data.query( this.playerQuery, player );
 
-    public async setControls( frameCar: Aframecar, type: FrameCarControl, value: number ) {
+        if( !playerObj || !playerObj.PlayerNamePrivate || !playerObj.PawnPrivate )
+            return Log.warn( `Cannot reset player camera/model for player '${player.PlayerNamePrivate}' as this player could not be found.` );
+
+        const name = data.getName( playerObj.PawnPrivate );
+        if( !name?.includes( 'Conductor' ) )
+            return Log.warn( `Cannot reset player camera/model for player '${player.PlayerNamePrivate}' as the player is inside an engine: ${name}.` );
+
+		// Force Player Rotation Pitch & Roll Reset. (Fixes issue noted after RRO update #230324; where player model turns/rotates after leaving locomotive).
+		const rotation = await playerObj.PawnPrivate.K2_GetActorRotation();
+		rotation.Pitch = 0;
+		rotation.Roll = 0;
+		const rotationSetStatus = await playerObj.PawnPrivate.K2_SetActorRelativeRotation(rotation, false, null as any, false );
+		
+		// Force Player Camera Rotation Roll Reset via canceling out current roll value. (Fixes issue noted after RRO update #230324; where camera turns/rotates after leaving locomotive).
+		const camRotation = await player.PawnPrivate.GetControlRotation();
+		player.PawnPrivate.AddControllerRollInput(-1 * camRotation.Roll);
+	}
+	
+    public async setControls( frameCar: Structs.Aframecar, type: FrameCarControl, value: number ) {
         if( !this.settings.get( 'features.controlEngines' ) )
             return;
 
@@ -791,20 +814,63 @@ export class World {
         }
     }
 	
+	public async resetFrameCar( frameCar: Structs.Aframecar ) {
+		// Force Framecar Location & Rotation Reset to bring the Framecar back to the Origin/Spawn Area.
+		if( !frameCar )
+            return Log.warn( `Cannot reset FrameCar as this frameCar could not be found.` );
+		
+		// Attempt to turn off the regulator and apply the brakes on the FrameCar.
+		const character = await this.getCharacter();
+        if ( character ){
+            // Found Server Character (required to setControls on the FrameCar).
+			
+			// Set the Regulator (if it is not null, aka it exists)
+			if ( frameCar.MyRegulator != null )
+                await character.ServerSetRaycastRegulator( frameCar.MyRegulator, 0 );
+			
+			// Set the Brake
+			if ( frameCar.MyBrake != null )
+                await character.ServerSetRaycastBake( frameCar.MyBrake, 100 );
+		}
+		
+		// Get current location and rotation.
+		const location = await frameCar.K2_GetActorLocation();
+		const rotation = await frameCar.K2_GetActorRotation();
+		
+		// Bring the location back to the spawn/origin area:
+		location.X = 720;
+		location.Y = -459;
+		
+		// Get the correct height for the location
+		const height = await this.getHeight( location );
+
+		if( !height )
+			return Log.warn( `Cannot teleport framecar '${frameCar.framename}' as the height of the location could not be determined.` );
+
+		location.Z = height + 500; // Place the framecar above the area (allowing it to fall into place with gravity and avoids direct collisions on teleport).
+		
+		// Force the Rotation to reset (aka: Set back to the spawning/starting Rotation).
+		rotation.Pitch = 0;
+		rotation.Yaw = 90;
+		rotation.Roll = 0;
+		
+		// Set the location and rotation.
+		const locationAndRotationSetStatus = await frameCar.K2_SetActorLocationAndRotation(location, rotation, false, null as any, false );
+	}
 	
-	public async useCrane( industryInstance: Aindustry, storageOutputIndex: number, craneNumber: number) {
+	public async useCrane( industryInstance: Structs.Aindustry, storageOutputIndex: number, craneNumber: number) {
 		if( !this.settings.get( 'features.controlCranes' ) )
             return;
 
-		if (industryInstance instanceof Aindustry) {
+		if (industryInstance instanceof this.structs.arr.Aindustry) {
 			const character = await this.getCharacter();
 			if( !character )
 				return Log.warn( `Cannot use crane as no character could be found.` );
 			
 			var storageInstance = this.getIndustryStorage(industryInstance, storageOutputIndex);
-			if (storageInstance instanceof Astorage) {
+			if (storageInstance instanceof this.structs.arr.Astorage) {
 				var craneInstance = this.getStorageCrane(storageInstance, craneNumber);
-				if (craneInstance instanceof Acrane) {
+				if (craneInstance instanceof this.structs.arr.Acrane) {
 					await character.ServerUseCrane( craneInstance );
 				}
 				else {
@@ -817,9 +883,9 @@ export class World {
 		}
     }
 	
-	private getIndustryStorage(industryInstance: Aindustry, storageOutputIndex: number) {
-		if (industryInstance instanceof Aindustry) {			
-			let storageInstance: Astorage;
+	private getIndustryStorage(industryInstance: Structs.Aindustry, storageOutputIndex: number) {
+		if (industryInstance instanceof this.structs.arr.Aindustry) {			
+			let storageInstance: Structs.Astorage;
 			
 			switch( storageOutputIndex ) {
 				case 0:
@@ -844,9 +910,9 @@ export class World {
 		}
 	}
 
-	private getStorageCrane(storageInstance: Astorage, craneNumber: number) {
-		if (storageInstance instanceof Astorage) {			
-			let craneInstance: Acrane;
+	private getStorageCrane(storageInstance: Structs.Astorage, craneNumber: number) {
+		if (storageInstance instanceof this.structs.arr.Astorage) {			
+			let craneInstance: Structs.Acrane;
 			
 			switch( craneNumber ) {
 				case 1:
@@ -868,7 +934,7 @@ export class World {
 		}
 	}
 
-    private isSwitch(track: ASplineTrack) {
+    private isSwitch(track: Structs.ASplineTrack) {
         return [
             SplineTrackType.SWITCH_3FT_LEFT, SplineTrackType.SWITCH_3FT_LEFT_MIRROR,
             SplineTrackType.SWITCH_3FT_RIGHT, SplineTrackType.SWITCH_3FT_RIGHT_MIRROR,

@@ -55,6 +55,8 @@ inline EObjectFlags operator&(EObjectFlags a, EObjectFlags b)
 	return static_cast<EObjectFlags>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
 }
 
+extern int UObjectProcessEventOffset;
+
 struct UObject {
 	void** VFTable; // 0x00(0x08)
 	EObjectFlags ObjectFlags; // 0x08(0x03)

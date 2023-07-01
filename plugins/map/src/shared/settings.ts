@@ -6,7 +6,8 @@ export type SplineColors = { [ K in SplineType ]: string; };
 export type FrameCarColors = {
     [ K in FrameCarType ]: K extends FreightFrameCarType ? {
         unloaded: string;
-        loaded: string
+        partiallyloaded: string;
+		fullyloaded: string
     } : string;
 }
 
@@ -108,12 +109,93 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
 			[ FrameCarType.TWEETSIE280         ]: { type: 'string', default: '#800080' },
             [ FrameCarType.TWEETSIE280_TENDER  ]: { type: 'string', default: '#000000' },
 			
-
+			[ FrameCarType.PLANTATIONCAR_FLATCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#6b6b6b' },
+                    partiallyloaded: { type: 'string', default: '#6b6b6b' },
+					fullyloaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_LOGS ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#cd5c5c' },
+                    partiallyloaded: { type: 'string', default: '#cd5c5c' },
+					fullyloaded: { type: 'string', default: '#cd5c5c' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#adff2f' },
+                    partiallyloaded: { type: 'string', default: '#adff2f' },
+					fullyloaded: { type: 'string', default: '#adff2f' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#ffa500' },
+                    partiallyloaded: { type: 'string', default: '#ffa500' },
+					fullyloaded: { type: 'string', default: '#ffa500' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_SMALL ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_HOPPER_LARGE ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_TANKER ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#d3d3d3' },
+                    partiallyloaded: { type: 'string', default: '#d3d3d3' },
+					fullyloaded: { type: 'string', default: '#d3d3d3' },
+                },
+                default: {}
+            },
+			[ FrameCarType.PLANTATIONCAR_BOXCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#6b6b6b' },
+                    partiallyloaded: { type: 'string', default: '#6b6b6b' },
+					fullyloaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
 			[ FrameCarType.SKELETONCAR ]: {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#cd775c' },
-                    loaded: { type: 'string', default: '#cd775c' },
+                    partiallyloaded: { type: 'string', default: '#cd775c' },
+					fullyloaded: { type: 'string', default: '#cd775c' },
                 },
                 default: {}
             },
@@ -121,7 +203,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#cd5c5c' },
-                    loaded: { type: 'string', default: '#cd5c5c' },
+                    partiallyloaded: { type: 'string', default: '#cd5c5c' },
+					fullyloaded: { type: 'string', default: '#cd5c5c' },
                 },
                 default: {}
             },
@@ -129,7 +212,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#ffa500' },
-                    loaded: { type: 'string', default: '#ffa500' },
+                    partiallyloaded: { type: 'string', default: '#ffa500' },
+					fullyloaded: { type: 'string', default: '#ffa500' },
                 },
                 default: {}
             },
@@ -137,7 +221,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#adff2f' },
-                    loaded: { type: 'string', default: '#adff2f' },
+                    partiallyloaded: { type: 'string', default: '#adff2f' },
+					fullyloaded: { type: 'string', default: '#adff2f' },
                 },
                 default: {}
             },
@@ -145,7 +230,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#bc8f8f' },
-                    loaded: { type: 'string', default: '#bc8f8f' },
+                    partiallyloaded: { type: 'string', default: '#bc8f8f' },
+					fullyloaded: { type: 'string', default: '#bc8f8f' },
                 },
                 default: {}
             },
@@ -153,7 +239,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#9d7777' },
-                    loaded: { type: 'string', default: '#9d7777' },
+                    partiallyloaded: { type: 'string', default: '#9d7777' },
+					fullyloaded: { type: 'string', default: '#9d7777' },
                 },
                 default: {}
             },
@@ -161,7 +248,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#d3d3d3' },
-                    loaded: { type: 'string', default: '#d3d3d3' },
+                    partiallyloaded: { type: 'string', default: '#d3d3d3' },
+					fullyloaded: { type: 'string', default: '#d3d3d3' },
                 },
                 default: {}
             },
@@ -169,7 +257,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#c5c5c5' },
-                    loaded: { type: 'string', default: '#c5c5c5' },
+                    partiallyloaded: { type: 'string', default: '#c5c5c5' },
+					fullyloaded: { type: 'string', default: '#c5c5c5' },
                 },
                 default: {}
             },
@@ -177,7 +266,8 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#808080' },
-                    loaded: { type: 'string', default: '#808080' },
+                    partiallyloaded: { type: 'string', default: '#808080' },
+					fullyloaded: { type: 'string', default: '#808080' },
                 },
                 default: {}
             },
@@ -185,11 +275,11 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                 type: 'object',
                 properties: {
                     unloaded: { type: 'string', default: '#6b6b6b' },
-                    loaded: { type: 'string', default: '#6b6b6b' },
+                    partiallyloaded: { type: 'string', default: '#6b6b6b' },
+					fullyloaded: { type: 'string', default: '#6b6b6b' },
                 },
                 default: {}
             },
-
 
             spline: {
                 type: 'object',

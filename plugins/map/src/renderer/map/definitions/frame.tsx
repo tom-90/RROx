@@ -39,6 +39,15 @@ import Cooke260Coal from '../../images/cars/cooke260_coal.png';
 import Cooke260TenderCoal from '../../images/cars/cooke260_tender_coal.png';
 import Tweetsie280 from '../../images/cars/etwnc280.png';
 import Tweetsie280Tender from '../../images/cars/etwnc280_tender.png';
+import Plantationcar_Flatcar from '../../images/cars/plantationcar_flatcar.png';
+import Plantationcar_Flatcar_Logs from '../../images/cars/plantationcar_flatcar_logs.png';
+import Plantationcar_Flatcar_Stakes from '../../images/cars/plantationcar_flatcar_stakes.png';
+import Plantationcar_Flatcar_Stakes_Bulkhead from '../../images/cars/plantationcar_flatcar_stakes_bulkhead.png';
+import Plantationcar_Hopper_Small from '../../images/cars/plantationcar_hopper_small.png';
+import Plantationcar_Hopper_Medium from '../../images/cars/plantationcar_hopper_medium.png';
+import Plantationcar_Hopper_Large from '../../images/cars/plantationcar_hopper_large.png';
+import Plantationcar_Tanker from '../../images/cars/plantationcar_tanker.png';
+import Plantationcar_Boxcar from '../../images/cars/plantationcar_boxcar.png';
 
 import HandcarIcon from '../../images/carsIcon/handcar.png';
 import PorterIcon from '../../images/carsIcon/porter_040.png';
@@ -80,7 +89,15 @@ import Cooke260CoalIcon from '../../images/carsIcon/cooke260_coal.png';
 import Cooke260TenderCoalIcon from '../../images/carsIcon/cooke260_tender_coal.png';
 import Tweetsie280Icon from '../../images/carsIcon/etwnc280.png';
 import Tweetsie280TenderIcon from '../../images/carsIcon/etwnc280_tender.png';
-
+import Plantationcar_FlatcarIcon from '../../images/carsIcon/plantationcar_flatcar.png';
+import Plantationcar_Flatcar_LogsIcon from '../../images/carsIcon/plantationcar_flatcar_logs.png';
+import Plantationcar_Flatcar_StakesIcon from '../../images/carsIcon/plantationcar_flatcar_stakes.png';
+import Plantationcar_Flatcar_Stakes_BulkheadIcon from '../../images/carsIcon/plantationcar_flatcar_stakes_bulkhead.png';
+import Plantationcar_Hopper_SmallIcon from '../../images/carsIcon/plantationcar_hopper_small.png';
+import Plantationcar_Hopper_MediumIcon from '../../images/carsIcon/plantationcar_hopper_medium.png';
+import Plantationcar_Hopper_LargeIcon from '../../images/carsIcon/plantationcar_hopper_large.png';
+import Plantationcar_TankerIcon from '../../images/carsIcon/plantationcar_tanker.png';
+import Plantationcar_BoxcarIcon from '../../images/carsIcon/plantationcar_boxcar.png';
 
 
 export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null, imageIcon: string | null, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
@@ -124,6 +141,15 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
     [ FrameCarType.COOKE260COAL_TENDER ]: { image: Cooke260TenderCoal, imageIcon: Cooke260TenderCoalIcon, length: 581.7, engine: false, tender: true , freight: false, name: 'Cooke Mogul Tender Coal'    },
 	[ FrameCarType.TWEETSIE280         ]: { image: Tweetsie280       , imageIcon: Tweetsie280Icon       , length: 878.9, engine: true , tender: false, freight: false, name: 'ET&WNC 280'                 },
     [ FrameCarType.TWEETSIE280_TENDER  ]: { image: Tweetsie280Tender , imageIcon: Tweetsie280TenderIcon , length: 618.8, engine: false, tender: true , freight: false, name: 'ET&WNC 280 Tender'          },
+	[ FrameCarType.PLANTATIONCAR_FLATCAR        ]: { image: Plantationcar_Flatcar            , imageIcon: Plantationcar_FlatcarIcon        , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Cane Flat' },
+	[ FrameCarType.PLANTATIONCAR_FLATCAR_LOGS   ]: { image: Plantationcar_Flatcar_Logs   , imageIcon: Plantationcar_Flatcar_LogsIcon   , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Logging Flat' },
+	[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES ]: { image: Plantationcar_Flatcar_Stakes , imageIcon: Plantationcar_Flatcar_StakesIcon , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Stake Flat' },
+	[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD  ]: { image: Plantationcar_Flatcar_Stakes_Bulkhead  , imageIcon: Plantationcar_Flatcar_Stakes_BulkheadIcon  , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Bulkhead Flat' },
+	[ FrameCarType.PLANTATIONCAR_HOPPER_SMALL   ]: { image: Plantationcar_Hopper_Small   , imageIcon: Plantationcar_Hopper_SmallIcon   , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Lowside Gondola' },
+	[ FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM  ]: { image: Plantationcar_Hopper_Medium  , imageIcon: Plantationcar_Hopper_MediumIcon  , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Medium Gondola' },
+	[ FrameCarType.PLANTATIONCAR_HOPPER_LARGE   ]: { image: Plantationcar_Hopper_Large   , imageIcon: Plantationcar_Hopper_LargeIcon   , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Highside Gondola' },
+	[ FrameCarType.PLANTATIONCAR_TANKER         ]: { image: Plantationcar_Tanker         , imageIcon: Plantationcar_TankerIcon         , length: 331.2, engine: false , tender: false, freight: true, name: 'EWA Plantation Box Car' },
+	[ FrameCarType.PLANTATIONCAR_BOXCAR         ]: { image: Plantationcar_Boxcar         , imageIcon: Plantationcar_BoxcarIcon         , length: 331.2, engine: false , tender: false, freight: true, name: 'Waualua Agricultural Tank Car' },
 
     [ FrameCarType.UNKNOWN             ]: { image: null              , imageIcon: null                  , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'                    },
 };

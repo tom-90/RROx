@@ -1,16 +1,13 @@
 import { Actions, IPluginController, IQuery, SettingsStore } from "@rrox/api";
 import WorldPlugin from ".";
 import { ICheats, IWorldSettings } from "../shared";
-import { ASCharacter } from "./structs/arr/SCharacter";
-import { EMovementMode } from "./structs/Engine/EMovementMode";
-import { APawn } from "./structs/Engine/Pawn";
-import { APlayerState } from "./structs/Engine/PlayerState";
+import { Structs } from "./structs/types";
 
 export class Cheats {
-    private pawnQuery: IQuery<APlayerState>;
-    private cheatsQuery: IQuery<ASCharacter>;
+    private pawnQuery: IQuery<Structs.APlayerState>;
+    private cheatsQuery: IQuery<Structs.ASCharacter>;
 
-    private fastSprintPlayers = new Map<ASCharacter, number>();;
+    private fastSprintPlayers = new Map<Structs.ASCharacter, number>();;
 
     private interval: NodeJS.Timeout;
 
@@ -19,11 +16,11 @@ export class Cheats {
     public async prepare() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        this.pawnQuery = await data.prepareQuery( APlayerState, ( player ) => [
+        this.pawnQuery = await data.prepareQuery( this.plugin.world.structs.Engine.APlayerState, ( player ) => [
             player.PawnPrivate
         ] );
 
-        this.cheatsQuery = await data.prepareQuery( ASCharacter, ( char ) => [
+        this.cheatsQuery = await data.prepareQuery( this.plugin.world.structs.arr.ASCharacter, ( char ) => [
             char.CharacterMovement.MaxFlySpeed,
             char.CharacterMovement.MaxWalkSpeed,
             char.CharacterMovement.MovementMode,
@@ -57,10 +54,10 @@ export class Cheats {
         this.fastSprintPlayers.clear();
     }
 
-    private async getCharacter( player: APlayerState ): Promise<ASCharacter> {
+    private async getCharacter( player: Structs.APlayerState ): Promise<Structs.ASCharacter> {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        let pawn: APawn;
+        let pawn: Structs.APawn;
         if( player.PawnPrivate )
             pawn = player.PawnPrivate;
         else {
@@ -71,7 +68,7 @@ export class Cheats {
             pawn = player.PawnPrivate;
         }
         
-        const character = await data.cast( pawn, ASCharacter );
+        const character = await data.cast( pawn, this.plugin.world.structs.arr.ASCharacter );
 
         if( !character )
             throw new Error( 'Could not find character to get cheats for.' );
@@ -84,7 +81,7 @@ export class Cheats {
         return cheats;
     }
 
-    public async getCheats( player: APlayerState ): Promise<ICheats> {
+    public async getCheats( player: Structs.APlayerState ): Promise<ICheats> {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const character = await this.getCharacter( player );
@@ -92,12 +89,12 @@ export class Cheats {
         const fastSprintKey = Array.from( this.fastSprintPlayers.keys() ).find( ( p ) => data.equals( p, character ) );
     
         return {
-            flySpeed: character.CharacterMovement.MovementMode === EMovementMode.MOVE_Flying ? character.CharacterMovement.MaxFlySpeed : undefined,
+            flySpeed: character.CharacterMovement.MovementMode === this.plugin.world.structs.Engine.EMovementMode.MOVE_Flying ? character.CharacterMovement.MaxFlySpeed : undefined,
             walkSpeed: fastSprintKey ? this.fastSprintPlayers.get(fastSprintKey) : undefined,
         }
     }
 
-    public async setCheats( player: APlayerState, cheats: ICheats ): Promise<void> {
+    public async setCheats( player: Structs.APlayerState, cheats: ICheats ): Promise<void> {
         if( !this.settings.get( 'features.cheats' ) )
             return;
 
@@ -106,10 +103,10 @@ export class Cheats {
         const character = await this.getCharacter( player );
     
         if( cheats.flySpeed ) {
-            character.CharacterMovement.MovementMode = EMovementMode.MOVE_Flying;
+            character.CharacterMovement.MovementMode = this.plugin.world.structs.Engine.EMovementMode.MOVE_Flying;
             character.CharacterMovement.MaxFlySpeed = cheats.flySpeed;
         } else {
-            character.CharacterMovement.MovementMode = EMovementMode.MOVE_Walking;
+            character.CharacterMovement.MovementMode = this.plugin.world.structs.Engine.EMovementMode.MOVE_Walking;
         }
 
         const keys = Array.from( this.fastSprintPlayers.keys() ).filter( ( p ) => data.equals( p, character ) );
@@ -123,7 +120,7 @@ export class Cheats {
         await data.save( character.CharacterMovement );
     }
 
-    public async setMoneyXP( player: APlayerState, money?: number, xp?: number ): Promise<void> {
+    public async setMoneyXP( player: Structs.APlayerState, money?: number, xp?: number ): Promise<void> {
         if( !this.settings.get( 'features.cheats' ) )
             return;
 

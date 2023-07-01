@@ -52,10 +52,10 @@ export function FramesList( {
                             </thead>
                             <tbody>
                             <tr>
-                                <td style={{ textAlign: 'center', color: frame.boiler!.pressure < 80 ? "red" : "black" }} className={frame.boiler!.pressure < 80 ? "dnt" : ""}>{frame.boiler!.pressure.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: frame.boiler!.fuel < 10 ? "red" : "black" }} className={frame.boiler!.fuel < 10 ? "dnt" : ""}>{frame.boiler!.fuel.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: frame.boiler!.fireTemperature < 100 ? "red" : "black" }} className={frame.boiler!.fireTemperature < 100 ? "dnt" : ""}>{frame.boiler!.fireTemperature.toFixed(0)}</td>
-                                <td style={{ textAlign: 'center', color: frame.boiler!.waterTemperature < 100 ? "red" : "black" }} className={frame.boiler!.waterTemperature < 100 ? "dnt" : ""}>{frame.boiler!.waterTemperature.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: frame.boiler!.pressure < 80 ? "red" : "" }} className={frame.boiler!.pressure < 80 ? "dnt" : ""}>{frame.boiler!.pressure.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: frame.boiler!.fuel < 10 ? "red" : "" }} className={frame.boiler!.fuel < 10 ? "dnt" : ""}>{frame.boiler!.fuel.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: frame.boiler!.fireTemperature < 100 ? "red" : "" }} className={frame.boiler!.fireTemperature < 100 ? "dnt" : ""}>{frame.boiler!.fireTemperature.toFixed(0)}</td>
+                                <td style={{ textAlign: 'center', color: frame.boiler!.waterTemperature < 100 ? "red" : "" }} className={frame.boiler!.waterTemperature < 100 ? "dnt" : ""}>{frame.boiler!.waterTemperature.toFixed(0)}</td>
                             </tr>
                             </tbody>
                         </table> : null

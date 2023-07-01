@@ -32,7 +32,7 @@ By clicking on an industry, you can open up the industry info (see Freight Infor
 
 ### Teleporting
 
-It is possible to teleport to any engine, caboose industry, firewood depot, water tower or sandhouse by clicking on it and clicking on `Teleport Here`. It is also possible to right-click anywhere on the map and choosing `Teleport Here`.
+It is possible to teleport to any engine, caboose, waycar, industry, firewood depot, coaling tower, water tower or sandhouse by clicking on it and clicking on `Teleport Here`. It is also possible to right-click anywhere on the map and choosing `Teleport Here`.
 
 ### Setting Money & XP
 
@@ -43,6 +43,35 @@ By clicking on a player, and clicking on the `Cheats`-button it is possible to i
 Flying and fast sprint can be enabled from the same `Cheats`-menu.
 
 ![](https://raw.githubusercontent.com/tom-90/RROx/master/plugins/map/docs/cheats.png)
+
+## Information Lists
+
+Helpful information read from your game world.
+
+### Rolling Stock
+
+Details, locate functionality, and controls for the various rolling stock in the game world.
+
+### Player List
+
+Names, locate functionality, and cheat menu for all the connected players
+
+### Industry List
+
+Details and storage amounts for the primary industries and the fueling buildings within the game world.
+
+## Helpful Extras Items
+
+### Player Camera/Model Reset
+Added button to RROx Player List. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives
+
+### Rolling Stock (Framecar) Reset Location Functionality (Game/Session Hosts  List
+Added Button to RROx Rolling Stock popup on RROx Map to allow Game/Session Host (will not display/work for RROx Clients) to reset rolling stock locations.
+-This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock).
+-Please be aware of the following:
+	-Momement is kept during/after location reset due to Game Logic/Implementation.
+	-May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case).
+	-Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item).
 
 # Settings
 
@@ -62,6 +91,46 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.13 27-06-2023
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Cane Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Logging Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Stake Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Bulkhead Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Lowside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Medium Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Highside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "EWA Plantation Box Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Waualua Agricultural Tank Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.12 27-05-2023
+- ``Fixed`` Corrected text colours on the Industry Information List Tables. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Corrected text colours on the Economy Information Tab Tables. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Corrected text colours on the Rolling Stock List. These will now correctly be readable in both RROx Light and Dark Themes. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Improved Rolling Stock Map Color Settings/Options to allow for the option to display/differentiate between "Partially Loaded" and "Fully Loaded" cars. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for new Steel Truss Bridges. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.11 17-04-2023
+- ``Fixed`` Corrected Cargo Icons/Images showing incorrect prices. These have been adjusted to only show the cargo/item being transported. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Map Plugin Backgrounds #1 and #5, to remove incorrect prices. These have been adjusted to remove the cargo/price details & fully support any map (including moved industries). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Economy Information Tab to the Industry list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added "Industry Inputs and Outputs Reference Chart" to the Economy Information Tab on the Industry list menu. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added "Item/Cargo Prices Reference Chart" to the Economy Information Tab on the Industry list menu. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Fixed Freight Info Image in Map Plugin Description/Documentation to align with current RROx Functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Seperated Rolling Stock lists for Tenders and Cabooses/Miscellaneous Rolling Stock for ease of finding non-tenders on larger sessions. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Button to Rolling Stock popup on RROx Map to allow Game/Session Host (will not display/work for RROx Clients) to reset rolling stock locations. This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock). Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Teleporting to a non-industries/buildings/rolling stock will close the Teleport Pop-up on the map after the teleport is called. (See RROx logs in the RROx settings should a Teleport be unsuccessful). (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.10 04-04-2023
+- ``Enhancement`` Added Reset Player Camera/Model button to RROx Player list functionality. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.9 - 22-03-2023
+- ``Added`` Industry list functionality. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.8 - 13-03-2023
+- ``Fixed`` Corrected missing lead on both 3-way (left) switches. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Work on correctly displaying large turn table with correct size.
+- ``Enhancement`` Show coal tower storage amounts.
+
 ### v1.1.7 - 11-03-2023
 
 - ``Enhancement`` Added support for Cooke 2-6-0 (Coal Version) Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
@@ -77,7 +146,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 - ``Fixed`` Adjusted Tender Controls Pop-up to list "Fuel Amount" instead of "Firewood Amount" (in support of new Coal powered locomotives and consistency with Locomotive Controls). (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added support for 3-way switch.
 - ``Enhancement`` Added support for new coaling towers, water towers and engine sheds.
-- 
+ 
 ### v1.1.6 - 26-02-2023
 
 - ``Enhancement`` Added a collapsible cheat menu to the player list. (Thanks to [bigyihsuan](https://github.com/bigyihsuan))

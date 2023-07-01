@@ -1,12 +1,10 @@
 import { IPluginController, Controller } from '@rrox/api';
-import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator, storageUseCrane  } from '../shared';
+import { Log, TeleportCommunicator, ChangeSwitchCommunicator, SetControlsCommunicator, GetPlayerCheats, SetPlayerCheats, SetMoneyXPCheats, WorldSettings, SetControlsSyncCommunicator, storageUseCrane, PlayerCameraReset, FramecarResetCommunicator  } from '../shared';
 import { Cheats } from './cheats';
 import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
-import { ASplineTrack } from './structs/arr/SplineTrack';
-import { ASwitch } from './structs/arr/Switch';
-import { Aindustry } from './structs/arr/industry';
 import { World } from './world';
+import { Structs } from './structs/types';
 
 export default class WorldPlugin extends Controller {
     public world: World;
@@ -49,9 +47,18 @@ export default class WorldPlugin extends Controller {
 
             await this.world.teleport( player, location );
         } );
+		
+		controller.communicator.handle( PlayerCameraReset, async ( playerName ) => {
+            const player = this.world.data.players.find( ( player ) => player.PlayerNamePrivate === playerName );
+
+            if( !player || !player.PawnPrivate )
+                return Log.warn( `Cannot reset camera/model player '${playerName}' as this player could not be found.` );
+
+            await this.world.playerCameraReset( player );
+        } );
 
         controller.communicator.handle( ChangeSwitchCommunicator, async ( switchIndex, isSplineTrack = false ) => {
-            let switchInstance: ASwitch | ASplineTrack | undefined;
+            let switchInstance: Structs.ASwitch | Structs.ASplineTrack | undefined;
             if(isSplineTrack)
                 switchInstance = this.world.data.splineTracks[ switchIndex ];
             else
@@ -117,8 +124,18 @@ export default class WorldPlugin extends Controller {
                 this.controlsSync.removeEngine( frameCar );
         } );
 
+		controller.communicator.handle( FramecarResetCommunicator, async ( index ) => {
+            const frameCar = this.world.data.frameCars[ index ];
+            
+            if( !frameCar )
+                return Log.warn( `Cannot reset framecar, as the framecar could not be found.` );
+
+			await this.world.resetFrameCar( frameCar );			
+
+        } );
+		
 		controller.communicator.handle( storageUseCrane, async ( industryIndex, storageOutputIndex, craneNumber ) => {
-			let industryInstance: Aindustry | undefined;
+			let industryInstance: Structs.Aindustry | undefined;
             industryInstance = this.world.data.industries[ industryIndex ];
 			
 			const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));

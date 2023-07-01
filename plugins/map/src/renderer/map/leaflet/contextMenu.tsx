@@ -37,6 +37,7 @@ export function ContextMenu() {
                     X,
                     Y
                 } );
+				setVisible( false ); // RROx Map Plugin Update v1.1.11 - Hide once done.
             }}
         >Teleport Here</Button>
     </MapTooltip>;

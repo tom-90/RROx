@@ -21,6 +21,8 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
         name: 'Unknown',
         points: [ [ -500, 0 ], [ 500, 500 ] ],
         fillColor: '#666',
+		productionChainBuilding: false,
+		fuelingBuilding: false,
     };
 
     const popupElements = usePopupElements( { industry: data, index } );

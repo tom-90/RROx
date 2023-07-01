@@ -19,8 +19,35 @@ The world loader provides a number of features that can be turned on or off depe
 - **Teleport**: Enable/disable the ability for a player teleport anywhere on the map.
 - **Cheats**: Enable/disable the ability for a player to change their money and use fast sprint and flying modes.
 - **Control Cranes**: Enable/disable the ability to remotely cranes.
+- **Rolling Stock Location Reset**: Added functionality for Rolling Stock Location Reset, which allows Game/Session Host (will not work for RROx Clients) to reset rolling stock location if required (may need re-railing after reset).
+	--> Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item).
 
 ## Changelog
+
+### v1.1.12 27-06-2023
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Cane Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Logging Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Stake Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Bulkhead Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Lowside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Medium Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Gregg Sugar Cane Highside Gondola" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "EWA Plantation Box Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Waualua Agricultural Tank Car" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.11 27-05-2023
+- ``Enhancement`` Added Support for new Steel Truss Bridges. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.10 21-04-2023
+- ``Added`` Support for RailroadsOnline Unreal Engine 5
+- ``Enhancement`` Added functionality for Rolling Stock Location Reset, which allows Game/Session Host (will not display/work for RROx Clients) to reset rolling stock location if required. This allows the Host to return stuck rolling stock to origin point in the world (may need re-railing after reset, but this can/will retrive your stuck rolling stock). Note: Momement is kept during/after location reset due to Game Logic/Implementation. May also have unexpected issues on larger saves with many phyiscs calculations (try only doing one car at a time on a fresh load in this case). Please allow framecar/rolling stock to come to a rest/stop before repeating/resetting another item (including the same item). (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.9 - 04-04-2023
+- ``Enhancement`` Added functionality to Reset Player Camera/Model. This addresses/fixes RRO game issue/bug noted after RRO update #230324; where player model/camera turns/rotates after leaving locomotives. (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.8 - 13-03-2023
+- ``Enhancement`` Correctly show turntable size and rotation.
+- ``Enhancement`` Retrieve coal tower storage amounts.
 
 ### v1.1.7 - 11-03-2023
 

@@ -67,6 +67,10 @@ const OverwriteTangents: {
         track1: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: -348.04, Z: 0 },
+        },
+		track3: {
+            start: { X: 2153, Y: 0, Z: 0 },
+            end: { X: 2125.36, Y: 348.04, Z: 0 },
         }
     },
     [ SplineTrackType.SWITCH_3WAY_3FT_RIGHT ]: {
@@ -83,6 +87,10 @@ const OverwriteTangents: {
         track1: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: -348.04, Z: 0 },
+        },
+		track3: {
+            start: { X: 2153, Y: 0, Z: 0 },
+            end: { X: 2125.36, Y: 348.04, Z: 0 },
         }
     },
     [ SplineTrackType.SWITCH_3WAY_BALLAST_3FT_RIGHT ]: {

@@ -39,6 +39,15 @@ export enum FrameCarType {
 	COOKE260COAL_TENDER = 'cooke260_new_tender',
 	TWEETSIE280 = 'tweetsie280',
 	TWEETSIE280_TENDER = 'tweetsie280_tender',
+	PLANTATIONCAR_FLATCAR = 'plantationcar_flatcar',
+	PLANTATIONCAR_FLATCAR_LOGS = 'plantationcar_flatcar_logs',
+	PLANTATIONCAR_FLATCAR_STAKES= 'plantationcar_flatcar_stakes',
+	PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD = 'plantationcar_flatcar_stakes_bulkhead',
+	PLANTATIONCAR_HOPPER_SMALL = 'plantationcar_hopper_small',
+	PLANTATIONCAR_HOPPER_MEDIUM = 'plantationcar_hopper_medium',
+	PLANTATIONCAR_HOPPER_LARGE = 'plantationcar_hopper_large',
+	PLANTATIONCAR_TANKER = 'plantationcar_tanker',
+	PLANTATIONCAR_BOXCAR = 'plantationcar_boxcar',
 		
     UNKNOWN = 'unknown',
 }
@@ -51,4 +60,7 @@ export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | Fr
 
 
 export type FreightFrameCarType = FrameCarType.BOXCAR | FrameCarType.FLATCAR_CORDWOOD | FrameCarType.HOPPER | FrameCarType.FLATCAR_LOGS |
-        FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER | FrameCarType.SKELETONCAR | FrameCarType.HOPPERBB | FrameCarType.TANKERNCO | FrameCarType.STOCKCAR;
+        FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER | FrameCarType.SKELETONCAR | FrameCarType.HOPPERBB | FrameCarType.TANKERNCO | FrameCarType.STOCKCAR |
+		FrameCarType.PLANTATIONCAR_FLATCAR | FrameCarType.PLANTATIONCAR_FLATCAR_LOGS | FrameCarType.PLANTATIONCAR_FLATCAR_STAKES | 
+		FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD | FrameCarType.PLANTATIONCAR_HOPPER_SMALL | FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM | 
+		FrameCarType.PLANTATIONCAR_HOPPER_LARGE | FrameCarType.PLANTATIONCAR_TANKER | FrameCarType.PLANTATIONCAR_BOXCAR;
