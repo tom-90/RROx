@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Form, Switch, Select, Slider, Button } from "antd";
+import { Form, Switch, Select, Slider, Button, Alert } from "antd";
 import { useRPC, useSettings } from "@rrox/api";
 import { AutosaveCommunicator, AutosaveSettings } from "../../shared";
 import { OpenSaveFolderCommunicator } from "../../shared/communicators/saveFolder";
@@ -25,7 +25,13 @@ export function AutosavesSettings() {
         onValuesChange={( changed ) => store.setAll( changed )}
         autoComplete="off"
     >
-        <Form.Item
+        <Alert
+			message="The RROX Autosave Plugin ONLY works in the 'legacybranch - URE4 Version of Railroads Online (RRO)'. Please use the in-game Autosave Functionality for all other game versions/branches."
+			description="This is effective as of the Game Update on July 3rd, 2023. Note: You can confirm the Game Version/Branch within Steam by going to the Game Properties --> Betas --> Beta Participation."
+			type="error"
+			banner
+		/>
+		<Form.Item
             label="Enable"
             name={[ 'autosave', 'enabled' ]}
             valuePropName="checked"
@@ -95,5 +101,11 @@ export function AutosavesSettings() {
                 Autosave now
             </Button>
         </Form.Item>
+		<Alert
+			message="The RROX Autosave Plugin ONLY works in the 'legacybranch - URE4 Version of Railroads Online (RRO)'. Please use the in-game Autosave Functionality for all other game versions/branches."
+			description="This is effective as of the Game Update on July 3rd, 2023. Note: You can confirm the Game Version/Branch within Steam by going to the Game Properties --> Betas --> Beta Participation."
+			type="error"
+			banner
+		/>
     </Form>;
 }

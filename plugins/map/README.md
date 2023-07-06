@@ -59,6 +59,8 @@ Names, locate functionality, and cheat menu for all the connected players
 ### Industry List
 
 Details and storage amounts for the primary industries and the fueling buildings within the game world.
+-This also includes a Reference Chart for all the Industy Inputs and Outputs on each Difficulty Setting.
+Also provided are accurate Cargo Prices and Capacities for all items and Rolling Stock.
 
 ## Helpful Extras Items
 
@@ -90,6 +92,11 @@ It is not possible to customize the images used for the industries, water towers
 It is possible to enable the minimap under the minimap settings. **The minimap will only show if the game overlay is enabled under the `Overlay` settings**.
 
 ## Changelog
+
+### v1.1.14 06-07-2023
+- ``Fixed`` Added missing Rolling Stock Cargo Capacities to the "Industry list" functionality, for the "Greg"/"Plantation" and "Waialua" cars that were missing. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Split the "Economy Information Tab" on the "Industry list" functionality to only contain the Industry Inputs/Outputs for clarity. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Created Dynamic "Cargo Prices & Capacities" to accurately and easily display all Cargo Capacities by Item/Rolling Stock Car for clarity. These can be expanded to only view the full details for the cargo/item the user wishes to view. This will allow for quick updates should the Game Economy/Capacities change at a later date. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.13 27-06-2023
 - ``Enhancement`` Added Support for "Gregg Sugar Cane Cane Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
