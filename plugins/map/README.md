@@ -95,6 +95,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ### v1.1.15 09-09-2023
 - ``Enhancement`` Added Support for "Wood Rick" as a new Industry/fueling building/facility. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` New and improved icons for the Gregg/{lantation freight rolling stock. (Thanks to [illudedPerception](https://github.com/illudedPerception))
 
 ### v1.1.14 06-07-2023
 - ``Fixed`` Added missing Rolling Stock Cargo Capacities to the "Industry list" functionality, for the "Greg"/"Plantation" and "Waialua" cars that were missing. (Thanks to [Mordred](https://github.com/mordred-random))
