@@ -24,6 +24,10 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.13 09-09-2023
+- ``Fixed`` Fixed RROx check for newer SplineTrack objects. This addresses/fixes RROx not displaying these track types after the RRO Beta Update 0.5.9.8. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "Wood Rick" as a new Industry/fueling building/facility. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.12 27-06-2023
 - ``Enhancement`` Added Support for "Gregg Sugar Cane Cane Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added Support for "Gregg Sugar Cane Logging Flat" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))

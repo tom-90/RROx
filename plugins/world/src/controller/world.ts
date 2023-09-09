@@ -235,8 +235,13 @@ export class World {
 
         this.hasSplineTracks = (await data.getReference(this.structs.BP_SplineTracks.ABP_SplineTrack_DriveTrack_C)) !== null;
 
-        Log.info('Has beta spline tracks: ' + this.hasSplineTracks);
-
+		// Secondary check for new splines after Drill track removed (and factory added).
+		if (this.hasSplineTracks == false){
+			this.hasSplineTracks = (await data.getReference(this.structs.BP_SplineTracks.ABP_SplineTrack_914_SPAWN_C)) !== null;
+		}
+		
+        Log.info('Has beta spline tracks: ' + this.hasSplineTracks);;
+		
         if(this.hasSplineTracks)
             this.splineTrackReference = await data.getMultiReference(
                 // Reversing the array has much better cache hit chances
