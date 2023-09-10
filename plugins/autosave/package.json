@@ -1,8 +1,11 @@
 {
     "name": "@rrox-plugins/autosave",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Autosave Plugin",
     "author": "_tom()",
+	"contributors": [
+        "Mordred"
+    ],
     "rrox": {
         "controller": "dist/controller/controller.js",
         "renderer": "dist/renderer/renderer.js"

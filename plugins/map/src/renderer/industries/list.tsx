@@ -7,6 +7,7 @@ import { IndustryDefinitions } from "../map/definitions";
 import { IndustryType } from "@rrox-plugins/world/shared";
 import { IndustryList } from "./industries";
 import { EconomyInformation } from "./economyInformation";
+import { CargoPricesCapacities } from "./cargoPricesCapacities";
 
 export function IndustryListPage() {
     const navigate = useNavigate();
@@ -43,6 +44,9 @@ export function IndustryListPage() {
                     </Tabs.TabPane>
 					<Tabs.TabPane tab="Economy Information" key="3" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
 						<EconomyInformation/>
+					</Tabs.TabPane>
+					<Tabs.TabPane tab="Cargo Prices & Capacities" key="4" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
+						<CargoPricesCapacities/>
 					</Tabs.TabPane>
                 </Tabs>
             </PageContent>

@@ -216,4 +216,11 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
 		productionChainBuilding: false,
 		fuelingBuilding: false,
     },
+	[ IndustryType.WOOD_RICK ]: {
+        name: 'Wood Rick',
+        points: [ [ -100, -150 ], [ 100, 150 ] ],
+        fillColor: 'orange',
+		productionChainBuilding: false,
+		fuelingBuilding: true,
+    },
 };
