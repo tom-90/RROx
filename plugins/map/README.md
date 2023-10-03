@@ -93,6 +93,14 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.16 03-10-2023
+- ``Enhancement`` Added support for Lima 280 Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "DSPRR Coach" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for new D&RG Water Tower. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added new background selection option for new "Lake Valley" Map for new D&RG Water Tower. Please note that the RROx Background is manually selected. (Having this auto select the correct Map Background would need additional support from the Game Developers). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added new images for the Lima 280 Locomotive, DSPRR Coach, and the "Lake Valley" Map. (Thanks to [Mordred](https://github.com/mordred-random) & [illudedPerception](https://github.com/illudedPerception))
+- ``Enhancement`` Added ability to teleport to the new "DSPRR Coach" within RROx. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.15 09-09-2023
 - ``Enhancement`` Added Support for "Wood Rick" as a new Industry/fueling building/facility. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` New and improved icons for the Gregg/{lantation freight rolling stock. (Thanks to [illudedPerception](https://github.com/illudedPerception))

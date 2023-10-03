@@ -48,7 +48,7 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             background: {
                 type: 'number',
                 default: 6,
-                maximum: 7,
+                maximum: 8,
                 minimum: 1,
             },
         },
@@ -108,6 +108,10 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             [ FrameCarType.COOKE260COAL_TENDER ]: { type: 'string', default: '#000000' },
 			[ FrameCarType.TWEETSIE280         ]: { type: 'string', default: '#800080' },
             [ FrameCarType.TWEETSIE280_TENDER  ]: { type: 'string', default: '#000000' },
+			[ FrameCarType.LIMA280             ]: { type: 'string', default: '#800080' },
+            [ FrameCarType.LIMA280_TENDER      ]: { type: 'string', default: '#000000' },
+			
+			[ FrameCarType.COACH_DSPRR_1       ]: { type: 'string', default: '#ADD8E6' },
 			
 			[ FrameCarType.PLANTATIONCAR_FLATCAR ]: {
                 type: 'object',

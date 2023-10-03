@@ -602,8 +602,35 @@ export class World {
 
         return world;
     }
-
-    public async getHeight( position: ILocation2D ) {
+	
+	public async getHeight( position: ILocation2D ) {
+		// Get the height of the given position
+		var checkHeight = 50000; // Height to do the collision checks from.
+		
+		var height = await this.getHeightRecursive( position, checkHeight );
+	
+		return height;
+	}
+	
+	public async getHeightRecursive( position: ILocation2D, checkHeight: double ) : Promise<number| undefined> {
+		// Get the height of the given position from the given checkHeight value/point.
+		var height = await this.getHeightLogic( position, checkHeight );
+		if (!height){
+			// no height found;
+			return;
+		}
+		
+		if (height == checkHeight){
+			// height is the same as the checkHeight. Likely hit the skybox. --> Go lower and try again.
+			height = await this.getHeightRecursive( position, checkHeight - 500);
+		}
+		
+		// Height was different than the checkHeight; return the height found.
+		return height;
+	}
+	
+	public async getHeightLogic( position: ILocation2D, checkFromHeight: double ) {
+		// Logic to get the height at a given position, starting the collision check from a given height.
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         if( !this.world?.ARRGameState )
@@ -619,7 +646,7 @@ export class World {
         const start = await data.create( this.structs.CoreUObject.FVector );
         start.X = position.X;
         start.Y = position.Y;
-        start.Z = 50000;
+        start.Z = checkFromHeight;
 
         const end = await data.create( this.structs.CoreUObject.FVector );
         end.X = position.X;
@@ -650,10 +677,10 @@ export class World {
 
         Geometry.getSplinesNear( new Vector2D( position ), this.valueProvider.getValue()?.splines || [] )
             .forEach( ( data ) => data.point.coords[ 2 ] > height ? height = data.point.coords[ 2 ] : null );
-
-        return height;
+		
+		return height;
     }
-
+	
     public async getCharacter() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 

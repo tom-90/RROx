@@ -57,7 +57,7 @@ export function RollingStockListPage() {
 					
 					<Tabs.TabPane tab="Cabooses &#38; Miscellaneous" key="4" style={{height: 'calc(100vh - 200px)', overflow: 'auto'}}>
                         <FramesList
-                            data={world?.frameCars.map( ( frame, index ) => ( { frame, index } ) ).filter( ( { frame } ) => frame.type === FrameCarType.CABOOSE || frame.type === FrameCarType.WAYCAR || frame.type === FrameCarType.PLOW) ?? []}
+                            data={world?.frameCars.map( ( frame, index ) => ( { frame, index } ) ).filter( ( { frame } ) => frame.type === FrameCarType.CABOOSE || frame.type === FrameCarType.WAYCAR || frame.type === FrameCarType.PLOW || frame.type === FrameCarType.COACH_DSPRR_1) ?? []}
                             onOpenControls={openControl}
                             onLocate={locate}
                         />
