@@ -12,6 +12,8 @@ const Backgrounds: { [ key: number ]: string } = {
     5: require( '../../images/bg5.jpg' ),
     6: require( '../../images/bg6preview.jpg' ),
 	8: require( '../../images/bg8.jpg' ),
+	9: require( '../../images/bg9.jpg' ),
+	10: require( '../../images/bg10.jpg' ),
 };
 
 const context = require.context('../../images/bg6?file', true, /\.(webp)$/);

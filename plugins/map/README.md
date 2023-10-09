@@ -97,8 +97,9 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 - ``Enhancement`` Added support for Lima 280 Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added Support for "DSPRR Coach" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added support for new D&RG Water Tower. (Thanks to [Mordred](https://github.com/mordred-random))
-- ``Enhancement`` Added new background selection option for new "Lake Valley" Map for new D&RG Water Tower. Please note that the RROx Background is manually selected. (Having this auto select the correct Map Background would need additional support from the Game Developers). (Thanks to [Mordred](https://github.com/mordred-random))
-- ``Enhancement`` Added new images for the Lima 280 Locomotive, DSPRR Coach, and the "Lake Valley" Map. (Thanks to [Mordred](https://github.com/mordred-random) & [illudedPerception](https://github.com/illudedPerception))
+- ``Enhancement`` Added new background selection option for new "Lake Valley" Map. Please note that the RROx Background is manually selected. (Having this auto select the correct Map Background would need additional support from the Game Developers). (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added new images for the Lima 280 Locomotive, DSPRR Coach, and the "Lake Valley" Map (same as in-game). (Thanks to [Mordred](https://github.com/mordred-random) & [illudedPerception](https://github.com/illudedPerception))
+- ``Enhancement`` Added new two other new images for the "Lake Valley" Map, provided by the RRO community. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added ability to teleport to the new "DSPRR Coach" within RROx. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.15 09-09-2023
