@@ -72,9 +72,9 @@ export class StructProperty extends BasicProperty<PropertyType.StructProperty> i
         if( queryStructName !== this.structName )
             throw new QueryError( `Unable to use struct '${queryStructName}' in the query. Only the struct '${this.structName}' can be used.` );
 
-        this.structQueries.set( classRef, query );
-
         const queryBuilders = await queryAction.createQueryBuilder( classRef, query );
+
+        this.structQueries.set( classRef, query );
 
         return query;
     }

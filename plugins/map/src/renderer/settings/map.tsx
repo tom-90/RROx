@@ -1,6 +1,6 @@
 import { useSettings } from "@rrox/api";
 import React, { useEffect } from "react";
-import { Form, Radio, Avatar, Space} from "antd";
+import { Form, Radio, Avatar, Space, Divider } from "antd";
 import { MapPreferences } from "../../shared";
 import Background1 from '../images/bg1.jpg';
 import Background2 from '../images/bg2.jpg';
@@ -13,14 +13,14 @@ import Background9 from '../images/bg9.jpg';
 import Background10 from '../images/bg10.jpg';
 
 export function MapSettings() {
-    const [ preferences, store ] = useSettings( MapPreferences );
-    const [ form ] = Form.useForm();
+	const [ preferences, store ] = useSettings( MapPreferences );
+	const [ form ] = Form.useForm();
 
-    useEffect( () => {
-        form.setFieldsValue( preferences );
-    }, [ preferences ] );
+	useEffect( () => {
+		form.setFieldsValue( preferences );
+	}, [ preferences ] );
 
-    return <div>
+	return <div>
 		<Form
 			form={form}
 			name="settings"
@@ -35,13 +35,17 @@ export function MapSettings() {
 				name={[ 'map', 'background' ]}
 			>
 				<Radio.Group>
+					<Divider>Pine Valley</Divider>
 					<Radio.Button value={6} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background6Preview} /></Radio.Button>
 					<Radio.Button value={7} style={{ margin: '5px', padding: '5px', height: '100%', filter: 'invert(1)' }}><Avatar shape='square' size={128} src={Background6Preview} /></Radio.Button>
 					<Radio.Button value={1} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background1} /></Radio.Button>
 					<Radio.Button value={2} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background2} /></Radio.Button>
 					<Radio.Button value={3} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background3} /></Radio.Button>
 					<Radio.Button value={4} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background4} /></Radio.Button>
-					<Radio.Button value={5} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background5} /></Radio.Button>				
+					<Radio.Button value={5} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background5} /></Radio.Button>
+					<Divider>Lake Valley</Divider>
+					<Radio.Button value={11} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background6Preview} /></Radio.Button>
+					<Radio.Button value={12} style={{ margin: '5px', padding: '5px', height: '100%', filter: 'invert(1)' }}><Avatar shape='square' size={128} src={Background6Preview} /></Radio.Button>
 					<Radio.Button value={8} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background8} /></Radio.Button>
 					<Radio.Button value={9} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background9} /></Radio.Button>
 					<Radio.Button value={10} style={{ margin: '5px', padding: '5px', height: '100%' }}><Avatar shape='square' size={128} src={Background10} /></Radio.Button>

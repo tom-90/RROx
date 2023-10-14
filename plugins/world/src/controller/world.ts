@@ -1,6 +1,6 @@
-import { Actions, InOutParam, IPluginController, IQuery, MultiLinkedStructRef, query, QueryBuilder, SettingsStore, StructConstructor, ValueProvider } from "@rrox/api";
+import { Actions, InOutParam, IQuery, MultiLinkedStructRef, query, QueryBuilder, SettingsStore, Struct, StructConstructor, ValueProvider } from "@rrox/api";
 import WorldPlugin from ".";
-import { FrameCarControl, FrameCarType, ILocation, ILocation2D, IRotation, ISpline, IStorage, IWorld, Log, ProductType, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
+import { FrameCarControl, ILocation, ILocation2D, Log, IWorld, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
 import { Geometry } from "./geometry";
 import { Structs, IWorldObjects } from "./structs/types";
 import * as BetaStructs from "./structs/beta-UE5";
@@ -336,6 +336,7 @@ export class World {
 
     private async determineVersion() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
+        const structs = this.plugin.controller.getAction(Actions.GET_STRUCT);
 
         Log.info('Trying beta branch version');
 
@@ -345,6 +346,28 @@ export class World {
             Log.info('Beta branch version detected');
 
             this.structs = BetaStructs;
+
+
+
+            // Fix for watertower, which seems to have a non-deterministic name in game code
+            const capitalizedWaterTower = await structs.getStruct('Class arr.WaterTower');
+            const noncapitalizedWaterTower = await structs.getStruct('Class arr.watertower');
+
+            if(capitalizedWaterTower) {
+                Log.info('Detected existence of capitalized WaterTower class, fixing watertower struct');
+                
+                Reflect.decorate([
+                    Struct( "Class arr.WaterTower" )
+                ], BetaStructs.arr.Awatertower);
+            } else if(noncapitalizedWaterTower) {
+                Log.info('Detected existence of non-capitalized watertower class, fixing watertower struct');
+
+                Reflect.decorate([
+                    Struct( "Class arr.watertower" )
+                ], BetaStructs.arr.Awatertower);
+            } else {
+                Log.error('Did not detect any watertower. Continuing anyway, even though this will probably fail.');
+            }
         } catch(e) {
             Log.info('Falling back to stable branch version, because beta branch version gave error:', e);
 
@@ -352,7 +375,7 @@ export class World {
         }
     }
 
-    private async getKismetSystemLibrary() {
+    public async getKismetSystemLibrary() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const kismetRef = await data.getReference( this.structs.Engine.UKismetSystemLibrary );
@@ -360,9 +383,11 @@ export class World {
             this.kismetSystemLibrary = await kismetRef.getStatic();
         else
             this.kismetSystemLibrary = null;
+
+        return this.kismetSystemLibrary;
     }
 
-    private async getWorld() {
+    public async getWorld() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
         const ref = await data.getReference( this.structs.Engine.UGameEngine );
@@ -382,6 +407,8 @@ export class World {
             ] ),
             engine
         ) )?.GameViewport?.World;
+
+        return this.world;
     }
 
     async load( type: LoadType ) {

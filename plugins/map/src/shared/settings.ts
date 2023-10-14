@@ -48,7 +48,7 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             background: {
                 type: 'number',
                 default: 6,
-                maximum: 10,
+                maximum: 12,
                 minimum: 1,
             },
         },

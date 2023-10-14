@@ -5,6 +5,7 @@ import { ControlsSynchronizer } from './controlsSync';
 import { WorldParser } from './parser';
 import { World } from './world';
 import { Structs } from './structs/types';
+import { HeightMapper } from './heightMapper';
 
 export default class WorldPlugin extends Controller {
     public world: World;
@@ -12,6 +13,7 @@ export default class WorldPlugin extends Controller {
     public controller: IPluginController;
     public controlsSync: ControlsSynchronizer;
     public parser: WorldParser;
+    public heightMapper: HeightMapper;
 
     public async load( controller: IPluginController ): Promise<void> {
         this.controller = controller;
@@ -22,6 +24,7 @@ export default class WorldPlugin extends Controller {
         this.world = new World( this, settings );
         this.cheats = new Cheats( this, settings );
         this.controlsSync = new ControlsSynchronizer( this );
+        this.heightMapper = new HeightMapper(this);
 
         controller.addSetup( async () => {
             await this.world.prepare();
@@ -31,7 +34,17 @@ export default class WorldPlugin extends Controller {
             this.cheats.start();
             this.controlsSync.start();
 
+            // const timeout = setTimeout(() => {
+            //     this.heightMapper.extractHeights().catch((e) => Log.error(e));
+            // }, 5000);
+
+            // const timeout = setInterval(() => {
+            //     this.heightMapper.getCurrentCoordinates();
+            // }, 1000);
+
             return () => {
+                // clearTimeout(timeout); 
+
                 this.world.stop();
                 this.cheats.stop();
                 this.world.stop();

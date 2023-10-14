@@ -1,8 +1,8 @@
-import { Property, Struct, StructInfo } from "@rrox/api";
+import { Property, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { Astorage } from "./storage";
 
-@Struct( "Class arr.watertower" )
+// Struct decorator will be placed dynamically based on detected name
 export class Awatertower extends AActor {
 
     constructor( struct: StructInfo<Awatertower> ) {

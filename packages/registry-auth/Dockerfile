@@ -16,7 +16,7 @@ COPY .parcelrc ./parcelrc
 RUN yarn build
 
 # PROD env
-FROM verdaccio/verdaccio
+FROM verdaccio/verdaccio:5.9.0
 
 USER root
 

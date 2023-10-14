@@ -25,7 +25,8 @@
     },
     "devDependencies": {
         "@rrox/plugin": "^1.0.1",
-        "@types/react": "^17.0.39"
+        "@types/react": "^17.0.39",
+        "@types/tmp": "^0.2.4"
     },
     "scripts": {
         "build": "rrox clean && rrox build",
@@ -36,6 +37,8 @@
     "dependencies": {
         "@rrox/api": "^1.1.0",
         "antd": "^4.17.2",
-        "react": "^17.0.2"
+        "promise-parallel-throttle": "^3.3.0",
+        "react": "^17.0.2",
+        "tmp": "^0.2.1"
     }
 }
