@@ -24,6 +24,12 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.14 03-10-2023
+- ``Enhancement`` Added support for Lima 280 Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added Support for "DSPRR Coach" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added support for new D&RG Water Tower. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Fixed`` Fixed RROx height check used for The Teleport Features. This addresses/fixes this issue with landing on the "sky box" on the Lake Valley Map. (Thanks to [Mordred](https://github.com/mordred-random))
+
 ### v1.1.13 09-09-2023
 - ``Fixed`` Fixed RROx check for newer SplineTrack objects. This addresses/fixes RROx not displaying these track types after the RRO Beta Update 0.5.9.8. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added Support for "Wood Rick" as a new Industry/fueling building/facility. (Thanks to [Mordred](https://github.com/mordred-random))

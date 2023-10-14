@@ -48,6 +48,9 @@ import Plantationcar_Hopper_Medium from '../../images/cars/plantationcar_hopper_
 import Plantationcar_Hopper_Large from '../../images/cars/plantationcar_hopper_large.png';
 import Plantationcar_Tanker from '../../images/cars/plantationcar_tanker.png';
 import Plantationcar_Boxcar from '../../images/cars/plantationcar_boxcar.png';
+import COACH_DSPRR_1 from '../../images/cars/DSPP_coach.png';
+import Lima280 from '../../images/cars/lima280.png';
+import Lima280Tender from '../../images/cars/lima280_tender.png';
 
 import HandcarIcon from '../../images/carsIcon/handcar.png';
 import PorterIcon from '../../images/carsIcon/porter_040.png';
@@ -98,6 +101,9 @@ import Plantationcar_Hopper_MediumIcon from '../../images/carsIcon/plantationcar
 import Plantationcar_Hopper_LargeIcon from '../../images/carsIcon/plantationcar_hopper_large.png';
 import Plantationcar_TankerIcon from '../../images/carsIcon/plantationcar_tanker.png';
 import Plantationcar_BoxcarIcon from '../../images/carsIcon/plantationcar_boxcar.png';
+import COACH_DSPRR_1Icon from '../../images/carsIcon/DSPP_coach.png';
+import Lima280Icon from '../../images/carsIcon/lima280.png';
+import Lima280TenderIcon from '../../images/carsIcon/lima280_tender.png';
 
 
 export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null, imageIcon: string | null, name: string, length: number, engine: boolean, tender: boolean, freight: boolean } } = {
@@ -141,6 +147,9 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
     [ FrameCarType.COOKE260COAL_TENDER ]: { image: Cooke260TenderCoal, imageIcon: Cooke260TenderCoalIcon, length: 581.7, engine: false, tender: true , freight: false, name: 'Cooke Mogul Tender Coal'    },
 	[ FrameCarType.TWEETSIE280         ]: { image: Tweetsie280       , imageIcon: Tweetsie280Icon       , length: 878.9, engine: true , tender: false, freight: false, name: 'ET&WNC 280'                 },
     [ FrameCarType.TWEETSIE280_TENDER  ]: { image: Tweetsie280Tender , imageIcon: Tweetsie280TenderIcon , length: 618.8, engine: false, tender: true , freight: false, name: 'ET&WNC 280 Tender'          },
+	[ FrameCarType.COACH_DSPRR_1       ]: { image: COACH_DSPRR_1     , imageIcon: COACH_DSPRR_1Icon     , length: 980.8, engine: false, tender: false, freight: false , name: 'Coach DSPRR'               },
+	[ FrameCarType.LIMA280             ]: { image: Lima280           , imageIcon: Lima280Icon           , length: 878.9, engine: true , tender: false, freight: false, name: 'Lima 280'                   },
+    [ FrameCarType.LIMA280_TENDER      ]: { image: Lima280TenderIcon , imageIcon: Lima280TenderIcon     , length: 615.8, engine: false, tender: true , freight: false, name: 'Lima 280 Tender'            },
 	[ FrameCarType.PLANTATIONCAR_FLATCAR        ]: { image: Plantationcar_Flatcar            , imageIcon: Plantationcar_FlatcarIcon        , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Cane Flat' },
 	[ FrameCarType.PLANTATIONCAR_FLATCAR_LOGS   ]: { image: Plantationcar_Flatcar_Logs   , imageIcon: Plantationcar_Flatcar_LogsIcon   , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Logging Flat' },
 	[ FrameCarType.PLANTATIONCAR_FLATCAR_STAKES ]: { image: Plantationcar_Flatcar_Stakes , imageIcon: Plantationcar_Flatcar_StakesIcon , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Stake Flat' },
@@ -150,6 +159,6 @@ export const FrameDefinitions: { [ key in FrameCarType ]: { image: string | null
 	[ FrameCarType.PLANTATIONCAR_HOPPER_LARGE   ]: { image: Plantationcar_Hopper_Large   , imageIcon: Plantationcar_Hopper_LargeIcon   , length: 331.2, engine: false , tender: false, freight: true, name: 'Gregg Sugar Cane Highside Gondola' },
 	[ FrameCarType.PLANTATIONCAR_TANKER         ]: { image: Plantationcar_Tanker         , imageIcon: Plantationcar_TankerIcon         , length: 331.2, engine: false , tender: false, freight: true, name: 'EWA Plantation Box Car' },
 	[ FrameCarType.PLANTATIONCAR_BOXCAR         ]: { image: Plantationcar_Boxcar         , imageIcon: Plantationcar_BoxcarIcon         , length: 331.2, engine: false , tender: false, freight: true, name: 'Waualua Agricultural Tank Car' },
-
+	
     [ FrameCarType.UNKNOWN             ]: { image: null              , imageIcon: null                  , length: 500  , engine: false, tender: false, freight: false, name: 'Unknown'                    },
 };

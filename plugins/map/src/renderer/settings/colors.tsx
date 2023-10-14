@@ -41,7 +41,8 @@ import Plantationcar_Hopper_Medium from '../images/cars/plantationcar_hopper_med
 import Plantationcar_Hopper_Large from '../images/cars/plantationcar_hopper_large.png';
 import Plantationcar_Tanker from '../images/cars/plantationcar_tanker.png';
 import Plantationcar_Boxcar from '../images/cars/plantationcar_boxcar.png';
-
+import COACH_DSPRR_1 from '../images/cars/DSPP_coach.png';
+import Lima280 from '../images/cars/lima280.png';
 
 import { MapPreferences } from "../../shared";
 import { useSettings } from "@rrox/api";
@@ -289,6 +290,17 @@ export function ColorSettings() {
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.TWEETSIE280}`, `colors.${FrameCarType.TWEETSIE280_TENDER}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={Lima280} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.LIMA280 ]}><input type='color' /></Form.Item></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.LIMA280_TENDER ]}><input type='color' /></Form.Item></td>
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.LIMA280}`, `colors.${FrameCarType.LIMA280_TENDER}` )}
                                 title='Reset to default value'
                                 className='reset'
                             ><ReloadOutlined /></Button></td>
@@ -568,6 +580,18 @@ export function ColorSettings() {
                             <td><Button
                                 type="text"
                                 onClick={() => store.reset( `colors.${FrameCarType.PLOW}` )}
+                                title='Reset to default value'
+                                className='reset'
+                            ><ReloadOutlined /></Button></td>
+                        </tr>
+						<tr>
+                            <td><img className='dark-mode-invert' src={COACH_DSPRR_1} /></td>
+                            <td><Form.Item name={[ 'colors', FrameCarType.COACH_DSPRR_1 ]}><input type='color' /></Form.Item></td>
+                            <td />
+							<td />
+                            <td><Button
+                                type="text"
+                                onClick={() => store.reset( `colors.${FrameCarType.COACH_DSPRR_1}` )}
                                 title='Reset to default value'
                                 className='reset'
                             ><ReloadOutlined /></Button></td>

@@ -223,4 +223,11 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
 		productionChainBuilding: false,
 		fuelingBuilding: true,
     },
+	[ IndustryType.DRGWATERTOWER ]: {
+        name: 'Water Tower',
+        points: [ [ -400, 100 ], [ 400, 900 ] ],
+        fillColor: '#e7e6d2',
+		productionChainBuilding: false,
+		fuelingBuilding: false,
+    },
 };

@@ -48,7 +48,10 @@ export enum FrameCarType {
 	PLANTATIONCAR_HOPPER_LARGE = 'plantationcar_hopper_large',
 	PLANTATIONCAR_TANKER = 'plantationcar_tanker',
 	PLANTATIONCAR_BOXCAR = 'plantationcar_boxcar',
-		
+	COACH_DSPRR_1 = 'coach_dsprr_1',
+	LIMA280 = 'lima280',
+	LIMA280_TENDER = 'lima280_tender',
+	
     UNKNOWN = 'unknown',
 }
 
@@ -56,7 +59,7 @@ export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | Fr
         FrameCarType.EUREKA_TENDER | FrameCarType.CLIMAX | FrameCarType.HEISLER | FrameCarType.CLASS70 | FrameCarType.CLASS70_TENDER | FrameCarType.COOKE260 | FrameCarType.COOKE260_TENDER |
 		FrameCarType.MONTEZUMA | FrameCarType.MONTEZUMA_TENDER | FrameCarType.GLENBROOK | FrameCarType.GLENBROOK_TENDER | FrameCarType.SHAY |
 		FrameCarType.BALDWIN622D | FrameCarType.MOSCA | FrameCarType.COOKE280 | FrameCarType.TENMILE | FrameCarType.RUBYBASIN | 
-		FrameCarType.COOKE260COAL | FrameCarType.COOKE260COAL_TENDER | FrameCarType.TWEETSIE280 | FrameCarType.TWEETSIE280_TENDER;
+		FrameCarType.COOKE260COAL | FrameCarType.COOKE260COAL_TENDER | FrameCarType.TWEETSIE280 | FrameCarType.TWEETSIE280_TENDER | FrameCarType.LIMA280 | FrameCarType.LIMA280_TENDER;
 
 
 export type FreightFrameCarType = FrameCarType.BOXCAR | FrameCarType.FLATCAR_CORDWOOD | FrameCarType.HOPPER | FrameCarType.FLATCAR_LOGS |

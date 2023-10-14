@@ -39,7 +39,7 @@ export function TeleportPopupButton( props: MapPopupElementProps ) {
 
     if( !settings.features.teleport || ( !props.frame && !props.industry && !props.sandhouse && !props.watertower ) )
         return null;
-    if( props.frame && !isEngine( props.frame ) && props.frame.type !== FrameCarType.CABOOSE && props.frame.type !== FrameCarType.WAYCAR )
+    if( props.frame && !isEngine( props.frame ) && props.frame.type !== FrameCarType.CABOOSE && props.frame.type !== FrameCarType.WAYCAR && props.frame.type !== FrameCarType.COACH_DSPRR_1 )
         return null;
 
     return <Button
