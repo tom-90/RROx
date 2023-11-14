@@ -2,7 +2,7 @@ import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { USceneComponent } from "../Engine/SceneComponent";
 
-@Struct( "Class arr.turntable" )
+@Struct( "Class arr.Turntable" )
 export class Aturntable extends AActor {
 
     constructor( struct: StructInfo<Aturntable> ) {
@@ -22,6 +22,6 @@ export class Aturntable extends AActor {
     /**
      * An object property containing information of a subobject.
      */
-    @Property.Object( "deckmesh", () => USceneComponent )
+    @Property.Object( "DeckMesh", () => USceneComponent )
     public deckmesh: USceneComponent;    
 }

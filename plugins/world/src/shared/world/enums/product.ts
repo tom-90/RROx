@@ -14,4 +14,7 @@ export enum ProductType {
     FIREWOOD = 'firewood',
     WATER = 'water',
     SAND = 'sand',
+    SEEDPALLET = 'seed_pallet',
+    STRAWBALE = 'straw_bale',
+    GRAIN = 'grain',
 }

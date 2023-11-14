@@ -1,7 +1,8 @@
 import { Actions } from "@rrox/api";
 import WorldPlugin from ".";
-import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack, Log } from "../shared";
+import { IndustryType, FrameCarType, IFrameCar, IIndustry, ILocation, IPlayer, IRotation, ISandhouse, ISpline, ISplineSegment, IStorage, ISwitch, ITurntable, IWatertower, ProductType, ISplineTrack, Log, industryNameToIndustryType } from "../shared";
 import { Structs } from './structs/types';
+import { freightTypeToProductType } from "./structs/beta-UE5/arr/efreighttype";
 
 export class WorldParser {
 
@@ -18,8 +19,15 @@ export class WorldParser {
     public parseFrameCar( frameCar: Structs.Aframecar, frameCars?: Structs.Aframecar[] ): IFrameCar {
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
+        let type = FrameCarType.UNKNOWN;
+        if(typeof frameCar.FrameType === 'string') {
+            type = Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType) ? frameCar.FrameType as FrameCarType : FrameCarType.UNKNOWN;
+        } else {
+            type = frameCar.FrameType?.getValue() as FrameCarType ?? FrameCarType.UNKNOWN;
+        }
+
         return {
-            type: Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType) ? frameCar.FrameType as FrameCarType : FrameCarType.UNKNOWN,
+            type,
             name: frameCar.framename,
             number: frameCar.FrameNumber,
             location: this.parseActorLocation( frameCar ),
@@ -54,7 +62,8 @@ export class WorldParser {
                 maxWater: frameCar.MyTender.maxamountwater,
             } : undefined,
             freight: frameCar.MyFreight ? {
-                type: frameCar.MyFreight.currentfreighttype as ProductType,
+                types: [typeof frameCar.MyFreight.currentfreighttype === 'string'? frameCar.MyFreight.currentfreighttype as ProductType : freightTypeToProductType(frameCar.MyFreight.currentfreighttype)]
+                    .filter((t): t is ProductType => t !== null),
                 currentAmount: frameCar.MyFreight.currentfreight,
                 maxAmount: frameCar.MyFreight.maxfreight,
                 location: this.parseActorLocation(frameCar.MyFreight),
@@ -109,8 +118,16 @@ export class WorldParser {
     }
     
     public parseIndustry( ind: Structs.Aindustry ): IIndustry {
+        let industryType = IndustryType.UNKNOWN;
+        if('industrytype' in ind) {
+            industryType = ind.industrytype as IndustryType;
+        } else if('IndustryName' in ind) {
+            const name = ind.IndustryName?.getValue();
+            industryType = name ? industryNameToIndustryType(name) : IndustryType.UNKNOWN;
+        }
+
         const industry = {
-            type: ind.industrytype,
+            type: industryType,
             educts: [ ind.mystorageeducts1, ind.mystorageeducts2, ind.mystorageeducts3, ind.mystorageeducts4 ].map(
                 ( storage ) => this.parseStorage( storage )
             ).filter( ( st ): st is IStorage => st !== undefined ),
@@ -119,9 +136,9 @@ export class WorldParser {
                     ( storage ) => this.parseStorage( storage )
                 )
                 .filter( ( st ): st is IStorage => st !== undefined )
-                .map( ( st ) => ind.industrytype === IndustryType.IRONWORKS && st.type === ProductType.RAWIRON ? {
+                .map( ( st ) => industryType === IndustryType.IRONWORKS ? {
                     ...st,
-                    type: ProductType.STEELPIPES,
+                    types: st.types.map((t) => t === ProductType.RAWIRON ? ProductType.STEELPIPES : t),
                 } : st ),
             location: this.parseActorLocation( ind ),
             rotation: this.parseActorRotation( ind ),
@@ -132,7 +149,7 @@ export class WorldParser {
             industry.educts.push( {
                 currentAmount: ind.educt1amount,
                 maxAmount: ind.educt1amountmax,
-                type: ind.educt1type as ProductType,
+                types: ind.educt1type.split(',') as ProductType[],
                 cranes: [],
                 location: {
                     X: 0,
@@ -150,7 +167,7 @@ export class WorldParser {
             industry.products.push( {
                 currentAmount: ind.product1amount,
                 maxAmount: ind.product1amountmax,
-                type: ind.product1type as ProductType,
+                types: ind.product1type.split(',') as ProductType[],
                 cranes: [],
                 location: {
                     X: 0,
@@ -271,10 +288,21 @@ export class WorldParser {
         if( !storage )
             return undefined;
 
+        let storageTypes: ProductType[] = [];
+        if('storagetype' in storage && storage.storagetype !== '') {
+            storageTypes = storageTypes.concat(storage.storagetype.split(',') as ProductType[]);
+        } else if('HoldableFreightTypes' in storage && storage.HoldableFreightTypes) {
+            storageTypes = storageTypes.concat(
+                storage.HoldableFreightTypes
+                    .map((t) => freightTypeToProductType(t))
+                    .filter((t): t is ProductType => t !== null)
+                );
+        }
+
         return {
             currentAmount: storage.currentamountitems,
             maxAmount: storage.maxitems,
-            type: storage.storagetype as ProductType,
+            types: storageTypes,
             location: this.parseLocation( storage.RootComponent.AttachParent.RelativeLocation ),
             rotation: this.parseRotation( storage.RootComponent.AttachParent.RelativeRotation ),
             cranes: [
@@ -283,7 +311,7 @@ export class WorldParser {
                 { id: 3, crane: storage.Mycrane3 }
             ].filter((c) => c.crane != null).map((c) => ({
                 id: c.id,
-				type: c.crane.freighttype as ProductType,
+				type: 'TypeOfFreight' in c.crane ? freightTypeToProductType(c.crane.TypeOfFreight)! : c.crane.freighttype as ProductType,
                 location: this.parseLocation( c.crane.RootComponent.AttachParent.RelativeLocation ),
                 rotation: this.parseRotation( c.crane.RootComponent.AttachParent.RelativeRotation ),
             })),

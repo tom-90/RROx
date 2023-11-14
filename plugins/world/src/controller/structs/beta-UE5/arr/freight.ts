@@ -1,5 +1,6 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
+import { EFreightType } from "./efreighttype";
 
 @Struct( "Class arr.Freight" )
 export class AFreight extends AActor {
@@ -10,21 +11,22 @@ export class AFreight extends AActor {
     }
 
     /**
-     * A string property.
+     * An array containing:
+     * Enum property
      */
-    @Property.Str( "LoadableFreight" )
-    public LoadableFreight: string;
+    @Property.Array( "LoadableFreight", [ EFreightType ] )
+    public LoadableFreight: Array<EFreightType>;
     
     /**
-     * A string property.
+     * A enum property,
      */
-    @Property.Str( "currentfreighttype" )
-    public currentfreighttype: string;
+    @Property.Enum( "CurrentTypeOfFreight", () => EFreightType )
+    public currentfreighttype: EFreightType;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "specificFreightMass" )
+    @Property.Float( "SpecificFreightMass" )
     public specificFreightMass: float;
     
     /**
@@ -42,13 +44,13 @@ export class AFreight extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "currentfreight" )
+    @Property.Int( "CurrentFreight" )
     public currentfreight: int32;
     
     /**
      * A string property.
      */
-    @Property.Str( "currentunloader" )
+    @Property.Str( "CurrentUnloader" )
     public currentunloader: string;
     
 }

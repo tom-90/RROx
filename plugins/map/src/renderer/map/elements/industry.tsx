@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import { StorageInfo } from '../popups';
 import { usePositions, usePopupElements, useImageAdjust } from '../hooks';
 import { MapMode } from '../types';
-import { IIndustry, TeleportCommunicator } from '@rrox-plugins/world/shared';
+import { IIndustry, IndustryType, TeleportCommunicator } from '@rrox-plugins/world/shared';
 import { useRPC } from '@rrox/api';
 import { Crane } from './crane';
 
@@ -17,13 +17,7 @@ export const Industry = React.memo( function Industry( { data, index }: { data: 
 
     const { type, location, rotation, products, educts } = data;
 
-    const definition = ( IndustryDefinitions[ type ] as IndustryDefinition | undefined ) ?? {
-        name: 'Unknown',
-        points: [ [ -500, 0 ], [ 500, 500 ] ],
-        fillColor: '#666',
-		productionChainBuilding: false,
-		fuelingBuilding: false,
-    };
+    const definition = ( IndustryDefinitions[ type ] as IndustryDefinition | undefined ) ?? IndustryDefinitions[ IndustryType.UNKNOWN ];
 
     const popupElements = usePopupElements( { industry: data, index } );
 

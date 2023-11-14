@@ -16,7 +16,7 @@ import Firewood from '../../images/products/firewood_p.png';
 import Water from '../../images/products/water_p.png';
 import Sand from '../../images/products/sand_p.png';
 
-export const ProductDefinitions: { [ key in ProductType ]: { name: string, image: string, offset?: number } } = {
+export const ProductDefinitions: { [ key in ProductType ]: { name: string, image?: string, offset?: number } } = {
     [ ProductType.CRUDEOIL   ]: { name: 'Crude oil'  , image: CrudeOil   },
     [ ProductType.COAL       ]: { name: 'Coal'       , image: Coal       },
     [ ProductType.IRONORE    ]: { name: 'Iron ore'   , image: IronOre    },
@@ -32,4 +32,7 @@ export const ProductDefinitions: { [ key in ProductType ]: { name: string, image
     [ ProductType.LOG        ]: { name: 'Logs'       , image: Logs    , offset: -5 },
     [ ProductType.LUMBER     ]: { name: 'Lumber'     , image: Lumber  , offset: -5 },
     [ ProductType.OILBARREL  ]: { name: 'Oil barrels', image: Barrels , offset: 2  },
+    [ ProductType.SEEDPALLET ]: { name: 'Seed pallets' },
+    [ ProductType.STRAWBALE  ]: { name: 'Strawbale' },
+    [ ProductType.GRAIN      ]: { name: 'Grain' },
 };

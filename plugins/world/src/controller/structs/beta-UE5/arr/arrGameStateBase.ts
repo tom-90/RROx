@@ -5,11 +5,10 @@ import { Aframecar } from "./framecar";
 import { Aindustry } from "./industry";
 import { Asandhouse } from "./sandhouse";
 import { ASplineActor } from "./SplineActor";
-import { ASwitch } from "./Switch";
 import { Aturntable } from "./turntable";
 import { Awatertower } from "./watertower";
 
-@Struct( "Class arr.arrGameStateBase" )
+@Struct( "Class arr.ARRGameStateBase" )
 export class AarrGameStateBase extends AGameStateBase {
 
     constructor( struct: StructInfo<AarrGameStateBase> ) {
@@ -21,35 +20,35 @@ export class AarrGameStateBase extends AGameStateBase {
      * An array containing:
      * String property
      */
-    @Property.Array( "playeridarray", [] )
+    @Property.Array( "playerIdArray", [] )
     public playeridarray: Array<string>;
     
     /**
      * An array containing:
      * String property
      */
-    @Property.Array( "playernamearray", [] )
+    @Property.Array( "playerNameArray", [] )
     public playernamearray: Array<string>;
     
     /**
      * An array containing:
      * Struct property
      */
-    @Property.Array( "playerlocationarray", [ () => FVector ] )
+    @Property.Array( "playerLocationArray", [ () => FVector ] )
     public playerlocationarray: Array<FVector>;
     
     /**
      * An array containing:
      * Float number property
      */
-    @Property.Array( "playermoneyarray", [] )
+    @Property.Array( "playerMoneyArray", [] )
     public playermoneyarray: Array<float>;
     
     /**
      * An array containing:
      * 32-bit int number property
      */
-    @Property.Array( "playerxparray", [] )
+    @Property.Array( "playerXpArray", [] )
     public playerxparray: Array<int32>;
     
     /**
@@ -58,13 +57,6 @@ export class AarrGameStateBase extends AGameStateBase {
      */
     @Property.Array( "SplineArray", [ () => ASplineActor ] )
     public SplineArray: Array<ASplineActor>;
-    
-    /**
-     * An array containing:
-     * Object property
-     */
-    @Property.Array( "SwitchArray", [ () => ASwitch ] )
-    public SwitchArray: Array<ASwitch>;
     
     /**
      * An array containing:

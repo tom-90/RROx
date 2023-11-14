@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.johnsonbar" )
+@Struct( "Class arr.JohnsonBar" )
 export class Ajohnsonbar extends AActor {
 
     constructor( struct: StructInfo<Ajohnsonbar> ) {
@@ -12,7 +12,7 @@ export class Ajohnsonbar extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "forwardvalue" )
+    @Property.Float( "ForwardValue" )
     public forwardvalue: float;
     
 }

@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.switch" )
+@Struct( "Class arr.Switch" )
 export class ASwitch extends AActor {
 
     constructor( struct: StructInfo<ASwitch> ) {
@@ -15,7 +15,7 @@ export class ASwitch extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "switchtype" )
+    @Property.Int( "SwitchType" )
     public switchtype: int32;
 
     /**
@@ -24,7 +24,7 @@ export class ASwitch extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "switchstate" )
+    @Property.Int( "SwitchState" )
     public switchstate: int32;
     
 }

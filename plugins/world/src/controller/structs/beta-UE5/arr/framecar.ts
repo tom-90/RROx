@@ -1,4 +1,4 @@
-import { Property, Struct, StructInfo } from "@rrox/api";
+import { NameRef, Property, Struct, StructInfo } from "@rrox/api";
 import { ACharacter } from "../Engine/Character";
 import { Aairbrake } from "./airbrake";
 import { Ajohnsonbar } from "./johnsonbar";
@@ -11,7 +11,7 @@ import { Atender } from "./tender";
 import { AFreight } from "./freight";
 import { Acoupler } from "./coupler";
 
-@Struct( "Class arr.framecar" )
+@Struct( "Class arr.Framecar" )
 export class Aframecar extends ACharacter {
 
     constructor( struct: StructInfo<Aframecar> ) {
@@ -20,10 +20,11 @@ export class Aframecar extends ACharacter {
     }
     
     /**
-     * A string property.
+     * A string property that cannot be changed.
+     * This property points to a constant string defined in the game.
      */
-    @Property.Str( "FrameType" )
-    public FrameType: string;
+    @Property.Name( "FrameType" )
+    public FrameType: NameRef;
     
     /**
      * A string property.
@@ -40,7 +41,7 @@ export class Aframecar extends ACharacter {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentspeedms" )
+    @Property.Float( "CurrentSpeedCms" )
     public currentspeedms: float;
     
     /**
@@ -109,7 +110,7 @@ export class Aframecar extends ACharacter {
     /**
      * An object property containing information of a subobject.
      */
-    @Property.Object( "MyFreight", () => AFreight )
+    @Property.Object( "FreightChild", () => AFreight )
     public MyFreight: AFreight;
     
     /**

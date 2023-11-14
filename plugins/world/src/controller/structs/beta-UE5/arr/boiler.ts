@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.boiler" )
+@Struct( "Class arr.Boiler" )
 export class Aboiler extends AActor {
 
     constructor( struct: StructInfo<Aboiler> ) {
@@ -12,163 +12,163 @@ export class Aboiler extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxboilerpressure" )
+    @Property.Float( "MaxBoilerPressure" )
     public maxboilerpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minboilerpressure" )
+    @Property.Float( "MinBoilerPressure" )
     public minboilerpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentboilerpressure" )
+    @Property.Float( "CurrentBoilerPressure" )
     public currentboilerpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "pressureloss" )
+    @Property.Float( "PressureLoss" )
     public pressureloss: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentpressureadd" )
+    @Property.Float( "CurrentPressureAdd" )
     public currentpressureadd: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "regulatorsetting" )
+    @Property.Float( "RegulatorSetting" )
     public regulatorsetting: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "reversersetting" )
+    @Property.Float( "ReverserSetting" )
     public reversersetting: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "boilerpressurefactor" )
+    @Property.Float( "BoilerPressureFactor" )
     public boilerpressurefactor: float;
     
     /**
      * A boolean property.
      */
-    @Property.Bool( "bhasunlimitedsteam" )
+    @Property.Bool( "bHasUnlimitedSteam" )
     public bhasunlimitedsteam: boolean;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxwateramount" )
+    @Property.Float( "MaxWaterAmount" )
     public maxwateramount: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minwateramount" )
+    @Property.Float( "MinWaterAmount" )
     public minwateramount: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentwateramount" )
+    @Property.Float( "CurrentWaterAmount" )
     public currentwateramount: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "waterfactor" )
+    @Property.Float( "WaterFactor" )
     public waterfactor: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentwaterconsumption" )
+    @Property.Float( "CurrentWaterConsumption" )
     public currentwaterconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxwaterconsumption" )
+    @Property.Float( "MaxWaterConsumption" )
     public maxwaterconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minwaterconsumption" )
+    @Property.Float( "MinWaterConsumption" )
     public minwaterconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxwatertemperature" )
+    @Property.Float( "MaxWaterTemperature" )
     public maxwatertemperature: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minwatertemperature" )
+    @Property.Float( "MinWaterTemperature" )
     public minwatertemperature: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentwatertemperature" )
+    @Property.Float( "CurrentWaterTemperature" )
     public currentwatertemperature: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxfuel" )
+    @Property.Float( "MaxFuel" )
     public maxfuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minfuel" )
+    @Property.Float( "MinFuel" )
     public minfuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentfuel" )
+    @Property.Float( "CurrentFuel" )
     public currentfuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "fuelfactor" )
+    @Property.Float( "FuelFactor" )
     public fuelfactor: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "fuelconsumption" )
+    @Property.Float( "FuelConsumption" )
     public fuelconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxfiretemperature" )
+    @Property.Float( "MaxFireTemperature" )
     public maxfiretemperature: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minfiretemperature" )
+    @Property.Float( "MinFireTemperature" )
     public minfiretemperature: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentfiretemperature" )
+    @Property.Float( "CurrentFireTemperature" )
     public currentfiretemperature: float;
     
 }

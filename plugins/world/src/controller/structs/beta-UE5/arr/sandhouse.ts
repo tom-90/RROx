@@ -2,7 +2,7 @@ import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { Astorage } from "./storage";
 
-@Struct( "Class arr.sandhouse" )
+@Struct( "Class arr.SandHouse" )
 export class Asandhouse extends AActor {
 
     constructor( struct: StructInfo<Asandhouse> ) {
@@ -16,13 +16,13 @@ export class Asandhouse extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "sandhousetype" )
+    @Property.Int( "SandHouseType" )
     public sandhousetype: int32;
     
     /**
      * An object property containing information of a subobject.
      */
-    @Property.Object( "Mystorage", () => Astorage )
+    @Property.Object( "Storage", () => Astorage )
     public Mystorage: Astorage;
     
 }

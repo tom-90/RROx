@@ -1,8 +1,8 @@
-import { Property, Struct, StructInfo } from "@rrox/api";
+import { NameRef, Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { Astorage } from "./storage";
 
-@Struct( "Class arr.industry" )
+@Struct( "Class arr.Industry" )
 export class Aindustry extends AActor {
 
     constructor( struct: StructInfo<Aindustry> ) {
@@ -59,13 +59,11 @@ export class Aindustry extends AActor {
     public mystorageproducts4: Astorage;
     
     /**
-     * A `int32` number property (range `-2147483648` to `+2147483647`).
-     * 
-     * @min `-2147483648`
-     * @max `+2147483647`
+     * A string property that cannot be changed.
+     * This property points to a constant string defined in the game.
      */
-    @Property.Int( "industrytype" )
-    public industrytype: int32;
+    @Property.Name( "IndustryName" )
+    public IndustryName: NameRef;
 
     
     // COAL TOWER STUPIDITY

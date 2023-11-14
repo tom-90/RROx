@@ -1,4 +1,4 @@
-import { Actions, InOutParam, IQuery, MultiLinkedStructRef, query, QueryBuilder, SettingsStore, Struct, StructConstructor, ValueProvider } from "@rrox/api";
+import { Actions, InOutParam, IQuery, MultiLinkedStructRef, query, QueryBuilder, QueryBuilderResult, SettingsStore, Struct, StructConstructor, ValueProvider } from "@rrox/api";
 import WorldPlugin from ".";
 import { FrameCarControl, ILocation, ILocation2D, Log, IWorld, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
 import { Geometry } from "./geometry";
@@ -129,7 +129,7 @@ export class World {
         const watertowerQuery = ( wt: QueryBuilder<Structs.Awatertower> ) => [
             wt.Mystorage.currentamountitems,
             wt.Mystorage.maxitems,
-            wt.Mystorage.storagetype,
+            'HoldableFreightTypes' in wt.Mystorage ? wt.Mystorage.HoldableFreightTypes : wt.Mystorage.storagetype,
             wt.Mystorage.RootComponent.AttachParent.RelativeLocation,
             wt.Mystorage.RootComponent.AttachParent.RelativeRotation,
             wt.RootComponent.RelativeLocation,
@@ -139,52 +139,63 @@ export class World {
         const sandhouseQuery = ( sh: QueryBuilder<Structs.Asandhouse> ) => [
             sh.Mystorage.currentamountitems,
             sh.Mystorage.maxitems,
-            sh.Mystorage.storagetype,
+            'HoldableFreightTypes' in sh.Mystorage ? sh.Mystorage.HoldableFreightTypes : sh.Mystorage.storagetype,
             sh.Mystorage.RootComponent.AttachParent.RelativeLocation,
             sh.Mystorage.RootComponent.AttachParent.RelativeRotation,
             sh.RootComponent.RelativeLocation,
             sh.RootComponent.RelativeRotation
         ];
 
-        const industryQuery = ( ind: QueryBuilder<Structs.Aindustry> ) => [
-            ind.industrytype,
-            ind.RootComponent.RelativeLocation,
-            ind.RootComponent.RelativeRotation,
-
-            ...[
-                ind.mystorageeducts1,
-                ind.mystorageeducts2,
-                ind.mystorageeducts3,
-                ind.mystorageeducts4,
-                ind.mystorageproducts1,
-                ind.mystorageproducts2,
-                ind.mystorageproducts3,
-                ind.mystorageproducts4,
-            ].map( ( storage ) => [
-                storage.currentamountitems,
-                storage.maxitems,
-                storage.storagetype,
-                storage.RootComponent.AttachParent.RelativeLocation,
-                storage.RootComponent.AttachParent.RelativeRotation,
-
+        const industryQuery = ( ind: QueryBuilder<Structs.Aindustry> ) => {
+            const base = [
+                ind.RootComponent.RelativeLocation,
+                ind.RootComponent.RelativeRotation,
+    
                 ...[
-                    storage.Mycrane1,
-                    storage.Mycrane2,
-                    storage.Mycrane3,
-                ].map((crane) => [
-                    crane.freighttype,
-                    crane.RootComponent.AttachParent.RelativeLocation,
-                    crane.RootComponent.AttachParent.RelativeRotation,
-                ]).flat(),
-            ] ).flat(),
+                    ind.mystorageeducts1,
+                    ind.mystorageeducts2,
+                    ind.mystorageeducts3,
+                    ind.mystorageeducts4,
+                    ind.mystorageproducts1,
+                    ind.mystorageproducts2,
+                    ind.mystorageproducts3,
+                    ind.mystorageproducts4,
+                ].map( ( storage ) => [
+                    storage.currentamountitems,
+                    storage.maxitems,
+                    'HoldableFreightTypes' in storage ? storage.HoldableFreightTypes : storage.storagetype,
+                    storage.RootComponent.AttachParent.RelativeLocation,
+                    storage.RootComponent.AttachParent.RelativeRotation,
+    
+                    ...[
+                        storage.Mycrane1,
+                        storage.Mycrane2,
+                        storage.Mycrane3,
+                    ].map((crane) => [
+                        'TypeOfFreight' in crane ? crane.TypeOfFreight : crane.freighttype,
+                        crane.RootComponent.AttachParent.RelativeLocation,
+                        crane.RootComponent.AttachParent.RelativeRotation,
+                    ]).flat(),
+                ] ).flat(),
+    
+                ind.educt1type,
+                ind.educt1amount,
+                ind.educt1amountmax,
+                ind.product1type,
+                ind.product1amount,
+                ind.product1amountmax
+            ];
 
-            ind.educt1type,
-            ind.educt1amount,
-            ind.educt1amountmax,
-            ind.product1type,
-            ind.product1amount,
-            ind.product1amountmax
-        ];
+            if('IndustryName' in ind) {
+                const ue5Industiry = ind as QueryBuilder<BetaStructs.arr.Aindustry>;
+                base.push(ue5Industiry.IndustryName);
+            } else {
+                const ue4Industiry = ind as QueryBuilder<MainStructs.arr.Aindustry>;
+                base.push(ue4Industiry.industrytype);
+            }
+
+            return base;
+        };
 
         const splineQuery = ( spline: QueryBuilder<Structs.ASplineActor> ) =>  [
             spline.SplineControlPoints.all(),
@@ -194,30 +205,36 @@ export class World {
             spline.RootComponent.RelativeRotation
         ];
 
-        this.worldQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase, ( gameState ) => [
-            // Query players
-            playerQuery( gameState.PlayerArray.all() ),
+        this.worldQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase as StructConstructor<Structs.AarrGameStateBase>, ( gameState ) => {
+            const base = [
+                // Query players
+                playerQuery( gameState.PlayerArray.all() ),
+    
+                // Query frames
+                frameCarQuery( gameState.FrameCarArray.all() ),
+    
+                // Query turntables
+                turntableQuery( gameState.TurntableArray.all() ),
+    
+                // Query watertowers
+                watertowerQuery( gameState.WatertowerArray.all() ),
+    
+                // Query sandhouses
+                sandhouseQuery( gameState.SandhouseArray.all() ),
+    
+                // Query industries
+                industryQuery( gameState.IndustryArray.all() ),
+            ];
 
-            // Query frames
-            frameCarQuery( gameState.FrameCarArray.all() ),
+            if('SwitchArray' in gameState) {
+                // Query switches (UE4)
+                base.push(switchQuery( (gameState as QueryBuilder<MainStructs.arr.AarrGameStateBase>).SwitchArray.all() ));
+            }
 
-            // Query switches
-            switchQuery( gameState.SwitchArray.all() ),
+            return base;
+        } );
 
-            // Query turntables
-            turntableQuery( gameState.TurntableArray.all() ),
-
-            // Query watertowers
-            watertowerQuery( gameState.WatertowerArray.all() ),
-
-            // Query sandhouses
-            sandhouseQuery( gameState.SandhouseArray.all() ),
-
-            // Query industries
-            industryQuery( gameState.IndustryArray.all() ),
-        ] );
-
-        this.splineQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase, ( gameState ) => [
+        this.splineQuery = await data.prepareQuery( this.structs.arr.AarrGameStateBase as StructConstructor<Structs.AarrGameStateBase>, ( gameState ) => [
             // Query splines
             splineQuery( gameState.SplineArray.all() ),
         ] );
@@ -252,8 +269,8 @@ export class World {
 
         this.playerQuery = await data.prepareQuery( this.structs.Engine.APlayerState, ( p ) => [ p.PlayerNamePrivate, p.PawnPrivate ] );
 
-        this.clientQuery = await data.prepareQuery( this.structs.Engine.UNetConnection, ( conn ) => [
-            query( conn.OpenActorChannels.all(), ( channel ) => [
+        this.clientQuery = await data.prepareQuery( this.structs.Engine.UNetConnection as StructConstructor<Structs.UNetConnection>, ( conn ) => [
+            query( conn.OpenActorChannels.all() as QueryBuilder<Structs.UActorChannel>, ( channel ) => [
                 // Query players
                 playerQuery( channel.Player ),
     
@@ -277,8 +294,8 @@ export class World {
             ] ),
         ] );
 
-        this.clientSplineQuery = await data.prepareQuery( this.structs.Engine.UNetConnection, ( conn ) => [
-            query( conn.OpenActorChannels.all(), ( channel ) => [
+        this.clientSplineQuery = await data.prepareQuery( this.structs.Engine.UNetConnection as StructConstructor<Structs.UNetConnection>, ( conn ) => [
+            query( conn.OpenActorChannels.all() as QueryBuilder<Structs.UActorChannel>, ( channel ) => [
                 // Query players
                 splineQuery( channel.Spline ),
             ] ),
@@ -346,28 +363,6 @@ export class World {
             Log.info('Beta branch version detected');
 
             this.structs = BetaStructs;
-
-
-
-            // Fix for watertower, which seems to have a non-deterministic name in game code
-            const capitalizedWaterTower = await structs.getStruct('Class arr.WaterTower');
-            const noncapitalizedWaterTower = await structs.getStruct('Class arr.watertower');
-
-            if(capitalizedWaterTower) {
-                Log.info('Detected existence of capitalized WaterTower class, fixing watertower struct');
-                
-                Reflect.decorate([
-                    Struct( "Class arr.WaterTower" )
-                ], BetaStructs.arr.Awatertower);
-            } else if(noncapitalizedWaterTower) {
-                Log.info('Detected existence of non-capitalized watertower class, fixing watertower struct');
-
-                Reflect.decorate([
-                    Struct( "Class arr.watertower" )
-                ], BetaStructs.arr.Awatertower);
-            } else {
-                Log.error('Did not detect any watertower. Continuing anyway, even though this will probably fail.');
-            }
         } catch(e) {
             Log.info('Falling back to stable branch version, because beta branch version gave error:', e);
 
@@ -390,7 +385,7 @@ export class World {
     public async getWorld() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        const ref = await data.getReference( this.structs.Engine.UGameEngine );
+        const ref = await data.getReference( this.structs.Engine.UGameEngine as StructConstructor<Structs.UGameEngine> );
         if( !ref )
             return;
             
@@ -401,7 +396,7 @@ export class World {
         const [ engine ] = instances;
 
         this.world = ( await data.query(
-            await data.prepareQuery( this.structs.Engine.UGameEngine, ( qb ) => [
+            await data.prepareQuery( this.structs.Engine.UGameEngine as StructConstructor<Structs.UGameEngine>, ( qb ) => [
                 qb.GameViewport.World.ARRGameState,
                 qb.GameViewport.World.NetDriver.ServerConnection,
             ] ),
@@ -507,7 +502,7 @@ export class World {
             frameCars   : data?.FrameCarArray,
             industries  : data?.IndustryArray,
             sandhouses  : data?.SandhouseArray,
-            switches    : data?.SwitchArray,
+            switches    : data && 'SwitchArray' in data ? data.SwitchArray : undefined,
             turntables  : data?.TurntableArray,
             watertowers : data?.WatertowerArray,
             splines     : splines?.SplineArray,
@@ -711,7 +706,7 @@ export class World {
     public async getCharacter() {
         const data = this.plugin.controller.getAction( Actions.QUERY );
 
-        const ref = await data.getReference( this.structs.BP_Player_Conductor.ABP_Player_Conductor_C );
+        const ref = await data.getReference( this.structs.BP_Player_Conductor.ABP_Player_Conductor_C as StructConstructor<Structs.ABPPlayerConductorC> );
         if( !ref )
             return;
 
@@ -855,7 +850,7 @@ export class World {
             case FrameCarControl.Whistle: {
                 if( frameCar.Mywhistle == null )
                     break;
-                await frameCar.ServerSetWhistle( frameCar, value );
+                await frameCar.ServerSetWhistle( frameCar as any, value );
                 break;
             }
             case FrameCarControl.Generator: {
@@ -930,7 +925,7 @@ export class World {
 			if (storageInstance instanceof this.structs.arr.Astorage) {
 				var craneInstance = this.getStorageCrane(storageInstance, craneNumber);
 				if (craneInstance instanceof this.structs.arr.Acrane) {
-					await character.ServerUseCrane( craneInstance );
+					await character.ServerUseCrane( craneInstance as any );
 				}
 				else {
 					Log.warn('Cannot use crane as craneInstance is invalid.');

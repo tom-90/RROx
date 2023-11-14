@@ -4,7 +4,7 @@ import { ILocation } from "./location";
 import { IRotation } from "./rotation";
 
 export interface IStorage {
-    type: ProductType;
+    types: ProductType[];
     currentAmount: number;
     maxAmount: number;
     cranes: ICrane[];

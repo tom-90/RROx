@@ -24,7 +24,7 @@ export abstract class ASplineTrack extends AActor {
     /**
      * A struct property containing information of a subobject.
      */
-    @Property.Struct( "EndLocation", () => FVector_NetQuantize )
+    @Property.Struct( "endlocation", () => FVector_NetQuantize )
     public EndLocation: FVector_NetQuantize;
     
     /**
@@ -45,19 +45,19 @@ export abstract class ASplineTrack extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "switchstate" )
+    @Property.Int( "SwitchState" )
     public switchstate: int32;
     
     /**
      * A struct property containing information of a subobject.
      */
-    @Property.Struct( "splinecomp1endrelativelocation", () => FVector )
+    @Property.Struct( "SplineComp1EndRelativeLocation", () => FVector )
     public splinecomp1endrelativelocation: FVector;
     
     /**
      * A struct property containing information of a subobject.
      */
-    @Property.Struct( "splinecomp2endrelativelocation", () => FVector )
+    @Property.Struct( "SplineComp2EndRelativeLocation", () => FVector )
     public splinecomp2endrelativelocation: FVector;
     
 }

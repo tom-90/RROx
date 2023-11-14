@@ -24,6 +24,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.15 14-11-2023
+- ``Fixed`` Issues after new game update
+
+Note: this update does not include graphics for the new freight types and industry yet. This will come in the future. This update is purely meant to get RROx working again for the new update.
+
 ### v1.1.14 14-10-2023
 - ``Enhancement`` Added support for Lima 280 Locomotive as new locomotive type. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added Support for "DSPRR Coach" as new rolling stock type. (Thanks to [Mordred](https://github.com/mordred-random))

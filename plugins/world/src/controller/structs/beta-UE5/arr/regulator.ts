@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.regulator" )
+@Struct( "Class arr.Regulator" )
 export class Aregulator extends AActor {
 
     constructor( struct: StructInfo<Aregulator> ) {
@@ -12,7 +12,7 @@ export class Aregulator extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "openPercentage" )
+    @Property.Float( "OpenPercentage" )
     public openPercentage: float;
     
 }

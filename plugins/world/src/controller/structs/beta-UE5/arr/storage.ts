@@ -2,37 +2,39 @@ import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { Acrane } from "./crane";
 import { Achute } from "./chute";
+import { EFreightType } from "./efreighttype";
 
-@Struct( "Class arr.storage" )
+@Struct( "Class arr.Storage" )
 export class Astorage extends AActor {
 
     constructor( struct: StructInfo<Astorage> ) {
         super( struct );
         struct.apply( this );
     }
-
+    
     /**
-     * A string property.
+     * An array containing:
+     * Enum property
      */
-    @Property.Str( "storagetype" )
-    public storagetype: string;
+    @Property.Array( "HoldableFreightTypes", [ EFreightType ] )
+    public HoldableFreightTypes: Array<EFreightType>;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxitems" )
+    @Property.Float( "MaxItemsNum" )
     public maxitems: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minitems" )
+    @Property.Float( "MinItemsNum" )
     public minitems: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentamountitems" )
+    @Property.Float( "CurrentItemsNum" )
     public currentamountitems: float;
 	
 	/**

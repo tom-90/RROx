@@ -1,4 +1,4 @@
-import { Actions, IPluginController, IQuery, SettingsStore } from "@rrox/api";
+import { Actions, IPluginController, IQuery, SettingsStore, StructConstructor } from "@rrox/api";
 import WorldPlugin from ".";
 import { ICheats, IWorldSettings } from "../shared";
 import { Structs } from "./structs/types";
@@ -20,7 +20,7 @@ export class Cheats {
             player.PawnPrivate
         ] );
 
-        this.cheatsQuery = await data.prepareQuery( this.plugin.world.structs.arr.ASCharacter, ( char ) => [
+        this.cheatsQuery = await data.prepareQuery( this.plugin.world.structs.arr.ASCharacter as StructConstructor<Structs.ASCharacter>, ( char ) => [
             char.CharacterMovement.MaxFlySpeed,
             char.CharacterMovement.MaxWalkSpeed,
             char.CharacterMovement.MovementMode,
@@ -68,7 +68,7 @@ export class Cheats {
             pawn = player.PawnPrivate;
         }
         
-        const character = await data.cast( pawn, this.plugin.world.structs.arr.ASCharacter );
+        const character = await data.cast( pawn, this.plugin.world.structs.arr.ASCharacter as StructConstructor<Structs.ASCharacter> );
 
         if( !character )
             throw new Error( 'Could not find character to get cheats for.' );

@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.coupler" )
+@Struct( "Class arr.Coupler" )
 export class Acoupler extends AActor {
 
     constructor( struct: StructInfo<Acoupler> ) {

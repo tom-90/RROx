@@ -2,7 +2,7 @@ import { Property, Struct, StructInfo } from "@rrox/api";
 import { FVector_NetQuantize } from "../CoreUObject/FVector_NetQuantize";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.SplineActor" )
+@Struct( "Class arr.SplineActorDeprecated" )
 export class ASplineActor extends AActor {
 
     constructor( struct: StructInfo<ASplineActor> ) {

@@ -1,8 +1,9 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { USceneComponent } from "../Engine/SceneComponent";
+import { EFreightType } from "./efreighttype";
 
-@Struct( "Class arr.crane" )
+@Struct( "Class arr.Crane" )
 export class Acrane extends AActor {
 
     constructor( struct: StructInfo<Acrane> ) {
@@ -11,10 +12,10 @@ export class Acrane extends AActor {
     }
 
     /**
-     * A string property.
+     * A enum property,
      */
-    @Property.Str( "freighttype" )
-    public freighttype: string;
+    @Property.Enum( "TypeOfFreight", () => EFreightType )
+    public TypeOfFreight: EFreightType;
     
     /**
      * @flags Final, Native, Public, BlueprintCallable

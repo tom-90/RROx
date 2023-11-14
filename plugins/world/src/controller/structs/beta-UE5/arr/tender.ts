@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.tender" )
+@Struct( "Class arr.Tender" )
 export class Atender extends AActor {
 
     constructor( struct: StructInfo<Atender> ) {
@@ -12,49 +12,49 @@ export class Atender extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxamountfuel" )
+    @Property.Float( "MaxFuelAmount" )
     public maxamountfuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minamountfuel" )
+    @Property.Float( "MinFuelAmount" )
     public minamountfuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentamountFuel" )
+    @Property.Float( "CurrentFuelAmount" )
     public currentamountFuel: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentamountWater" )
+    @Property.Float( "CurrentWaterAmount" )
     public currentamountWater: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxamountwater" )
+    @Property.Float( "MaxWaterAmount" )
     public maxamountwater: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minamountwater" )
+    @Property.Float( "MinWaterAmount" )
     public minamountwater: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "tenderwaterfactor" )
+    @Property.Float( "TenderWaterFactor" )
     public tenderwaterfactor: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxwaterheight" )
+    @Property.Float( "MaxWaterHeight" )
     public maxwaterheight: float;
     
     /**
@@ -66,7 +66,7 @@ export class Atender extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentwaterconsumption" )
+    @Property.Float( "CurrentWaterConsumption" )
     public currentwaterconsumption: float;
     
     /**

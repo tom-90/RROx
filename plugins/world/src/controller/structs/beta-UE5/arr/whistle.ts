@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.whistle" )
+@Struct( "Class arr.Whistle" )
 export class Awhistle extends AActor {
 
     constructor( struct: StructInfo<Awhistle> ) {
@@ -12,7 +12,7 @@ export class Awhistle extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "whistleopenfactor" )
+    @Property.Float( "WhistleOpenFactor" )
     public whistleopenfactor: float;
     
 }

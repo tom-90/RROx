@@ -22,14 +22,14 @@ export class ASCharacter extends ACharacter {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "playermoney" )
+    @Property.Float( "PlayerMoney" )
     public playermoney: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "playerXPValue" )
-    public playerXPValue: float;
+    @Property.Int( "PlayerXp" )
+    public playerXPValue: int32;
     
     /**
      * @param MySwitch Object property

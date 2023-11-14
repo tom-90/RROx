@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.chute" )
+@Struct( "Class arr.Chute" )
 export class Achute extends AActor {
 
     constructor( struct: StructInfo<Achute> ) {
@@ -18,7 +18,7 @@ export class Achute extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "freightrespawntime" )
+    @Property.Float( "FreightRespawnTime" )
     public freightrespawntime: float;
     
     /**

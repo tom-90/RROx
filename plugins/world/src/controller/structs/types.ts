@@ -3,9 +3,12 @@ import * as BetaStructs from './beta-UE5';
 
 export namespace Structs {
     export type UWorld = MainStructs.Engine.UWorld | BetaStructs.Engine.UWorld;
+    export type UGameEngine = MainStructs.Engine.UGameEngine | BetaStructs.Engine.UGameEngine;
     export type UKismetSystemLibrary = MainStructs.Engine.UKismetSystemLibrary | BetaStructs.Engine.UKismetSystemLibrary;
     export type UNetConnection = MainStructs.Engine.UNetConnection | BetaStructs.Engine.UNetConnection;
+    export type UActorChannel = MainStructs.Engine.UActorChannel | BetaStructs.Engine.UActorChannel;
     export type APlayerState = MainStructs.Engine.APlayerState | BetaStructs.Engine.APlayerState;
+    export type ABPPlayerConductorC = MainStructs.BP_Player_Conductor.ABP_Player_Conductor_C | BetaStructs.BP_Player_Conductor.ABP_Player_Conductor_C;
     export type AActor = MainStructs.Engine.AActor | BetaStructs.Engine.AActor;
     export type Aframecar = MainStructs.arr.Aframecar | BetaStructs.arr.Aframecar;
     export type ASwitch = MainStructs.arr.ASwitch | BetaStructs.arr.ASwitch;

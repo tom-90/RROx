@@ -1,8 +1,8 @@
-import { Property, StructInfo } from "@rrox/api";
+import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 import { Astorage } from "./storage";
 
-// Struct decorator will be placed dynamically based on detected name
+@Struct( "Class arr.WaterTower" )
 export class Awatertower extends AActor {
 
     constructor( struct: StructInfo<Awatertower> ) {
@@ -16,13 +16,13 @@ export class Awatertower extends AActor {
      * @min `-2147483648`
      * @max `+2147483647`
      */
-    @Property.Int( "watertowertype" )
+    @Property.Int( "WaterTowerType" )
     public watertowertype: int32;
     
     /**
      * An object property containing information of a subobject.
      */
-    @Property.Object( "Mystorage", () => Astorage )
+    @Property.Object( "Storage", () => Astorage )
     public Mystorage: Astorage;
     
 }

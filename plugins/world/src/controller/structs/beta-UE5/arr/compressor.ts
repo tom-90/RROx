@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.compressor" )
+@Struct( "Class arr.Compressor" )
 export class Acompressor extends AActor {
 
     constructor( struct: StructInfo<Acompressor> ) {
@@ -12,49 +12,49 @@ export class Acompressor extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "powerHP" )
+    @Property.Float( "PowerHP" )
     public powerHP: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "operatingvalue" )
+    @Property.Float( "OperatingValue" )
     public operatingvalue: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxenergyconsumption" )
+    @Property.Float( "MaxEnergyConsumption" )
     public maxenergyconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentenergyconsumption" )
+    @Property.Float( "CurrentEnergyConsumption" )
     public currentenergyconsumption: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "maxairpressure" )
+    @Property.Float( "MaxAirPressure" )
     public maxairpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "minairpressure" )
+    @Property.Float( "MinAirPressure" )
     public minairpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentairpressure" )
+    @Property.Float( "CurrentAirPressure" )
     public currentairpressure: float;
     
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "currentpressurefactor" )
+    @Property.Float( "CurrentPressureFactor" )
     public currentpressurefactor: float;
     
 }

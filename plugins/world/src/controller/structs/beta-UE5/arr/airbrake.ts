@@ -1,7 +1,7 @@
 import { Property, Struct, StructInfo } from "@rrox/api";
 import { AActor } from "../Engine/Actor";
 
-@Struct( "Class arr.airbrake" )
+@Struct( "Class arr.AirBrake" )
 export class Aairbrake extends AActor {
 
     constructor( struct: StructInfo<Aairbrake> ) {
@@ -12,7 +12,7 @@ export class Aairbrake extends AActor {
     /**
      * A `float` number property (contains decimal digits).
      */
-    @Property.Float( "brakevalue" )
+    @Property.Float( "BrakeValue" )
     public brakevalue: float;
     
 }
