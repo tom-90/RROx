@@ -29,7 +29,7 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
-### v2.2.2 - 21-04-2023
+### v2.2.2 - 19-11-2023
 
 - ``Fixed`` Stability issues with RROx connecting to RRO.
 - ``Fixed`` Issues finding objects in game memory (case-sensitivity issues).
