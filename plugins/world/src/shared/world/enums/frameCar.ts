@@ -49,6 +49,7 @@ export enum FrameCarType {
 	PLANTATIONCAR_TANKER = 'plantationcar_tanker',
 	PLANTATIONCAR_BOXCAR = 'plantationcar_boxcar',
 	COACH_DSPRR_1 = 'coach_dsprr_1',
+	COACH_DSPRR_2 = 'coach_dsprr_2',
 	LIMA280 = 'lima280',
 	LIMA280_TENDER = 'lima280_tender',
 	

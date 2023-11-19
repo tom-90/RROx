@@ -93,6 +93,10 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.18 19-11-2023
+- ``Fixed`` Issues where unknown rolling stock could crash the RROx map.
+- ``Fixed`` Issues where some industries might not have showed up correctly.
+
 ### v1.1.17 14-11-2023
 - ``Fixed`` Issues after new game update
 

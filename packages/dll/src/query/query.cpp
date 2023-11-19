@@ -620,12 +620,18 @@ std::vector<int> QueryExecutor::getArrayIndices(int arraySize) {
 
 bool QueryExecutor::isValidName(UObject* obj, std::string& name) {
 	WUObject wrapped = obj;
+	std::string nameLowerCase = name;
+	std::transform(nameLowerCase.begin(), nameLowerCase.end(), nameLowerCase.begin(), ::tolower);
 
-	if (wrapped.GetFullName() == name)
+	std::string wrappedName = wrapped.GetFullName();
+	std::transform(wrappedName.begin(), wrappedName.end(), wrappedName.begin(), ::tolower);
+	if (wrappedName == nameLowerCase)
 		return true;
 
 	WUClass wrappedClass = wrapped.GetClass();
-	if (wrappedClass.GetFullName() == name)
+	std::string wrappedClassName = wrappedClass.GetFullName();
+	std::transform(wrappedClassName.begin(), wrappedClassName.end(), wrappedClassName.begin(), ::tolower);
+	if (wrappedClassName == nameLowerCase)
 		return true;
 
 	while (wrappedClass) {
@@ -634,7 +640,10 @@ bool QueryExecutor::isValidName(UObject* obj, std::string& name) {
 		if (!super)
 			return false;
 
-		if(super.GetFullName() == name)
+		std::string superName = super.GetFullName();
+		std::transform(superName.begin(), superName.end(), superName.begin(), ::tolower);
+
+		if(superName == nameLowerCase)
 			return true;
 		if (!super.IsA<WUClass>())
 			return false;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Slider, Popover, Switch } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { FrameDefinitions } from '../../definitions';
-import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine, SetControlsCommunicator } from '@rrox-plugins/world/shared';
+import { FrameCarControl, IFrameCar, getCoupledFrames, SetControlsSyncCommunicator, isEngine as checkIsEngine, SetControlsCommunicator, FrameCarType } from '@rrox-plugins/world/shared';
 import { CouplingsBar } from './couplingsBar';
 import { useRPC } from '@rrox/api';
 
@@ -45,14 +45,14 @@ export function FrameControls( {
 
     const { type, controls: controlsData, boiler, compressor, tender, speedMs, maxSpeedMs } = selectedData || {};
 
-    const definition = FrameDefinitions[ type ];
+    const definition = FrameDefinitions[ type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
     const isEngine = definition.engine;
 
     const [ pendingSyncControls, setPendingSyncControls ] = useState<boolean | null>( null );
 
     useEffect( () => {
-        if( pendingSyncControls !== null && pendingSyncControls === data.syncedControls )
-        setPendingSyncControls( null );
+        if ( pendingSyncControls !== null && pendingSyncControls === data.syncedControls )
+            setPendingSyncControls( null );
     }, [ pendingSyncControls, data.syncedControls ] );
 
     const [ controls, setControls ] = useState<{
@@ -74,16 +74,16 @@ export function FrameControls( {
 
     useEffect( () => {
         if ( controlsData.regulator === controls.regulator
-                && controlsData.reverser === controls.reverser
-                && controlsData.brake === controls.brake
-                && controlsData.whistle === controls.whistle
-                && controlsData.generator === controls.generator
-                && controlsData.compressor === controls.compressor )
+            && controlsData.reverser === controls.reverser
+            && controlsData.brake === controls.brake
+            && controlsData.whistle === controls.whistle
+            && controlsData.generator === controls.generator
+            && controlsData.compressor === controls.compressor )
             return;
 
         setControls( controlsData );
     }, [ controlsData ] );
-    
+
     const coupledFrames = getCoupledFrames( selectedData, selectedFrame, frames );
     const controlledBy = isEngine ? coupledFrames.find(
         ( coupled ) => coupled.isCoupled && coupled.frame.syncedControls && checkIsEngine( coupled.frame ) && coupled.frame !== selectedData
@@ -93,7 +93,7 @@ export function FrameControls( {
         <div style={{ width: '100%' }}>
             {controlledBy
                 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: 250 }}>
-                    Controlled by&nbsp;<strong>{`${controlledBy.name.replace("<br>", "").toUpperCase()}${controlledBy.name && controlledBy.number ? ' - ' : ''}${controlledBy.number.toUpperCase() || ''}`}</strong>
+                    Controlled by&nbsp;<strong>{`${controlledBy.name.replace( "<br>", "" ).toUpperCase()}${controlledBy.name && controlledBy.number ? ' - ' : ''}${controlledBy.number.toUpperCase() || ''}`}</strong>
                 </div>
                 : <table style={{ width: '100%' }} className='frameControls'>
                     <thead>
@@ -191,7 +191,7 @@ export function FrameControls( {
                                 vertical
                                 min={0}
                                 max={100}
-                                value={(controls.generator || 0) * 100}
+                                value={( controls.generator || 0 ) * 100}
                                 step={1}
                                 tipFormatter={( value ) => value + '%'}
                                 tooltipPlacement={'left'}
@@ -208,7 +208,7 @@ export function FrameControls( {
                                 vertical
                                 min={0}
                                 max={100}
-                                value={(controls.compressor || 0) * 100}
+                                value={( controls.compressor || 0 ) * 100}
                                 step={1}
                                 tipFormatter={( value ) => value + '%'}
                                 tooltipPlacement={'left'}

@@ -7,7 +7,7 @@ import { MapContext } from '../context';
 import { FrameControls } from '../components';
 import { FrameDefinitions } from '../definitions';
 import { MapMode } from '../types';
-import { IFrameCar } from '@rrox-plugins/world/shared';
+import { FrameCarType, IFrameCar } from '@rrox-plugins/world/shared';
 
 export function FrameControlsPopup( {
     className,
@@ -31,21 +31,21 @@ export function FrameControlsPopup( {
     const [ compact, setCompact ] = useState( false );
     const navigate = useNavigate();
 
-    const definition = FrameDefinitions[ data.type ];
+    const definition = FrameDefinitions[ data.type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
     const isEngine = definition.engine;
-	
-	
-	const locate = ( index: number ) => {
+
+
+    const locate = ( index: number ) => {
         navigate( '/@rrox-plugins/map/map', {
             state: {
                 locate: {
-                    type : 'frameCars',
+                    type: 'frameCars',
                     index: index,
                 }
             }
         } );
     }
-	
+
 
     return <DraggableModal
         title={<>
@@ -66,11 +66,11 @@ export function FrameControlsPopup( {
             >
                 <ControlOutlined />
             </Button>}
-			{mode === MapMode.NORMAL && <Button
+            {mode === MapMode.NORMAL && <Button
                 type='text'
                 style={{ marginLeft: 10, padding: 5 }}
-				title="Locate on the map"
-				onClick={() => locate( index )}
+                title="Locate on the map"
+                onClick={() => locate( index )}
                 icon={<AimOutlined />}
             />}
         </>}

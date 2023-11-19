@@ -111,7 +111,7 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
 			[ FrameCarType.LIMA280             ]: { type: 'string', default: '#800080' },
             [ FrameCarType.LIMA280_TENDER      ]: { type: 'string', default: '#000000' },
 			
-			[ FrameCarType.COACH_DSPRR_1       ]: { type: 'string', default: '#ADD8E6' },
+			[ FrameCarType.COACH_DSPRR_2       ]: { type: 'string', default: '#ADD8E6' },
 			
 			[ FrameCarType.PLANTATIONCAR_FLATCAR ]: {
                 type: 'object',

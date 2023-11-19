@@ -37,6 +37,8 @@ export enum IndustryType {
     WATERTOWER_SMALL = 102,
 }
 
+const unknownIndustryTypes = new Set<string>();
+
 export function industryNameToIndustryType(name: string): IndustryType {
     switch(name) {
         case 'logcamp':
@@ -60,12 +62,17 @@ export function industryNameToIndustryType(name: string): IndustryType {
         case 'firewooddepot':
             return IndustryType.FIREWOOD_DEPOT;
         case 'enginehouse_alpine':
+        case 'enginehouse_alpine_blue':
             return IndustryType.ENGINE_SHED_BLUE;
         case 'enginehouse_aspen':
+        case 'enginehouse_aspen_gold':
             return IndustryType.ENGINE_SHED_GOLD;
         case 'enginehouse_barn':
+        case 'enginehouse_barn_red':
             return IndustryType.ENGINE_SHED_RED;
         case 'enginehouse_princess':
+        case 'enginehouse_princess_mineral_brown':
+        case 'enginehouse_princess_brown':
             return IndustryType.ENGINE_SHED_BROWN;
         case 'coaltower':
             return IndustryType.COALINGTOWER;
@@ -104,7 +111,10 @@ export function industryNameToIndustryType(name: string): IndustryType {
         case 'watertower_small':
             return IndustryType.WATERTOWER_SMALL;
         default:
-            console.log('Unknown industry name', name);
+            if(!unknownIndustryTypes.has(name)) {
+                console.log('Unknown industry name', name);
+                unknownIndustryTypes.add(name);
+            }
             return IndustryType.UNKNOWN;
     }
 }

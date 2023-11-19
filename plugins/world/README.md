@@ -24,7 +24,11 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
-### v1.1.15 14-11-2023
+### v1.1.17 19-11-2023
+- ``Fixed`` Issues where unknown rolling stock could crash the RROx map.
+- ``Fixed`` Issues where some industries might not have showed up correctly.
+
+### v1.1.16 14-11-2023
 - ``Fixed`` Issues after new game update
 
 Note: this update does not include graphics for the new freight types and industry yet. This will come in the future. This update is purely meant to get RROx working again for the new update.

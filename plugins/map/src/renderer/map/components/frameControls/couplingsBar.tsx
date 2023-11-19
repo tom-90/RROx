@@ -1,4 +1,4 @@
-import { CoupledFrameItem } from '@rrox-plugins/world/shared';
+import { CoupledFrameItem, FrameCarType } from '@rrox-plugins/world/shared';
 import React from 'react';
 import { FrameDefinitions } from '../../definitions';
 
@@ -13,7 +13,7 @@ export function CouplingsBar( {
 } ) {
     return <div style={{ display: 'flex', overflowX: 'auto', maxWidth: '100%', minHeight: 50 }} className="couplingBar">
         {coupledFrames.map( ( { frame, flipped, isCoupled, index }, i ) => {
-            const definition = FrameDefinitions[ frame.type ];
+            const definition = FrameDefinitions[ frame.type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
 
             return <img
                 className='dark-mode-invert'

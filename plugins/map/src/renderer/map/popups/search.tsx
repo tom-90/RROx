@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input, Button, Modal, List, Avatar } from 'antd';
 import { MapContext } from '../context';
 import { AimOutlined, ControlOutlined } from '@ant-design/icons';
-import { IWorld } from "@rrox-plugins/world/shared";
+import { FrameCarType, IWorld } from "@rrox-plugins/world/shared";
 import { FrameDefinitions } from "../definitions";
 import PlayerImage from '../../images/players/player.png';
 
@@ -24,41 +24,44 @@ export function SearchPopup( { visible, setVisible, data }: {
     }[] = [];
 
     data.frameCars.forEach( ( frame, i ) => {
-        let title = `${frame.name.toUpperCase()}${frame.name && Number ? ' - ' : ''}${frame.number.toUpperCase() || ''}`;
-        if ( FrameDefinitions[ frame.type ].engine ) {
+        let title = `${frame.name.toUpperCase()}${frame.name && frame.number ? ' - ' : ''}${frame.number.toUpperCase() || ''}`;
+
+        const definition = FrameDefinitions[ frame.type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
+
+        if ( definition.engine ) {
             searchItems.push( {
                 index: i,
                 title: title,
-                desc: 'Locomotive - ' + FrameDefinitions[ frame.type ].name,
+                desc: 'Locomotive - ' + definition.name,
                 type: 'engine',
-                image: FrameDefinitions[ frame.type ].image,
+                image: definition.image,
             } );
-        } else if ( FrameDefinitions[ frame.type ].tender ) {
+        } else if ( definition.tender ) {
             searchItems.push( {
                 index: i,
                 title: title.length != 0 ? title : 'Tender',
-                desc: 'Tender - ' + FrameDefinitions[ frame.type ].name,
+                desc: 'Tender - ' + definition.name,
                 type: 'tender',
-                image: FrameDefinitions[ frame.type ].image,
+                image: definition.image,
             } );
-        } else if ( FrameDefinitions[ frame.type ].freight ) {
+        } else if ( definition.freight ) {
             searchItems.push( {
                 index: i,
                 title: title.length != 0 ? title : 'Freight',
-                desc: 'Freight - ' + FrameDefinitions[ frame.type ].name,
+                desc: 'Freight - ' + definition.name,
                 type: 'freight',
-                image: FrameDefinitions[ frame.type ].image,
+                image: definition.image,
             } );
         }
     } );
-    
+
     data.players.forEach( ( player, i ) => {
         searchItems.push( {
             index: i,
             title: player.name,
             desc: 'Player',
             type: 'player',
-			image: PlayerImage,
+            image: PlayerImage,
         } );
     } );
 
@@ -104,7 +107,7 @@ export function SearchPopup( { visible, setVisible, data }: {
                         navigate( '/@rrox-plugins/map/map', {
                             state: {
                                 locate: {
-                                    type : item.type === 'player' ? 'players' : 'frameCars' ,
+                                    type: item.type === 'player' ? 'players' : 'frameCars',
                                     index: item.index,
                                 }
                             }

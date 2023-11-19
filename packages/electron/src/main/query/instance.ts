@@ -195,7 +195,6 @@ export class StructInstance<T extends object> implements StructInfo<T> {
 
         const response = await pipe.waitForResponse( request, GetStructTypeResponse );
 
-        console.log( response.structType );
         if( response.structType !== StructResponseType.Struct )
             throw new StructInstanceError( 'Unexpected Struct response' );
 

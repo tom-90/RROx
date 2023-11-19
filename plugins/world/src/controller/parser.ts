@@ -23,7 +23,10 @@ export class WorldParser {
         if(typeof frameCar.FrameType === 'string') {
             type = Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType) ? frameCar.FrameType as FrameCarType : FrameCarType.UNKNOWN;
         } else {
-            type = frameCar.FrameType?.getValue() as FrameCarType ?? FrameCarType.UNKNOWN;
+            type = frameCar.FrameType?.getValue() as FrameCarType;
+            if(!type || !Object.values(FrameCarType).includes(type)) {
+                type = FrameCarType.UNKNOWN;
+            }
         }
 
         return {

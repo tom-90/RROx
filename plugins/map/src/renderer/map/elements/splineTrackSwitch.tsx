@@ -68,7 +68,7 @@ const OverwriteTangents: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: -348.04, Z: 0 },
         },
-		track3: {
+        track3: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: 348.04, Z: 0 },
         }
@@ -88,7 +88,7 @@ const OverwriteTangents: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: -348.04, Z: 0 },
         },
-		track3: {
+        track3: {
             start: { X: 2153, Y: 0, Z: 0 },
             end: { X: 2125.36, Y: 348.04, Z: 0 },
         }
@@ -237,7 +237,6 @@ export const SplineTrackSwitch = React.memo( function Switch( { data, index, cli
     }, [ data ] );
 
     const track3 = useMemo<ISplineTrack | null>( () => {
-        console.log( data, OverwriteTangents[ data.type ] );
         if ( !OverwriteTangents[ data.type ]?.track3 ) {
             return null;
         }

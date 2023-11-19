@@ -17,15 +17,21 @@ FUObjectItem* TUObjectArray::GetObjectPtr(int32_t Index) {
 }
 
 FUObjectItem* FUObjectArray::FindObject(const std::string& name) {
-	std::unordered_map<std::string, FUObjectItem*>::const_iterator cached = Cache.find(name);
+	std::string nameLowerCase = name;
+	std::transform(nameLowerCase.begin(), nameLowerCase.end(), nameLowerCase.begin(), ::tolower);
+
+	std::unordered_map<std::string, FUObjectItem*>::const_iterator cached = Cache.find(nameLowerCase);
 
 	if (cached != Cache.end()) {
 		FUObjectItem* item = cached->second;
 
 		if (item && !IsBadReadPtr(item, sizeof(FUObjectItem*))
-			&& item->Object && !IsBadReadPtr(item->Object, sizeof(UObject*))
-			&& item->Object->GetFullName() == name)
-			return item;
+			&& item->Object && !IsBadReadPtr(item->Object, sizeof(UObject*))) {
+			std::string objectName = item->Object->GetFullName();
+			std::transform(objectName.begin(), objectName.end(), objectName.begin(), ::tolower);
+			if(objectName == nameLowerCase)
+				return item;
+		}
 
 		Cache.erase(cached);
 	}
@@ -35,11 +41,12 @@ FUObjectItem* FUObjectArray::FindObject(const std::string& name) {
 
 		if (item && item->Object) {
 			std::string foundName = item->Object->GetFullName();
+			std::transform(foundName.begin(), foundName.end(), foundName.begin(), ::tolower);
 
 			if (Cache.find(foundName) == Cache.end())
 				Cache.insert({ foundName, item });
 
-			if (foundName == name)
+			if (foundName == nameLowerCase)
 				return item;
 		}
 	}

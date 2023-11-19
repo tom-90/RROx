@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <algorithm>
 #include "base.h"
 #include "uobject.h"
 

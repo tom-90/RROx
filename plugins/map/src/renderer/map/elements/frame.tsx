@@ -24,11 +24,11 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
 
     const { location, rotation, type, freight, number, name, controls } = data;
 
-    const definition = FrameDefinitions[ type ];
+    const definition = FrameDefinitions[ type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
 
     const teleport = useRPC( TeleportCommunicator );
-	
-	const framecarReset = useRPC( FramecarResetCommunicator );
+
+    const framecarReset = useRPC( FramecarResetCommunicator );
 
     const [ controlsVisible, setControlsVisible ] = useState( false );
     const [ storageVisible, setStorageVisible ] = useState( false );
@@ -84,12 +84,12 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                     {follow.following?.array === 'frameCars' && follow.following.index === index ? 'Unfollow' : 'Follow'}
                 </Button>
                 {popupElements}
-				{settings.features.resetFramecars && <Button 
-					style={{ marginTop: 25 }}
-					onClick={() => {
-						framecarReset( index );
-					}}
-				>Reset Framecar Location</Button>}
+                {settings.features.resetFramecars && <Button
+                    style={{ marginTop: 25 }}
+                    onClick={() => {
+                        framecarReset( index );
+                    }}
+                >Reset Framecar Location</Button>}
             </MapTooltip>
             <FrameControlsPopup
                 title={`${name.replace( "<br>", "" ).toUpperCase()}${name && number ? ' - ' : ''}${number.toUpperCase() || ''}`}
@@ -119,7 +119,7 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
         rotation={Math.round( rotation.Yaw ) - 90}
         color={getStrokeColor( controls.brake )}
         fillColor={definition.freight
-            ? preferences.colors[ type as FreightFrameCarType ][ freight && freight.currentAmount > 0 ? (freight && freight.currentAmount == freight.maxAmount ? 'fullyloaded' : 'partiallyloaded') : 'unloaded' ]
+            ? preferences.colors[ type as FreightFrameCarType ][ freight && freight.currentAmount > 0 ? ( freight && freight.currentAmount == freight.maxAmount ? 'fullyloaded' : 'partiallyloaded' ) : 'unloaded' ]
             : preferences.colors[ type as EngineFrameCarType ]}
         fillOpacity={1}
         interactive
@@ -142,12 +142,12 @@ export const Frame = React.memo( function Frame( { data, index, frames }: { data
                 }}
             >Show Freight</Button>}
             {popupElements}
-			{settings.features.resetFramecars && <Button 
-				style={{ marginTop: 25 }}
-				onClick={() => {
-					framecarReset( index );
-				}}
-			>Reset Framecar Location</Button>}
+            {settings.features.resetFramecars && <Button
+                style={{ marginTop: 25 }}
+                onClick={() => {
+                    framecarReset( index );
+                }}
+            >Reset Framecar Location</Button>}
         </MapTooltip>
         <FrameControlsPopup
             title={frameTitle}

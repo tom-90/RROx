@@ -7,15 +7,15 @@ export class StructStore {
     private storage: { [ name: string ]: Struct | Function | Enum } = {};
 
     insert( struct: Struct | Function | Enum ) {
-        this.storage[ struct.fullName ] = struct;
+        this.storage[ struct.fullName.toLowerCase() ] = struct;
     }
 
     get( name: string ) {
-        return this.storage[ name ];
+        return this.storage[ name.toLowerCase() ];
     }
 
     has( name: string ): boolean {
-        return this.storage[ name ] != null;
+        return this.storage[ name.toLowerCase() ] != null;
     }
 
     clear() {

@@ -1,5 +1,6 @@
 #pragma once
 #include <stack>
+#include <algorithm>
 #include "../injector.h"
 #include "../net/buffer.h"
 #include "../UE425/uobject.h"
