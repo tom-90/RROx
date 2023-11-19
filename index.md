@@ -29,6 +29,12 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v2.2.2 - 21-04-2023
+
+- ``Fixed`` Stability issues with RROx connecting to RRO.
+- ``Fixed`` Issues finding objects in game memory (case-sensitivity issues).
+- ``Fixed`` Issue where reading certain types of text (rolling stock name/number) did not work or gave weird characters.
+
 ### v2.2.1 - 21-04-2023
 
 - ``Added`` Support for Unreal Engine 5 (for RailroadsOnline Weather & Sky update)
