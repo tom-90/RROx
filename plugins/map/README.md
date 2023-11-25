@@ -93,7 +93,16 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
-### v1.1.18 19-11-2023
+### v1.1.20 25-11-2023
+- ``Fixed`` RROx Speed Readout issue after Game Build #0.6.0.0.3. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added RROx Map Image for "Wheat Farm" Industry; which now appears correctly on the RROx Map. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added RROx Icon for "Seed Pallet" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added RROx Icon for "Straw Bale" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Added RROx Icon for "Grain" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Updated RROx "Economy Information" for new "Wheat Farm" Industry. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Updated RROx "Cargo Prices & Car Capacties" for new the freight/cargo types ("Seed Pallet", "Straw Bale", "Grain"). (Thanks to [Mordred](https://github.com/mordred-random))
+
+### v1.1.18 & v1.1.19 19-11-2023
 - ``Fixed`` Issues where unknown rolling stock could crash the RROx map.
 - ``Fixed`` Issues where some industries might not have showed up correctly.
 
