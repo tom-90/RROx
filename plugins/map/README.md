@@ -99,6 +99,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 - ``Enhancement`` Added RROx Icon for "Seed Pallet" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added RROx Icon for "Straw Bale" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added RROx Icon for "Grain" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
+- ``Enhancement`` Improved icons for the freight rolling stock to include the new cargo types ("Seed Pallet", "Straw Bale", "Grain"). (Thanks to [illudedPerception](https://github.com/illudedPerception))
 - ``Enhancement`` Updated RROx "Economy Information" for new "Wheat Farm" Industry. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Updated RROx "Cargo Prices & Car Capacties" for new the freight/cargo types ("Seed Pallet", "Straw Bale", "Grain"). (Thanks to [Mordred](https://github.com/mordred-random))
 
