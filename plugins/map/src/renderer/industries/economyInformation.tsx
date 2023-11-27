@@ -263,11 +263,11 @@ export function EconomyInformation( ) {
 				<td style={{ border: bor1px, }} >1</td>
 				<td style={{ border: bor1px, }} >1</td>
 				<td style={{ border: bor1px, }} >2</td>
-				<td style={{ border: bor1px, }} rowSpan={3}>Oil Barrel</td>
-				<td style={{ border: bor1px, }} rowSpan={3}>100</td>
-				<td style={{ border: bor1px, }} rowSpan={3}>10</td>
-				<td style={{ border: bor1px, }} rowSpan={3}>5</td>
-				<td style={{ border: bor1px, }} rowSpan={3}>5</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>Oil Barrel</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>100</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>10</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>5</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>5</td>
 			</tr>
 			<tr style={{
 				border: bor1px,
@@ -278,7 +278,33 @@ export function EconomyInformation( ) {
 				<td style={{ border: bor1px, }} >12</td>
 				<td style={{ border: bor1px, }} >12</td>
 				<td style={{ border: bor1px, }} >24</td>
-			</tr>		
+			</tr>
+			<tr style={{
+				border: bor1px,
+			}}>
+				<td style={{ border: bor2px, fontWeight: 'bold', }} rowSpan={2}>Wheat Farm</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>Seed Pallet</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>100</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>2</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>2</td>
+				<td style={{ border: bor1px, }} rowSpan={2}>4</td>
+				<td style={{ border: bor1px, }} >Straw Bale</td>
+				<td style={{ border: bor1px, }} >40</td>
+				<td style={{ border: bor1px, }} >2</td>
+				<td style={{ border: bor1px, }} >1</td>
+				<td style={{ border: bor1px, }} >1</td>
+			</tr>
+			<tr style={{
+				border: bor1px,
+				borderBottom: bor2px,
+			}}>
+				<td style={{ border: bor1px, }} >Grain</td>
+				<td style={{ border: bor1px, }} >40</td>
+				<td style={{ border: bor1px, }} >2</td>
+				<td style={{ border: bor1px, }} >1</td>
+				<td style={{ border: bor1px, }} >1</td>
+			</tr>
+			
 		</table>
 
 	</div> // main/parent div

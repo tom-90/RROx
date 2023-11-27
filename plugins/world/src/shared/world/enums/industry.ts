@@ -95,6 +95,7 @@ export function industryNameToIndustryType(name: string): IndustryType {
         case 'watertower_1870_style4': // Unknown
             return IndustryType.WATERTOWER1870_OLD;
         case 'watertower_drwg':
+		case 'watertower_drgw':
             return IndustryType.DRGWATERTOWER;
         case 'engineshed_style1':
             return IndustryType.LARGE_ENGINE_SHED_RED;

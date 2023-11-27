@@ -45,6 +45,15 @@ export function FrameControls( {
 
     const { type, controls: controlsData, boiler, compressor, tender, speedMs, maxSpeedMs } = selectedData || {};
 
+	/*
+		Regarding the RROx speed conversion:
+		-"44.704" converts from cm/s to mph.
+		-"2.236936" converts from m/s to mph.
+		
+		Game Developers changed "speedMs" to give cm/s update to Game Build #0.6.0.0.3.
+		--> "maxSpeedMs" still gives m/s in Game Build #0.6.0.0.3.
+	*/
+
     const definition = FrameDefinitions[ type ] ?? FrameDefinitions[ FrameCarType.UNKNOWN ];
     const isEngine = definition.engine;
 
@@ -274,7 +283,7 @@ export function FrameControls( {
                     <tr>
                         <td style={{ textAlign: 'center' }}>{compressor?.airPressure.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{boiler?.waterAmount.toFixed( 0 )} / {boiler?.maxWaterAmount.toFixed( 0 )}</td>
-                        <td style={{ textAlign: 'center' }}>{( speedMs * 2.236936 )?.toFixed( 1 )}</td>
+                        <td style={{ textAlign: 'center' }}>{( speedMs / 44.704 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( maxSpeedMs * 2.236936 )?.toFixed( 0 )}</td>
                     </tr>
                 </tbody>
@@ -288,7 +297,7 @@ export function FrameControls( {
                 </thead>
                 <tbody>
                     <tr>
-                        <td style={{ textAlign: 'center' }}>{( speedMs * 2.236936 )?.toFixed( 1 )}</td>
+                        <td style={{ textAlign: 'center' }}>{( speedMs / 44.704 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( maxSpeedMs * 2.236936 )?.toFixed( 0 )}</td>
                     </tr>
                 </tbody>
@@ -304,7 +313,7 @@ export function FrameControls( {
                 </thead>
                 <tbody>
                     <tr>
-                        <td style={{ textAlign: 'center' }}>{( speedMs * 2.236936 )?.toFixed( 1 )}</td>
+                        <td style={{ textAlign: 'center' }}>{( speedMs / 44.704 )?.toFixed( 1 )}</td>
                         <td style={{ textAlign: 'center' }}>{( maxSpeedMs * 2.236936 )?.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{tender?.water.toFixed( 0 )} / {tender?.maxWater.toFixed( 0 )}</td>
                         <td style={{ textAlign: 'center' }}>{tender?.fuel.toFixed( 0 )} / {tender?.maxFuel.toFixed( 0 )}</td>

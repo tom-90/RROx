@@ -54,6 +54,18 @@ export function CargoPricesCapacities( ) {
 			name: "Oil Barrel",
 			price: 40,
 		},
+		{
+			name: "Seed Pallet",
+			price: 5,
+		},
+		{
+			name: "Straw Bale",
+			price: 5,
+		},
+		{
+			name: "Grain",
+			price: 10,
+		},
 	];
 	
 	
@@ -362,6 +374,63 @@ export function CargoPricesCapacities( ) {
 					key: "Oil Barrel" + "Tier 3 Bulkhead Flatcar<",
 					carType: "Tier 3 Bulkhead Flatcar<",
 					carCapacity: 46,
+				},
+			],
+		},
+		{
+			key: "Seed Pallet",
+			name: "Seed Pallet",
+			price: getProductPrice("Seed Pallet"),
+			rollingStock: [				
+				{
+					product: "Seed Pallet",
+					key: "Seed Pallet" + "Plantation Flatcar",
+					carType: "Plantation Flatcar",
+					carCapacity: 6,
+				},
+				{
+					product: "Seed Pallet",
+					key: "Seed Pallet" + "Plantation Box Car",
+					carType: "Plantation Box Car",
+					carCapacity: 3,
+				},
+				{
+					product: "Seed Pallet",
+					key: "Seed Pallet" + "Boxcar",
+					carType: "Boxcar",
+					carCapacity: 14,
+				},
+			],
+		},
+		{
+			key: "Straw Bale",
+			name: "Straw Bale",
+			price: getProductPrice("Straw Bale"),
+			rollingStock: [
+				{
+					product: "Straw Bale",
+					key: "Straw Bale" + "Plantation Bulkhead Flatcar",
+					carType: "Plantation Bulkhead Flatcar",
+					carCapacity: 4,
+				},
+				{
+					product: "Straw Bale",
+					key: "Straw Bale" + "Tier 3 Bulkhead Flatcar",
+					carType: "Tier 3 Bulkhead Flatcar",
+					carCapacity: 15,
+				},
+			],
+		},
+		{
+			key: "Grain",
+			name: "Grain",
+			price: getProductPrice("Grain"),
+			rollingStock: [
+				{
+					product: "Grain",
+					key: "Grain" + "Boxcar",
+					carType: "Boxcar",
+					carCapacity: 12,
 				},
 			],
 		},

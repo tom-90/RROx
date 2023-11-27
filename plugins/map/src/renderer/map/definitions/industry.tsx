@@ -9,6 +9,7 @@ import CoalMine from '../../images/industries/Coal Mine.svg';
 import Refinery from '../../images/industries/Refinery.svg';
 import Ironworks from '../../images/industries/Ironworks.svg';
 import OilField from '../../images/industries/Oil Field.svg';
+import WheatFarm from '../../images/industries/Wheat Farm.svg';
 
 export type IndustryDefinition = {
     name: string,
@@ -80,6 +81,13 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
         name: 'Oil field',
         image: OilField,
         points: [ [ 11000, 9500 ], [ -6700, 9500 ], [ 11000, -7900 ] ],
+        productionChainBuilding: true,
+        fuelingBuilding: false,
+    },
+	[ IndustryType.WHEAT_FARM ]: {
+        name: 'Wheat Farm',
+        image: WheatFarm,
+		points: [ [ -1850, -2650 ], [ 12100, -2650 ], [ -1850, 7900 ] ],
         productionChainBuilding: true,
         fuelingBuilding: false,
     },
@@ -235,13 +243,6 @@ export const IndustryDefinitions: { [ key in IndustryType ]: IndustryDefinition 
         points: [ [ -250, 250 ], [ 250, 750 ] ],
         fillColor: '#e7e6d2',
         productionChainBuilding: false,
-        fuelingBuilding: false,
-    },
-    [ IndustryType.WHEAT_FARM ]: {
-        name: 'Wheat Farm',
-        fillColor: '#666',
-        points: [ [ -490, 0 ], [ 490, 2100 ] ],
-        productionChainBuilding: true,
         fuelingBuilding: false,
     },
     [ IndustryType.UNKNOWN ]: {
