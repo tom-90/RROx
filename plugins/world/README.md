@@ -24,7 +24,7 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
-### v1.1.18 25-11-2023
+### v1.1.18 27-11-2023
 - ``Fixed`` RROx Logs warning for unknown industry 'watertower_drgw'. (Thanks to [Mordred](https://github.com/mordred-random))
 
 ### v1.1.17 19-11-2023

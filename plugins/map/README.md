@@ -93,7 +93,7 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
-### v1.1.20 25-11-2023
+### v1.1.20 27-11-2023
 - ``Fixed`` RROx Speed Readout issue after Game Build #0.6.0.0.3. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added RROx Map Image for "Wheat Farm" Industry; which now appears correctly on the RROx Map. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added RROx Icon for "Seed Pallet" Product/Freight/Cargo. (Thanks to [Mordred](https://github.com/mordred-random))
