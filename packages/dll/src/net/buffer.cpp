@@ -42,3 +42,15 @@ bool Buffer::SetOffset(std::size_t offset) {
 bool Buffer::Skip(std::size_t offset) {
 	return SetOffset(GetOffset() + offset);
 }
+
+std::string Buffer::ToHex() {
+	std::string hex;
+
+	for (auto& byte : data) {
+		char buf[3];
+		sprintf_s(buf, "%02X", static_cast<uint8_t>(byte));
+		hex += buf;
+	}
+
+	return hex;
+}

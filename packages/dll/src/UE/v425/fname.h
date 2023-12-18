@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <unordered_map>
 
+namespace UE425 {
+
 struct FName {
 	uint32_t Index; // 0x00(0x04)
 	uint32_t Number; // 0x04(0x04)
@@ -66,3 +68,5 @@ struct FNamePool
 };
 
 extern FNamePool* NamePoolData;
+
+}

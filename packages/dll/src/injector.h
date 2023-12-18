@@ -2,10 +2,17 @@
 #include "utils/memory.h"
 #include "net/pipe.h"
 #include <thread>
+#include "wrappers/uobjectarray.h"
 
 class Injector {
-public:
+private:
 	MemoryManager memory;
+	uint32_t determineVersionOffset();
+	void testProcessEventOffset();
+
+public:
+	EVersion version;
+	WFUObjectArray objectArray;
 
 	std::stop_token stopToken;
 
@@ -13,11 +20,7 @@ public:
 
 	bool load();
 
-	uint32_t determineVersion();
-
 	void stop();
-
-	void parseTable();
 
 	bool stopRequested();
 

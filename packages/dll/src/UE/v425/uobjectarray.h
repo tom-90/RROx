@@ -2,8 +2,10 @@
 #include <cstdint>
 #include <string>
 #include <algorithm>
-#include "base.h"
+#include "../base.h"
 #include "uobject.h"
+
+namespace UE425 {
 
 struct FUObjectItem
 {
@@ -45,10 +47,6 @@ struct FUObjectArray
 	char pad_C[0x4]; // 0xC (0x4)
 
 	TUObjectArray ObjObjects; //0x10
-
-	FUObjectItem* FindObject(const std::string& name);
-	FUObjectItem* FindInstance(const UObject* type);
-	FUObjectItem* FindStatic(const UObject* type);
-	std::vector<FUObjectItem*> FindInstances(const UObject* type, const uint32_t count = 0, const bool deep = false);
-	std::vector<std::tuple<UObject*, FUObjectItem*>> FindInstances(const std::vector<UObject*>& types, const uint32_t count = 0, const bool deep = false);
 };
+
+}

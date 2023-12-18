@@ -2,8 +2,8 @@
 #include <cstdint>
 #include "ffield.h"
 #include "uobject.h"
-#include "../UE425/ffield.h"
-#include "../UE425/fproperty.h"
+#include "../UE/v425/ffield.h"
+#include "../UE/v425/fproperty.h"
 #include "../utils/hash.h"
 
 #define CONCAT_(a, b) a##b
@@ -11,7 +11,6 @@
 #define PROPERTY(Type) class CONCAT(CONCAT(WF, Type), Property) : public WFProperty { \
 public: \
 	using WFProperty::WFProperty;\
-	CONCAT(CONCAT(WF, Type), Property)* get() { return reinterpret_cast<CONCAT(CONCAT(WF, Type), Property)*>(object); } \
 	static std::string ClassName; \
 	static constinit const uint64_t Hash = HASH(#Type"Property"); \
 };
@@ -55,10 +54,10 @@ public:
 	int32_t GetArrayDim();
 	int32_t GetSize();
 	int32_t GetOffset();
-	EPropertyFlags GetPropertyFlags();
+	UEVariant(EPropertyFlags) GetPropertyFlags();
 	PropertyType GetType();
 
-	FProperty* get() { return reinterpret_cast<FProperty*>(object); }
+	UEVariant(FProperty*) get() const { return CastVariant<UEType(FProperty*)>(); }
 };
 
 class WFStructProperty : public WFProperty {
@@ -66,7 +65,7 @@ public:
 	using WFProperty::WFProperty;
 	WUStruct GetStruct();
 
-	FStructProperty* get() { return reinterpret_cast<FStructProperty*>(object); }
+	UEVariant(FStructProperty*) get() const { return CastVariant<UEType(FStructProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("StructProperty");
@@ -77,7 +76,7 @@ public:
 	using WFProperty::WFProperty;
 	WUClass GetPropertyClass();
 
-	FObjectPropertyBase* get() { return reinterpret_cast<FObjectPropertyBase*>(object); }
+	UEVariant(FObjectPropertyBase*) get() const { return CastVariant<UEType(FObjectPropertyBase*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("ObjectProperty");
@@ -88,7 +87,7 @@ public:
 	using WFProperty::WFProperty;
 	WFProperty GetInner();
 
-	FArrayProperty* get() { return reinterpret_cast<FArrayProperty*>(object); }
+	UEVariant(FArrayProperty*) get() const { return CastVariant<UEType(FArrayProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("ArrayProperty");
@@ -99,7 +98,7 @@ public:
 	using WFProperty::WFProperty;
 	WUEnum GetEnum();
 
-	FByteProperty* get() { return reinterpret_cast<FByteProperty*>(object); }
+	UEVariant(FByteProperty*) get() const { return CastVariant<UEType(FByteProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("ByteProperty");
@@ -110,7 +109,7 @@ public:
 	using WFProperty::WFProperty;
 	uint8_t GetFieldMask();
 
-	FBoolProperty* get() { return reinterpret_cast<FBoolProperty*>(object); }
+	UEVariant(FBoolProperty*) get() const { return CastVariant<UEType(FBoolProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("BoolProperty");
@@ -121,7 +120,7 @@ public:
 	using WFProperty::WFProperty;
 	WUEnum GetEnum();
 
-	FEnumProperty* get() { return reinterpret_cast<FEnumProperty*>(object); }
+	UEVariant(FEnumProperty*) get() const { return CastVariant<UEType(FEnumProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("EnumProperty");
@@ -132,7 +131,7 @@ public:
 	using WFObjectPropertyBase::WFObjectPropertyBase;
 	WUClass GetMetaClass();
 
-	FClassProperty* get() { return reinterpret_cast<FClassProperty*>(object); }
+	UEVariant(FClassProperty*) get() const { return CastVariant<UEType(FClassProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("ClassProperty");
@@ -143,7 +142,7 @@ public:
 	using WFProperty::WFProperty;
 	WFProperty GetElementProp();
 
-	FSetProperty* get() { return reinterpret_cast<FSetProperty*>(object); }
+	UEVariant(FSetProperty*) get() const { return CastVariant<UEType(FSetProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("SetProperty");
@@ -155,7 +154,7 @@ public:
 	WFProperty GetKeyProp();
 	WFProperty GetValueProp();
 
-	FMapProperty* get() { return reinterpret_cast<FMapProperty*>(object); }
+	UEVariant(FMapProperty*) get() const { return CastVariant<UEType(FMapProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("MapProperty");
@@ -166,7 +165,7 @@ public:
 	using WFProperty::WFProperty;
 	WUClass GetInterfaceClass();
 
-	FInterfaceProperty* get() { return reinterpret_cast<FInterfaceProperty*>(object); }
+	UEVariant(FInterfaceProperty*) get() const { return CastVariant<UEType(FInterfaceProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("InterfaceProperty");
@@ -175,9 +174,9 @@ public:
 class WFFieldPathProperty : public WFProperty {
 public:
 	using WFProperty::WFProperty;
-	FName GetPropertyName();
+	UEVariant(FName) GetPropertyName();
 
-	FFieldPathProperty* get() { return reinterpret_cast<FFieldPathProperty*>(object); }
+	UEVariant(FFieldPathProperty*) get() const { return CastVariant<UEType(FFieldPathProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("FieldPathProperty");
@@ -188,7 +187,7 @@ public:
 	using WFProperty::WFProperty;
 	WUFunction GetFunction();
 
-	FDelegateProperty* get() { return reinterpret_cast<FDelegateProperty*>(object); }
+	UEVariant(FDelegateProperty*) get() const { return CastVariant<UEType(FDelegateProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("DelegateProperty");
@@ -199,7 +198,7 @@ public:
 	using WFProperty::WFProperty;
 	WUFunction GetFunction();
 
-	FMulticastDelegateProperty* get() { return reinterpret_cast<FMulticastDelegateProperty*>(object); }
+	UEVariant(FMulticastDelegateProperty*) get() const { return CastVariant<UEType(FMulticastDelegateProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("MulticastDelegateProperty");
@@ -209,7 +208,7 @@ class WFMulticastSparseDelegateProperty : public WFMulticastDelegateProperty {
 public:
 	using WFMulticastDelegateProperty::WFMulticastDelegateProperty;
 
-	FMulticastSparseDelegateProperty* get() { return reinterpret_cast<FMulticastSparseDelegateProperty*>(object); }
+	UEVariant(FMulticastSparseDelegateProperty*) get() const { return CastVariant<UEType(FMulticastSparseDelegateProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("MulticastSparseDelegateProperty");
@@ -219,7 +218,7 @@ class WFWeakObjectProperty : public WFObjectPropertyBase {
 public:
 	using WFObjectPropertyBase::WFObjectPropertyBase;
 
-	FSoftObjectProperty* get() { return reinterpret_cast<FSoftObjectProperty*>(object); }
+	UEVariant(FWeakObjectProperty*) get() const { return CastVariant<UEType(FWeakObjectProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("WeakObjectProperty");
@@ -229,7 +228,7 @@ class WFSoftObjectProperty : public WFObjectPropertyBase {
 public:
 	using WFObjectPropertyBase::WFObjectPropertyBase;
 
-	FSoftObjectProperty* get() { return reinterpret_cast<FSoftObjectProperty*>(object); }
+	UEVariant(FSoftObjectProperty*) get() const { return CastVariant<UEType(FSoftObjectProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("SoftObjectProperty");
@@ -240,7 +239,7 @@ public:
 	using WFObjectPropertyBase::WFObjectPropertyBase;
 	WUClass GetMetaClass();
 
-	FSoftClassProperty* get() { return reinterpret_cast<FSoftClassProperty*>(object); }
+	UEVariant(FSoftClassProperty*) get() const { return CastVariant<UEType(FSoftClassProperty*)>(); }
 
 	static std::string ClassName;
 	static constinit const uint64_t Hash = HASH("SoftClassProperty");

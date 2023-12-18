@@ -81,6 +81,9 @@ export class NamedPipe extends EventEmitter implements NamedPipe {
         if( !message )
             return;
 
+        // Log.debug(this.messageSize);
+        // Log.debug( message.toString( 'hex' ) );
+
         const res = this.createResponse( new BufferIO( message ) );
 
         res.process();

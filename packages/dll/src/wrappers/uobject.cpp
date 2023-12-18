@@ -1,7 +1,7 @@
 #include "uobject.h"
 #include "../injector.h"
-#include "../UE425/uobjectarray.h"
-#include "../UE425/uobject.h"
+#include "../UE/v425/uobjectarray.h"
+#include "../UE/v425/uobject.h"
 
 const std::string WUObject::ClassName = "Class CoreUObject.Object";
 const std::string WUField::ClassName = "Class CoreUObject.Field";
@@ -11,20 +11,23 @@ const std::string WUFunction::ClassName = "Class CoreUObject.Function";
 const std::string WUScriptStruct::ClassName = "Class CoreUObject.ScriptStruct";
 const std::string WUEnum::ClassName = "Class CoreUObject.Enum";
 
-uint32_t WUObject::GetIndex() const {
-	if (!IsValid()) return 0;
-	return object->InternalIndex;
-};
+uint32_t WUObject::GetIndex() const UEAccessor(InternalIndex);
+WUClass WUObject::GetClass() const UEAccessorT(ClassPrivate, WUClass);
+WUObject WUObject::GetOuter() const UEAccessorT(OuterPrivate, WUObject);
+std::string WUObject::GetName() const UEAccessor(GetName())
+std::string WUObject::GetFullName() const UEAccessor(GetFullName());
+void WUObject::ProcessEvent(WUFunction fnW, void* parms) const {
+	if(!IsValid()) return;
+	std::visit([fnW, parms](auto&& obj) {
+		using FuncType = typename std::decay_t<decltype(*obj)>::FunctionType;
 
-WUClass WUObject::GetClass() const {
-	if (!IsValid()) return WUClass();
-	return object->ClassPrivate;
-};
+		auto fnV = fnW.get();
+		if(!std::holds_alternative<FuncType>(fnV)) return;
+		auto fn = std::get<FuncType>(fnV);
 
-WUObject WUObject::GetOuter() const {
-	if (!IsValid()) return WUObject();
-	return object->OuterPrivate;
-};
+		obj->ProcessEvent(fn, parms);
+	}, get());
+}
 
 WUObject WUObject::GetPackageObject() const {
 	if (!IsValid()) return WUObject();
@@ -33,16 +36,6 @@ WUObject WUObject::GetPackageObject() const {
 		package = outer;
 	}
 	return package;
-};
-
-std::string WUObject::GetName() const {
-	if (!IsValid()) return "";
-	return object->GetName();
-};
-
-std::string WUObject::GetFullName() const {
-	if (!IsValid()) return "";
-	return object->GetFullName();
 };
 
 std::string WUObject::GetCppName() const {
@@ -83,46 +76,25 @@ bool WUObject::IsA(WUObject cmp) const {
 	return false;
 }
 
-WUField WUStruct::GetChildren() {
-	if (!IsValid()) return WUField();
-	return get()->Children;
+WUField WUStruct::GetChildren() const UEAccessorT(Children, WUField);
+WUField WUField::GetNext() const UEAccessorT(Next, WUField);
+WUStruct WUStruct::GetSuper() const UEAccessorT(SuperStruct, WUStruct);
+int32_t WUStruct::GetSize() const UEAccessor(PropertiesSize);
+WFField WUStruct::GetChildProperties() const UEAccessorT(ChildProperties, WFField);
+
+WUEnum::Names WUEnum::GetNames() {
+	if (!IsValid()) {
+		// Needs explicit UE425 reference to construct empty type
+		UE::TArray<UE::TPair<UE425::FName, int64_t>> empty = {nullptr, 0, sizeof(UE::TPair<UE425::FName, int64_t>)};
+		return empty;
+	}
+	return std::visit([](auto&& obj) -> WUEnum::Names { return obj->Names; }, get());
 }
 
-WUField WUField::GetNext() {
-	if (!IsValid()) return WUField();
-	return get()->Next;
-}
+void* WUFunction::GetFunc() UEAccessor(Func);
 
-WUStruct WUStruct::GetSuper() {
-	if (!IsValid()) return WUStruct();
-	return get()->SuperStruct;
-}
-
-int32_t WUStruct::GetSize() {
-	if (!IsValid()) return 0;
-	return get()->PropertiesSize;
-};
-
-WFField WUStruct::GetChildProperties() {
-	if (!IsValid()) return WFField();
-	return get()->ChildProperties;
-}
-
-TArray<TPair<FName, int64_t>> WUEnum::GetNames() {
-	if (!IsValid()) return {nullptr, 0, sizeof(TPair<FName, int64_t>)};
-	return get()->Names;
-}
-
-void* WUFunction::GetFunc() {
-	if (!IsValid()) return nullptr;
-	return get()->Func;
-}
-
-EFunctionFlags WUFunction::GetFunctionFlags() {
-	if (!IsValid()) return EFunctionFlags::FUNC_None;
-	return get()->FunctionFlags;
-}
+UEVariant(EFunctionFlags) WUFunction::GetFunctionFlags() UEAccessorT(FunctionFlags, UEVariant(EFunctionFlags));
 
 WUClass WUObject::StaticClass(std::string name) {
-	return injector.memory.getSymbol<FUObjectArray>()->FindObject(name)->Object;
+	return injector.objectArray.FindObject(name).GetObject().Cast<WUClass>();
 };

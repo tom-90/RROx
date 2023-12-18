@@ -2,12 +2,13 @@
 #include <string>
 #include <cstdint>
 #include "base.h"
-#include "../UE425/ffield.h"
+#include "../UE/v425/ffield.h"
+#include "../UE/v503/ffield.h"
 #include "../utils/hash.h"
 
 class WFField;
 
-class WFFieldClass : public Wrapper<FFieldClass> {
+class WFFieldClass : public Wrapper<UEType(FFieldClass*)> {
 	friend class WFField;
 private:
 	uint64_t CachedHash = 0;
@@ -16,10 +17,10 @@ public:
 
 	std::string GetName();
 
-	FFieldClass* get() { return reinterpret_cast<FFieldClass*>(object); }
+	UEVariant(FFieldClass*) get() const { return CastVariant<UEType(FFieldClass*)>(); }
 };
 
-class WFField : public Wrapper<FField> {
+class WFField : public Wrapper<UEType(FField*)> {
 public:
 	using Wrapper::Wrapper;
 
@@ -29,7 +30,7 @@ public:
 
 	template <typename T> bool IsA();
 
-	FField* get() { return reinterpret_cast<FField*>(object); }
+	UEVariant(FField*) get() const { return CastVariant<UEType(FField*)>(); }
 };
 
 

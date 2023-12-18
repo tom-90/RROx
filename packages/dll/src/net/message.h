@@ -1,6 +1,7 @@
 #pragma once
 #include "buffer.h"
 #include "pipe.h"
+#include "../injector.h"
 
 enum class MessageType : uint16_t {
 	UNKNOWN = 0,
@@ -47,6 +48,9 @@ void Request::ProcessResponse(T& response) {
 	response.id = id;
 	Buffer data;
 	response.Process(data);
+
+    // injector.log("DLL: " + std::to_string(data.Size()) + " bytes sending");
+    // injector.log("DLL: " + data.ToHex());
 
 	if(pipe)
 		pipe->Write(data);

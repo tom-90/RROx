@@ -41,6 +41,7 @@ public:
 
 	std::byte* Data();
 	std::size_t Size();
+	std::string ToHex();
 };
 
 template <typename T>

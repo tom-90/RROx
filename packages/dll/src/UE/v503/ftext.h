@@ -1,45 +1,9 @@
 #pragma once
 #include <string>
 #include "uobjectarray.h"
-#include "../injector.h"
+#include "../../injector.h"
 
-/*struct FText
-{
-	char UnknownData[0x38];
-};
-
-
-
-std::string FTextToString(FText& text)
-{
-	FUObjectArray* arr = injector.memory.getSymbol<FUObjectArray>();
-	FUObjectItem* item = arr->FindObject("Class Engine.KismetTextLibrary");
-	if (!item || !item->Object)
-		return "";
-
-	FUObjectItem* staticInstance = arr->FindStatic(item->Object);
-	if (!staticInstance || !staticInstance->Object)
-		return "";
-
-	injector.log(staticInstance->Object->GetFullName());
-
-	FUObjectItem* func = arr->FindObject("Function Engine.KismetTextLibrary.Conv_TextToString");
-	if (!func || !func->Object)
-		return "";
-
-	injector.log(func->Object->GetFullName());
-
-	struct {
-		FText InText;
-		FString ReturnValue;
-	} params;
-
-	params.InText = text;
-
-	staticInstance->Object->ProcessEvent((UFunction*)func->Object, &params);
-
-	return params.ReturnValue.ToString();
-}*/
+namespace UE503 {
 
 struct FTextData1
 {
@@ -67,7 +31,7 @@ union FTextData
 	FTextData1 type1;
 	FTextData2 type2;
 	FTextData3 type3;
-	FString type4;
+	UE::FString type4;
 };
 
 struct FText
@@ -111,3 +75,5 @@ struct FText
 		return std::string(wide.begin(), wide.end());
 	}
 };
+
+}

@@ -3,6 +3,8 @@
 #include "ffield.h"
 #include "uobject.h"
 
+namespace UE425 {
+
 struct UStruct;
 struct UClass;
 struct UFunction;
@@ -90,7 +92,7 @@ struct FProperty : FField
 	int32_t	ElementSize; //0x3C 0x34
 	EPropertyFlags PropertyFlags; //0x40 0x38
 	uint16_t RepIndex; //0x48 0x40
-	TEnumAsByte<ELifetimeCondition> BlueprintReplicationCondition; //0x4A 0x42
+	UE::TEnumAsByte<ELifetimeCondition> BlueprintReplicationCondition; //0x4A 0x42
 	int32_t Offset_Internal; //0x4C ?? 0x4B     0x44 ?? 0x43
 	FName RepNotifyFunc; // 0x50  0x48
 	FProperty* PropertyLinkNext; // 0x60  0x58
@@ -201,3 +203,5 @@ struct FSoftClassProperty : FSoftObjectProperty
 {
 	UClass* MetaClass;
 };
+
+}

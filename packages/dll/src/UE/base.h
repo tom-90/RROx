@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <string>
 
+namespace UE {
+
 template<typename T>
 struct TArray {
 	T* Data;
@@ -37,3 +39,5 @@ struct TTuple {
 
 template <typename KeyType, typename ValueType>
 using TPair = TTuple<KeyType, ValueType>;
+
+}

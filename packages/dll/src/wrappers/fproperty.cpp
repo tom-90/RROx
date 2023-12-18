@@ -71,97 +71,22 @@ PropertyType WFProperty::GetType() {
     return PropertyType::Unknown;
 }
 
-int32_t WFProperty::GetArrayDim() {
-    if (!IsValid()) return 0;
-    return get()->ArrayDim;
-}
-
-int32_t WFProperty::GetSize() {
-    if (!IsValid()) return 0;
-    return get()->ElementSize;
-}
-
-int32_t WFProperty::GetOffset() {
-    if (!IsValid()) return 0;
-    return get()->Offset_Internal;
-}
-
-EPropertyFlags WFProperty::GetPropertyFlags() {
-    if (!IsValid()) return EPropertyFlags::CPF_None;
-    return get()->PropertyFlags;
-}
-
-WUStruct WFStructProperty::GetStruct() {
-    if (!IsValid()) return WUStruct();
-    return get()->Struct;
-}
-
-WUClass WFObjectPropertyBase::GetPropertyClass() {
-    if (!IsValid()) return WUClass();
-    return get()->PropertyClass;
-}
-
-WFProperty WFArrayProperty::GetInner() {
-    if (!IsValid()) return WFProperty();
-    return get()->Inner;
-}
-
-WUEnum WFByteProperty::GetEnum() {
-    if (!IsValid()) return WUEnum();
-    return get()->Enum;
-}
-
-uint8_t WFBoolProperty::GetFieldMask() {
-    if (!IsValid()) return 0;
-    return get()->FieldMask;
-}
-
-WUEnum WFEnumProperty::GetEnum() {
-    if (!IsValid()) return WUEnum();
-    return get()->Enum;
-}
-
-WUClass WFClassProperty::GetMetaClass() {
-    if (!IsValid()) return WUClass();
-    return get()->MetaClass;
-}
-
-WFProperty WFSetProperty::GetElementProp() {
-    if (!IsValid()) return WFProperty();
-    return get()->ElementProp;
-}
-
-WFProperty WFMapProperty::GetKeyProp() {
-    if (!IsValid()) return WFProperty();
-    return get()->KeyProp;
-}
-
-WFProperty WFMapProperty::GetValueProp() {
-    if (!IsValid()) return WFProperty();
-    return get()->ValueProp;
-}
-
-WUClass WFInterfaceProperty::GetInterfaceClass() {
-    if (!IsValid()) return WUClass();
-    return get()->InterfaceClass;
-}
-
-FName WFFieldPathProperty::GetPropertyName() {
-    if (!IsValid()) return FName();
-    return get()->PropertyClass->Name;
-}
-
-WUFunction WFDelegateProperty::GetFunction() {
-    if (!IsValid()) return WUFunction();
-    return get()->SignatureFunction;
-}
-
-WUFunction WFMulticastDelegateProperty::GetFunction() {
-    if (!IsValid()) return WUFunction();
-    return get()->SignatureFunction;
-}
-
-WUClass WFSoftClassProperty::GetMetaClass() {
-    if (!IsValid()) return WUClass();
-    return get()->MetaClass;
-}
+int32_t WFProperty::GetArrayDim() UEAccessor(ArrayDim);
+int32_t WFProperty::GetSize() UEAccessor(ElementSize);
+int32_t WFProperty::GetOffset() UEAccessor(Offset_Internal);
+UEVariant(EPropertyFlags) WFProperty::GetPropertyFlags() UEAccessorT(PropertyFlags, UEVariant(EPropertyFlags));
+WUStruct WFStructProperty::GetStruct() UEAccessorT(Struct, WUStruct);
+WUClass WFObjectPropertyBase::GetPropertyClass() UEAccessorT(PropertyClass, WUClass);
+WFProperty WFArrayProperty::GetInner() UEAccessorT(Inner, WFProperty);
+WUEnum WFByteProperty::GetEnum() UEAccessorT(Enum, WUEnum);
+uint8_t WFBoolProperty::GetFieldMask() UEAccessor(FieldMask);
+WUEnum WFEnumProperty::GetEnum() UEAccessorT(Enum, WUEnum);
+WUClass WFClassProperty::GetMetaClass() UEAccessorT(MetaClass, WUClass);
+WFProperty WFSetProperty::GetElementProp() UEAccessorT(ElementProp, WFProperty);
+WFProperty WFMapProperty::GetKeyProp() UEAccessorT(KeyProp, WFProperty);
+WFProperty WFMapProperty::GetValueProp() UEAccessorT(ValueProp, WFProperty);
+WUClass WFInterfaceProperty::GetInterfaceClass() UEAccessorT(InterfaceClass, WUClass);
+UEVariant(FName) WFFieldPathProperty::GetPropertyName() UEAccessorT(PropertyClass->Name, UEVariant(FName));
+WUFunction WFDelegateProperty::GetFunction() UEAccessorT(SignatureFunction, WUFunction);
+WUFunction WFMulticastDelegateProperty::GetFunction() UEAccessorT(SignatureFunction, WUFunction);
+WUClass WFSoftClassProperty::GetMetaClass() UEAccessorT(MetaClass, WUClass);

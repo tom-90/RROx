@@ -2,6 +2,8 @@
 #include <string>
 #include "fname.h"
 
+namespace UE503 {
+
 struct FFieldClass;
 struct FField;
 struct UObject;
@@ -13,7 +15,8 @@ struct FFieldVariant {
 		UObject* Object;
 	} Container;
 
-	bool bIsUObject;
+	// Removed in UE5.3
+	// bool bIsUObject;
 };
 
 struct FField {
@@ -42,3 +45,5 @@ struct FFieldClass {
 
 	std::string GetName();
 };
+
+}

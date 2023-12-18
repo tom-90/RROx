@@ -14,10 +14,10 @@ public:
 
     PropertyType Type = PropertyType::Unknown;
     std::string Name;
-    uint32_t Offset = 0;
-    uint32_t Size = 0;
-    int32_t ArrayDim = 0;
-    EPropertyFlags PropertyFlags = EPropertyFlags::CPF_None;
+    uint32_t Offset;
+    uint32_t Size;
+    int32_t ArrayDim;
+    UEVariant(EPropertyFlags) PropertyFlags;
 
     void Serialize(Buffer& data);
 };
@@ -29,7 +29,7 @@ public:
     std::string FullName;
     std::string CppName;
     std::vector<GeneratedMember> Params;
-    EFunctionFlags Flags;
+    UEVariant(EFunctionFlags) Flags;
     uint32_t Size = 0;
     void* Func = nullptr;
 

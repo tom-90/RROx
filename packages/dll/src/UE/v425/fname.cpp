@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <string>
 
+namespace UE425 {
+
 FNamePool* NamePoolData = nullptr;
 
 FNameEntry* FNameEntryAllocator::GetEntry(FNameEntryHandle Handle) const {
@@ -77,4 +79,6 @@ std::string FName::GetName()
 		name = name.substr(pos + 1);
 	}
 	return name;
+}
+
 }

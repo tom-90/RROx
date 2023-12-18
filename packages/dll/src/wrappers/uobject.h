@@ -1,12 +1,14 @@
 #pragma once
 #include <string>
 #include "base.h"
-#include "../UE425/uobject.h"
+#include "../UE/v425/uobject.h"
+#include "../UE/v503/uobject.h"
 #include "ffield.h"
 
 class WUClass;
+class WUFunction;
 
-class WUObject : public Wrapper<UObject> {
+class WUObject : public Wrapper<UEType(UObject*)> {
 public:
 	using Wrapper::Wrapper;
 	uint32_t GetIndex() const;
@@ -16,8 +18,9 @@ public:
 	std::string GetName() const;
 	std::string GetCppName() const;
 	std::string GetFullName() const;
+	void ProcessEvent(WUFunction fn, void* parms) const;
 
-	UObject* get() { return object; }
+	UEVariant(UObject*) get() const { return object; }
 
 	static WUClass StaticClass(std::string name);
 
@@ -30,9 +33,9 @@ public:
 class WUField : public WUObject {
 public:
 	using WUObject::WUObject;
-	WUField GetNext();
+	WUField GetNext() const;
 
-	UField* get() { return reinterpret_cast<UField*>(object); }
+	UEVariant(UField*) get() const { return CastVariant<UEType(UField*)>(); }
 
 	static const std::string ClassName;
 };
@@ -40,12 +43,12 @@ public:
 class WUStruct : public WUField {
 public:
 	using WUField::WUField;
-	WUStruct GetSuper();
-	WFField GetChildProperties();
-	WUField GetChildren();
-	int32_t GetSize();
+	WUStruct GetSuper() const;
+	WFField GetChildProperties() const;
+	WUField GetChildren() const;
+	int32_t GetSize() const;
 
-	UStruct* get() { return reinterpret_cast<UStruct*>(object); }
+	UEVariant(UStruct*) get() const { return CastVariant<UEType(UStruct*)>(); }
 
 	static const std::string ClassName;
 };
@@ -54,7 +57,7 @@ class WUClass : public WUStruct {
 public:
 	using WUStruct::WUStruct;
 
-	UClass* get() { return reinterpret_cast<UClass*>(object); }
+	UEVariant(UClass*) get() const { return CastVariant<UEType(UClass*)>(); }
 
 	static const std::string ClassName;
 };
@@ -63,10 +66,10 @@ class WUFunction : public WUStruct {
 public:
 	using WUStruct::WUStruct;
 
-	UFunction* get() { return reinterpret_cast<UFunction*>(object); }
+	UEVariant(UFunction*) get() const { return CastVariant<UEType(UFunction*)>(); }
 
 	void* GetFunc();
-	EFunctionFlags GetFunctionFlags();
+	UEVariant(EFunctionFlags) GetFunctionFlags();
 
 	static const std::string ClassName;
 };
@@ -82,9 +85,15 @@ class WUEnum : public WUField {
 public:
 	using WUField::WUField;
 
-	TArray<TPair<FName, int64_t>> GetNames();
+	// Needs explicit UE425/503 variants because of complex type
+	using Names = std::variant<
+		UE::TArray<UE::TPair<UE425::FName, int64_t>>,
+		UE::TArray<UE::TPair<UE503::FName, int64_t>>
+	>;
 
-	UEnum* get() { return reinterpret_cast<UEnum*>(object); }
+	Names GetNames();
+
+	UEVariant(UEnum*) get() const { return CastVariant<UEType(UEnum*)>(); }
 
 	static const std::string ClassName;
 };

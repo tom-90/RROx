@@ -35,15 +35,22 @@
     <ClCompile Include="src\net\messages\ready.cpp" />
     <ClCompile Include="src\net\pipe.cpp" />
     <ClCompile Include="src\query\query.cpp" />
-    <ClCompile Include="src\UE425\ffield.cpp" />
-    <ClCompile Include="src\UE425\fname.cpp" />
-    <ClCompile Include="src\UE425\uobject.cpp" />
-    <ClCompile Include="src\UE425\uobjectarray.cpp" />
+    <ClCompile Include="src\UE\v425\ffield.cpp" />
+    <ClCompile Include="src\UE\v425\fname.cpp" />
+    <ClCompile Include="src\UE\v425\uobject.cpp" />
+    <ClCompile Include="src\UE\v425\uobjectarray.cpp" />
+    <ClCompile Include="src\UE\v503\ffield.cpp" />
+    <ClCompile Include="src\UE\v503\fname.cpp" />
+    <ClCompile Include="src\UE\v503\uobject.cpp" />
+    <ClCompile Include="src\UE\v503\uobjectarray.cpp" />
     <ClCompile Include="src\utils\memory.cpp" />
     <ClCompile Include="src\utils\scanner.cpp" />
     <ClCompile Include="src\wrappers\ffield.cpp" />
+    <ClCompile Include="src\wrappers\fname.cpp" />
     <ClCompile Include="src\wrappers\fproperty.cpp" />
+    <ClCompile Include="src\wrappers\ftext.cpp" />
     <ClCompile Include="src\wrappers\uobject.cpp" />
+    <ClCompile Include="src\wrappers\uobjectarray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\generator.h" />
@@ -61,20 +68,29 @@
     <ClInclude Include="src\net\messages\ready.h" />
     <ClInclude Include="src\net\pipe.h" />
     <ClInclude Include="src\query\query.h" />
-    <ClInclude Include="src\UE425\base.h" />
-    <ClInclude Include="src\UE425\ffield.h" />
-    <ClInclude Include="src\UE425\fname.h" />
-    <ClInclude Include="src\UE425\fproperty.h" />
-    <ClInclude Include="src\UE425\ftext.h" />
-    <ClInclude Include="src\UE425\uobject.h" />
-    <ClInclude Include="src\UE425\uobjectarray.h" />
+    <ClInclude Include="src\UE\base.h" />
+    <ClInclude Include="src\UE\v425\ffield.h" />
+    <ClInclude Include="src\UE\v425\fname.h" />
+    <ClInclude Include="src\UE\v425\fproperty.h" />
+    <ClInclude Include="src\UE\v425\ftext.h" />
+    <ClInclude Include="src\UE\v425\uobject.h" />
+    <ClInclude Include="src\UE\v425\uobjectarray.h" />
+    <ClInclude Include="src\UE\v503\ffield.h" />
+    <ClInclude Include="src\UE\v503\fname.h" />
+    <ClInclude Include="src\UE\v503\fproperty.h" />
+    <ClInclude Include="src\UE\v503\ftext.h" />
+    <ClInclude Include="src\UE\v503\uobject.h" />
+    <ClInclude Include="src\UE\v503\uobjectarray.h" />
     <ClInclude Include="src\utils\hash.h" />
     <ClInclude Include="src\utils\memory.h" />
     <ClInclude Include="src\utils\scanner.h" />
     <ClInclude Include="src\wrappers\base.h" />
     <ClInclude Include="src\wrappers\ffield.h" />
+    <ClInclude Include="src\wrappers\fname.h" />
     <ClInclude Include="src\wrappers\fproperty.h" />
+    <ClInclude Include="src\wrappers\ftext.h" />
     <ClInclude Include="src\wrappers\uobject.h" />
+    <ClInclude Include="src\wrappers\uobjectarray.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

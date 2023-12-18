@@ -1,6 +1,7 @@
 #include "uobject.h"
 
-int UObjectProcessEventOffset = 0x4B;
+namespace UE503 {
+int UObjectProcessEventOffset = 0x4D;
 
 std::string UObject::GetFullName() {
 	std::string name;
@@ -18,4 +19,5 @@ void UObject::ProcessEvent(UFunction* fn, void* parms)
 {
 	auto vtable = *reinterpret_cast<void***>(this);
 	reinterpret_cast<void(*)(void*, void*, void*)>(vtable[UObjectProcessEventOffset])(this, fn, parms);
+}
 }

@@ -1,23 +1,23 @@
 #include "getinstances.h"
 #include "../message.h"
 #include "../../injector.h"
-#include "../../UE425/uobjectarray.h"
-#include "../../UE425/uobject.h"
+#include "../../UE/v425/uobjectarray.h"
+#include "../../UE/v425/uobject.h"
 
 GetInstancesRequest::GetInstancesRequest(Buffer& data) : Request(data), name(data.Read()), count(data.Read<uint32_t>()), deep(data.Read<bool>()) {}
 
 void GetInstancesRequest::Process() {
 	GetInstancesResponse res;
 
-	FUObjectItem* item = injector.memory.getSymbol<FUObjectArray>()->FindObject(name);
+	WFUObjectItem item = injector.objectArray.FindObject(name);
 
-	if (item && item->Object) {
-		std::vector<FUObjectItem*> instances = injector.memory.getSymbol<FUObjectArray>()->FindInstances(item->Object, count, deep);
+	if (item) {
+		std::vector<WFUObjectItem> instances = injector.objectArray.FindInstances(item.GetObject(), count, deep);
 		for (auto instance : instances) {
-			if (!instance || !instance->Object)
+			if (!instance)
 				continue;
 
-			res.names.push_back(instance->Object->GetFullName());
+			res.names.push_back(instance.GetObject().GetFullName());
 		}
 	}
 

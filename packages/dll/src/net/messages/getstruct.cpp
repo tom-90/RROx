@@ -1,7 +1,7 @@
 #include "getstruct.h"
 #include "../message.h"
 #include "../../injector.h"
-#include "../../UE425/uobjectarray.h"
+#include "../../UE/v425/uobjectarray.h"
 
 GetStructRequest::GetStructRequest(Buffer& data) : Request(data), name(data.Read()) {}
 
@@ -10,10 +10,10 @@ void GetStructRequest::Process() {
 
 	injector.log("Retrieving struct: " + name);
 
-	FUObjectItem* item = injector.memory.getSymbol<FUObjectArray>()->FindObject(name);
+	WFUObjectItem item = injector.objectArray.FindObject(name);
 
-	if (item && item->Object) {
-		WUObject wrapped = item->Object;
+	if (item) {
+		WUObject wrapped = item.GetObject();
 		if (wrapped.IsA<WUEnum>())
 			res = GetStructResponse(new GeneratedEnum(wrapped.Cast<WUEnum>()));
 		else if (wrapped.IsA<WUFunction>())

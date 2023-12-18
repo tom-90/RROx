@@ -1,4 +1,5 @@
 #include "generator.h"
+#include "injector.h"
 
 GeneratedStruct::GeneratedStruct(WUStruct object) {
     Size = object.GetSize();
@@ -62,7 +63,7 @@ void GeneratedMember::Serialize(Buffer& data) {
     data.Write(Name);
     data.Write(Offset);
     data.Write(Size);
-    data.Write(PropertyFlags);
+    std::visit([&data](auto&& value) { data.Write(value); }, PropertyFlags);
     data.Write(ArrayDim);
 
     if (Type == PropertyType::StructProperty && prop.IsA<WFStructProperty>())
@@ -88,7 +89,7 @@ void GeneratedMember::Serialize(Buffer& data) {
     else if (Type == PropertyType::InterfaceProperty && prop.IsA<WFInterfaceProperty>())
         data.Write(prop.Cast<WFInterfaceProperty>().GetInterfaceClass().GetFullName());
     else if (Type == PropertyType::FieldPathProperty && prop.IsA<WFFieldPathProperty>())
-        data.Write(prop.Cast<WFFieldPathProperty>().GetPropertyName().GetName());
+        data.Write(std::visit([](auto&& name) -> auto { return name.GetName(); }, prop.Cast<WFFieldPathProperty>().GetPropertyName()));
     else if (Type == PropertyType::DelegateProperty && prop.IsA<WFDelegateProperty>())
         data.Write(prop.Cast<WFDelegateProperty>().GetFunction().GetFullName());
     else if (Type == PropertyType::MulticastDelegateProperty && prop.IsA<WFMulticastDelegateProperty>())
@@ -117,7 +118,7 @@ GeneratedFunction::GeneratedFunction(WUFunction fn) {
 void GeneratedFunction::Serialize(Buffer& data) {
     data.Write(FullName);
     data.Write(CppName);
-    data.Write(Flags);
+    std::visit([&data](auto&& value) { data.Write(value); }, Flags);
     data.Write(Size);
 
     data.Write(Params.size());
@@ -129,18 +130,19 @@ GeneratedEnum::GeneratedEnum(WUEnum object) {
     FullName = object.GetFullName();
     CppName = object.GetCppName();
 
-    std::string enumPrefix = object.GetName() + "::";
+    std::visit([object, this](auto&& names) {
+        std::string enumPrefix = object.GetName() + "::";
 
-    auto names = object.GetNames();
-    for (int i = 0; i < names.Count; i++) {
-        auto name = names.Data[i].Key.GetName();
+        for (int i = 0; i < names.Count; i++) {
+            auto name = names.Data[i].Key.GetName();
 
-        // Check if the name starts with prefix ENUMNAME:: and remove if necessary
-        if (name.find(enumPrefix) == 0)
-            name = name.erase(0, enumPrefix.length());
+            // Check if the name starts with prefix ENUMNAME:: and remove if necessary
+            if (name.find(enumPrefix) == 0)
+                name = name.erase(0, enumPrefix.length());
 
-        Members.push_back({ name, names.Data[i].Value });
-    }
+            Members.push_back({ name, names.Data[i].Value });
+        }
+    }, object.GetNames());
 }
 
 void GeneratedEnum::Serialize(Buffer& data) {

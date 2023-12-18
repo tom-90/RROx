@@ -1,11 +1,12 @@
 #pragma once
-#include "base.h"
+#include "../base.h"
 #include <cstdint>
 #include <string>
 #include "fname.h"
 #include "fproperty.h"
 #include "ffield.h"
 
+namespace UE503 {
 struct FField;
 
 /**
@@ -67,7 +68,9 @@ struct UObject {
 
 	std::string GetName();
 	std::string GetFullName();
+	
 	void ProcessEvent(UFunction* fn, void* parms);
+	using FunctionType = UFunction*;
 };
 
 // Class CoreUObject.Field
@@ -104,8 +107,8 @@ struct UClass : UStruct {
 // Class CoreUObject.Enum
 // Size: 0x30 (Inherited: 0x30)
 struct UEnum : UField {
-	FString CppType; //0x30
-	TArray<TPair<FName, int64_t>> Names; //0x40
+	UE::FString CppType; //0x30
+	UE::TArray<UE::TPair<FName, int64_t>> Names; //0x40
 	int32_t CppForm; //0x50 (Enum type)
 	void* EnumDisplayNameFn;
 };
@@ -159,3 +162,4 @@ struct UFunction : UStruct {
 	int32_t EventGraphCallOffset;
 	void* Func;
 };
+}

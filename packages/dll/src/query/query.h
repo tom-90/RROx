@@ -3,7 +3,9 @@
 #include <algorithm>
 #include "../injector.h"
 #include "../net/buffer.h"
-#include "../UE425/uobject.h"
+#include "../UE/v425/uobject.h"
+#include "../UE/v503/uobject.h"
+#include "../wrappers/base.h"
 
 enum class QueryCommandTypes : uint16_t {
     READ_BYTES,
@@ -44,7 +46,12 @@ private:
     void processCommandNoop(QueryCommandTypes command);
     void processCommandsNoop();
     std::vector<int> getArrayIndices(int arraySize);
-    bool isValidName(UObject* obj, std::string& name);
+    bool isValidName(WUObject obj, std::string& name);
+
+    template <typename T> T getStackItem();
+    template <typename T> T getStackItem(int offset);
+    template <typename T> T getStackItem(bool withBaseOffset, int offset);
+    template <typename T> T getForAddress(void* addr);
 public:
 	QueryExecutor(Buffer& request, Buffer& response) : request(request), response(response) {};
 

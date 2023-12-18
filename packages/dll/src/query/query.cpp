@@ -1,9 +1,11 @@
 #include "query.h"
-#include "../UE425/base.h"
-#include "../UE425/uobject.h"
-#include "../UE425/uobjectarray.h"
-#include "../UE425/ftext.h"
+#include "../UE/base.h"
+#include "../UE/v425/uobject.h"
+#include "../UE/v425/uobjectarray.h"
+#include "../UE/v425/ftext.h"
 #include "../wrappers/uobject.h"
+#include "../wrappers/fname.h"
+#include "../wrappers/ftext.h"
 
 bool QueryExecutor::processCommands() {
 	QueryCommandTypes command = request.Read<QueryCommandTypes>();
@@ -53,7 +55,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		TArray<void*>* ptr = (TArray<void*>*)((std::byte*)stackItem.object + stackItem.baseOffset + offset);
+		UE::TArray<void*>* ptr = (UE::TArray<void*>*)((std::byte*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -97,7 +99,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		TArray<void*>* ptr = (TArray<void*>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		UE::TArray<void*>* ptr = (UE::TArray<void*>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -138,8 +140,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		if (traversal.empty())
 			return false;
 
-		UObject* obj = (UObject*)traversal.top().object;
-		std::string name = obj->GetFullName();
+		std::string name = getStackItem<WUObject>().GetFullName();
 
 		response.Write(name);
 
@@ -153,18 +154,19 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		FName* ptr = (FName*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		void* ptr = (void*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr))) {
 			response.Write(false);
 			return true;
 		}
 
-		std::string name = ptr->GetName();
+		auto wrapper = getStackItem<WFName>(offset);
+		std::string name = wrapper.GetName();
 
 		response.Write(true);
 		response.Write(name);
-		response.Write(ptr->Index);
-		response.Write(ptr->Number);
+		response.Write(wrapper.GetIndex());
+		response.Write(wrapper.GetNumber());
 
 		return true;
 	}
@@ -176,7 +178,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		FString* ptr = (FString*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		UE::FString* ptr = (UE::FString*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr))) {
 			response.Write(false);
 			return true;
@@ -197,13 +199,14 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		FText* ptr = (FText*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		void* ptr = (void*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr))) {
 			response.Write(false);
 			return true;
 		}
 
-		std::string name = ptr->ToString();
+		auto wrapper = getStackItem<WFText>(offset);
+		std::string name = wrapper.ToString();
 
 		response.Write(true);
 		response.Write(name);
@@ -212,9 +215,12 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 	}
 	case QueryCommandTypes::TRAVERSE_GLOBAL: {
 		std::string name = request.Read();
-		FUObjectItem* item = injector.memory.getSymbol<FUObjectArray>()->FindObject(name);
-		if (item && item->Object) {
-			traversal.push({ item->Object, 0 });
+		WFUObjectItem item = injector.objectArray.FindObject(name);
+		if (item) {
+			traversal.push({
+				std::visit([](auto&& obj) -> void* { return obj; }, item.GetObject().get()),
+				0
+			});
 
 			response.Write(true);
 
@@ -240,7 +246,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		uint64_t addr = (uint64_t)stackItem.object;
 		addr += stackItem.baseOffset + offset;
-		UObject* ptr = (*(UObject**)addr);
+		void* ptr = (*(void**)addr);
 
 		if (ptr == nullptr) {
 			response.Write(false);
@@ -251,7 +257,9 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
-		if (!isValidName(ptr, name)) {
+		WUObject obj = getForAddress<WUObject>(ptr);
+
+		if (!isValidName(obj, name)) {
 			response.Write(false);
 			processCommandsNoop();
 			return true;
@@ -277,7 +285,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 
 		QueryStackItem& stackItem = traversal.top();
 
-		TArray<void*>* ptr = (TArray<void*>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		UE::TArray<void*>* ptr = (UE::TArray<void*>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -346,7 +354,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		uint32_t itemSize = request.Read<uint32_t>();
 		uint32_t length = request.Read<uint32_t>();
 
-		TArray<std::byte>* ptr = (TArray<std::byte>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		UE::TArray<std::byte>* ptr = (UE::TArray<std::byte>*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 		
@@ -376,7 +384,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		uint32_t offset = request.Read<uint32_t>();
 		std::string string = request.Read();
 
-		FString* ptr = (FString*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
+		UE::FString* ptr = (UE::FString*)((unsigned char*)stackItem.object + stackItem.baseOffset + offset);
 		if (IsBadReadPtr(ptr, sizeof(ptr)))
 			return false;
 
@@ -426,15 +434,15 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 		if (traversal.empty())
 			return false;
 
-		UObject* obj = (UObject*)traversal.top().object;
+		WUObject obj = getStackItem<WUObject>();
 		
 		std::string funcName = request.Read();
 		uint32_t size = request.Read<uint32_t>();
 
-		FUObjectItem* item = injector.memory.getSymbol<FUObjectArray>()->FindObject(funcName);
+		WFUObjectItem item = injector.objectArray.FindObject(funcName);
 
-		if (item && item->Object) {
-			UFunction* func = (UFunction*)item->Object;
+		if (item) {
+			WUFunction func = item.GetObject().Cast<WUFunction>();
 
 			std::vector<std::byte> data;
 
@@ -445,7 +453,7 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 			// Commands to write to data
 			processCommands();
 
-			obj->ProcessEvent(func, data.data());
+			obj.ProcessEvent(func, data.data());
 
 			response.Write(true);
 
@@ -467,12 +475,9 @@ bool QueryExecutor::processCommand(QueryCommandTypes command) {
 			return false;
 
 		std::string name = request.Read();
+		WUObject obj = getStackItem<WUObject>();
 
-		QueryStackItem& stackItem = traversal.top();
-
-		UObject* addr = (UObject*)stackItem.object;
-
-		if (!isValidName(addr, name)) {
+		if (!isValidName(obj, name)) {
 			response.Write(false);
 			return true;
 		}
@@ -618,7 +623,7 @@ std::vector<int> QueryExecutor::getArrayIndices(int arraySize) {
 	return indices;
 }
 
-bool QueryExecutor::isValidName(UObject* obj, std::string& name) {
+bool QueryExecutor::isValidName(WUObject obj, std::string& name) {
 	WUObject wrapped = obj;
 	std::string nameLowerCase = name;
 	std::transform(nameLowerCase.begin(), nameLowerCase.end(), nameLowerCase.begin(), ::tolower);
@@ -652,4 +657,32 @@ bool QueryExecutor::isValidName(UObject* obj, std::string& name) {
 	}
 
 	return true;
+}
+
+template <class T>
+T QueryExecutor::getStackItem() {
+	return getStackItem<T>(false, 0);
+}
+
+template <class T>
+T QueryExecutor::getStackItem(int offset) {
+	return getStackItem<T>(true, offset);
+}
+
+template <class T>
+T QueryExecutor::getStackItem(bool withBaseOffset, int offset) {
+	QueryStackItem& stackItem = traversal.top();
+
+	uint64_t addr = (uint64_t)stackItem.object;
+	if (withBaseOffset)
+		addr += stackItem.baseOffset;
+
+	addr += offset;
+
+	return getForAddress<T>((void*) addr);
+}
+
+template <class T>
+T QueryExecutor::getForAddress(void* addr) {
+	return T{ addr, injector.version };
 }
