@@ -93,6 +93,13 @@ It is possible to enable the minimap under the minimap settings. **The minimap w
 
 ## Changelog
 
+### v1.1.21 19-12-2023
+- ``Fixed`` Issues after recent game updates.
+- ``Fixed`` Turntable size incorrect.
+- ``Enhancement`` Added new icons for the new rolling stock. (Thanks to [illudedPerception](https://github.com/illudedPerception))
+
+Note: this update does not include graphics for the new freight types and industries yet. These will come in the future.
+
 ### v1.1.20 27-11-2023
 - ``Fixed`` RROx Speed Readout issue after Game Build #0.6.0.0.3. (Thanks to [Mordred](https://github.com/mordred-random))
 - ``Enhancement`` Added RROx Map Image for "Wheat Farm" Industry; which now appears correctly on the RROx Map. (Thanks to [Mordred](https://github.com/mordred-random))

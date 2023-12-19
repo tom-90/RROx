@@ -24,6 +24,12 @@ The world loader provides a number of features that can be turned on or off depe
 
 ## Changelog
 
+### v1.1.19 19-12-2023
+- ``Fixed`` Issues after recent game updates.
+- ``Fixed`` Turntable size incorrect.
+
+Note: this update does not include graphics for the new freight types and industries yet. These will come in the future.
+
 ### v1.1.18 27-11-2023
 - ``Fixed`` RROx Logs warning for unknown industry 'watertower_drgw'. (Thanks to [Mordred](https://github.com/mordred-random))
 
