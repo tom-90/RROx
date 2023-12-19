@@ -52,6 +52,10 @@ export enum FrameCarType {
 	COACH_DSPRR_2 = 'coach_dsprr_2',
 	LIMA280 = 'lima280',
 	LIMA280_TENDER = 'lima280_tender',
+	VENTILATED_BOXCAR_CC = 'VentilatedBoxcarCC',
+	WATERCAR = 'WaterCar',
+	FERRIES_242_T = 'Ferries242T',
+	OAHU_WATER_CAR = 'OahuWaterCar',
 	
     UNKNOWN = 'unknown',
 }
@@ -60,11 +64,12 @@ export type EngineFrameCarType = FrameCarType.PORTER | FrameCarType.PORTER2 | Fr
         FrameCarType.EUREKA_TENDER | FrameCarType.CLIMAX | FrameCarType.HEISLER | FrameCarType.CLASS70 | FrameCarType.CLASS70_TENDER | FrameCarType.COOKE260 | FrameCarType.COOKE260_TENDER |
 		FrameCarType.MONTEZUMA | FrameCarType.MONTEZUMA_TENDER | FrameCarType.GLENBROOK | FrameCarType.GLENBROOK_TENDER | FrameCarType.SHAY |
 		FrameCarType.BALDWIN622D | FrameCarType.MOSCA | FrameCarType.COOKE280 | FrameCarType.TENMILE | FrameCarType.RUBYBASIN | 
-		FrameCarType.COOKE260COAL | FrameCarType.COOKE260COAL_TENDER | FrameCarType.TWEETSIE280 | FrameCarType.TWEETSIE280_TENDER | FrameCarType.LIMA280 | FrameCarType.LIMA280_TENDER;
+		FrameCarType.COOKE260COAL | FrameCarType.COOKE260COAL_TENDER | FrameCarType.TWEETSIE280 | FrameCarType.TWEETSIE280_TENDER | FrameCarType.LIMA280 | FrameCarType.LIMA280_TENDER | FrameCarType.FERRIES_242_T;
 
 
 export type FreightFrameCarType = FrameCarType.BOXCAR | FrameCarType.FLATCAR_CORDWOOD | FrameCarType.HOPPER | FrameCarType.FLATCAR_LOGS |
         FrameCarType.FLATCAR_STAKES | FrameCarType.TANKER | FrameCarType.SKELETONCAR | FrameCarType.HOPPERBB | FrameCarType.TANKERNCO | FrameCarType.STOCKCAR |
 		FrameCarType.PLANTATIONCAR_FLATCAR | FrameCarType.PLANTATIONCAR_FLATCAR_LOGS | FrameCarType.PLANTATIONCAR_FLATCAR_STAKES | 
 		FrameCarType.PLANTATIONCAR_FLATCAR_STAKES_BULKHEAD | FrameCarType.PLANTATIONCAR_HOPPER_SMALL | FrameCarType.PLANTATIONCAR_HOPPER_MEDIUM | 
-		FrameCarType.PLANTATIONCAR_HOPPER_LARGE | FrameCarType.PLANTATIONCAR_TANKER | FrameCarType.PLANTATIONCAR_BOXCAR;
+		FrameCarType.PLANTATIONCAR_HOPPER_LARGE | FrameCarType.PLANTATIONCAR_TANKER | FrameCarType.PLANTATIONCAR_BOXCAR |
+		FrameCarType.VENTILATED_BOXCAR_CC | FrameCarType.WATERCAR | FrameCarType.OAHU_WATER_CAR;

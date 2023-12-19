@@ -16,15 +16,31 @@ export class WorldParser {
         }
     }
 
+    private loggedUnknownFrameCarTypes = new Set<string>();
+
     public parseFrameCar( frameCar: Structs.Aframecar, frameCars?: Structs.Aframecar[] ): IFrameCar {
         const queryAction = this.plugin.controller.getAction( Actions.QUERY );
 
         let type = FrameCarType.UNKNOWN;
         if(typeof frameCar.FrameType === 'string') {
-            type = Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType) ? frameCar.FrameType as FrameCarType : FrameCarType.UNKNOWN;
+            if(Object.values(FrameCarType).includes(frameCar.FrameType as FrameCarType)) {
+                type = frameCar.FrameType as FrameCarType;
+            } else {
+                if(frameCar.FrameType && !this.loggedUnknownFrameCarTypes.has(frameCar.FrameType)) {
+                    Log.warn(`Unknown frame car type: ${frameCar.FrameType}`);
+                    this.loggedUnknownFrameCarTypes.add(frameCar.FrameType);
+                }
+
+                type = FrameCarType.UNKNOWN;
+            }
         } else {
             type = frameCar.FrameType?.getValue() as FrameCarType;
             if(!type || !Object.values(FrameCarType).includes(type)) {
+                if(type && !this.loggedUnknownFrameCarTypes.has(type)) {
+                    Log.warn(`Unknown frame car type: ${type}`);
+                    this.loggedUnknownFrameCarTypes.add(type);
+                }
+
                 type = FrameCarType.UNKNOWN;
             }
         }
@@ -93,7 +109,7 @@ export class WorldParser {
 
     public parseTurntable( tt: Structs.Aturntable ): ITurntable {
         return {
-            type: tt.turntabletype,
+            type: 'turntabletype' in tt ? tt.turntabletype : tt.type,
             deckRotation: {
                 Pitch: tt.deckmesh.RelativeRotation.Pitch,
                 Yaw: tt.deckmesh.RelativeRotation.Yaw,

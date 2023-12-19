@@ -1,4 +1,4 @@
-import { Actions, InOutParam, IQuery, MultiLinkedStructRef, query, QueryBuilder, QueryBuilderResult, SettingsStore, Struct, StructConstructor, ValueProvider } from "@rrox/api";
+import { Actions, InOutParam, IQuery, IQueryProperty, MultiLinkedStructRef, query, QueryBuilder, QueryBuilderResult, SettingsStore, Struct, StructConstructor, ValueProvider } from "@rrox/api";
 import WorldPlugin from ".";
 import { FrameCarControl, ILocation, ILocation2D, Log, IWorld, WorldCommunicator, IWorldSettings, SplineTrackType } from "../shared";
 import { Geometry } from "./geometry";
@@ -38,11 +38,13 @@ export class World {
     private splineQuery: IQuery<Structs.AarrGameStateBase>;
     private playerQuery: IQuery<Structs.APlayerState>;
     private switchQuery: IQuery<Structs.ASwitch>;
+    private turntableQuery: IQuery<Structs.Aturntable>;
     private splineTrackQuery: IQuery<Structs.ASplineTrack>;
     private clientQuery: IQuery<Structs.UNetConnection>;
     private clientSplineQuery: IQuery<Structs.UNetConnection>;
 
     private splineTrackReference: MultiLinkedStructRef<Structs.ASplineTrack> | null = null;
+    private turntableReference: MultiLinkedStructRef<Structs.Aturntable> | null = null;
 
     private worldInterval?: NodeJS.Timeout;
     private splineInterval?: NodeJS.Timeout;
@@ -119,12 +121,18 @@ export class World {
             sw.RootComponent.RelativeRotation,
         ];
 
-        const turntableQuery = ( tt: QueryBuilder<Structs.Aturntable> ) => [
-            tt.turntabletype,
-            tt.deckmesh.RelativeRotation,
-            tt.RootComponent.RelativeLocation,
-            tt.RootComponent.RelativeRotation,
-        ];
+        const turntableQuery = ( tt: QueryBuilder<Structs.Aturntable> ) => {
+            const base: QueryBuilderResult = [
+                tt.deckmesh.RelativeRotation,
+                tt.RootComponent.RelativeLocation,
+                tt.RootComponent.RelativeRotation,
+            ];
+
+            if('turntabletype' in tt)
+                base.push((tt as QueryBuilder<MainStructs.arr.Aturntable> ).turntabletype);
+
+            return base;
+        }
 
         const watertowerQuery = ( wt: QueryBuilder<Structs.Awatertower> ) => [
             wt.Mystorage.currentamountitems,
@@ -213,15 +221,6 @@ export class World {
                 // Query frames
                 frameCarQuery( gameState.FrameCarArray.all() ),
     
-                // Query turntables
-                turntableQuery( gameState.TurntableArray.all() ),
-    
-                // Query watertowers
-                watertowerQuery( gameState.WatertowerArray.all() ),
-    
-                // Query sandhouses
-                sandhouseQuery( gameState.SandhouseArray.all() ),
-    
                 // Query industries
                 industryQuery( gameState.IndustryArray.all() ),
             ];
@@ -229,6 +228,21 @@ export class World {
             if('SwitchArray' in gameState) {
                 // Query switches (UE4)
                 base.push(switchQuery( (gameState as QueryBuilder<MainStructs.arr.AarrGameStateBase>).SwitchArray.all() ));
+            }
+
+            if('TurntableArray' in gameState) {
+                // Query turntables (UE4)
+                base.push(turntableQuery( (gameState as QueryBuilder<MainStructs.arr.AarrGameStateBase>).TurntableArray.all() ));
+            }
+
+            if('WatertowerArray' in gameState) {
+                // Query watertowers (UE4)
+                base.push(watertowerQuery( (gameState as QueryBuilder<MainStructs.arr.AarrGameStateBase>).WatertowerArray.all() ));
+            }
+
+            if('SandhouseArray' in gameState) {
+                // Query splines (UE4)
+                base.push(sandhouseQuery( (gameState as QueryBuilder<MainStructs.arr.AarrGameStateBase>).SandhouseArray.all() ));
             }
 
             return base;
@@ -250,6 +264,8 @@ export class World {
             splineTrack.splinecomp2endrelativelocation,
         ] );
 
+        this.turntableQuery = await data.prepareQuery( this.structs.arr.Aturntable as StructConstructor<Structs.Aturntable>, turntableQuery );
+
         this.hasSplineTracks = (await data.getReference(this.structs.BP_SplineTracks.ABP_SplineTrack_DriveTrack_C)) !== null;
 
 		// Secondary check for new splines after Drill track removed (and factory added).
@@ -259,11 +275,17 @@ export class World {
 		
         Log.info('Has beta spline tracks: ' + this.hasSplineTracks);;
 		
-        if(this.hasSplineTracks)
+        if(this.hasSplineTracks) {
             this.splineTrackReference = await data.getMultiReference(
                 // Reversing the array has much better cache hit chances
                 Object.values(this.structs.BP_SplineTracks as { [key: string]: StructConstructor<Structs.ASplineTrack> }).reverse()
             );
+
+            if('BP_turntable' in this.structs)
+                this.turntableReference = await data.getMultiReference(
+                    Object.values(this.structs.BP_turntable as { [key: string]: StructConstructor<Structs.Aturntable> })
+                );
+        }
 
         this.switchQuery = await data.prepareQuery( this.structs.arr.ASwitch, ( sw ) => [ sw.switchstate ] );
 
@@ -472,6 +494,10 @@ export class World {
             }
         }
         
+        let sandhouses: Structs.Asandhouse[] = this.data.sandhouses;
+        let turntables: Structs.Aturntable[] = this.data.turntables;
+        let watertowers: Structs.Awatertower[] = this.data.watertowers;
+
         if( type === LoadType.SPLINES || type === LoadType.ALL ) {
             splines = await queryAction.query( this.splineQuery, gameState );
             
@@ -495,16 +521,33 @@ export class World {
                     
                 }
             }
+
+            if(this.turntableReference && 'BP_turntable' in this.structs) {
+                turntables = [];
+                const instances = await this.turntableReference.getInstances();
+
+                if(instances) {
+                    for(const instance of instances) {
+                        const turntable = await queryAction.query(
+                            this.turntableQuery,
+                            instance
+                        );
+
+                        if(turntable)
+                            turntables.push(turntable)
+                    }
+                }
+            }
         }
 
         this.parseWorld( {
             players     : data?.PlayerArray,
             frameCars   : data?.FrameCarArray,
             industries  : data?.IndustryArray,
-            sandhouses  : data?.SandhouseArray,
+            sandhouses  : data && 'SandhouseArray' in data ? data.SandhouseArray : sandhouses,
             switches    : data && 'SwitchArray' in data ? data.SwitchArray : undefined,
-            turntables  : data?.TurntableArray,
-            watertowers : data?.WatertowerArray,
+            turntables  : data && 'TurntableArray' in data ? data.TurntableArray : turntables,
+            watertowers : data && 'WatertowerArray' in data ? data.WatertowerArray : watertowers,
             splines     : splines?.SplineArray,
             splineTracks: splineTracks ?? undefined,
         } );

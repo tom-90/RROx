@@ -110,6 +110,7 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
             [ FrameCarType.TWEETSIE280_TENDER  ]: { type: 'string', default: '#000000' },
 			[ FrameCarType.LIMA280             ]: { type: 'string', default: '#800080' },
             [ FrameCarType.LIMA280_TENDER      ]: { type: 'string', default: '#000000' },
+            [ FrameCarType.FERRIES_242_T       ]: { type: 'string', default: '#800080' },
 			
 			[ FrameCarType.COACH_DSPRR_2       ]: { type: 'string', default: '#ADD8E6' },
 			
@@ -281,6 +282,33 @@ const preferencesSchema: SettingsSchema<IMapPreferences> = {
                     unloaded: { type: 'string', default: '#6b6b6b' },
                     partiallyloaded: { type: 'string', default: '#6b6b6b' },
 					fullyloaded: { type: 'string', default: '#6b6b6b' },
+                },
+                default: {}
+            },
+			[ FrameCarType.VENTILATED_BOXCAR_CC ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#cd5c5c' },
+                    partiallyloaded: { type: 'string', default: '#cd5c5c' },
+					fullyloaded: { type: 'string', default: '#cd5c5c' },
+                },
+                default: {}
+            },
+			[ FrameCarType.WATERCAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#5b92cd' },
+                    partiallyloaded: { type: 'string', default: '#5b92cd' },
+					fullyloaded: { type: 'string', default: '#5b92cd' },
+                },
+                default: {}
+            },
+			[ FrameCarType.OAHU_WATER_CAR ]: {
+                type: 'object',
+                properties: {
+                    unloaded: { type: 'string', default: '#5a8bbf' },
+                    partiallyloaded: { type: 'string', default: '#5a8bbf' },
+					fullyloaded: { type: 'string', default: '#5a8bbf' },
                 },
                 default: {}
             },

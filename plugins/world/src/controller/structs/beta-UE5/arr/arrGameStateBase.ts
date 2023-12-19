@@ -62,13 +62,6 @@ export class AarrGameStateBase extends AGameStateBase {
      * An array containing:
      * Object property
      */
-    @Property.Array( "TurntableArray", [ () => Aturntable ] )
-    public TurntableArray: Array<Aturntable>;
-    
-    /**
-     * An array containing:
-     * Object property
-     */
     @Property.Array( "IndustryArray", [ () => Aindustry ] )
     public IndustryArray: Array<Aindustry>;
     
