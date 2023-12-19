@@ -29,6 +29,13 @@ Troubleshooting information for RROx error codes can be found [here](./error-cod
 
 ## Changelog
 
+### v2.3.0 19-12-2023
+
+- ``Added`` Support for loading from Railroads Online running on Unreal Engine v5.3
+- ``Added`` Support for the memory reader to dynamically switch between Unreal Engine versions (this means RROx is still backwards compatible with older versions)
+- ``Enhancement`` Rewrote a major portion of the memory reader to make future Unreal Engine updates much easier to handle.
+- ``Enhancement`` Various stability and performance improvements.
+
 ### v2.2.2 - 19-11-2023
 
 - ``Fixed`` Stability issues with RROx connecting to RRO.
