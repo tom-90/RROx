@@ -10,6 +10,14 @@
     <meta name="theme-color" content="#157878">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <style>
+      iframe {
+        width: 100%;
+        height: 100%;
+        min-height: 1000px;
+        border: none;
+      }
+    </style>
     {% include head-custom.html %}
   </head>
   <body>
@@ -27,8 +35,6 @@
         {% if site.github.is_project_page %}
           <span class="site-footer-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
         {% endif %}
-        <span class="site-footer-credits">If you want to donate to support the development of RROx, you can do that <a href="https://www.paypal.com/donate/?hosted_button_id=VRDSCHVHYWL8W">here</a>.</span><br/>
-        <span class="site-footer-credits"><i>Disclaimer: donating does not give any guarantees about the development of RROx.</i></span>
       </footer>
     </main>
   </body>

@@ -10,6 +10,20 @@
     <meta name="theme-color" content="#157878">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <style>
+      .unsupported {
+        display: inline-block;
+        background: rgb(255, 0, 0, 0.6);
+        color: white;
+        padding: 5px 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        margin-bottom: -20px;
+      }
+      .unsupported a {
+        color: #eee;
+      }
+    </style>
     {% include head-custom.html %}
   </head>
   <body>
@@ -20,6 +34,7 @@
       <h1 class="project-name">RROx</h1>
       <h2 class="project-tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
       <a href="https://github.com/tom-90/RROx/releases/latest/download/RailroadsOnline.Extended.msi" class="btn">Download</a>
+      <div><h2 class="unsupported">Warning! No longer supported. <a href="./eol">Click to read more</a></h2></div>
     </header>
 
     <main id="content" class="main-content" role="main">
@@ -29,8 +44,6 @@
         {% if site.github.is_project_page %}
           <span class="site-footer-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
         {% endif %}
-        <span class="site-footer-credits">If you want to donate to support the development of RROx, you can do that <a href="https://www.paypal.com/donate/?hosted_button_id=VRDSCHVHYWL8W">here</a>.</span><br/>
-        <span class="site-footer-credits"><i>Disclaimer: donating does not give any guarantees about the development of RROx.</i></span>
       </footer>
     </main>
   </body>
